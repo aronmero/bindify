@@ -12,7 +12,6 @@
     "pinia": "^2.1.7",
     "swiper": "^11.0.6",
     "vue": "^3.4.19",
-    "vue-carousel": "^0.18.0",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
