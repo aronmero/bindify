@@ -3,6 +3,20 @@
 @tailwind utilities;
 @import "variables";
 
+// Ejemplo de media query para pantallas pequeñas (móviles)
+@media (max-width: 576px) {
+  // Estilos para pantallas pequeñas
+}
+
+// Ejemplo de media query para pantallas medianas (tabletas)
+@media (min-width: 768px) {
+  // Estilos para pantallas medianas
+}
+
+// Ejemplo de media query para pantallas grandes (ordenadores)
+@media (min-width: 992px) {
+  // Estilos para pantallas grandes
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -169,4 +183,5 @@ h1 {
 #app {
  width: 100vw;
  overflow: hidden;
+}
 }
