@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('commerces', function (Blueprint $table) {
             $table->foreignId('users_id')->constrained()->onDelete('cascade');
             $table->string('address');
-            $table->string('description');
+            $table->string('description', 300);
             $table->unsignedBigInteger('verification_token_id');
             $table->foreign('verification_token_id')->references('id')->on('verification_tokens');
             $table->boolean('verificated');
