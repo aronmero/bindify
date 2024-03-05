@@ -13,12 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone')->unique();
+            $table->unsignedBigInteger('municipality_id');
+            $table->string('avatar')->nullable();
+            $table->string('username')->unique();
+            $table->string('nombre')->unique();
             $table->rememberToken();
             $table->timestamps();
+
+            //clave foranea para el ID del municipio
+            $table->foreign('municipality_id')->references('id')->on('municipalities');
         });
     }
 
@@ -27,6 +33,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('users',function(Blueprint $table){
+            $table->dropForeign(['municipality_id']);
+            $table->dropColumn('municipality_id');
+        });
         Schema::dropIfExists('users');
     }
 };
