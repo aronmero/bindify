@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
 
             //clave foranea para el ID del municipio
-            $table->foreign('municipality_id')->references('id')->on('municipalities');
+            $table->foreign('municipality_id')->references('id')->on('municipalities')->onDelete('cascade');
         });
     }
 
@@ -33,10 +33,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users',function(Blueprint $table){
-            $table->dropForeign(['municipality_id']);
-            $table->dropColumn('municipality_id');
-        });
+      
         Schema::dropIfExists('users');
     }
 };
