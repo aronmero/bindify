@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         // Crea 10 tokens de verificación de ejemplo
         for ($i = 1; $i <= 10; $i++) {
             DB::table('verification_tokens')->insert([
-                'token' => Str::random(10), // Genera un token aleatorio
+                'token' => "token_" . $i,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -34,6 +34,17 @@ class DatabaseSeeder extends Seeder
         for ($i = 1; $i <= 30; $i++) {
             DB::table('municipalities')->insert([
                 'nombre' => 'Municipio ' . $i,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        // Categorias
+        for ($i = 1; $i <= 30; $i++) {
+            DB::table('categories')->insert([
+                'name' => 'Categoria ' . $i,
+                'description' => 'Descripción de la categoría ' . $i,
+                'active' => rand(0, 1),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -92,29 +103,6 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
             
-        }
-
-        // Categorias
-        for ($i = 1; $i <= 30; $i++) {
-            DB::table('categories')->insert([
-                'name' => 'Categoria ' . $i,
-                'description' => 'Descripción de la categoría ' . $i,
-                'active' => rand(0, 1),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        // Comentarios
-        for ($i = 1; $i <= 30; $i++) {
-            DB::table('comments')->insert([
-                'user_id' => rand(1, 30),
-                'post_id' => rand(1, 30),
-                'content' => 'Contenido del comentario ' . $i,
-                'active' => rand(0, 1),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
         }
 
         // Clientes
@@ -194,6 +182,18 @@ class DatabaseSeeder extends Seeder
             DB::table('posts-hashtags')->insert([
                 'post_id' => rand(1, 20),
                 'hashtag_id' => rand(1, 5),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        // Comentarios
+        for ($i = 1; $i <= 30; $i++) {
+            DB::table('comments')->insert([
+                'user_id' => rand(1, 30),
+                'post_id' => rand(1, 30),
+                'content' => 'Contenido del comentario ' . $i,
+                'active' => rand(0, 1),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
