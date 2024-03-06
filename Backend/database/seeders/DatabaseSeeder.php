@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +19,15 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        // Crea 10 tokens de verificación de ejemplo
+        for ($i = 1; $i <= 10; $i++) {
+            DB::table('verification_tokens')->insert([
+                'token' => Str::random(10), // Genera un token aleatorio
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
 
         // Municipios
@@ -56,17 +66,32 @@ class DatabaseSeeder extends Seeder
 
          // Comercios
          for ($i = 1; $i <= 30; $i++) {
-            DB::table('commerces')->insert([
-                'user_id' => rand(1, 30),
-                'address' => 'Dirección del comercio ' . $i,
-                'description' => 'Descripción del comercio ' . $i,
-                'verification_token_id' => rand(1, 30),
-                'category_id' => rand(1, 30),
-                'verificated' => rand(0, 1),
-                'active' => rand(0, 1),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+
+            if ($i<11 && $i>0) {
+                DB::table('commerces')->insert([
+                    'user_id' => rand(1, 30),
+                    'address' => 'Dirección del comercio ' . $i,
+                    'description' => 'Descripción del comercio ' . $i,
+                    'verification_token_id' => $i,
+                    'category_id' => rand(1, 30),
+                    'verificated' => rand(0, 1),
+                    'active' => rand(0, 1),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }else{
+                DB::table('commerces')->insert([
+                    'user_id' => rand(1, 30),
+                    'address' => 'Dirección del comercio ' . $i,
+                    'description' => 'Descripción del comercio ' . $i,
+                    'category_id' => rand(1, 30),
+                    'verificated' => rand(0, 1),
+                    'active' => rand(0, 1),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+            
         }
 
         // Categorias
