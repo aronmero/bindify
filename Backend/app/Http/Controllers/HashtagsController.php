@@ -23,7 +23,7 @@ class HashtagsController extends Controller
             $data = Hashtag::all();
 
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'data'=> $data 
             ], 200);
 
@@ -44,7 +44,7 @@ class HashtagsController extends Controller
             $data = Hashtag::create($request->all());
 
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'data'=> $data->id 
             ], 200);
 
