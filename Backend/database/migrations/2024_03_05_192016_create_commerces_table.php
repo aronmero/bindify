@@ -18,8 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('verification_token_id');
             $table->foreign('verification_token_id')->references('id')->on('verification_tokens')->onDelete('cascade');
             $table->boolean('verificated');
-            $table->string('opening_hour');
-            $table->string('closing_hour');
+            $table->string('schedule', 300)->nullable();
             $table->boolean('active');
             $table->timestamps();
         });
