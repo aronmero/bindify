@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('commerces-hashtags', function (Blueprint $table) {
-            $table->foreignId("commerces_id")->constrained()->onDelete('cascade');
-            $table->foreignId("hashtags_id")->constrained()->onDelete('cascade');
+            $table->foreignId("commerce_id")->constrained('commerces', 'user_id')->onDelete('cascade');
+            $table->foreignId("hashtag_id")->constrained('hashtags', 'id')->onDelete('cascade');
             $table->timestamps();
         });
     }

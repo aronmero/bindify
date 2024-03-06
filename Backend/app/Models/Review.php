@@ -5,16 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class Review extends Model
 {
     use HasFactory;
 
-    protected $table = 'customers';
+    protected $table = 'reviews';
 
     protected $fillable = [
         "user_id",
-        "gender",
-        'birth_date',
+        "commerce_id",
+        'comment',
+        'note'
     ];
+
+    
 
 }
