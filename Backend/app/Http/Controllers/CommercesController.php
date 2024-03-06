@@ -9,14 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 class CommercesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function __construct() {
+        $this->middleware("can:ver commerce")->only("show");
+        $this->middleware("can:editar commerce")->only("store", "update");
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -52,7 +48,7 @@ class CommercesController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error' => throw $th,
+                'error' => $th->getMessage(), 
             ], 400);
         }
     }
@@ -110,13 +106,5 @@ class CommercesController extends Controller
             ], 404);
         }
         
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
