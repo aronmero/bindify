@@ -6,9 +6,15 @@ use App\Models\Commerce;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class CommercesController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware("can:ver commerce")->only("show");
+        $this->middleware("can:editar commerce")->only("store", "update");
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -44,7 +50,7 @@ class CommercesController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error' => throw $th,
+                'error' => $th->getMessage(), 
             ], 400);
         }
     }
@@ -95,10 +101,10 @@ class CommercesController extends Controller
                 'message' => 'comercio actualizado',
                 'data' => $commerce
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error' => throw $th,
+                'error' => throw $th->getMessage(),
             ], 404);
         }
         
