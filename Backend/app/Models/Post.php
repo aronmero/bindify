@@ -23,7 +23,7 @@ class Post extends Model
 
     public function post_type(){
 
-        return $this->belongsTo(Post_type::class);
+        return $this->belongsTo(Post_type::class, 'post_type_id');
 
     }
 }
