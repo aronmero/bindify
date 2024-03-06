@@ -6,6 +6,7 @@ use App\Models\Commerce;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class CommercesController extends Controller
 {
@@ -99,10 +100,10 @@ class CommercesController extends Controller
                 'message' => 'comercio actualizado',
                 'data' => $commerce
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error' => throw $th,
+                'error' => throw $th->getMessage(),
             ], 404);
         }
         
