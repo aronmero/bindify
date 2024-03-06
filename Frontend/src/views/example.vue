@@ -4,14 +4,17 @@ import Grid from "@/components/comun/layout.vue";
 import Header from "@/components/comun/header.vue";
 import Footer from "@/components/comun/footer.vue";
 
+import Input from "../components/comun/input.vue";
+
+const options = ["Ferretería", "Floristería", "Panadería", "Mecánico"];
 </script>
 
 <template>
     <Header />
-    <Grid><template v-slot:Left> Left</template>
-        Content
-
-        <template v-slot:Right> Right </template>
+    <Grid>
+        <template v-slot:Left></template>
+        
+        <template v-slot:Right></template>
     </Grid>
     <Footer />
 </template>
