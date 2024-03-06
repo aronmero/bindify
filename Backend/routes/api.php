@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->apiResource('commerce', CommercesController::
 // Route::middleware('auth:sanctum')->apiResource('post', PostsController::class)->except(['index']);
 // Route::middleware('auth:sanctum')->apiResource('comment', CommentsController::class)->except(['index']);
 // Route::middleware('auth:sanctum')->apiResource('review', ReviewsController::class)->except(['index']);
-// Route::middleware('auth:sanctum')->apiResource('hashtag', HashtagsController::class)->except(['show', 'update', 'destroy']);
+Route::middleware('auth:sanctum')->apiResource('hashtag', HashtagsController::class)->except(['show', 'update', 'destroy']);
 // Route::middleware('auth:sanctum')->apiResource('municipality', MunicipalitiesController::class)->except(['show', 'update', 'destroy', 'store']);
 // Route::middleware('auth:sanctum')->apiResource('category', CategoriesController::class)->except(['show', 'update', 'destroy', 'store']);
 // Route::middleware('auth:sanctum')->apiResource('post_type', Post_typesController::class)->except(['show', 'update', 'destroy', 'store']);

@@ -10,6 +10,7 @@ use Throwable;
 
 class CommercesController extends Controller
 {
+
     public function __construct() {
         $this->middleware("can:ver commerce")->only("show");
         $this->middleware("can:editar commerce")->only("store", "update");
@@ -108,4 +109,5 @@ class CommercesController extends Controller
         }
         
     }
+
 }
