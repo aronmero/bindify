@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('description', 300)->default("");
             $table->foreignId('post_type_id')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->string('schedule', 200)->nullable();
             $table->boolean('active');
             $table->timestamps();
         });
