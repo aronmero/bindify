@@ -1,12 +1,23 @@
 <script setup>
-//DE LA VISTA VALIDAR COMERCIO
-const array = ["Notificaciones", "Solicitudes verificación"];
+const titulo = "TodoJardín";
+const categoria = "Floristeria";
 </script>
 
 <template>
-    <div><img src="@public/assets/icons/arrowLeft.svg" class="lg:hidden absolute left-[20px]">
-        <div class="ml-[10px] gap-[25px] flex justify-center"><div v-for=" item in array" class="text-[12px] font-semibold">{{ item }}</div></div>
+  <div class="flex flex-row gap-[5px] items-center p-[10px]">
+    <img src="https://placehold.co/35x35/png" class="rounded-full" />
+    <div class=" flex flex-row w-full justify-between">
+      <div class=" flex flex-col justify-center">
+        <div class="font-bold">{{ titulo }}</div>
+        <div>{{ categoria }}</div>
+      </div>
+
+      <div class=" flex flex-row justify-center items-center">
+        <div >true</div>
+        <div>false</div>
+      </div>
     </div>
+  </div>
 </template>
 
 <style scoped></style>
