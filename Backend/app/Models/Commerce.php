@@ -29,4 +29,17 @@ class Commerce extends Model
         return $this->belongsTo(Category::class);
     }
 
+
+    public function hashtags(){
+
+        return $this->belongsToMany(Hashtag::class, 'commerces_hashtags', 'hashtag_id', 'commerce_id');
+
+    }
+
+    public function token(){
+
+        return $this->belongsTo(Verification_token::class, 'verification_token_id');
+
+    }
+
 }
