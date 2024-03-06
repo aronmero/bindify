@@ -11,6 +11,8 @@ class Customer extends Model
 
     protected $table = 'customers';
 
+    protected $primaryKey = 'user_id';
+
     protected $fillable = [
         "user_id",
         "gender",
@@ -19,7 +21,7 @@ class Customer extends Model
 
     public function reviews(){
 
-        return $this->hasMany(Review::class);
+        return $this->hasMany(Review::class, 'user_id');
 
     }
 
