@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommercesController;
+use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\HashtagsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('auth:sanctum')->apiResource('commerce', CommercesController::class)->except(['index', 'destroy']);
-// Route::middleware('auth:sanctum')->apiResource('customer', CustomersController::class)->except(['index', 'destroy']);
+Route::/*middleware('auth:sanctum')->*/apiResource('customer', CustomersController::class)->except(['index', 'destroy']);
 // Route::middleware('auth:sanctum')->apiResource('post', PostsController::class)->except(['index']);
 // Route::middleware('auth:sanctum')->apiResource('comment', CommentsController::class)->except(['index']);
 // Route::middleware('auth:sanctum')->apiResource('review', ReviewsController::class)->except(['index']);
