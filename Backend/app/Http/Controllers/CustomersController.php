@@ -24,24 +24,27 @@ class CustomersController extends Controller
      */
     public function show(string $id)
     {
-        $customer = Customer::find($id);
 
         try {
 
+            $customer = Customer::where('user_id', $id)->first();
+
             return response()->json([
-                "status"=> "true",
+                "status"=> true,
                 "data"=> $customer
             ], 200);
 
         } catch (ModelNotFoundException $e) {
 
             return response()->json([
+                "status"=> false,
                 "error"=> "Customer no encontrado",
             ], 403);
 
         }catch (Exception $e) {
 
             return response()->json([
+                "status"=> false,
                 "error"=> $e->getMessage()
             ], 404);
 
