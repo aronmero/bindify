@@ -15,11 +15,10 @@ return new class extends Migration
             $table->foreignId('users_id')->constrained()->onDelete('cascade');
             $table->string('address');
             $table->string('description', 300);
-            $table->unsignedBigInteger('verification_token_id');
+            $table->unsignedBigInteger('verification_token_id')->nullable();
             $table->foreign('verification_token_id')->references('id')->on('verification_tokens')->onDelete('cascade');
             $table->boolean('verificated');
-            $table->string('opening_hour');
-            $table->string('closing_hour');
+            $table->string('schedule')->nullable();
             $table->boolean('active');
             $table->timestamps();
         });
