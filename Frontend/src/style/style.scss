@@ -16,7 +16,7 @@
 // Ejemplo de media query para pantallas grandes (ordenadores)
 @media (min-width: 992px) {
   // Estilos para pantallas grandes
-
+}
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -24,7 +24,7 @@
 
   color-scheme: light dark;
   color: $text-color;
-  background-color: #242424;
+  background-color: #d6d6d6;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -183,5 +183,6 @@ h1 {
 #app {
  width: 100vw;
  overflow: hidden;
+ height: 100vh;
 }
-}
+
