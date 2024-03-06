@@ -4,7 +4,8 @@ import { createRouter, createWebHistory } from "vue-router";
  * Definición de las rutas del enrutador.
  */
 const routes = [
-  { path: "/", component: () => import("@/views/example.vue") }
+  { path: "/", component: () => import("@/views/example.vue") },
+  { path: "/search", component: () => import("@/views/search.vue")}
 ];
 
 /**
