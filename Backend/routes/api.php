@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,6 @@ Route::middleware('auth:sanctum')->apiResource('municipality', MunicipalitiesCon
 Route::middleware('auth:sanctum')->apiResource('category', CategoriesController::class)->except(['show', 'update', 'destroy', 'store']);
 Route::middleware('auth:sanctum')->apiResource('post_type', Post_typesController::class)->except(['show', 'update', 'destroy', 'store']);
 Route::middleware('auth:sanctum')->apiResource('notification', NotificationsController::class)->except(['index', 'destroy']);
+
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
