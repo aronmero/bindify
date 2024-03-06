@@ -10,7 +10,6 @@ import Footer from "@/components/comun/footer.vue";
     <Header />
     <Grid><template v-slot:Left> Left</template>
         Content
-
         <template v-slot:Right> Right </template>
     </Grid>
     <Footer />
