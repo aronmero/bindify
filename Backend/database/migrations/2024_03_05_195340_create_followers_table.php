@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreign('follows_id')->references('id')->on('users')->onDelete('cascade');
             
             //clave foranea para el ID del usuario al  que siguen
-             $table->foreign('follows_id')->references('id')->on('users')->onDelete('cascade');
+             $table->foreign('follower_id')->references('id')->on('users')->onDelete('cascade');
             
         });
     }
