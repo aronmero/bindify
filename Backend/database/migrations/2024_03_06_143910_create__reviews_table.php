@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('followers', function (Blueprint $table) {
-            $table->foreignId("follows_id")->constrained('users')->onDelete('cascade');
-            $table->foreignId("follower_id")->constrained('users')->onDelete('cascade');
+        Schema::create('_reviews', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
         });
     }
@@ -23,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('followers');
+        Schema::dropIfExists('_reviews');
     }
 };
