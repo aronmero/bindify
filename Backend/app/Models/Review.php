@@ -18,6 +18,14 @@ class Review extends Model
         'note'
     ];
 
-    
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function commerce()
+    {
+        return $this->belongsTo(Commerce::class, 'commerce_id');
+    }
 
 }

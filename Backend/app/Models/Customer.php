@@ -17,4 +17,10 @@ class Customer extends Model
         'birth_date',
     ];
 
+    public function reviews(){
+
+        return $this->hasMany(Review::class);
+
+    }
+
 }
