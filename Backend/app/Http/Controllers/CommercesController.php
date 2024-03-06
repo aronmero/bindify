@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commerce;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CommercesController extends Controller
 {
