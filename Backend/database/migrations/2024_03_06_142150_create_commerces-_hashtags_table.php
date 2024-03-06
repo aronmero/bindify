@@ -15,6 +15,8 @@ return new class extends Migration
             $table->foreignId("commerce_id")->constrained('commerces', 'user_id')->onDelete('cascade');
             $table->foreignId("hashtag_id")->constrained('hashtags', 'id')->onDelete('cascade');
             $table->timestamps();
+
+            $table->unique(['commerce_id', 'hashtag_id']);
         });
     }
 
