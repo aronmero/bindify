@@ -55,6 +55,7 @@ class ReviewsController extends Controller
                     'commerce_id' => $review->commerce_id,
                     'content' => $review->comment,
                     'note' => $review->note,
+                    'id' => $review->id
                 ],
             ], 201);
         } catch (\Exception $e) {
