@@ -1,5 +1,5 @@
 <script setup>
-import Input from '@/components/input.vue';
+import Input from '@/components/comun/input.vue';
 import router from '@/router/index.js';
 import { ref } from 'vue';
 
