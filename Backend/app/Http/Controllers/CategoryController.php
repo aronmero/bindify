@@ -7,7 +7,7 @@ use App\Models\Category;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class CategoriesController extends Controller
+class CategoryController extends Controller
 
 {
     //Devuelve Un array JSON de todas las categorías con los siguientes datos

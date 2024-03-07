@@ -10,7 +10,7 @@ class HashtagsController extends Controller
     public function __construct()
     {
         $this->middleware('can:ver hashtag')->only('index');
-        $this->middleware('can:editar hashtag')->only('index', 'store', 'update', 'destroy');
+        $this->middleware('can:editar hashtag')->only('index', 'store');
 
     }
     /**
@@ -23,7 +23,7 @@ class HashtagsController extends Controller
             $data = Hashtag::all();
 
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'data'=> $data 
             ], 200);
 
@@ -44,7 +44,7 @@ class HashtagsController extends Controller
             $data = Hashtag::create($request->all());
 
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'data'=> $data->id 
             ], 200);
 
@@ -54,29 +54,5 @@ class HashtagsController extends Controller
                 'message'=> $th->getMessage(), 
             ], 404);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
