@@ -27,7 +27,7 @@ class Review extends Model
 
     public function commerce()
     {
-        return $this->belongsTo(Commerce::class, 'commerce_id');
+        return $this->belongsTo(User::class, 'commerce_id');
     }
 
 }
