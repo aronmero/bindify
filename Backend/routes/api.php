@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommercesController;
 use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\HashtagsController;
 use App\Models\Follower;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ Route::post('follow/{id}', [FollowersController::class , 'follow']);
 
 //Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('commerce', CommercesController::class)->except(['index', 'destroy']);
-// Route::apiResource('customer', CustomersController::class)->except(['index', 'destroy']);
+    Route::apiResource('customer', CustomersController::class)->except(['index', 'destroy']);
 // Route::apiResource('post', PostsController::class)->except(['index']);
 // Route::apiResource('comment', CommentsController::class)->except(['index']);
 // Route::apiResource('review', ReviewsController::class)->except(['index']);
