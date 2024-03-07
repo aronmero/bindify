@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Scripts\Utils;
 use App\Models\Commerce;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class CommercesController extends Controller
                 'municipality_id' => $request->municipality_id,
                 'avatar' => $request->avatar,
                 'username' => $request->username,
-                'nombre' => $request->nombre
+                'name' => $request->name
             ]);
 
             $commerce = Commerce::create([
@@ -36,7 +37,7 @@ class CommercesController extends Controller
                 'description' => $request->description,
                 'verification_token_id' => $request->verification_token_id,
                 'category_id' => $request->category_id,
-                'verificated' => $request->verificated,
+                'verificated'=> false,
                 'schedule' => $request->schedule
             ]);
 
@@ -65,7 +66,7 @@ class CommercesController extends Controller
             ->join('users', 'commerces.user_id', '=', 'users.id')
             ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
             ->join('categories', 'commerces.category_id', '=', 'categories.id')
-            ->select('email', 'phone', 'municipalities.name AS municipality_name', 'avatar', 'username', 'nombre',
+            ->select('email', 'phone', 'municipalities.name AS municipality_name', 'avatar', 'username', 'name',
              'address', 'description', 'categories.name AS categories_name', 'schedule', 'active')
             ->where('users.id', '=', $id)
             ->get();
@@ -88,24 +89,25 @@ class CommercesController extends Controller
     public function update(Request $request, string $id)
     {
 
-        try {
+        // try {
             $user = User::find($id);
-            $user->update($request->all());
+            $request->request->remove('verificated');
+            $user->update($request->only('phone', 'municipality_id', 'avatar', 'username', 'name'));
+            
 
             $commerce = Commerce::find($id);
-            $commerce->update($request->all());
+            $commerce->update($request->only('address', 'category_id', 'schedule'));
 
             return response()->json([
                 'status' => true,
                 'message' => 'comercio actualizado',
-                'data' => $commerce
             ], 200);
-        } catch (Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'error' => $th->getMessage(),
-            ], 404);
-        }
+        // } catch (Throwable $th) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'error' => $th->getMessage(),
+        //     ], 404);
+        // }
         
     }
 

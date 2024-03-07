@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         // Municipios
         for ($i = 1; $i <= 30; $i++) {
             DB::table('municipalities')->insert([
-                'nombre' => 'Municipio ' . $i,
+                'name' => 'Municipio ' . $i,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -68,7 +68,7 @@ class DatabaseSeeder extends Seeder
                 'municipality_id' => rand(1, 30),
                 'avatar' => 'avatar_' . $i . '.jpg',
                 'username' => 'usuario_' . $i,
-                'nombre' => 'Nombre Usuario ' . $i,
+                'name' => 'Nombre Usuario ' . $i,
                 'remember_token' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
