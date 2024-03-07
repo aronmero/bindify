@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
+import Login from "../views/Login.vue";
 
 /**
  * Definición de las rutas del enrutador.
  */
 const routes = [
-  { path: "/", component: () => import("@/views/home.vue") }
+  { path: "/", name: "Login", component: Login }
 ];
 
 /**

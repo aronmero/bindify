@@ -3,7 +3,7 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
-  ], 
+  ],
   theme: {
     extend: {
       colors: {
@@ -72,7 +72,7 @@ export default {
           900: 'var(--accent-900)',
           950: 'var(--accent-950)',
         },
-       },
+      },
     },
   },
   plugins: [],
