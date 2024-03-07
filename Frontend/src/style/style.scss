@@ -25,7 +25,7 @@
 
   color-scheme: light dark;
   color: $text-color;
-  background-color: #f3f2f2;
+  background-color: var(--background-50);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
