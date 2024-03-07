@@ -13,6 +13,29 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    /**
+     * Maneja la solicitud de inicio de sesión.
+     *
+     * Este método verifica las credenciales del usuario y genera un token de acceso si las credenciales son válidas.
+     * Devuelve una respuesta JSON con el token de acceso y el tipo de usuario si la autenticación es exitosa.
+     * Si las credenciales son inválidas, devuelve una respuesta JSON con un mensaje de error y un estado 404.
+     *
+     * @param \App\Http\Requests\LoginRequest $datos - Los datos de la solicitud de inicio de sesión.
+     *
+     * @return \Illuminate\Http\JsonResponse - Una respuesta JSON que contiene el token de acceso y el tipo de usuario o un mensaje de error.
+     *
+     * Ejemplo de la solicitud
+     * 
+     * @response 201 { 
+     *   "user_id": 1,
+     *   "token": "access_token",
+     *   "tipo": ["rol_1", "rol_2", ...]
+     * }
+     *
+     * @response 404 {
+     *   "error": "Ususario no encontrado"
+     * }
+     */
     public function login(LoginRequest $datos)
     {
         $credenciales = $datos->only('email', 'password');
@@ -34,6 +57,24 @@ class AuthController extends Controller
         return response()->json(['error' => 'Ususario no encontrado'], 404);
     }
 
+    /**
+     * Maneja la solicitud de registro de usuarios.
+     *
+     * Este método crea un nuevo usuario con los datos proporcionados en la solicitud.
+     * Asigna un rol al usuario (comercio, cliente o ayuntamiento) según los datos proporcionados.
+     * Devuelve una respuesta JSON con un mensaje de éxito y los detalles del usuario creado.
+     *
+     * @param \App\Http\Requests\RegisterRequest $request - Los datos de la solicitud de registro de usuario.
+     *
+     * @return \Illuminate\Http\JsonResponse - Una respuesta JSON que contiene un mensaje de éxito y los detalles del usuario creado.
+     *
+     * @response 201 {
+     *   "message": "Usuario creado correctamente",
+     *   "user": {
+     *     Detalles del usuario
+     *   }
+     * }
+     */
     public function register(RegisterRequest $request)
     {
         $user = User::create([

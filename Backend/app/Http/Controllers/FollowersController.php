@@ -12,8 +12,30 @@ class FollowersController extends Controller
 
 
     /**
-     * Muestra todos los seguidores del usuario
+     * Muestra los seguidores del usuario autenticado.
+     *
+     * Este método devuelve una lista de los seguidores del usuario autenticado.
+     *
+     * @authenticated
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "data": [
+     *         {
+     *             "follower_id": "ID_del_seguidor",
+     *             "avatar": "avatar_del_seguidor",
+     *             "username": "nombre_de_usuario_del_seguidor"
+     *         },
+     *         ...
+     *     ]
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
      */
+
     public function showFollowers()
     {
         try {
@@ -38,18 +60,35 @@ class FollowersController extends Controller
     }
 
     /**
-     * Comienza a seguir a un usuario, en caso de ya seguir al usuario dejara de seguirlo
+     * Sigue o deja de seguir a un usuario.
+     *
+     * Este método permite al usuario autenticado seguir o dejar de seguir a otro usuario especificado por su ID.
+     *
+     * @urlParam id string required El ID del usuario a seguir o dejar de seguir.
+     *
+     * @authenticated
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "message": "mensaje_de_confirmación"
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
      */
+
     public function follow(string $id)
     {
         try {
             $user = Auth::user();
             $mensaje = "";
             $follows = DB::table("followers")
-            ->join('users', 'followers.follows_id', '=', 'users.id')
-            ->select('followers.follows_id', 'avatar', 'username')
-            ->where('followers.follower_id', '=', $user->id)
-            ->get();
+                ->join('users', 'followers.follows_id', '=', 'users.id')
+                ->select('followers.follows_id', 'avatar', 'username')
+                ->where('followers.follower_id', '=', $user->id)
+                ->get();
             $seguir = true;
 
             if ($follows->count() > 0) {
@@ -84,8 +123,30 @@ class FollowersController extends Controller
 
 
     /**
-     * Muestra todos los seguidos del usuario
+     * Muestra a los usuarios seguidos por el usuario autenticado.
+     *
+     * Este método devuelve una lista de usuarios que son seguidos por el usuario autenticado.
+     *
+     * @authenticated
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "data": [
+     *         {
+     *             "follows_id": "ID_del_usuario_seguido",
+     *             "avatar": "avatar",
+     *             "username": "nombre_de_usuario"
+     *         },
+     *         ...
+     *     ]
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
      */
+
     public function showFollows()
     {
         try {
