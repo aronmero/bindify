@@ -7,13 +7,14 @@ const props = defineProps({
     label: String, 
     valor: String, 
     img: String,
-    opciones: Array
-})
+    opciones: Array,
+    error: String,
+    placeholder: String
+});
 const emit = defineEmits(["datos"]);
 let ojoAbierto = "/assets/icons/eye.svg";
 let ojoCerrado = "/assets/icons/invisible.svg";
-const diaActual = new Date().getFullYear()+"-"+("0" + new Date().getMonth()).slice(-2)+"-"+("0" + new Date().getDate()).slice(-2);
-console.log(diaActual);
+const diaActual = new Date().getFullYear()+"-"+("0" + (parseInt(new Date().getMonth())+1).toString()).slice(-2)+"-"+("0" + new Date().getDate()).slice(-2);
 const ojo = ref("/assets/icons/eye.svg");
 const cambiarVision = (e)=>{
     if(e.target.parentNode.parentNode.parentNode.children[1].type == "password"){
@@ -44,26 +45,30 @@ const emitirDatos = (e)=>{
 </script>
 <template>
     <div class="flex flex-col gap-y-2">
-        <label v-if="label != null" for="" class="ms-1 text-lg">{{label}}</label>
-        <input @change="emitirDatos" v-if="requerido == 'true' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img != null" :type="tipo" required class="ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl">
-        <input @change="emitirDatos" v-if="requerido == 'false' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img != null" :type="tipo" class="ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl">
-        <input @change="emitirDatos" v-if="requerido == 'true' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img == null" :type="tipo" required class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl">
-        <input @change="emitirDatos" v-if="requerido == 'false' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img == null" :type="tipo" class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl">
+        <div v-if="label != null" class="label flex items-center">
+            <label for="" class="ms-1 text-lg">{{label}}</label>
+            <p v-if="requerido" class="text-primary-700 text-xl">*</p>
+            <p v-if="error != null" class="text-primary-700 text-sm ms-3">{{ error }}</p>
+        </div>
+        <input @change="emitirDatos" v-if="requerido == 'true' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img != null" :type="tipo" required class="ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
+        <input @change="emitirDatos" v-if="requerido == 'false' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img != null" :type="tipo" class="ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
+        <input @change="emitirDatos" v-if="requerido == 'true' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img == null" :type="tipo" required class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
+        <input @change="emitirDatos" v-if="requerido == 'false' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img == null" :type="tipo" class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'button'" :type="tipo" class="ps-12 bg-background-100 text-text-950 py-3 rounded-xl w-fit px-4 cursor-pointer" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'submit' && clase == 'claro'" :type="tipo" :value="valor" class="bg-secondary-400 text-text-950 py-3 px-1 rounded-xl cursor-pointer">
         <input @change="emitirDatos" v-if="tipo == 'submit' && clase == 'oscuro'" :type="tipo" :value="valor" class="bg-background-800 text-text-50 py-3 px-1 rounded-xl cursor-pointer">
-        <input @change="emitirDatos" v-if="tipo == 'file'" :type="tipo" hidden>
-        <input @change="emitirDatos" v-if="tipo == 'hora'" type="time" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]">
-        <input @change="emitirDatos" v-if="tipo == 'fecha'" type="date" :min="diaActual" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]">
+        <input @change="emitirDatos" v-if="tipo == 'file'" :type="tipo" hidden >
+        <input @change="emitirDatos" v-if="tipo == 'hora'" type="time" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
+        <input @change="emitirDatos" v-if="tipo == 'fecha'" type="date" :min="diaActual" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <select @change="emitirDatos" v-if="tipo == 'selection' && requerido == 'true'" class="bg-background-100 text-text-950 py-3 px-1 text-center rounded-xl cursor-pointer" required> 
-            <option value="" disabled selected>{{ valor }}</option>
+            <option value="" disabled selected>{{ placeholder }}</option>
             <option v-for="(valor, clave) in opciones" :value="clave">{{ valor }}</option>
         </select>
         <select @change="emitirDatos" v-if="tipo == 'selection' && required == 'false'" class="bg-background-100 text-text-950 py-3 px-1 text-center rounded-xl cursor-pointer"> 
-            <option value="" disabled selected>{{ valor }}</option>
+            <option value="" disabled selected>{{ placeholder }}</option>
             <option v-for="(valor, clave) in opciones" :value="clave">{{ valor }}</option>
         </select>
-        <textarea @change="emitirDatos" v-if="tipo == 'texto'" class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl resize-none h-[15rem]" :placeholder="valor"></textarea>
+        <textarea @change="emitirDatos" v-if="tipo == 'texto'" class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl resize-none h-[15rem]" :placeholder="placeholder" :value="valor"></textarea>
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'perfil'" class="flex relative lg:size-40 size-28 justify-center items-center rounded-full border-dotted border border-background-900">
             <p v-if="imagenSubida == null" class="text-[1em] pointer-events-none">Añadir Imagen</p>
             <img v-else :src="imagenSubida" alt="Previsualizacion de foto de perfil" class="pointer-events-none lg:size-40 size-28 rounded-full">
