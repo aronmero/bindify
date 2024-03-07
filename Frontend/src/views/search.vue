@@ -1,5 +1,4 @@
 <script setup>
-    import { ref } from 'vue';
     import Grid from "@/components/comun/layout.vue";
     import Header from "@/components/comun/header.vue";
     import Footer from "@/components/comun/footer.vue";
@@ -9,19 +8,17 @@
     import searchButton from "@/components/search/searchButton.vue";
     import Menu from "@/components/search/menu.vue";
     import commercesResults from "../components/search/commercesResults.vue";
+    import useSearchLogic from "../utils/searchLogic";
 
-    let option = ref("Botánica"); //categoria por defecto
-
-    const selectedOption = (name) =>{
-        option.value = name;
-    }
+    const {filteredCommerces} = useSearchLogic();
+    
 
 </script>
 
 <template>
     <Header />
     <Grid><template v-slot:Left> Left</template>
-        <div class="flex flex-col gap-y-4">
+        <form class="flex flex-col gap-y-10 ">
             <div class="flex items-center flex-wrap gap-y-4 gap-x-3">
                 <searchBar />
                 <selectCategory />
@@ -32,9 +29,10 @@
                     <img src="/assets/icons/filter.svg">
                 </div>
             </div>
-            <Menu @selectedOption="selectedOption" />
-            <commercesResults :category="option" :key="option"/>
-        </div>
+            <Menu  />
+            <p class="text-[#bdbdbd]  mb-[-10px] ">{{ filteredCommerces.length > 1 ? filteredCommerces.length + " comercios encontrados" : filteredCommerces.length === 0 ? "Sin resultados" :  filteredCommerces.length +  " comercio encontrado" }}</p>
+            <commercesResults :comercios="filteredCommerces" />
+        </form>
         <template v-slot:Right> Right </template>
     </Grid>
     <Footer />

@@ -4,12 +4,13 @@
         name : String
     })
 
-    const emit = defineEmits([
-        "selectedOption"
-    ]) 
+    import { optionSelected } from '@/stores/option.js';
+
+    let option = optionSelected();
 
     const selectedOption = (name) =>{
-        emit("selectedOption", name);
+
+        option.setOptionSelected(name);
     }
 
     

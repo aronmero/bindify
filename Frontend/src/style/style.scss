@@ -24,7 +24,7 @@
 
   color-scheme: light dark;
   color: $text-color;
-  background-color: #d6d6d6;
+  background-color: #ededed;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -182,7 +182,7 @@ h1 {
 
 #app {
  width: 100vw;
- overflow: hidden;
+ overflow: auto;
  height: 100vh;
 }
 
