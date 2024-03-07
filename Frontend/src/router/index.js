@@ -4,8 +4,8 @@ import { createRouter, createWebHistory } from "vue-router";
  * Definición de las rutas del enrutador.
  */
 const routes = [
-  { path: "/", component: () => import("@/views/example.vue") },
-  { path: "/home", component: () => import("@/views/home.vue") },
+ // { path: "/", component: () => import("@/views/example.vue") },
+  { path: "/", component: () => import("@/views/home.vue") },
   { path: "/login", component: () => import("@/views/Auth/login.vue") },
   { path: "/registro", component: () => import("@/views/Auth/registroParticular.vue") },
   { path: "/registro-comercio", component: () => import("@/views/Auth/registroComercio.vue") },
@@ -17,7 +17,7 @@ const routes = [
   { path: "/eventos/edit", component: () => import("@/views/eventos/editarEvento.vue") },
   { path: "/calendario", component: () => import("@/views/eventos/calendarioEvento.vue") },
 
-  { path: "/busqueda", component: () => import("@/views/Misc/busqueda.vue") },
+  { path: "/busqueda", component: () => import("@/views/Misc/search.vue") },
   { path: "/reseña", component: () => import("@/views/Misc/crearResena.vue") },
   { path: "/validar", component: () => import("@/views/Misc/validarComercio.vue") },
   

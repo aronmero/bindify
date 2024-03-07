@@ -12,14 +12,14 @@ import { RouterLink } from "vue-router";
     </nav>
     <div class="flex">
       <nav class="w-[50px] flex justify-center items-center">
-        <RouterLink to="/search">
+        <RouterLink to="/busqueda">
           <img
             src="/assets/icons/search.svg"
             class="max-w-[30px] max-h-[30px] hidden lg:block"
         /></RouterLink>
       </nav>
       <nav class="w-[50px] flex justify-center items-center">
-        <RouterLink to="/">
+        <RouterLink to="//calendario">
           <img
             src="/assets/icons/schedule.svg"
             class="max-w-[30px] max-h-[30px] hidden lg:block"

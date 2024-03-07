@@ -7,8 +7,8 @@
     import locationButton from "@/components/search/locationButton.vue"
     import searchButton from "@/components/search/searchButton.vue";
     import Menu from "@/components/search/menu.vue";
-    import commercesResults from "../components/search/commercesResults.vue";
-    import useSearchLogic from "../utils/searchLogic";
+    import commercesResults from "@/components/search/commercesResults.vue";
+    import useSearchLogic from "@/utils/searchLogic";
 
     const {filteredCommerces} = useSearchLogic();
 
@@ -19,7 +19,7 @@
 
 <template>
     <Header />
-    <Grid><template v-slot:Left> Left</template>
+    <Grid><template v-slot:Left> </template>
         <form class="flex flex-col gap-y-8 ">
             <div class="flex items-center flex-wrap gap-y-4 gap-x-3">
                 <searchBar />
@@ -35,7 +35,7 @@
             <p class="text-[#bdbdbd]  mb-[-10px] ">{{ filteredCommerces.length > 1 ? filteredCommerces.length + " comercios encontrados" : filteredCommerces.length === 0 ? "Sin resultados" :  filteredCommerces.length +  " comercio encontrado" }}</p>
             <commercesResults :comercios="filteredCommerces" />
         </form>
-        <template v-slot:Right> Right </template>
+        <template v-slot:Right>  </template>
     </Grid>
     <Footer />
 </template>
@@ -45,4 +45,4 @@
 
 </style>
 
-
+../../utils/searchLogic
