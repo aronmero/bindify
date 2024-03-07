@@ -6,7 +6,7 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   { path: "/", component: () => import("@/views/example.vue") },
   /* David */
-  { path: "/feed", component: () => import("@/views/FeedMedia.vue") }
+  { path: "/calendario", component: () => import("@/views/calendarioEvento.vue") }
 ];
 
 /**
