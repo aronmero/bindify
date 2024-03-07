@@ -4,6 +4,7 @@ import Grid from "@/components/comun/layout.vue";
 import Header from "@/components/comun/header.vue";
 import Footer from "@/components/comun/footer.vue";
 
+
 </script>
 
 <template>
