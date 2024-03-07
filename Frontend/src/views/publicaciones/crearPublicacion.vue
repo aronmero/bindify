@@ -5,7 +5,7 @@ import Grid from "@/components/comun/layout.vue";
 import Header from "@/components/comun/header.vue";
 import Footer from "@/components/comun/footer.vue";
 
-import Input from "@/components/input.vue";
+import Input from "@/components/comun/input.vue";
 let options = ["Evento", "Publicación"]; /* Cambiar por info del back */
 let tipo = ref(null);
 let errorDesc = ref(null);
