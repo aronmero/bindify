@@ -5,7 +5,7 @@ namespace App\Http\Scripts;
 
 class Utils 
 {
-  public static example() {
-    
-  }
+  // public static example() {
+
+  // }
 }
