@@ -1,0 +1,42 @@
+/* mixins */
+
+@mixin set_highlight_bg() {
+    background: $highlight;
+}
+
+@mixin set_highlight() {
+    color: $highlight;
+}
+
+@mixin row_center() {
+    display:flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content:center;
+}
+
+@mixin column_center() {
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+}
+/*- antonio -*/
+
+@mixin flex-wFh7{
+    display: flex;
+    width: 100%;
+    height: 7vh;
+}
+
+@mixin padding-margin-br100{
+    padding: 0.5rem;
+    border-radius: 100%;
+    margin: 0 0.5rem;
+}
+
+@mixin fullCenter{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
