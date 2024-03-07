@@ -4,23 +4,16 @@
     import Header from "@/components/comun/header.vue";
     import Footer from "@/components/comun/footer.vue";
 
-    import FeedPosts from "../components/feed_media/Posts.vue";
-
-    /* Trends */
-    import TrendsOfertas from "../components/feed_media/widgets/TrendsOfertas.vue";
-    import TrendsComercios from "../components/feed_media/widgets/TrendsComercios.vue";
+    import VistaCalendario from '@/components/VistaCalendario.vue'
     
 </script>
 
 <template >
     <Header />
     <Grid style="max-height:100vh; overflow-y:scroll; background:#fff; margin: 20px 0px 40px 0px;">
-        <template v-slot:Left  >
-            <!-- Se listan los trends de la barra de navegación izquierda -->
-            <TrendsOfertas  v-if="true"/>
-            <TrendsComercios  v-if="true"/>
+        <template v-slot:Left >
         </template>
-            <FeedPosts  />
+           <VistaCalendario/>
         <template v-slot:Right > </template>
     </Grid>
     <Footer />
