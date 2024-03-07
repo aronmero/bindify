@@ -5,6 +5,7 @@ use App\Http\Controllers\CommercesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\HashtagsController;
+use App\Http\Controllers\SearchController;
 use App\Models\Follower;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('follower', [FollowersController::class , 'showFollowers']);
     Route::post('follow/{id}', [FollowersController::class , 'follow']);
     Route::get('follows', [FollowersController::class , 'showFollows']);
+    Route::get('commerces/{municipity}', [SearchController::class, 'commercesByMunicipality']);
+    Route::get('commerces/hashtag/{hashtag}', [SearchController::class, 'commercesByHashtag']);
+    Route::get('posts/{idMunicipity}', [SearchController::class, 'postsByMunicipity']);
+    Route::get('posts/hashtag/{hashtag}', [SearchController::class, 'postsByMunicipity']);
 
 });
 
