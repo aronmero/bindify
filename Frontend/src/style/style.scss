@@ -4,19 +4,36 @@
 @import "variables";
 
 // Ejemplo de media query para pantallas pequeñas (móviles)
-@media (max-width: 576px) {
-  // Estilos para pantallas pequeñas
+@media screen and (min-width: 100px) and (max-width: 450px) {
+  // Estilos para pantallas pequeñas 1
 }
+
+
+@media screen and (min-width: 451px) and (max-width: 576px) {
+  // Estilos para pantallas pequeñas 2
+}
+
 
 // Ejemplo de media query para pantallas medianas (tabletas)
-@media (min-width: 768px) {
-  // Estilos para pantallas medianas
+@media screen and (min-width: 577px) and (max-width: 1250px) {
+  // Estilos para pantallas medianas 1
 }
 
-// Ejemplo de media query para pantallas grandes (ordenadores)
-@media (min-width: 992px) {
-  // Estilos para pantallas grandes
+
+@media screen and (min-width: 1251px) and (max-width: 1450px) {
+  // Estilos para pantallas medianas 2
 }
+
+
+// Ejemplo de media query para pantallas grandes (ordenadores)
+@media screen and (min-width: 1451px) and (max-width: 1750px) {
+  // Estilos para pantallas grandes 1
+}
+
+@media screen and (min-width: 1751px) {
+  // Estilos para pantallas grandes 2
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -181,8 +198,8 @@ h1 {
 }
 
 #app {
- width: 100vw;
- overflow: hidden;
- min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  min-height: 100vh;
 }
 

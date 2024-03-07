@@ -9,6 +9,7 @@ const routes = [
   { path: "/login", component: () => import("@/views/Auth/login.vue") },
   { path: "/registro", component: () => import("@/views/Auth/registroParticular.vue") },
   { path: "/registro-comercio", component: () => import("@/views/Auth/registroComercio.vue") },
+  //{ path: "/horarios-modal", component: () => import("@/views/Auth/horarios-modal.vue") },
   
   { path: "/evento", component: () => import("@/views/eventos/evento.vue") },
   { path: "/eventos", component: () => import("@/views/eventos/eventos.vue") },

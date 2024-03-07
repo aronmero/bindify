@@ -1,4 +1,5 @@
 <script setup>
+    import router from '@/router/index.js';
     import { ref } from 'vue';
 
     const email = ref('');
@@ -13,7 +14,7 @@
     }
 
     function Registro() {
-        
+        router.push("/registro");
     }
 </script>
 
