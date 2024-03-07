@@ -20,7 +20,7 @@
 <template>
     <div class="container">
         <div class="imagen-container">
-            <img src="./../../public/fondo.png" alt="imagen">
+            <img src="@public/img/fondo.png" alt="imagen">
         </div>
         <div class="formulario-container">
             <h2 class="title">Título</h2>
@@ -46,15 +46,15 @@
                     <p>O inicie sesión con:</p>
                     <div class="social-media-buttons">
                         <button class="social-media-button">
-                            <img src="./../../public/google-logo.png" alt="Google">
+                            <img src="@public/img/google-logo.png" alt="Google">
                         </button>
 
                         <button class="social-media-button">
-                            <img src="./../../public/instagram-logo.png" alt="Instagram">
+                            <img src="@public/img/instagram-logo.png" alt="Instagram">
                         </button>
 
                         <button class="social-media-button">
-                            <img src="./../../public/facebook-logo.png" alt="Facebook">
+                            <img src="@public/img/facebook-logo.png" alt="Facebook">
                         </button>
                     </div>
                 </div>
@@ -68,7 +68,112 @@
 </template>
 
 <style scoped lang="scss">
-@media screen and (max-width: 576px) {
+@media screen and (min-width: 100px) and (max-width: 450px) {
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+    .container {
+        margin: 0 auto;
+        display: flex;
+        margin-top: 25px;
+        width: 90%;
+        padding: 10px;
+        background-color: #EBEBEB;
+    }
+
+    .imagen-container {
+        display: none;
+    }
+
+    .title {
+        font-family: "Inter", 'Times New Roman', Times, serif;
+        font-size: 30px;
+        font-weight: bolder;
+        text-align: center;
+    }
+
+    .subtitle {
+        margin-top: 10px;
+    }
+    
+    .grupos {
+        position: relative;
+        margin-top: 20px;
+    }
+
+    .grupos input {
+        width: 100%;
+        border-radius: 10px;
+        padding: 12px 12px 12px 12px;
+        outline: none;
+    }
+
+    .grupos input::placeholder {
+        color: transparent;
+    }
+
+    .grupos i {
+        position: absolute;
+        top: 65%;
+        left: 10px;
+        font-size: 20px;
+        transform: translateY(-50%);
+    }
+
+    
+    .login input {
+        background-color: black;
+        color: white;
+        border-radius: 15px;
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+    }
+
+    .olvidarPassword {
+        text-align: end;
+        margin-bottom: 25px;
+        p {
+            font-size: 14px;
+        }
+    }
+
+    .links {
+        p {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    }
+
+    .social-media-buttons {
+        display: flex;
+        justify-content: space-around;
+    }
+    
+    .social-media-button {
+        background-color: white;
+        border-radius: 15px;
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+
+    .social-media-button img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .registro {
+        display: flex;
+        justify-content: center;
+
+        button {
+            margin-left: 5px;
+            font-weight: bold;
+        }
+    }
+}
+
+
+@media screen and (min-width: 451px) and (max-width: 576px) {
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
     .container {
