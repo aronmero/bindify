@@ -7,6 +7,14 @@ use Illuminate\Http\Request;
 
 class HashtagsController extends Controller
 {
+    /**
+     * Constructor de la clase.
+     *
+     * Este método establece los middlewares de autorización para las acciones del controlador.
+     * Se aplica el middleware "ver hashtag" solo a la acción "index" y el middleware "editar hashtag" a las acciones "index" y "store".
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('can:ver hashtag')->only('index');
@@ -14,30 +22,62 @@ class HashtagsController extends Controller
 
     }
     /**
-     * Display a listing of the resource.
+     * Muestra todos los hashtags disponibles.
+     *
+     * Este método devuelve una lista de todos los hashtags disponibles en el sistema.
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "data": [
+     *         {
+     *             // Datos del hashtag
+     *         },
+     *         ...
+     *     ]
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
      */
     public function index()
     {
         try {
-            
+
             $data = Hashtag::all();
 
             return response()->json([
                 'status' => true,
-                'data'=> $data 
+                'data' => $data
             ], 200);
 
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message'=> $th->getMessage(), 
+                'message' => $th->getMessage(),
             ], 404);
         }
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena un nuevo hashtag.
+     *
+     * Este método almacena un nuevo hashtag con la información proporcionada.
+     *
+     * @bodyParam name string required El nombre del hashtag.
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "data": id_del_hashtag_creado
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
      */
+
     public function store(Request $request)
     {
         try {
@@ -45,13 +85,13 @@ class HashtagsController extends Controller
 
             return response()->json([
                 'status' => true,
-                'data'=> $data->id 
+                'data' => $data->id
             ], 200);
 
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message'=> $th->getMessage(), 
+                'message' => $th->getMessage(),
             ], 404);
         }
     }
