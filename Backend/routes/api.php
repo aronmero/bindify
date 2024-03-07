@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommercesController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\HashtagsController;
+use App\Http\Controllers\PostsController;
 use App\Models\Follower;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('commerce', CommercesController::class)->except(['index', 'destroy']);
 // Route::apiResource('customer', CustomersController::class)->except(['index', 'destroy']);
-// Route::apiResource('post', PostsController::class)->except(['index']);
+    Route::apiResource('post', PostsController::class)->except(['index']);
 // Route::apiResource('comment', CommentsController::class)->except(['index']);
 // Route::apiResource('review', ReviewsController::class)->except(['index']);
     Route::apiResource('hashtag', HashtagsController::class)->except(['show', 'update', 'destroy']);
@@ -38,6 +39,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('follower', [FollowersController::class , 'showFollowers']);
     Route::post('follow/{id}', [FollowersController::class , 'follow']);
     Route::get('follows', [FollowersController::class , 'showFollows']);
+    Route::get('home', [PostsController::class , 'home']);
 
 });
 

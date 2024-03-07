@@ -63,4 +63,11 @@ class User extends Authenticatable
 
     }
 
+    public function posts(){
+
+        return $this->belongsToMany(Post::class, 'users_posts', 'post_id', 'user_id');
+
+
+    }
+
 }
