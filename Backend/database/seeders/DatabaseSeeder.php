@@ -102,7 +102,7 @@ class DatabaseSeeder extends Seeder
                     'updated_at' => now(),
                 ]);
             }
-            
+
         }
 
         // Clientes
@@ -154,7 +154,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
-        
+
         // Reviews
         for ($i = 1; $i <= 30; $i++) {
             DB::table('reviews')->insert([
@@ -198,7 +198,15 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
-        
+
+        // Seeder for users-posts
+        for ($i = 1; $i <= 30; $i++) {
+            DB::table('users-posts')->insert([
+                'user_id' => $i,
+                'post_id' => $i
+            ]);
+        }
+
     }
 
 }

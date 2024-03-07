@@ -104,9 +104,10 @@ class SearchController extends Controller
             Municipality::where('name', $municipality)->firstOrFail();
 
             $posts = Post::join('post_types', 'post_types.id', '=', 'posts.post_type_id')
-            ->join('commerces', 'users.municipality_id', '=', 'municipalities.id')
+            ->join('users-posts', 'users-posts.post_id', '=', 'posts.id')
+            ->join('users', 'users.id', '=', 'users-posts.user_id')
             ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
-            ->select('image', 'title', 'description', 'post_type_id', 'active',)
+            ->select('users.avatar', 'users.username', 'users.name', 'posts.image', 'posts.title', 'posts.description', 'post_types.name', 'posts.active',)
             ->where('municipalities.name', '=', $municipality)
             ->get();
 
