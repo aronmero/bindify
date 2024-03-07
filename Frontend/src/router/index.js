@@ -25,8 +25,18 @@ const routes = [
 
   //Estas tres se deberian reducir a una vista con 3 modos segun el tipo de usuario
   { path: "/ayuntamiento", component: () => import("@/views/perfiles/ayuntamiento.vue") },
-  { path: "/comercio", component: () => import("@/views/perfiles/comercio.vue") },
-  { path: "/particular", component: () => import("@/views/perfiles/particular.vue") },
+
+  { path: "/comercio", component: () => import("@/views/perfiles/comercio.vue"),
+   children:[
+    {path:"posts", component:() => import("@/components/contenedorVistaPosts.vue")},
+    {path:"eventos", component:() => import("@/components/contenedorVistaEventos.vue")},{path:"resenias", component:() => import("@/components/contenedorVistaResenias.vue")}
+  ]},
+
+  { path: "/particular", component: () => import("@/views/perfiles/particular.vue"), 
+  children:[
+    {path:"fidelidad", component:() => import("@/components/contenedorVistaFidelidad.vue")},{path:"favoritos", component:() => import("@/components/contenedorVistaFavoritos.vue")}
+  ]},
+
   { path: "/perfil/edit", component: () => import("@/views/perfiles/editarPerfil.vue") },
 
   { path: "/fidelidad", component: () => import("@/views/perfiles/fidelidad.vue") },
