@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('followers', function (Blueprint $table) {
-           
+
 
             $table->unsignedBigInteger('follows_id');
             $table->unsignedBigInteger('follower_id');
@@ -21,10 +21,11 @@ return new class extends Migration
 
             //clave foranea para el ID del usuario que sigue
             $table->foreign('follows_id')->references('id')->on('users')->onDelete('cascade');
-            
+
             //clave foranea para el ID del usuario al  que siguen
              $table->foreign('follower_id')->references('id')->on('users')->onDelete('cascade');
-            
+
+            $table->unique(['follows_id', 'follower_id']);
         });
     }
 
