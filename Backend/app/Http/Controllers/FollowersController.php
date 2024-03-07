@@ -36,7 +36,7 @@ class FollowersController extends Controller
     }
 
     /**
-     * 
+     * Comienza a seguir a un usuario, si ya lo sigue dejara de seguirlo
      */
     public function follow(string $id)
     {
@@ -44,9 +44,12 @@ class FollowersController extends Controller
 
             $user = Auth::user();
 
-            if (condition) {
-                # code...
+            $follower = $user->follows();
+            dd($follower);
+            foreach ($follower as $usuario) {
+                
             }
+
             
             $user->follow()->attach($id);
 
