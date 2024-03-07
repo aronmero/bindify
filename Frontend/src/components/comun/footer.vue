@@ -4,7 +4,7 @@ import { RouterLink } from "vue-router";
 
 <template>
   <footer
-    class="h-[50px] w-full bg-background-50 flex px-[10px] justify-around fixed bottom-0 lg:hidden"
+    class="h-[50px] w-full bg-background-50 flex px-[10px] justify-around fixed bottom-0 lg:hidden z-50"
   >
     <nav class="w-[50px] flex justify-center items-center">
       <RouterLink to="/">
