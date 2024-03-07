@@ -14,7 +14,7 @@
 
 <template >
     <Header />
-    <Grid style="max-height:100vh; overflow-y:scroll; background:#fff; margin: 20px 0px 40px 0px;">
+    <Grid>
         <template v-slot:Left  >
             <!-- Se listan los trends de la barra de navegación izquierda -->
             <TrendsOfertas  v-if="true"/>
