@@ -21,17 +21,18 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 }); */
 
-// middleware('auth:sanctum')->
-Route::apiResource('commerce', CommercesController::class)->except(['index', 'destroy']);
-// Route::middleware('auth:sanctum')->apiResource('customer', CustomersController::class)->except(['index', 'destroy']);
-// Route::middleware('auth:sanctum')->apiResource('post', PostsController::class)->except(['index']);
-// Route::middleware('auth:sanctum')->apiResource('comment', CommentsController::class)->except(['index']);
-// Route::middleware('auth:sanctum')->apiResource('review', ReviewsController::class)->except(['index']);
-Route::middleware('auth:sanctum')->apiResource('hashtag', HashtagsController::class)->except(['show', 'update', 'destroy']);
-// Route::middleware('auth:sanctum')->apiResource('municipality', MunicipalitiesController::class)->except(['show', 'update', 'destroy', 'store']);
-// Route::middleware('auth:sanctum')->apiResource('category', CategoriesController::class)->except(['show', 'update', 'destroy', 'store']);
-// Route::middleware('auth:sanctum')->apiResource('post_type', Post_typesController::class)->except(['show', 'update', 'destroy', 'store']);
-// Route::middleware('auth:sanctum')->apiResource('notification', NotificationsController::class)->except(['index', 'destroy']);
+//Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::apiResource('commerce', CommercesController::class)->except(['index', 'destroy']);
+// Route::apiResource('customer', CustomersController::class)->except(['index', 'destroy']);
+// Route::apiResource('post', PostsController::class)->except(['index']);
+// Route::apiResource('comment', CommentsController::class)->except(['index']);
+// Route::apiResource('review', ReviewsController::class)->except(['index']);
+    Route::apiResource('hashtag', HashtagsController::class)->except(['show', 'update', 'destroy']);
+// Route::apiResource('municipality', MunicipalitiesController::class)->except(['show', 'update', 'destroy', 'store']);
+// Route::apiResource('category', CategoriesController::class)->except(['show', 'update', 'destroy', 'store']);
+// Route::apiResource('post_type', Post_typesController::class)->except(['show', 'update', 'destroy', 'store']);
+// Route::apiResource('notification', NotificationsController::class)->except(['index', 'destroy']);
+//}
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
