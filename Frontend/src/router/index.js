@@ -44,6 +44,7 @@ const routes = [
 
   { path: "/publicacion/new", component: () => import("@/views/publicaciones/crearPublicacion.vue") },
   { path: "/publicacion/edit", component: () => import("@/views/publicaciones/editarPublicacion.vue") },
+  { path: "/validate", component: () => import("@/views/validate.vue") }
 ];
 
 /**
