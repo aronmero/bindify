@@ -6,22 +6,26 @@
 
     import FeedPosts from "../components/feed_media/Posts.vue";
 
+    /* Trends */
+    import TrendsOfertas from "../components/feed_media/widgets/TrendsOfertas.vue";
+    import TrendsComercios from "../components/feed_media/widgets/TrendsComercios.vue";
+    
 </script>
 
 <template >
     <Header />
     <Grid style="max-height:100vh; overflow-y:scroll; background:#fff; margin: 20px 0px 40px 0px;">
-        <template v-slot:Left >
-            
+        <template v-slot:Left  >
+            <!-- Se listan los trends de la barra de navegación izquierda -->
+            <TrendsOfertas  v-if="true"/>
+            <TrendsComercios  v-if="true"/>
         </template>
-            <FeedPosts  id="feed" />
-        <template v-slot:Right > Right </template>
+            <FeedPosts  />
+        <template v-slot:Right > </template>
     </Grid>
     <Footer />
 </template>
 
 <style scoped lang="scss">
-    #feed  {
-        background: red !important;
-    }
+
 </style>

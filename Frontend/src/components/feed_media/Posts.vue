@@ -1,14 +1,16 @@
 <script setup>
-    import { posts } from './posts.js';
+    import { posts } from './mocks/posts.js';
     import Feed from './tipos_post/TipoPost.vue';
   
 </script>
 
 <template>
-     <Feed 
-        v-for="post in posts" 
-        :post="post"
-    /> 
+    <Suspense>
+        <Feed 
+            v-for="post in posts" 
+            :post="post"
+        /> 
+    </Suspense>
 </template>
 
 <style scoped lang="scss">
