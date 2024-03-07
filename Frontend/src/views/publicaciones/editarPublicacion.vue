@@ -8,6 +8,7 @@ import Footer from "@/components/comun/footer.vue";
 import Input from "@/components/comun/input.vue";
 import {posts} from '@/scripts/posts.js';
 let data = posts[0];
+console.log(data);
 let options = ["Evento", "Publicación"]; /* Cambiar por info del back */
 let tipo = ref(null);
 let errorDesc = ref(null);
