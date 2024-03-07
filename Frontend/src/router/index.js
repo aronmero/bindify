@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import Login from "../views/Login.vue";
 
 /**
  * Definición de las rutas del enrutador.
