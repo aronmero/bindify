@@ -18,8 +18,8 @@
 
 <template>
     <div class="flex flex-col items-center cursor-pointer" @click="selectedOption(name)">
-        <img :src="icon" class="size-8 icon" />
-        <p class="text-gray-400 text-lg">{{ name }}</p>
+        <img :src="icon" class="size-7 icon" />
+        <p class="text-gray-400 text-md">{{ name }}</p>
     </div>
 </template>
 

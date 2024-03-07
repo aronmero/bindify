@@ -5,7 +5,7 @@
 
 
 <template>
-    <select name="category" id="categoryId" class="p-2 rounded-full bg-[#F8FCFB] shadow-xl outline-[#EB5959] cursor-pointer ">
+    <select name="category" id="categoryId" class="p-2 rounded-full  bg-[#F8FCFB] shadow-md outline-none cursor-pointer ">
         <option value="Categoría" selected>
             Categoría
         </option>

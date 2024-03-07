@@ -14,8 +14,11 @@ export default function useSearchLogic() {
         return comercios.filter(comercio => comercio.category === category.value);
     });
 
+   
+
     return {
         category,
-        filteredCommerces
+        filteredCommerces,
+        
     };
 }

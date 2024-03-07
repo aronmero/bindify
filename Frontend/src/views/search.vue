@@ -11,6 +11,8 @@
     import useSearchLogic from "../utils/searchLogic";
 
     const {filteredCommerces} = useSearchLogic();
+
+   
     
 
 </script>
@@ -18,7 +20,7 @@
 <template>
     <Header />
     <Grid><template v-slot:Left> Left</template>
-        <form class="flex flex-col gap-y-10 ">
+        <form class="flex flex-col gap-y-8 ">
             <div class="flex items-center flex-wrap gap-y-4 gap-x-3">
                 <searchBar />
                 <selectCategory />
