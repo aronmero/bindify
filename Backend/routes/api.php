@@ -21,8 +21,8 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 }); */
 
-
-Route::middleware('auth:sanctum')->apiResource('commerce', CommercesController::class)->except(['index', 'destroy']);
+// middleware('auth:sanctum')->
+Route::apiResource('commerce', CommercesController::class)->except(['index', 'destroy']);
 // Route::middleware('auth:sanctum')->apiResource('customer', CustomersController::class)->except(['index', 'destroy']);
 // Route::middleware('auth:sanctum')->apiResource('post', PostsController::class)->except(['index']);
 // Route::middleware('auth:sanctum')->apiResource('comment', CommentsController::class)->except(['index']);
