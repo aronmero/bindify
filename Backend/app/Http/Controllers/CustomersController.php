@@ -44,10 +44,10 @@ class CustomersController extends Controller
             ->select(
                 'email',
                 'phone',
-                'municipalities.nombre AS municipality_name',
+                'municipalities.name AS municipality_name',
                 'avatar',
                 'username',
-                'users.nombre',
+                'users.name',
                 'gender',
                 'birth_date'
             )
@@ -105,10 +105,10 @@ class CustomersController extends Controller
                 ->select(
                     'email',
                     'phone',
-                    'municipalities.nombre AS municipality_name',
+                    'municipalities.name AS municipality_name',
                     'avatar',
                     'username',
-                    'users.nombre',
+                    'users.name',
                     'gender',
                     'birth_date'
                 )
@@ -173,10 +173,10 @@ class CustomersController extends Controller
             ->select(
                 'email',
                 'phone',
-                'municipalities.nombre AS municipality_name',
+                'municipalities.name AS municipality_name',
                 'avatar',
                 'username',
-                'users.nombre',
+                'users.name',
                 'gender',
                 'birth_date'
             )
