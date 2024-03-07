@@ -5,7 +5,7 @@ import { createRouter, createWebHistory } from "vue-router";
  */
 const routes = [
   // { path: "/", component: () => import("@/views/example.vue") }
-  { path: "/", component: () => import("@/views/vistaPerfilParticular.vue") }
+  { path: "/", component: () => import("@/views/vistaPerfilComercio.vue") }
 ];
 
 /**
