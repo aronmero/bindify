@@ -1,5 +1,8 @@
 <script setup>
     import {onMounted} from 'vue';
+    import { postsPerDate, postsDates, format_date } from '../mocks/filtros';
+    import ForwardSVG from '@public/assets/icons/forward.svg';
+
     const props = defineProps({
         title: String, 
         desc: String, 
@@ -37,7 +40,7 @@
         ];
 
         const manipulate = () => {
-            const daysWithEvents = props.dates;
+            const daysWithEvents = postsDates();
             let dayone = new Date(year, month, 1).getDay();
             let lastdate = new Date(year, month + 1, 0).getDate();
             let dayend = new Date(year, month, lastdate).getDay();
@@ -56,6 +59,7 @@
                     today = "active";
                 }
 
+                //console.log(postsDates())
                 let hasEvent = daysWithEvents.includes(`${month+1}/${i}/${year}`);
                 let event = ""
                 if(hasEvent) {
@@ -64,7 +68,7 @@
 
                 let posts_found = ""
                 if (hasEvent) {
-                    posts_found = props.post_per_date(`${month+1}/${i}/${year}`);
+                    posts_found = postsPerDate(`${month+1}/${i}/${year}`);
                 }
 
                 cell += `<a class="${event} ${today}" title="${(posts_found != "") ? posts_found[0].title : "No hay eventos en esta fecha"}" href="${(posts_found != "") ? '/post/' + posts_found[0].id : ""}" >${i}</a>`;
@@ -107,10 +111,10 @@
                     <p class="calendar-current-date"></p>
                     <div class="calendar-navigation">
                         <span id="calendar-prev" class="material-symbols-rounded">
-                            <iconify-icon icon="material-symbols:chevron-left"></iconify-icon>
+                            <img :src="ForwardSVG" />
                         </span>
                         <span id="calendar-next" class="material-symbols-rounded">
-                            <iconify-icon icon="material-symbols:chevron-right"></iconify-icon>
+                            <img :src="ForwardSVG" />
                         </span>
                     </div>
                 </header>
@@ -131,11 +135,14 @@
     </div>
 </template>
 <style lang="scss">
-    @import './src/sass/imports/variables', './src/sass/imports/mixins';
+    @import './../styles/calendario/variables', './../styles/calendario/mixins';
     .calendar-container {
-        background: #fff;
-        width: 100%;
+        margin:20px 0px;
+        width: 70%;
+        height:fit-content;
+        padding:20px;
         border-radius: 10px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     }
 
     .calendar-container header {
@@ -143,6 +150,7 @@
         align-items: center;
         padding: 25px 30px 10px;
         justify-content: space-between;
+        //background:red;
         
     }
 
@@ -198,6 +206,7 @@
         font-size: 1.07rem;
         font-size:.9rem;
         color: #414141;
+        padding:10px;
     }
 
     .calendar-body li {
@@ -225,5 +234,9 @@
 
     .calendar-body .inactive {
         color: #BFC1C5;
+    }
+
+    #calendar-prev {
+        transform: rotate(180deg);
     }
 </style>
