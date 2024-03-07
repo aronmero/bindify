@@ -26,6 +26,7 @@ class User extends Authenticatable
         'municipality_id',
         'avatar',
         'username',
+        'nombre'
     ];
 
     /**
@@ -64,6 +65,13 @@ class User extends Authenticatable
     public function follower(){
 
         return $this->belongsToMany(Follower::class, 'follows', 'follower_id', 'follows_id');
+
+
+    }
+
+    public function posts(){
+
+        return $this->belongsToMany(Post::class, 'users_posts', 'post_id', 'user_id');
 
 
     }

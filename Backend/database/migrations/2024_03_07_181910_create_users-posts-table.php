@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reviews', function (Blueprint $table) {
-            $table->id();
+        Schema::create('users-posts', function (Blueprint $table) {
             $table->foreignId("user_id")->constrained('users', 'id')->onDelete('cascade');
-            $table->foreignId("commerce_id")->constrained('users', 'id')->onDelete('cascade');
-            $table->string('comment', 200)->default('');
-            $table->tinyInteger('note');
+            $table->foreignId("post_id")->constrained('posts', 'id')->onDelete('cascade');
             $table->timestamps();
 
-            $table->unique(['user_id', 'commerce_id']);
         });
     }
 
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reviews');
+        //
     }
 };

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use App\Models\Post;
 use Exception;
 
 class CommentsController extends Controller
@@ -36,8 +37,10 @@ class CommentsController extends Controller
             'user_id' => 'required|integer', // ID del usuario que realiza el comentario
             'content' => 'required|string', // Contenido del comentario
             'comment_id' => 'nullable|integer', // ID del comentario padre en caso de que exista
-        ]);
-        */
+       ]);
+       */
+
+
         try {
             // Crear un nuevo comentario
             $comment = new Comment();
@@ -99,7 +102,10 @@ class CommentsController extends Controller
             $comentarioFormateado = [
                 'username' => $comentario->user->username, // Acceder al nombre del usuario a través de la relación
                 'content' => $comentario->content,
-                'comment_id' => $comentario->id
+                'comment_id' => $comentario->id,
+                'avatar' => $comentario->user->avatar,
+                'user_id' => $comentario->user->id
+
             ];
             $comentariosFormateados[] = $comentarioFormateado;
         }
@@ -116,7 +122,6 @@ class CommentsController extends Controller
      *
      * @param \Illuminate\Http\Request $request - La solicitud HTTP que contiene los datos para actualizar el comentario.
      * @param int $id - El ID del comentario que se desea actualizar.
-     * @param string $contenido - El nuevo contenido del comentario (opcional).
      *
      * @return \Illuminate\Http\JsonResponse - Respuesta JSON que indica el éxito o el fracaso de la actualización del comentario.
      *
@@ -135,7 +140,7 @@ class CommentsController extends Controller
      *   "message": "Comentario no encontrado"
      * }
      */
-    public function update(Request $request, int $id, string $contenido)
+    public function update(Request $request, int $id)
     {
         try {
             // Buscar el comentario por su ID
@@ -147,12 +152,13 @@ class CommentsController extends Controller
             }
 
             // Actualizar el contenido del comentario si se proporciona en la solicitud
+            $contenido = $request->input('content'); // Obtener el contenido de la solicitud
             if (!empty($contenido)) {
                 $comentario->content = $contenido;
             }
 
             // Actualizar el comentario con los datos de la solicitud
-            $comentario->update($request->all());
+            $comentario->save();
 
             // Devolver una respuesta de éxito
             return response()->json(['status' => true, 'message' => 'Comentario actualizado exitosamente'], 200);
@@ -161,6 +167,7 @@ class CommentsController extends Controller
             return response()->json(['status' => false, 'message' => 'Error al editar el comentario (Algún dato de la solicitud no es válido)'], 400);
         }
     }
+
 
 
     /**
@@ -187,7 +194,7 @@ class CommentsController extends Controller
      *   "message": "Error al eliminar el comentario"
      * }
      */
-    public function delete(string $id)
+    public function destroy(string $id)
     {
         try {
             // Buscar el comentario por su ID
