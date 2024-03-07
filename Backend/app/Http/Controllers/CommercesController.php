@@ -10,11 +10,10 @@ use Throwable;
 
 class CommercesController extends Controller
 {
-
-    public function __construct() {
-        $this->middleware("can:ver commerce")->only("show");
-        $this->middleware("can:editar commerce")->only("store", "update");
-    }
+    // public function __construct() {
+    //     $this->middleware("can:ver commerce")->only("show");
+    //     $this->middleware("can:editar commerce")->only("store", "update");
+    // }
     /**
      * Store a newly created resource in storage.
      */
@@ -104,7 +103,7 @@ class CommercesController extends Controller
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error' => throw $th->getMessage(),
+                'error' => $th->getMessage(),
             ], 404);
         }
         
