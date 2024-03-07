@@ -1,0 +1,32 @@
+/* david variables list */
+$highlight: #80ED99; /* sustituir por color principal */
+$highlight_dark: #22577A; /* sustituir por color secundario oscuro */
+$alert: orange;
+
+
+/*antonio */
+
+$primary: #fff;
+$secondary: #f3f3f3;
+$tertiary: #CECECE;
+$verde: #80ED99;
+$verdeTexto:#227a4a;
+$grisHover: #0b0b0c;
+$azul: #22577A;
+$amarillo: #6a7a22;
+
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "tertiary": $tertiary
+);
+
+$custom-colors: (
+  "verdeApp": $verdeTexto,
+  "verdeText": $verdeTexto,
+  "gris": $grisHover,
+  "blue": $azul,
+  "yellow": $amarillo
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
