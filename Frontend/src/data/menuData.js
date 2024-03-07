@@ -1,4 +1,4 @@
-const menuOptions = [
+export const menuOptions = [
     {icon : (".././assets/icons/restaurant.svg"), name : "Restaurante"},
     {icon : (".././assets/icons/plant.svg"), name : "Botánica"},
     {icon : (".././assets/icons/jewelry.svg"), name : "Joyería"},

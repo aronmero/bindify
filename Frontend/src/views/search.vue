@@ -1,4 +1,5 @@
 <script setup>
+    import { ref } from 'vue';
     import Grid from "@/components/comun/layout.vue";
     import Header from "@/components/comun/header.vue";
     import Footer from "@/components/comun/footer.vue";
@@ -7,6 +8,14 @@
     import locationButton from "@/components/search/locationButton.vue"
     import searchButton from "@/components/search/searchButton.vue";
     import Menu from "@/components/search/menu.vue";
+    import commercesResults from "../components/search/commercesResults.vue";
+
+    let option = ref("Botánica"); //categoria por defecto
+
+    const selectedOption = (name) =>{
+        option.value = name;
+    }
+
 </script>
 
 <template>
@@ -23,7 +32,8 @@
                     <img src="/assets/icons/filter.svg">
                 </div>
             </div>
-            <Menu />
+            <Menu @selectedOption="selectedOption" />
+            <commercesResults :category="option" :key="option"/>
         </div>
         <template v-slot:Right> Right </template>
     </Grid>
