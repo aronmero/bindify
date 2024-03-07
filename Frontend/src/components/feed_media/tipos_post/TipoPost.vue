@@ -12,6 +12,7 @@ import TipoOferta from '@public/assets/icons/tipo_oferta.svg'
 import TipoEvento from '@public/assets/icons/tipo_evento.svg'
 
 import { datetranslate } from './../helpers/datetranslate.js'
+import router from '../../../router';
 
 const props = defineProps({
     post: Object
@@ -47,7 +48,9 @@ const estilos = {
     modal_superior_dcha: ' top-[100px] right-[20px] '
 };
 
-
+const redirect = (url) => {
+    router.push(url)
+}
 
 const tipo = props.post.post_type_id;
 let IconoTipo = "";
@@ -63,7 +66,7 @@ if (tipo == 2) IconoTipo = TipoEvento;
         <!-- Contenedor del header del post -->
         <div class=" post-header w-[100%] h-[60px] flex items-center ">
             <div class=" w-[50px] h-[50px] rounded-full overflow-hidden mr-2">
-                <img class=" w-[100%] h-[100%] object-cover " :src="post.usuario.avatar" alt="avatar_usuario">
+                <img @click="redirect(`comercio/${post.usuario.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.usuario.avatar" alt="avatar_usuario">
             </div>
             <div class=" flex flex-col items-start w-[100%] h-[100%] ">
                 <b>{{ post.usuario.nombre }}</b>
@@ -76,14 +79,14 @@ if (tipo == 2) IconoTipo = TipoEvento;
 
         <!-- Contenedor de la imagen del post -->
         <div class=" post-content w-[100%] h-[600px] rounded-2xl bg-slate-400 overflow-hidden mt-5 ">
-            <img class=" w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
+            <img @click="redirect(`evento/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
         </div>
 
         <!-- Contenedor de botones del post -->
         <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
             <!-- Rating -->
             <button class=" flex flex-row items-center mr-3 ">
-                <img :src="StarSVG" />
+                <img @click="redirect(`evento/${post.id}`)" :src="StarSVG" />
                 {{ post.rating }}
             </button>
 
@@ -110,7 +113,7 @@ if (tipo == 2) IconoTipo = TipoEvento;
         <!-- Modal de Ver Más -->
         <div ref="modal" :id="`modal_${post.id}`" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
             <!-- Botón ver perfil -->
-            <button :class="`${estilos.modal_button} m-2 `">
+            <button @click="redirect(`comercio/${post.usuario.id}`)" :class="`${estilos.modal_button} m-2 `">
                 <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" />
                 Ver perfil
             </button>
@@ -129,10 +132,10 @@ if (tipo == 2) IconoTipo = TipoEvento;
         <!-- Contenedor del header del post -->
         <div class=" post-header w-[100%] h-[60px] flex items-center ">
             <div class=" w-[50px] h-[50px] rounded-full overflow-hidden mr-2 ">
-                <img class=" w-[100%] h-[100%] object-cover  " :src="post.usuario.avatar" alt="avatar_usuario">
+                <img @click="redirect(`comercio/${post.usuario.id}`)"  class=" cursor-pointer w-[100%] h-[100%] object-cover  " :src="post.usuario.avatar" alt="avatar_usuario">
             </div>
-            <div class=" flex flex-col items-start texts w-[100%] bg-white h-[100%]  ">
-                <b>{{ post.usuario.nombre }}</b>
+            <div  class=" flex flex-col items-start texts w-[100%] bg-white h-[100%]  ">
+                <b @click="redirect(`comercio/${post.id}`)" class="cursor-pointer" >{{ post.usuario.nombre }}</b>
                 <small>{{ datetranslate(post.fecha_publicacion) }}</small>
             </div>
             <button @click="() => abrirModal(post.id)" class="mr-4">
@@ -142,7 +145,7 @@ if (tipo == 2) IconoTipo = TipoEvento;
 
         <!-- Contenedor de la imagen del post -->
         <div class=" post-content w-[100%] h-[600px] rounded-2xl bg-slate-400 overflow-hidden mt-5 mb-5 ">
-            <img class=" w-[100%] h-[100%] object-cover  " :src="post.image" :alt="post.titulo">
+            <img @click="redirect(`evento/${post.id}`)" class=" w-[100%] h-[100%] object-cover  " :src="post.image" :alt="post.titulo">
         </div>
 
         <!-- post footer -->
@@ -186,7 +189,7 @@ if (tipo == 2) IconoTipo = TipoEvento;
         <!-- Modal de Ver Más -->
         <div ref="modal" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
             <!-- Botón ver perfil -->
-            <button :class="`${estilos.modal_button} m-2 `">
+            <button @click="redirect(`comercio/${post.id}`)" :class="`${estilos.modal_button} m-2 `">
                 <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" />
                 Ver perfil
             </button>
@@ -205,9 +208,9 @@ if (tipo == 2) IconoTipo = TipoEvento;
         <!-- post header -->
         <div class=" post-header w-[100%] h-[fit-content] flex items-center pt-3 pb-4 ">
             <div class=" w-[50px] h-[50px] rounded-full overflow-hidden  mr-2 ">
-                <img class=" w-[100%] h-[100%] object-cover mr-2" :src="post.usuario.avatar" alt="avatar_usuario">
+                <img @click="redirect(`ayuntamiento/${post.usuario.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover mr-2" :src="post.usuario.avatar" alt="avatar_usuario">
             </div>
-            <div class=" flex flex-col items-start texts w-[100%] h-[100%] ">
+            <div @click="redirect(`ayuntamiento/${post.id}`)" class=" cursor-pointer flex flex-col items-start texts w-[100%] h-[100%] ">
                 <b>{{ post.usuario.nombre }}</b>
                 <small> Organización </small>
             </div>
@@ -218,7 +221,7 @@ if (tipo == 2) IconoTipo = TipoEvento;
 
         <!-- post image -->
         <div class=" post-content w-[100%] h-[600px] rounded-2xl bg-slate-400 overflow-hidden ">
-            <img class=" w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
+            <img @click="redirect(`evento/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
         </div>
 
 
@@ -260,7 +263,7 @@ if (tipo == 2) IconoTipo = TipoEvento;
         <!-- Modal de Ver Más -->
         <div ref="modal" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
             <!-- Botón ver perfil -->
-            <button :class="`${estilos.modal_button} m-2 `">
+            <button @click="redirect(`ayuntamiento/${post.id}`)" :class="`${estilos.modal_button} m-2 `">
                 <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" />
                 Ver perfil
             </button>
