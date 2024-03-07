@@ -13,6 +13,7 @@ const emit = defineEmits(["datos"]);
 let ojoAbierto = "/assets/icons/eye.svg";
 let ojoCerrado = "/assets/icons/invisible.svg";
 const diaActual = new Date().getFullYear()+"-"+("0" + new Date().getMonth()).slice(-2)+"-"+("0" + new Date().getDate()).slice(-2);
+console.log(diaActual);
 const ojo = ref("/assets/icons/eye.svg");
 const cambiarVision = (e)=>{
     if(e.target.parentNode.parentNode.parentNode.children[1].type == "password"){
