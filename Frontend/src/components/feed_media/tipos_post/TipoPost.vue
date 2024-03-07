@@ -28,7 +28,7 @@ const estilos = {
     post: ' w-[100%] min-h-[800px] flex flex-col overflow-hidden ',
     post_avatar: '',
     modal: ' absolute bg-white min-w-[200px] rounded-lg p-2 flex flex-col items-start justify-center',
-    modal_button: ' flex items-center font-medium ',
+    modal_button: ' flex items-center font-medium w-[100%]  ',
     modal_inferior_izq: ' bottom-[220px] left-[20px] ',
     modal_superior_dcha: ' top-[100px] right-[20px] '
 };
@@ -86,13 +86,13 @@ const estilos = {
         <!-- Modal de Ver Más -->
         <div :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
             <!-- Botón ver perfil -->
-            <button :class="`${estilos.modal_button} `">
-                <img class="mr-3 " :src="UserSVG" />
+            <button :class="`${estilos.modal_button} m-2 `">
+                <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" />
                 Ver perfil
             </button>
             <!-- Botón ver reseñas comercio -->
-            <button :class="`${estilos.modal_button} `">
-                <img class="mr-3 " :src="StarSVG" />
+            <button :class="`${estilos.modal_button} m-2 `">
+                <img class="w-[30px] h-[30px]  mr-3 " :src="StarSVG" />
                 Reseñas
             </button>
         </div>
@@ -150,7 +150,7 @@ const estilos = {
         <!-- Modal de Destacados -->
         <div :class="`modal ${estilos.modal} ${estilos.modal_inferior_izq} `">
             <button :class="`${estilos.modal_button} `">
-                <img class="mr-3 " :src="StarSVG" />
+                <img class=" w-[20px] h-[20px]  mr-3 " :src="StarSVG" />
                 Destacado por la comunidad
             </button>
         </div>
@@ -158,15 +158,16 @@ const estilos = {
          <!-- Modal de Ver Más -->
          <div :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
             <!-- Botón ver perfil -->
-            <button :class="`${estilos.modal_button} `">
-                <img class="mr-3 " :src="UserSVG" />
-                Ver perfil
-            </button>
-            <!-- Botón ver reseñas comercio -->
-            <button :class="`${estilos.modal_button} `">
-                <img class="mr-3 " :src="StarSVG" />
-                Reseñas
-            </button>
+         <!-- Botón ver perfil -->
+         <button :class="`${estilos.modal_button} m-2 `">
+            <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" />
+            Ver perfil
+        </button>
+        <!-- Botón ver reseñas comercio -->
+        <button :class="`${estilos.modal_button} m-2 `">
+            <img class="w-[30px] h-[30px]  mr-3 " :src="StarSVG" />
+            Reseñas
+        </button>
         </div>
 
     </article>
@@ -221,21 +222,21 @@ const estilos = {
         <!-- Modal de Evento Institucional -->
         <div :class="`modal ${estilos.modal}  ${estilos.modal_inferior_izq}`">
             <button :class="`${estilos.modal_button} `">
-                <img class="mr-3 " :src="StarSVG" />
+                <img class=" w-[20px] h-[20px]  mr-3 " :src="StarSVG" />
                 Evento Institucional
             </button>
         </div>
 
          <!-- Modal de Ver Más -->
          <div :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
-            <!-- Botón ver perfil -->
-            <button :class="`${estilos.modal_button} `">
-                <img class="mr-3 " :src="UserSVG" />
+             <!-- Botón ver perfil -->
+             <button :class="`${estilos.modal_button} m-2 `">
+                <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" />
                 Ver perfil
             </button>
             <!-- Botón ver reseñas comercio -->
-            <button :class="`${estilos.modal_button} `">
-                <img class="mr-3 " :src="StarSVG" />
+            <button :class="`${estilos.modal_button} m-2 `">
+                <img class="w-[30px] h-[30px]  mr-3 " :src="StarSVG" />
                 Reseñas
             </button>
         </div>
