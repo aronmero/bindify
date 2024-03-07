@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('follows_id');
             $table->unsignedBigInteger('follower_id');
-            $table->boolean('favorito');
+            $table->boolean('favorito')->default(false);
             $table->timestamps();
 
             //clave foranea para el ID del usuario que sigue

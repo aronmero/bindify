@@ -35,7 +35,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 // Route::apiResource('category', CategoriesController::class)->except(['show', 'update', 'destroy', 'store']);
 // Route::apiResource('post_type', Post_typesController::class)->except(['show', 'update', 'destroy', 'store']);
 // Route::apiResource('notification', NotificationsController::class)->except(['index', 'destroy']);
-    Route::get('follow', [FollowersController::class , 'showFollowers']);
+    Route::get('follower', [FollowersController::class , 'showFollowers']);
+    Route::post('follow/{id}', [FollowersController::class , 'follow']);
+    Route::get('follows', [FollowersController::class , 'showFollows']);
 
 });
 
