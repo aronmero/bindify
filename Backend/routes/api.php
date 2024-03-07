@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommercesController;
 use App\Http\Controllers\HashtagsController;
+use App\Models\Follower;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 /* Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 }); */
+
+Route::post('follow/{id}', [FollowersController::class , 'follow']);
 
 //Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('commerce', CommercesController::class)->except(['index', 'destroy']);
