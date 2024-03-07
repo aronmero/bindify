@@ -30,28 +30,44 @@ class AuthController extends Controller
         return response()->json(['error' => 'Ususario no encontrado'], 404);
     }
 
-    public function register(RegisterRequest $datos)
+    public function register(RegisterRequest $request)
     {
-        $user = new User();
-        $user->name = $datos->name;
-        $user->email = $datos->email;
-        $user->phone = $datos->phone;
-        $user->password = Hash::make($datos->password);
-        $user->save();
-        $credentials = $datos->only('email', 'password');
+        $user = User::create([
+            'email' => $request->email,
+            'password' => $request->password,
+            'phone' => $request->phone,
+            'municipality_id' => $request->municipality_id,
+            'avatar' => $request->avatar,
+            'username' => $request->username,
+            'name' => $request->name
+        ]);
+
+        
+        $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
-        if ($datos->empresa) {
-            $user->assignRole('commerce');
+        if ($request->empresa) {
+            if ($request->verificationToken != null) {
+                $user->assignRole('ayuntamiento');
+            } else {
+                $user->assignRole('comercio');
+            }
+
             $commerce = Commerce::create([
-                'user_id' => $user->id,
-            ]);
-            $commerce->user()->associate($user->id);
+            'user_id' => $user->id,
+            'address' => $request->address,
+            'description' => $request->description,
+            'verification_token_id' => $request->verification_token_id,
+            'category_id' => $request->category_id,
+            'verificated'=> false,
+            'schedule' => $request->schedule
+        ]);
+            $commerce->user()->attach($user->id);
         } else {
-            $user->assignRole('customer');
+            $user->assignRole('cliente');
             $customer = Customer::create([
                 'user_id' => $user->id,
             ]);
-            $customer->user()->associate($user->id);
+            $customer->user()->attach($user->id);
         }
 
 
