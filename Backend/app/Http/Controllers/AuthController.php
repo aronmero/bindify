@@ -18,10 +18,14 @@ class AuthController extends Controller
         $credenciales = $datos->only('email', 'password');
         if (Auth::attempt($credenciales)) {
             $user = User::where('email', $datos->email)->first();
+            $tipo = $user->getRoleNames();
+            
             $token = $user->createtoken('my_app_token')->plainTextToken;
 
             $response = [
-                'token' => $token
+                'user_id' => $user->id,
+                'token' => $token,
+                'tipo' => $tipo
             ];
 
             return response($response, 201);
@@ -72,7 +76,7 @@ class AuthController extends Controller
 
 
         $response = [
-            'message' => 'Usuario credo correctamente',
+            'message' => 'Usuario creado correctamente',
             'user' => $user,
         ];
 
