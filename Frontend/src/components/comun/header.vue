@@ -3,7 +3,7 @@ import { RouterLink } from "vue-router";
 </script>
 
 <template>
-  <header class="h-[50px] bg-background-300 flex fixed top-0 justify-between px-[10px] w-full">
+  <header class="h-[50px] bg-background-300 flex fixed top-0 justify-between px-[10px] w-full z-50">
     <nav class="w-[50px] flex justify-center items-center">
         <RouterLink to="/"> <img
         src="https://placehold.co/35x35/png"
