@@ -5,6 +5,7 @@ use App\Http\Controllers\CommercesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\HashtagsController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\PostsController;
@@ -43,6 +44,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('follow/{id}', [FollowersController::class , 'follow']);
     Route::get('follows', [FollowersController::class , 'showFollows']);
     Route::get('home', [PostsController::class , 'home']);
+    Route::get('commerces/{municipity}', [SearchController::class, 'commercesByMunicipality']);
+    Route::get('commerces/hashtag/{hashtag}', [SearchController::class, 'commercesByHashtag']);
+    Route::get('posts/{idMunicipity}', [SearchController::class, 'postsByMunicipality']);
+    Route::get('posts/hashtag/{hashtag}', [SearchController::class, 'postsByHashtag']);
+
 });
 
 Route::post('login', [AuthController::class, 'login']);
