@@ -1,6 +1,6 @@
 <script setup>
-import btnConImg from "@/components/btnConImg.vue";
-import btnConText from "@/components/btnConText.vue";
+import btnConImg from "@/components/perfiles/widgets/btnConImg.vue";
+import btnConText from "@/components/perfiles/widgets/btnConText.vue";
 </script>
 <template>
   <div class="flex justify-center items-center gap-4">

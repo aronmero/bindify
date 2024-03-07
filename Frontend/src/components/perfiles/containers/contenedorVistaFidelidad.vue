@@ -1,7 +1,7 @@
 <script setup>
-  import contenedorPuntosFidelidad from "@/components/contenedorPuntosFidelidad.vue";
-  import textoEnNegrita from "@/components/textoEnNegrita.vue";
-  import btnConImg from "@/components/btnConImg.vue";
+  import contenedorPuntosFidelidad from "@/components/perfiles/containers/contenedorPuntosFidelidad.vue";
+  import textoEnNegrita from "@/components/perfiles/widgets/textoEnNegrita.vue";
+  import btnConImg from "@/components/perfiles/widgets/btnConImg.vue";
 </script>
 <template>
   <div>

@@ -28,18 +28,18 @@ const routes = [
 
   { path: "/comercio", component: () => import("@/views/perfiles/comercio.vue"),
    children:[
-    {path:"posts", component:() => import("@/components/contenedorVistaPosts.vue")},
-    {path:"eventos", component:() => import("@/components/contenedorVistaEventos.vue")},{path:"resenias", component:() => import("@/components/contenedorVistaResenias.vue")}
+    {path:"posts", component:() => import("@/components/perfiles/containers/contenedorVistaPosts.vue")},
+    {path:"eventos", component:() => import("@/components/perfiles/containers/contenedorVistaEventos.vue")},
+    {path:"resenias", component:() => import("@/components/perfiles/containers/contenedorVistaResenias.vue")}
   ]},
 
   { path: "/particular", component: () => import("@/views/perfiles/particular.vue"), 
   children:[
-    {path:"fidelidad", component:() => import("@/components/contenedorVistaFidelidad.vue")},{path:"favoritos", component:() => import("@/components/contenedorVistaFavoritos.vue")}
+    {path:"fidelidad", component:() => import("@/components/perfiles/containers/contenedorVistaFidelidad.vue")},
+    {path:"favoritos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")}
   ]},
 
   { path: "/perfil/edit", component: () => import("@/views/perfiles/editarPerfil.vue") },
-
-  { path: "/fidelidad", component: () => import("@/views/perfiles/fidelidad.vue") },
 
   { path: "/publicacion/new", component: () => import("@/views/publicaciones/crearPublicacion.vue") },
   { path: "/publicacion/edit", component: () => import("@/views/publicaciones/editarPublicacion.vue") },

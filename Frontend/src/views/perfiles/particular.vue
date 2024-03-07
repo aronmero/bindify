@@ -2,11 +2,11 @@
 import Grid from "@/components/comun/layout.vue";
 import Header from "@/components/comun/header.vue";
 import Footer from "@/components/comun/footer.vue";
-import imgsPerfil from "@/components/imgsPerfil.vue";
-import contenedorBtnsPerfilUser from "@/components/contenedorBtnsPerfilUser.vue";
-import textoEnNegrita from "@/components/textoEnNegrita.vue";
-import textoNormal from "@/components/textoNormal.vue";
-import { users } from "@/components/users.js";
+import imgsPerfil from "@/components/perfiles/containers/imgsPerfil.vue";
+import contenedorBtnsPerfilUser from "@/components/perfiles/containers/contenedorBtnsPerfilUser.vue";
+import textoEnNegrita from "@/components/perfiles/widgets/textoEnNegrita.vue";
+import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
+import { users } from "@/components/perfiles/helpers/users.js";
 import { RouterLink, RouterView } from "vue-router";
 
 </script>

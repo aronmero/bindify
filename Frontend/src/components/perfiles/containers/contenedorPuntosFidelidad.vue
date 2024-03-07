@@ -1,5 +1,5 @@
 <script setup>
-import textoEnNegrita from "@/components/textoEnNegrita.vue";
+import textoEnNegrita from "@/components/perfiles/widgets/textoEnNegrita.vue";
 
 defineProps({
   comercio: String,

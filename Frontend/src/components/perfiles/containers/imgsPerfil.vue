@@ -1,6 +1,6 @@
 <script setup>
-import imgRectangular from '@/components/imgRectangular.vue';
-import imgRedonda from '@/components/imgRedonda.vue';
+import imgRectangular from '@/components/perfiles/widgets/imgRectangular.vue';
+import imgRedonda from '@/components/perfiles/widgets/imgRedonda.vue';
     const props =defineProps({
         "rutaBaner":String,
         "altTextBaner":String,
