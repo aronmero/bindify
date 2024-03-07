@@ -12,7 +12,7 @@ import { RouterLink } from "vue-router";
     </nav>
     <div class="flex">
       <nav class="w-[50px] flex justify-center items-center">
-        <RouterLink to="/">
+        <RouterLink to="/search">
           <img
             src="/assets/icons/search.svg"
             class="max-w-[30px] max-h-[30px] hidden lg:block"
