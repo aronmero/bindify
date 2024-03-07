@@ -97,7 +97,7 @@ class CommentsController extends Controller
         $comentariosFormateados = [];
         foreach ($comentarios as $comentario) {
             $comentarioFormateado = [
-                'username' => $comentario->user->nombre, // Acceder al nombre del usuario a través de la relación
+                'username' => $comentario->user->username, // Acceder al nombre del usuario a través de la relación
                 'content' => $comentario->content,
                 'comment_id' => $comentario->id
             ];
