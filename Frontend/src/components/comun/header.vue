@@ -19,7 +19,7 @@ import { RouterLink } from "vue-router";
         /></RouterLink>
       </nav>
       <nav class="w-[50px] flex justify-center items-center">
-        <RouterLink to="//calendario">
+        <RouterLink to="/calendario">
           <img
             src="/assets/icons/schedule.svg"
             class="max-w-[30px] max-h-[30px] hidden lg:block"
