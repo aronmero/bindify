@@ -5,10 +5,7 @@
 </script>
 
 <template>
-     <Feed 
-        v-for="post in posts" 
-        :post="post"
-    /> 
+
 </template>
 
 <style scoped lang="scss">

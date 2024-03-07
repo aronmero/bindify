@@ -10,14 +10,18 @@
 
 <template >
     <Header />
-    <Grid style="max-height:100vh; overflow-y:scroll; background:#fff;">
-        <template v-slot:Left > Left</template>
-            <FeedPosts />
+    <Grid style="max-height:100vh; overflow-y:scroll; background:#fff; margin: 20px 0px 40px 0px;">
+        <template v-slot:Left >
+            
+        </template>
+            <FeedPosts  id="feed" />
         <template v-slot:Right > Right </template>
     </Grid>
     <Footer />
 </template>
 
 <style scoped lang="scss">
-
+    #feed  {
+        background: red !important;
+    }
 </style>

@@ -252,11 +252,12 @@ const estilos = {
     }
 
     .post {
+        padding:20px 0px;
         .information {
             /*estilos simples */
             h1 {
                 font-size:2rem;
-                font-weight:bold;
+                font-weight:500;
                 margin:10px 0px;
             }
 
