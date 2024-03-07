@@ -40,7 +40,11 @@
 
 
         const manipulate = () => {
-            const daysWithEvents = props.dates;
+            //const daysWithEvents = props.dates;
+            const daysWithEvents = [
+                '09/02/2024', '03/07/2024'
+            ];
+            const post_per_date = (date) => { return [{ id: 1, title: 'Test' }]} ;
             let dayone = new Date(year, month, 1).getDay();
             let lastdate = new Date(year, month + 1, 0).getDate();
             let dayend = new Date(year, month, lastdate).getDay();
@@ -67,7 +71,7 @@
 
                 let posts_found = ""
                 if (hasEvent) {
-                    posts_found = props.post_per_date(`${month+1}/${i}/${year}`);
+                    posts_found = post_per_date(`${month+1}/${i}/${year}`);
                 }
 
                 cell += `<a class="${event} ${today}" title="${(posts_found != "") ? posts_found[0].title : "No hay eventos en esta fecha"}" href="${(posts_found != "") ? '/post/' + posts_found[0].id : ""}" >${i}</a>`;
@@ -134,7 +138,7 @@
     </div>
 </template>
 <style lang="scss">
-    @import './src/sass/imports/variables', './src/sass/imports/mixins';
+    @import '@/style/variables', '@/style/mixins';
     .calendar-container {
         background: #fff;
         width: 100%;

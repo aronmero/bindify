@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 @import "variables";
+@import "mixins";
 
 // Ejemplo de media query para pantallas pequeñas (móviles)
 @media (max-width: 576px) {
