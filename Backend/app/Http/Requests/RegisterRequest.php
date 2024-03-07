@@ -24,8 +24,11 @@ class RegisterRequest extends FormRequest
         return [
             'password' => ['required'],
             'email' => ['required', 'unique:users,email'],
-            'phone' => ['required'],
-            'empresa' => ['required', 'boolean']
+            'phone' => ['required', 'unique:users,phone'],
+            'username' => ['required', 'unique:users,username'],
+            'municipality_id' => ['exists:municipalities,id'],
+            'empresa' => ['required', 'boolean'],
+            'name'=> ['required'],
         ];
     }
 }
