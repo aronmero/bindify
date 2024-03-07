@@ -10,9 +10,10 @@ import btnConText from "@/components/btnConText.vue";
 import contenedorBtnsPerfilUser from "@/components/contenedorBtnsPerfilUser.vue";
 import textoEnNegrita from "@/components/textoEnNegrita.vue";
 import textoNormal from "@/components/textoNormal.vue";
-import contenedorPuntosFidelidad from "@/components/contenedorPuntosFidelidad.vue";
+
 import contenedorPuntuacion from "@/components/contenedorPuntuacion.vue";
 import contenedorFollower from "@/components/contenedorFollower.vue";
+import { users } from "@/components/users.js";
 import { RouterLink, RouterView } from "vue-router";
 
 </script>
@@ -20,20 +21,20 @@ import { RouterLink, RouterView } from "vue-router";
 <template>
   <Header />
   <Grid
-    ><template v-slot:Left> Left</template>
+    ><template v-slot:Left></template>
     <div class="flex flex-col gap-6">
       <div>
         <imgsPerfil
-          rutaBaner="https://www.dzoom.org.es/wp-content/uploads/2020/02/portada-foto-perfil-redes-sociales-consejos.jpg"
+          rutaBaner=""
           altTextBaner="foto baner"
-          rutaPerfil="https://www.dzoom.org.es/wp-content/uploads/2020/02/portada-foto-perfil-redes-sociales-consejos.jpg"
+          :rutaPerfil="users[1].avatar"
           altTextPerfil="foto perfil"
         ></imgsPerfil>
       </div>
 
       <div class="flex flex-col gap-6 justify-evenly">
         <div class="flex flex-col">
-          <textoEnNegrita texto="Albert Flores" class="text-base md:text-xl" />
+          <textoEnNegrita :texto="users[1].name" class="text-base md:text-xl" />
         </div>
         <div class="flex justify-center items-start gap-6 md:gap-20">
           <div class="flex flex-col">
@@ -45,8 +46,6 @@ import { RouterLink, RouterView } from "vue-router";
             />
           </div>
           <contenedorPuntuacion
-            rutaIcono="https://www.dzoom.org.es/wp-content/uploads/2020/02/portada-foto-perfil-redes-sociales-consejos.jpg"
-            altTextoIcono="icono estella"
             puntuacion="4.1"
             cantidadResenias="312"
           />
@@ -101,7 +100,7 @@ import { RouterLink, RouterView } from "vue-router";
       <RouterView></RouterView>
     </div>
 
-    <template v-slot:Right> Right </template>
+    <template v-slot:Right></template>
   </Grid>
   <Footer />
 </template>

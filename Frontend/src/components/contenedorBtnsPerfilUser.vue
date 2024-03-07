@@ -6,8 +6,9 @@ import btnConText from "@/components/btnConText.vue";
   <div class="flex justify-center items-center gap-4">
     <btnConText texto="EDIT PROFILE"></btnConText>
     <btnConImg
-      ruta="https://www.dzoom.org.es/wp-content/uploads/2020/02/portada-foto-perfil-redes-sociales-consejos.jpg"
+      ruta="/assets/icons/qrCode.svg"
       altText="icono codigo qr"
+      :borde="true"
     ></btnConImg>
   </div>
 </template>

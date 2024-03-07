@@ -4,8 +4,6 @@ import textoEnNegrita from "@/components/textoEnNegrita.vue";
 import textoNormal from "@/components/textoNormal.vue";
 
 defineProps({
-  rutaIcono: String,
-  altTextoIcono: String,
   puntuacion: String,
   cantidadResenias: String,
 });
@@ -13,7 +11,7 @@ defineProps({
 <template>
   <div class="flex flex-col justify-center items-center">
     <div class="flex flex-row justify-center items-center">
-      <btnConImg :ruta="rutaIcono" :altText="altTextoIcono"></btnConImg>
+      <btnConImg ruta="/assets/icons/christmasStar.svg" altText="icono de estrella"></btnConImg>
       <textoEnNegrita :texto="puntuacion" class="text-lg md:text-xl" />
     </div>
     <textoNormal :texto="cantidadResenias"></textoNormal>
