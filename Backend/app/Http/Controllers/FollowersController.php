@@ -14,13 +14,15 @@ class FollowersController extends Controller
     /**
      * Muestra todos los seguidores del usuario
      */
-    public function showFollowers(string $id)
+    public function showFollowers()
     {
-        try {
+        try {          
+            $user = Auth::user();
+
             $followers = DB::table("followers")
             ->join('users', 'followers.follows_id', '=','users.id')
             ->select('users.id', 'avatar', 'username')
-            ->where('followers.follows_id', '=', $id)
+            ->where('followers.follower_id', '=', $user->id)
             ->get();
 
             return response()->json([
@@ -30,31 +32,62 @@ class FollowersController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message'=> $th->getMessage()
+                'message'=> throw $th,
             ], 404);
         }
     }
 
     /**
-     * Comienza a seguir a un usuario, si ya lo sigue dejara de seguirlo
+     * Comienza a seguir a un usuario, en caso de ya seguir al usuario dejara de seguirlo
      */
     public function follow(string $id)
     {
         try {
 
             $user = Auth::user();
-
+            $mensaje = "";
             $follower = $user->follows();
-            dd($follower);
-            foreach ($follower as $usuario) {
-                
-            }
-
             
-            $user->follow()->attach($id);
+            foreach ($follower as $seguido) {
+                if ($seguido->id == $id) {
+                    $user->follows()->detach($id);
+                    $mensaje = "Usuario dejado de seguir";
+                }else {
+                    $user->follows()->attach($id);
+                    $mensaje = "Usuario seguido";
+                }
+            }
+            
+            return response()->json([
+                'status' => true,
+                'message' => $mensaje,
+            ],200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message'=> $th->getMessage()
+            ], 404);
+        }
+    }
+
+
+    /**
+     * Muestra todos los seguidos del usuario
+     */
+    public function showFollows(string $id)
+    {
+        try {
+            $user = Auth::user();
+
+            $follows = DB::table("followers")
+            ->join('users', 'followers.follows_id', '=','users.id')
+            ->select('users.id', 'avatar', 'username')
+            ->where('followers.followers_id', '=', $user->id)
+            ->get();
 
             return response()->json([
                 'status' => true,
+                'data'=> $follows
             ],200);
         } catch (\Throwable $th) {
             return response()->json([
