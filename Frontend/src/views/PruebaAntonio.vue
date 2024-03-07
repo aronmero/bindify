@@ -15,10 +15,18 @@ const options = ["Ferretería", "Floristería", "Panadería", "Mecánico"];
         <template v-slot:Left></template>
         <form @submit.prevent="" action="" class="flex flex-col gap-y-5">
             <Input tipo="text" requerido="true" label="Nombre" img="/assets/icons/user.svg"/>
+            <Input tipo="texto" label="Descripcion" valor="Cuentanos tu experiencia"/>
             <Input tipo="email" requerido="true" label="Email" img="/assets/icons/schedule.svg"/>
             <Input tipo="password" requerido="true" label="Password" img="/assets/icons/settings.svg"/>
             <Input tipo="selection" requerido="true" label="Categoría" :opciones="options" valor="Selecciona una categoría"/>
-            <Input tipo="file" clase="perfil" label="Perfil"/>
+            <div class="imagenes flex justify-evenly">
+                <Input tipo="file" clase="perfil" label="Perfil"/>
+                <Input tipo="file" clase="banner" label="Banner"/>
+            </div>
+            <div class="fecha-hora">
+                <Input tipo="fecha" label="Fecha"/>
+                <Input tipo="hora" label="Horario"/>
+            </div>
             <Input tipo="submit" clase="claro" valor="Iniciar sesión"/>
         </form>
         <template v-slot:Right></template>
