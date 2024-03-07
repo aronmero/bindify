@@ -16,23 +16,23 @@ class FollowersController extends Controller
      */
     public function showFollowers()
     {
-        try {          
+        try {
             $user = Auth::user();
 
             $followers = DB::table("followers")
-            ->join('users', 'followers.follows_id', '=','users.id')
-            ->select('users.id', 'avatar', 'username')
-            ->where('followers.follower_id', '=', $user->id)
-            ->get();
+                ->join('users', 'followers.follower_id', '=', 'users.id')
+                ->select('follower_id', 'avatar', 'username')
+                ->where('followers.follows_id', '=', $user->id)
+                ->get();
 
             return response()->json([
                 'status' => true,
-                'data'=> $followers
-            ],200);
+                'data' => $followers
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message'=> throw $th,
+                'message' => $th->getMessage()
             ], 404);
         }
     }
@@ -43,29 +43,41 @@ class FollowersController extends Controller
     public function follow(string $id)
     {
         try {
-
             $user = Auth::user();
             $mensaje = "";
-            $follower = $user->follows();
-            
-            foreach ($follower as $seguido) {
-                if ($seguido->id == $id) {
-                    $user->follows()->detach($id);
-                    $mensaje = "Usuario dejado de seguir";
-                }else {
-                    $user->follows()->attach($id);
-                    $mensaje = "Usuario seguido";
+            $follows = DB::table("followers")
+            ->join('users', 'followers.follows_id', '=', 'users.id')
+            ->select('followers.follows_id', 'avatar', 'username')
+            ->where('followers.follower_id', '=', $user->id)
+            ->get();
+            $seguir = true;
+
+            if ($follows->count() > 0) {
+                foreach ($follows as $seguido) {
+                    if ($seguido->follows_id == $id) {
+                        $seguir = false;
+                    }
                 }
             }
-            
+
+
+            if (!$seguir) {
+                $user->follower()->detach($id);
+                $mensaje = "Usuario dejado de seguir";
+            } else {
+                $user->follower()->attach($id);
+                $mensaje = "Usuario seguido";
+            }
+
+
             return response()->json([
                 'status' => true,
                 'message' => $mensaje,
-            ],200);
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message'=> $th->getMessage()
+                'message' => throw $th
             ], 404);
         }
     }
@@ -74,25 +86,25 @@ class FollowersController extends Controller
     /**
      * Muestra todos los seguidos del usuario
      */
-    public function showFollows(string $id)
+    public function showFollows()
     {
         try {
             $user = Auth::user();
 
             $follows = DB::table("followers")
-            ->join('users', 'followers.follows_id', '=','users.id')
-            ->select('users.id', 'avatar', 'username')
-            ->where('followers.followers_id', '=', $user->id)
-            ->get();
+                ->join('users', 'followers.follows_id', '=', 'users.id')
+                ->select('followers.follows_id', 'avatar', 'username')
+                ->where('followers.follower_id', '=', $user->id)
+                ->get();
 
             return response()->json([
                 'status' => true,
-                'data'=> $follows
-            ],200);
+                'data' => $follows
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message'=> $th->getMessage()
+                'message' => $th->getMessage()
             ], 404);
         }
     }
