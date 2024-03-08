@@ -10,7 +10,11 @@ use Exception;
 
 class CommentsController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware("can:ver comments")->only("show");
+        $this->middleware("can:editar comments")->only("store", "update", "destroy");
+    }
     /**
      * Store de un nuevo comentario.
      *

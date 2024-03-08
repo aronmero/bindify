@@ -21,8 +21,8 @@ class CommercesController extends Controller
      */
     public function __construct()
     {
-        $this->middleware("can:ver commerce")->only("show");
-        $this->middleware("can:editar commerce")->only("store", "update");
+        $this->middleware("can:ver commerces")->only("show");
+        $this->middleware("can:editar commerces")->only("store", "update");
     }
     /**
      * Almacena un nuevo recurso creado en el almacenamiento.
