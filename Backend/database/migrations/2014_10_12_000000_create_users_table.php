@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('username')->unique();
             $table->string('name')->unique();
+            $table->string('banner')->nullable();
             $table->rememberToken();
             $table->timestamps();
 
