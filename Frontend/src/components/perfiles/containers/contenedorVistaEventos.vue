@@ -1,7 +1,7 @@
 <script setup>
-
+  import FeedPost from "@/components/feed_media/Posts.vue"
 </script>
 <template>
-  <h1>Eventos</h1>
+  <FeedPost></FeedPost>
 </template>
 <style scoped></style>

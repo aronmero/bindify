@@ -15,7 +15,6 @@ import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPun
 import contenedorFollower from "@/components/perfiles/containers/contenedorFollower.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
 import { RouterLink, RouterView } from "vue-router";
-
 </script>
 
 <template>
@@ -25,7 +24,7 @@ import { RouterLink, RouterView } from "vue-router";
     <div class="flex flex-col gap-6">
       <div>
         <imgsPerfil
-          rutaBaner=""
+          rutaBaner="https://placehold.co/600x400"
           altTextBaner="foto baner"
           :rutaPerfil="users[1].avatar"
           altTextPerfil="foto perfil"
@@ -45,10 +44,7 @@ import { RouterLink, RouterView } from "vue-router";
               class="text-sm md:text-base"
             />
           </div>
-          <contenedorPuntuacion
-            puntuacion="4.1"
-            cantidadResenias="312"
-          />
+          <contenedorPuntuacion puntuacion="4.1" cantidadResenias="312" />
           <div class="flex flex-col">
             <textoEnNegrita texto="Horario" class="text-sm md:text-base" />
             <textoNormal
@@ -70,14 +66,16 @@ import { RouterLink, RouterView } from "vue-router";
             <textoNormal texto="#flores" class="text-sm md:text-base" />
           </div>
         </div>
-        <div class="flex gap-6 justify-center" >
-          <contenedorFollower amount="10" tipo="Following"/>
-          <contenedorFollower amount="50" tipo="Follows"/>
-          <contenedorFollower amount="20" tipo="Posts"/>
-          
+        <div class="flex gap-6 justify-center">
+          <contenedorFollower amount="10" tipo="Following" />
+          <contenedorFollower amount="50" tipo="Follows" />
+          <contenedorFollower amount="20" tipo="Posts" />
         </div>
 
-        <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser>
+        <!-- <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser> -->
+        <div class="flex justify-center">
+          <btnConText texto="EDIT PROFILE" class="w-48"></btnConText>
+        </div>
       </div>
 
       <div class="flex w-full justify-center gap-6">
@@ -90,13 +88,8 @@ import { RouterLink, RouterView } from "vue-router";
         <RouterLink to="/comercio/resenias">
           <textoEnNegrita texto="Reseñas" class="text-sm md:text-base" />
         </RouterLink>
-        
-        
-        
       </div>
-      <div>
-        
-      </div>
+      <div></div>
       <RouterView></RouterView>
     </div>
 

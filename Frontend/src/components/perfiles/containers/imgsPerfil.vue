@@ -9,7 +9,7 @@ import imgRedonda from '@/components/perfiles/widgets/imgRedonda.vue';
     })
 </script>
 <template>
-    <div v-if="props.rutaBaner!=''" class="relative">
+    <div v-if="props.rutaBaner!=''" class="relative flex justify-center">
         
         <imgRectangular :ruta="rutaBaner" :altText="altTextBaner" />
         <div class="flex justify-center items-end absolute bottom-0 left-0 w-full">

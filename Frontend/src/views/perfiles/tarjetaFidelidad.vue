@@ -6,8 +6,9 @@ import imgsPerfil from "@/components/perfiles/containers/imgsPerfil.vue";
 import contenedorBtnsPerfilUser from "@/components/perfiles/containers/contenedorBtnsPerfilUser.vue";
 import textoEnNegrita from "@/components/perfiles/widgets/textoEnNegrita.vue";
 import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
+import imgRectangular from "@/components/perfiles/widgets/imgRectangular.vue"
 import { users } from "@/components/perfiles/helpers/users.js";
-import { RouterLink, RouterView } from "vue-router";
+
 
 </script>
 
@@ -25,27 +26,9 @@ import { RouterLink, RouterView } from "vue-router";
         ></imgsPerfil>
       </div>
       <div class="flex flex-col gap-6 justify-evenly md:flex-row">
-        <div class="flex flex-col">
-          <textoEnNegrita :texto="users[0].name" class="text-base md:text-xl" />
-          <textoEnNegrita texto="15" class="text-base md:text-xl" />
-          <textoNormal
-            texto="Following"
-            class="text-sm md:text-base"
-          ></textoNormal>
-        </div>
-
-        <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser>
+        <textoEnNegrita :texto="users[0].name" class="text-base md:text-xl" />
       </div>
-      <div class="flex w-full justify-center gap-6 ">
-        <RouterLink to="/particular/fidelidad">
-          <textoEnNegrita texto="Fidelidad" class="text-sm md:text-base" />
-        </RouterLink>
-        <RouterLink to="/particular/favoritos">
-          <textoEnNegrita texto="Favoritos" class="text-sm md:text-base" />
-        </RouterLink>
-        
-      </div>
-      <RouterView></RouterView>
+      <imgRectangular ruta=""></imgRectangular>
     </div>
 
     <template v-slot:Right></template>
@@ -53,9 +36,4 @@ import { RouterLink, RouterView } from "vue-router";
   <Footer />
 </template>
 
-<style scoped>
-  /* .contenedorRutasPerfiles .activelink button{
-  color: #c94203;
-  background-color: #2e0505;
-} */
-</style>
+<style scoped></style>
