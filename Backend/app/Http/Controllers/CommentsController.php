@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommentsRequest;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Models\Post;
@@ -29,7 +30,7 @@ class CommentsController extends Controller
      *   "message": "Error al almacenar el comentario"
      * }
      */
-    public function store(Request $request)
+    public function store(StoreCommentsRequest $request)
     {
         // Validar los datos de la solicitud
         /*/ $request->validate([
