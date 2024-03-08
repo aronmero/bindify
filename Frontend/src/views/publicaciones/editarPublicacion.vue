@@ -81,7 +81,7 @@ const tratarDatos = ()=>{
                         <Input tipo="button" valor="Colaboradores" img="/assets/icons/addUser.svg"/>
                     </div>
                     <div class="flex flex-col items-center w-full justify-center ">
-                        <Input @click="tratarDatos" tipo="submit" clase="oscuro" valor="Publicar" class="w-[50%]"/>
+                        <Input @click="tratarDatos" tipo="submit" clase="oscuro" valor="Guardar Cambios" class="w-[50%]"/>
                     </div>
                 </form>
             </section>

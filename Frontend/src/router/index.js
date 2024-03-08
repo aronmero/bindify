@@ -18,7 +18,7 @@ const routes = [
   { path: "/calendario", component: () => import("@/views/eventos/calendarioEvento.vue") },
 
   { path: "/busqueda", component: () => import("@/views/Misc/search.vue") },
-  { path: "/reseña", component: () => import("@/views/Misc/crearResena.vue") },
+  { path: "/resenia", component: () => import("@/views/Misc/crearResena.vue") },
   { path: "/validar", component: () => import("@/views/Misc/validarComercio.vue") },
   
   //Sprint 2

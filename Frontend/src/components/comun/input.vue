@@ -74,22 +74,24 @@ const emitirDatos = (e)=>{
             />
         </button>
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'banner'" class="flex relative lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] justify-center items-center rounded-xl border-dotted border border-background-900">
-            <p v-if="imagenSubida == null && valor == null" class="text-[1em] pointer-events-none">Añadir Imagen</p>
             <img v-if="imagenSubida == null && valor != null" :src="valor" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] rounded-xl">
+            <p v-if="imagenSubida == null && valor == null" class="text-[1em] pointer-events-none">Añadir Imagen</p>
             <img v-else :src="imagenSubida" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] rounded-xl">
             <img 
                 src="/assets/icons/add.svg"
                 class="max-w-[40px] max-h-[40px] lg:block absolute bottom-0 right-0 lg:translate-x-4 lg:translate-y-2 translate-x-4 translate-y-2 py-1 px-2 pointer-events-none"
             />
         </button>
+        <div v-if="tipo == 'button'" class="relative flex flex-row items-center justify-start">
+            <img 
+            :src="img"
+            class="max-w-[30px] max-h-[30px] lg:block absolute lg:-translate-y-[2rem] lg:translate-x-[0.9rem]"
+            />
+        </div>
         <div class="absolute translate-y-11 translate-x-3 flex">
             <img v-if="tipo != 'submit' && tipo != 'selection' && tipo != 'file' && tipo != 'fecha' && tipo != 'button'"
             :src="img"
             class="max-w-[30px] max-h-[30px] lg:block"
-            />
-            <img v-if="tipo == 'button'"
-            :src="img"
-            class="max-w-[30px] max-h-[30px] lg:block relative -translate-y-[1.8rem] translate-x-[0.25rem]"
             />
            <!--  <img v-if="tipo == 'fecha'"
             :src="img"
