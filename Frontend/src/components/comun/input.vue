@@ -2,10 +2,10 @@
 import { ref } from 'vue';
 const props = defineProps({
     clase: String,
-    tipo: String, 
-    requerido: Boolean, 
-    label: String, 
-    valor: String, 
+    tipo: String,
+    requerido: Boolean,
+    label: String,
+    valor: String,
     img: String,
     opciones: Array,
     error: String,
@@ -47,7 +47,7 @@ const emitirDatos = (e)=>{
     <div class="flex flex-col gap-y-2">
         <div v-if="label != null" class="label flex items-center">
             <label for="" class="ms-1 text-lg">{{label}}</label>
-            <p v-if="requerido" class="text-primary-700 text-xl">*</p>
+            <p v-if="requerido == 'true'" class="text-primary-700 text-xl">*</p>
             <p v-if="error != null" class="text-primary-700 text-sm ms-3">{{ error }}</p>
         </div>
         <input @change="emitirDatos" v-if="requerido == 'true' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img != null" :type="tipo" required class="ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
@@ -61,15 +61,15 @@ const emitirDatos = (e)=>{
         <input @change="emitirDatos" v-if="tipo == 'hora'" type="time" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'fecha'" type="date" :min="diaActual" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'fechaLibre'" type="date" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
-        <select @change="emitirDatos" v-if="tipo == 'selection'" class="bg-background-100 text-text-950 py-3 px-1 text-center rounded-xl cursor-pointer"> 
+        <select @change="emitirDatos" v-if="tipo == 'selection'" class="bg-background-100 text-text-950 py-3 px-1 text-center rounded-xl cursor-pointer">
             <option value="" disabled selected>{{ placeholder }}</option>
             <option v-for="(value, clave) in opciones" :value="clave" :selected="value == valor">{{ value }}</option>
         </select>
-        <textarea @change="emitirDatos" v-if="tipo == 'texto'" class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl resize-none h-[15rem]" :placeholder="placeholder" :value="valor"></textarea>
+        <textarea @change="emitirDatos" v-if="tipo == 'texto'" class="ps-10 bg-background-100 text-text-950 py-3 px-1 rounded-xl resize-none h-[15rem]" :placeholder="placeholder" :value="valor"></textarea>
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'perfil'" class="flex relative lg:size-40 size-28 justify-center items-center rounded-full border-dotted border border-background-900">
             <p v-if="imagenSubida == null" class="text-[1em] pointer-events-none">Añadir Imagen</p>
             <img v-else :src="imagenSubida" alt="Previsualizacion de foto de perfil" class="pointer-events-none lg:size-40 size-28 rounded-full">
-            <img 
+            <img
                 src="/assets/icons/add.svg"
                 class="max-w-[40px] max-h-[40px] lg:block absolute bottom-0 right-0 lg:-translate-x-1 lg:translate-y-0 translate-x-1 translate-y-1 py-1 px-2 pointer-events-none"
             />
@@ -78,13 +78,13 @@ const emitirDatos = (e)=>{
             <img v-if="imagenSubida == null && valor != null" :src="valor" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] rounded-xl">
             <p v-if="imagenSubida == null && valor == null" class="text-[1em] pointer-events-none">Añadir Imagen</p>
             <img v-else :src="imagenSubida" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] rounded-xl">
-            <img 
+            <img
                 src="/assets/icons/add.svg"
                 class="max-w-[40px] max-h-[40px] lg:block absolute bottom-0 right-0 lg:translate-x-4 lg:translate-y-2 translate-x-4 translate-y-2 py-1 px-2 pointer-events-none"
             />
         </button>
         <div v-if="tipo == 'button'" class="relative flex flex-row items-center justify-start">
-            <img 
+            <img
             :src="img"
             class="max-w-[30px] max-h-[30px] lg:block absolute -translate-y-[2rem] translate-x-[0.9rem]"
             />
@@ -94,12 +94,12 @@ const emitirDatos = (e)=>{
             :src="img"
             class="max-w-[30px] max-h-[30px] lg:block"
             />
-           <!--  <img v-if="tipo == 'fecha'"
+            <!--  <img v-if="tipo == 'fecha'"
             :src="img"
             class="max-w-[30px] max-h-[30px] lg:block w-[4rem] pointer-events-none select-none hidden"
             /> -->
             <button v-if="tipo == 'password'" @click.prevent="cambiarVision" class="lg:translate-x-[37rem] translate-x-[73vw] -translate-y-[0.10rem] hover:bg-background-100 p-2 rounded-full">
-                <img 
+                <img
                     :src="ojo"
                     class="max-w-[30px] max-h-[30px] lg:block"
                 />
