@@ -11,6 +11,7 @@ let tipo = ref(null);
 let errorDesc = ref(null);
 let errorType = ref(null);
 let errorDate = ref(null);
+let errorTitle = ref(null);
 const titulo = ref(null);
 const descripcion = ref(null);
 const imagen = ref(null);
@@ -30,22 +31,30 @@ const tratarDatos = ()=>{
     console.log(descripcion.value);
     console.log(imagen.value);
     console.log(publiTipo.value);
-    if(titulo.value != null){
+    console.log(fechaInicio.value);
+    console.log(fechaFin.value);
+    if(titulo.value != null && titulo.value.length > 0){
         /* Revisar error en el que cuando pones una descripcion y luego la quitas te deja de aparecer el error, comprobar el length del value */
-        if(descripcion.value == null && imagen.value == null){
+        if((descripcion.value == null || descripcion.value.length == 0) && imagen.value == null){
+            errorTitle.value = null;
             errorDesc.value = "Es necesario indicar una imagen o una descripción para la publicación.";
         }else if(publiTipo.value == null){
+            errorTitle.value = null;
             errorDesc.value = null;
             errorType.value = "Es obligatorio seleccionar un tipo de evento para crear una publicación.";
-        }else if(publiTipo.value == "0" && (fechaInicio.value == null || fechaFin.value == null) ){
+        }else if(publiTipo.value == "1" && (fechaInicio.value == null || fechaFin.value == null) ){ /* Cambiar el tipo cuando llegue la info del back */
+            errorTitle.value = null;
             errorDesc.value = null;
             errorType.value = null;
             errorDate.value = "Debe seleccionar las fechas de inicio y fin del evento.";
         }else{
+            errorTitle.value = null;
             errorDesc.value = null;
             errorType.value = null;
             errorDate.value = null;
         }
+    }else{
+        errorTitle.value = "Es necesario indicar el título de la publicación";
     }
 }
 </script>
@@ -63,18 +72,18 @@ const tratarDatos = ()=>{
             </header>
             <section class="w-full mt-5 mb-5">
                 <form action="javascript:void(0);" class="flex flex-col gap-y-5">
-                    <Input @datos="(nuevosDatos)=>{titulo = nuevosDatos}" tipo="text" requerido="true" label="Título"/>
-                    <Input @datos="(nuevosDatos)=>{descripcion = nuevosDatos}" tipo="texto" label="Descripción" :error="errorDesc"/>
-                    <Input @datos="(nuevosDatos)=>{imagen = nuevosDatos}" tipo="file" label="Imagen del post" clase="banner" :error="errorDesc" />
-                    <Input @datos="(nuevosDatos)=>{publiTipo = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Tipo de publicación" :opciones="options" valor="Tipos" :error="errorType"/>
+                    <Input @datos="(nuevosDatos)=>{titulo = nuevosDatos}" tipo="text" label="Título" requerido="true" :error="errorTitle" :valor="titulo"/>
+                    <Input @datos="(nuevosDatos)=>{descripcion = nuevosDatos}" tipo="texto" label="Descripción" requerido="true" :error="errorDesc" :valor="descripcion"/>
+                    <Input @datos="(nuevosDatos)=>{imagen = nuevosDatos}" tipo="file" label="Imagen del post" requerido="true" clase="banner" :error="errorDesc" />
+                    <Input @datos="(nuevosDatos)=>{publiTipo = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Tipo de publicación" :opciones="options" placeholder="Tipos" :error="errorType"/>
                     <div v-if="tipo == 'Publicación'" class="datos flex flex-col items-center">
                         <Input tipo="button" valor="Colaboradores" img="/assets/icons/addUser.svg"/>
                     </div>
                     <div v-if="tipo == 'Evento'" class="datosEvento flex flex-col items-center">
                         <p v-if="errorDate != null" class="mb-1 text-primary-700 text-sm">{{ errorDate }}</p>
                         <div class="flex justify-center gap-x-5 mb-5">
-                            <Input @datos="(nuevosDatos)=>{fechaInicio = nuevosDatos}" tipo="fecha" label="Fecha de inicio"/>
-                            <Input @datos="(nuevosDatos)=>{fechaFin = nuevosDatos}" tipo="fecha" label="Fecha de finalización"/>
+                            <Input @datos="(nuevosDatos)=>{fechaInicio = nuevosDatos}" tipo="fecha" requerido="true" label="Fecha de inicio"/>
+                            <Input @datos="(nuevosDatos)=>{fechaFin = nuevosDatos}" tipo="fecha" requerido="true" label="Fecha de finalización"/>
                         </div>
                         <Input tipo="button" valor="Colaboradores" img="/assets/icons/addUser.svg"/>
                     </div>
