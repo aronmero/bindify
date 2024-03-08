@@ -43,6 +43,9 @@ import { RouterLink, RouterView } from "vue-router";
         <RouterLink to="/particular/favoritos">
           <textoEnNegrita texto="Favoritos" class="text-sm md:text-base" />
         </RouterLink>
+        <RouterLink to="/particular/favoritos">
+          <textoEnNegrita texto="Seguidos" class="text-sm md:text-base" />
+        </RouterLink>
         
       </div>
       <RouterView></RouterView>

@@ -15,6 +15,8 @@ import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPun
 import contenedorFollower from "@/components/perfiles/containers/contenedorFollower.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
 import { RouterLink, RouterView } from "vue-router";
+
+
 </script>
 
 <template>

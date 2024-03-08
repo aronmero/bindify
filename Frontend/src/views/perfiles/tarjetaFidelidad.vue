@@ -16,7 +16,13 @@ import { users } from "@/components/perfiles/helpers/users.js";
   <Header />
   <Grid
     ><template v-slot:Left></template>
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-1 items-center">
+      <header class="flex items-center relative w-[90vw] justify-center">
+                <button class="lg:hidden absolute left-0">
+                    <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
+                </button>
+                <h3 class="lg:text-xl">Tarjeta de Fidelidad</h3>
+            </header>
       <div>
         <imgsPerfil
           rutaBaner="https://placehold.co/600x400"
@@ -25,10 +31,14 @@ import { users } from "@/components/perfiles/helpers/users.js";
           altTextPerfil="foto perfil"
         ></imgsPerfil>
       </div>
-      <div class="flex flex-col gap-6 justify-evenly md:flex-row">
+      <div class="flex flex-col justify-evenly md:flex-row">
         <textoEnNegrita :texto="users[0].name" class="text-base md:text-xl" />
       </div>
-      <imgRectangular ruta=""></imgRectangular>
+      <imgRectangular ruta="/img/codigo-qr.svg" class="size-80"></imgRectangular>
+      <div class="flex flex-col justify-center gap-x-2 md:flex-row mb-3">
+        <textoNormal texto="Tu número de identificación es:"></textoNormal>
+        <textoEnNegrita texto="U1hP8e4Vw9kN7Z3cE2gS"></textoEnNegrita>
+      </div>
     </div>
 
     <template v-slot:Right></template>
