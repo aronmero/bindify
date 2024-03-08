@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Review;
+use App\Http\Scripts\Utils;
 
 class ReviewsController extends Controller
 {
@@ -47,6 +48,7 @@ class ReviewsController extends Controller
             ]);
 
             $review->save();
+            Utils::AVG_Reviews($request->commerce_id);
 
             return response()->json([
                 'status' => true,
@@ -178,6 +180,8 @@ class ReviewsController extends Controller
                 'note' => $request->note,
             ]);
 
+            Utils::AVG_Reviews($request->commerce_id);
+
             // Devolver una respuesta de éxito
             return response()->json([
                 'status' => true, 'message' => 'review actualizada exitosamente',
@@ -227,8 +231,12 @@ class ReviewsController extends Controller
                 return response()->json(['status' => false, 'message' => 'La review no existe',], 404);
             }
 
+            // Guardar el commerce_id antes de eliminar la revisión
+            $commerce_id = $review->commerce_id;
             // Eliminar la review
             $review->delete();
+
+            Utils::AVG_Reviews($commerce_id);
 
             // Devolver una respuesta de éxito
             return response()->json([
