@@ -9,6 +9,7 @@ import Input from "@/components/comun/input.vue";
 import { useRouter } from "vue-router";
 let options = ["Publicación", "Evento"]; /* Cambiar por info del back */
 let tipo = ref(null);
+let errorTitle = ref(null);
 let errorDesc = ref(null);
 let errorButtons = ref(null);
 const router = useRouter();
@@ -35,22 +36,33 @@ const tratarDatos = ()=>{ /* Revisar */
     console.log(titulo.value);
     console.log(descripcion.value);
     console.log(imagen.value);
-    console.log(publiTipo.value);
+    console.log(fecha.value);
+    console.log(puntuacion.value);
     if(titulo.value != null){
         /* Revisar error en el que cuando pones una descripcion y luego la quitas te deja de aparecer el error, comprobar el length del value */
         if(descripcion.value == null){
-            errorDesc.value = "Es necesario indicar una imagen o una descripción para la publicación.";
+            errorTitle.value = null;
+            errorDesc.value = "Es necesario explicar un poco tu experiecia.";
         }else if(fecha.value == null || puntuacion.value == null){
+            errorTitle.value = null;
             errorDesc.value = null;
             if(fecha.value == null){
-                errorButtons = "";
+                errorButtons.value = "Es necesario indicar la fecha en la que visitaste el comercio.";
+            }else{
+                errorButtons.value = "Es obligatorio puntuar tu experiencia con el comercio.";
             }
 
+        }else{
+            errorTitle.value = null;
+            errorDesc.value = null;
+            errorButtons.value = null;
         }
+    }else{
+        errorTitle.value = "Es necesario indicar un breve título para la reseña";
     }
 }
 /* Poner el apratado de puntuar (Modal) visible por defecto ya que es obligatorio */
-const openModal = (e) => {
+/* const openModal = (e) => {
     const modal = document.getElementById("modalResenia");
     if (modal.classList.contains("hidden")) {
         modal.classList.remove("hidden");
@@ -68,7 +80,7 @@ window.addEventListener("mouseup", (e) => {
             modal.classList.add("hidden");
         }
     }
-});
+}); */
 const modificarPuntuacion = (e)=>{
     let imagenEstrellaCompleta = '/assets/icons/star.svg';
     let estrella1 = document.getElementById("estrella1");
@@ -99,7 +111,6 @@ const resetPuntuacion = (e)=>{
         textoResenia.value = "Elige una puntuacion";
     }else{
         estrellas.forEach((valor, clave) => {
-            console.log(valor);
             if(clave > puntuacion.value-1){
                 valor.src = imagenEstrellaVacia;
             }
@@ -115,7 +126,6 @@ const setearPuntuacion = (e)=>{
     let estrella4 = document.getElementById("estrella4");
     let estrella5 = document.getElementById("estrella5");
     let estrellas = [estrella1, estrella2, estrella3, estrella4, estrella5];
-    console.log(estrellas.indexOf(e.target));
     estrellas.forEach((valor, clave) => {
         if(clave > estrellas.indexOf(e.target)){
             valor.src = imagenEstrellaVacia;
@@ -139,16 +149,15 @@ const setearPuntuacion = (e)=>{
             </header>
             <section class="w-full mt-5 mb-5">
                 <form action="javascript:void(0);" class="flex flex-col gap-y-5">
-                    <Input @datos="(nuevosDatos)=>{titulo = nuevosDatos}" tipo="text" requerido="true" label="Título"/>
-                    <Input @datos="(nuevosDatos)=>{descripcion = nuevosDatos}" tipo="texto" label="Cuéntanos un poco más" :error="errorDesc"/>
+                    <Input @datos="(nuevosDatos)=>{titulo = nuevosDatos}" tipo="text" requerido="true" label="Título" :error="errorTitle" :valor="titulo"/>
+                    <Input @datos="(nuevosDatos)=>{descripcion = nuevosDatos}" tipo="texto" label="Cuéntanos un poco más" :error="errorDesc" :valor="descripcion"/>
                     <Input @datos="(nuevosDatos)=>{imagen = nuevosDatos}" tipo="file" label="Incluye una imágen" clase="banner"/>
                     <div class="buttons flex flex-col gap-y-5">
                         <p v-if="errorButtons != null" class="mb-1 text-primary-700 text-sm">{{ errorButtons }}</p>
-                        <div class="row flex flex-col lg:flex-row gap-x-10 relative">
+                        <div class="row flex flex-col lg:flex-row gap-y-6 gap-x-10 relative">
                             <Input @datos="(nuevosDatos)=>{fecha = nuevosDatos}" tipo="fechaLibre" label="¿Cuándo fue?"/>
-                            <Input @click.prevent="openModal" tipo="button" label="Valora tu experiencia" valor="Puntúa" img="/assets/icons/star.svg"/>
                             <div id="modalResenia"
-                            class="bg-background-50 drop-shadow-sm rounded-xl font-normal p-3 flex-col gap-[5px] justify-center items-center cursor-pointer hidden">
+                            class="bg-background-50 rounded-xl font-normal flex-col gap-[5px] justify-evenly items-start lg:items-center cursor-pointer flex h-[4rem] lg:h-[5.5rem]">
                                 <p>{{ textoResenia }}</p>
                                 <div class="estrellas flex">
                                     <img @mouseover="modificarPuntuacion" @mouseleave="resetPuntuacion" @click="setearPuntuacion" id="estrella1" :src="estrella1" class="w-[2rem]"> 
@@ -161,7 +170,7 @@ const setearPuntuacion = (e)=>{
                         </div>
                     </div>
                     <div class="flex flex-col items-center w-full justify-center">
-                        <Input @click="tratarDatos" tipo="submit" clase="oscuro" valor="Publicar" class="w-[50%]"/>
+                        <Input @click.prevent="tratarDatos" tipo="submit" clase="oscuro" valor="Publicar" class="w-[50%] mt-3"/>
                     </div>
                 </form>
             </section>
