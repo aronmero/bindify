@@ -7,19 +7,18 @@ import Footer from "@/components/comun/footer.vue";
 
 import Input from "@/components/comun/input.vue";
 import {posts} from '@/scripts/posts.js';
-let data = posts[0];
-console.log(data);
-let options = ["Evento", "Publicación"]; /* Cambiar por info del back */
-let tipo = ref(null);
+let data = posts[2];
+let options = ["Publicación", "Evento"]; /* Cambiar por info del back */
+let tipo = ref(options[(data.post_type_id)-1]);
 let errorDesc = ref(null);
 let errorType = ref(null);
 let errorDate = ref(null);
-const titulo = ref(null);
-const descripcion = ref(null);
-const imagen = ref(null);
-const publiTipo = ref(null);
-const fechaInicio = ref(null);
-const fechaFin = ref(null);
+const titulo = ref(data.title);
+const descripcion = ref(data.description);
+const imagen = ref(data.image);
+const publiTipo = ref(options[(data.post_type_id)-1]);
+const fechaInicio = ref(data.fecha_inicio);
+const fechaFin = ref(data.fecha_fin);
 const colaboradores = ref(null);
 const mostrarInformacion = (e)=>{
     let opciones = [...e.target.children];
@@ -66,18 +65,18 @@ const tratarDatos = ()=>{
             </header>
             <section class="w-full mt-5 mb-5">
                 <form action="javascript:void(0);" class="flex flex-col gap-y-5">
-                    <Input @datos="(nuevosDatos)=>{titulo = nuevosDatos}" tipo="text" requerido="true" label="Título"/>
-                    <Input @datos="(nuevosDatos)=>{descripcion = nuevosDatos}" tipo="texto" label="Descripción" :error="errorDesc"/>
-                    <Input @datos="(nuevosDatos)=>{imagen = nuevosDatos}" tipo="file" label="Imagen del post" clase="banner" :error="errorDesc" />
-                    <Input @datos="(nuevosDatos)=>{publiTipo = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Tipo de publicación" :opciones="options" valor="Tipos" :error="errorType"/>
+                    <Input @datos="(nuevosDatos)=>{titulo = nuevosDatos}" tipo="text" requerido="true" label="Título" :valor="titulo"/>
+                    <Input @datos="(nuevosDatos)=>{descripcion = nuevosDatos}" tipo="texto" label="Descripción" :error="errorDesc" :valor="descripcion"/>
+                    <Input @datos="(nuevosDatos)=>{imagen = nuevosDatos}" tipo="file" label="Imagen del post" clase="banner" :error="errorDesc" :valor="imagen"/>
+                    <Input @datos="(nuevosDatos)=>{publiTipo = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Tipo de publicación" :opciones="options" placeholder="Tipos" :error="errorType" :valor="publiTipo"/>
                     <div v-if="tipo == 'Publicación'" class="datos flex flex-col items-center">
                         <Input tipo="button" valor="Colaboradores" img="/assets/icons/addUser.svg"/>
                     </div>
                     <div v-if="tipo == 'Evento'" class="datosEvento flex flex-col items-center">
                         <p v-if="errorDate != null" class="mb-1 text-primary-700 text-sm">{{ errorDate }}</p>
                         <div class="flex justify-center gap-x-5 mb-5">
-                            <Input @datos="(nuevosDatos)=>{fechaInicio = nuevosDatos}" tipo="fecha" label="Fecha de inicio"/>
-                            <Input @datos="(nuevosDatos)=>{fechaFin = nuevosDatos}" tipo="fecha" label="Fecha de finalización"/>
+                            <Input @datos="(nuevosDatos)=>{fechaInicio = nuevosDatos}" tipo="fecha" label="Fecha de inicio" :valor="fechaInicio"/>
+                            <Input @datos="(nuevosDatos)=>{fechaFin = nuevosDatos}" tipo="fecha" label="Fecha de finalización" :valor="fechaFin"/>
                         </div>
                         <Input tipo="button" valor="Colaboradores" img="/assets/icons/addUser.svg"/>
                     </div>

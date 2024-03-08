@@ -57,16 +57,12 @@ const emitirDatos = (e)=>{
         <input @change="emitirDatos" v-if="tipo == 'button'" :type="tipo" class="ps-12 bg-background-100 text-text-950 py-3 rounded-xl w-fit px-4 cursor-pointer" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'submit' && clase == 'claro'" :type="tipo" :value="valor" class="bg-secondary-400 text-text-950 py-3 px-1 rounded-xl cursor-pointer">
         <input @change="emitirDatos" v-if="tipo == 'submit' && clase == 'oscuro'" :type="tipo" :value="valor" class="bg-background-800 text-text-50 py-3 px-1 rounded-xl cursor-pointer">
-        <input @change="emitirDatos" v-if="tipo == 'file'" :type="tipo" hidden >
+        <input @change="emitirDatos" v-if="tipo == 'file'" accept="image/*" :type="tipo" hidden>
         <input @change="emitirDatos" v-if="tipo == 'hora'" type="time" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'fecha'" type="date" :min="diaActual" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
-        <select @change="emitirDatos" v-if="tipo == 'selection' && requerido == 'true'" class="bg-background-100 text-text-950 py-3 px-1 text-center rounded-xl cursor-pointer" required> 
+        <select @change="emitirDatos" v-if="tipo == 'selection'" class="bg-background-100 text-text-950 py-3 px-1 text-center rounded-xl cursor-pointer"> 
             <option value="" disabled selected>{{ placeholder }}</option>
-            <option v-for="(valor, clave) in opciones" :value="clave">{{ valor }}</option>
-        </select>
-        <select @change="emitirDatos" v-if="tipo == 'selection' && required == 'false'" class="bg-background-100 text-text-950 py-3 px-1 text-center rounded-xl cursor-pointer"> 
-            <option value="" disabled selected>{{ placeholder }}</option>
-            <option v-for="(valor, clave) in opciones" :value="clave">{{ valor }}</option>
+            <option v-for="(value, clave) in opciones" :value="clave" :selected="value == valor">{{ value }}</option>
         </select>
         <textarea @change="emitirDatos" v-if="tipo == 'texto'" class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl resize-none h-[15rem]" :placeholder="placeholder" :value="valor"></textarea>
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'perfil'" class="flex relative lg:size-40 size-28 justify-center items-center rounded-full border-dotted border border-background-900">
@@ -78,8 +74,9 @@ const emitirDatos = (e)=>{
             />
         </button>
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'banner'" class="flex relative lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] justify-center items-center rounded-xl border-dotted border border-background-900">
-            <p v-if="imagenSubida == null" class="text-[1em] pointer-events-none">Añadir Imagen</p>
-            <img v-else :src="imagenSubida" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] rounded-xl">
+            <p v-if="imagenSubida == null && valor == null" class="text-[1em] pointer-events-none">Añadir Imagen</p>
+            <img v-if="imagenSubida == null && valor != null" :src="valor" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] rounded-xl">
+            <img v-else :src="imagenSubida" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] rounded-xl">
             <img 
                 src="/assets/icons/add.svg"
                 class="max-w-[40px] max-h-[40px] lg:block absolute bottom-0 right-0 lg:translate-x-4 lg:translate-y-2 translate-x-4 translate-y-2 py-1 px-2 pointer-events-none"
