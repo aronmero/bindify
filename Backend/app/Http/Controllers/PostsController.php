@@ -74,14 +74,12 @@ class PostsController extends Controller
                 )
                 ->whereIn('users-posts.user_id', $ids)
                 ->where('posts.active', '=', true)
+                ->orderBy('posts.created_at','desc')
                 ->get();
-
-
-            $posts = $listado;
 
             return response()->json([
                 'status' => true,
-                'data' => $posts,
+                'data' => $listado,
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
