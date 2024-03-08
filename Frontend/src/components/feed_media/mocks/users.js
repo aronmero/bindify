@@ -50,3 +50,12 @@ export const users = [
         tipo: 'ayuntamiento'
     },
 ];
+
+export const encontrar_usuario_por_id = (usuario_id) => {
+    let encontrado = false;
+    users.forEach(usuario => {
+        if(usuario.id == usuario_id) encontrado = usuario;
+    })
+    console.log(encontrado);
+    return encontrado;
+}

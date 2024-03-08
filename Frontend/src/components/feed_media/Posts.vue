@@ -7,8 +7,8 @@
 <template>
     <Suspense>
         <Feed 
-            v-for="post in posts" 
-            :post="post"
+                v-for="post in posts" 
+                :post="post"
         /> 
     </Suspense>
 </template>
