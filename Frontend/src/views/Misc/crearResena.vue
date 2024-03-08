@@ -6,11 +6,12 @@ import Header from "@/components/comun/header.vue";
 import Footer from "@/components/comun/footer.vue";
 
 import Input from "@/components/comun/input.vue";
+import { useRouter } from "vue-router";
 let options = ["Publicación", "Evento"]; /* Cambiar por info del back */
 let tipo = ref(null);
 let errorDesc = ref(null);
-let errorType = ref(null);
-let errorDate = ref(null);
+let errorButtons = ref(null);
+const router = useRouter();
 const titulo = ref(null);
 const descripcion = ref(null);
 const imagen = ref(null);
@@ -37,22 +38,18 @@ const tratarDatos = ()=>{ /* Revisar */
     console.log(publiTipo.value);
     if(titulo.value != null){
         /* Revisar error en el que cuando pones una descripcion y luego la quitas te deja de aparecer el error, comprobar el length del value */
-        if(descripcion.value == null && imagen.value == null){
+        if(descripcion.value == null){
             errorDesc.value = "Es necesario indicar una imagen o una descripción para la publicación.";
-        }else if(publiTipo.value == null){
+        }else if(fecha.value == null || puntuacion.value == null){
             errorDesc.value = null;
-            errorType.value = "Es obligatorio seleccionar un tipo de evento para crear una publicación.";
-        }else if(publiTipo.value == "0" && (fechaInicio.value == null || fechaFin.value == null) ){
-            errorDesc.value = null;
-            errorType.value = null;
-            errorDate.value = "Debe seleccionar las fechas de inicio y fin del evento.";
-        }else{
-            errorDesc.value = null;
-            errorType.value = null;
-            errorDate.value = null;
+            if(fecha.value == null){
+                errorButtons = "";
+            }
+
         }
     }
 }
+/* Poner el apratado de puntuar (Modal) visible por defecto ya que es obligatorio */
 const openModal = (e) => {
     const modal = document.getElementById("modalResenia");
     if (modal.classList.contains("hidden")) {
@@ -66,13 +63,12 @@ const openModal = (e) => {
 }
 window.addEventListener("mouseup", (e) => {
     const modal = document.getElementById("modalResenia");
-
     if (e.target != modal.previousSibling) {
         if (modal.compareDocumentPosition(e.target) != "20" & modal.compareDocumentPosition(e.target) != "0") {
             modal.classList.add("hidden");
         }
     }
-})
+});
 const modificarPuntuacion = (e)=>{
     let imagenEstrellaCompleta = '/assets/icons/star.svg';
     let estrella1 = document.getElementById("estrella1");
@@ -136,7 +132,7 @@ const setearPuntuacion = (e)=>{
         <template v-slot:Left></template>
         <tempalte class="flex flex-col items-center justify-center">
             <header class="flex items-center relative w-[90vw] justify-center">
-                <button class="lg:hidden absolute left-0">
+                <button @click="router.go(-1)" class="lg:hidden absolute left-0">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
                 </button>
                 <h3 class="lg:text-xl">Crear una reseña</h3>
@@ -145,11 +141,11 @@ const setearPuntuacion = (e)=>{
                 <form action="javascript:void(0);" class="flex flex-col gap-y-5">
                     <Input @datos="(nuevosDatos)=>{titulo = nuevosDatos}" tipo="text" requerido="true" label="Título"/>
                     <Input @datos="(nuevosDatos)=>{descripcion = nuevosDatos}" tipo="texto" label="Cuéntanos un poco más" :error="errorDesc"/>
-                    <Input @datos="(nuevosDatos)=>{imagen = nuevosDatos}" tipo="file" label="Incluye una imágen" clase="banner" :error="errorDesc" />
+                    <Input @datos="(nuevosDatos)=>{imagen = nuevosDatos}" tipo="file" label="Incluye una imágen" clase="banner"/>
                     <div class="buttons flex flex-col gap-y-5">
-                        <p v-if="errorDate != null" class="mb-1 text-primary-700 text-sm">{{ errorButtons }}</p>
-                        <div class="row flex gap-x-10 relative">
-                            <Input @datos="(nuevosDatos)=>{fecha = nuevosDatos}" tipo="fecha" label="¿Cuándo fue?"/>
+                        <p v-if="errorButtons != null" class="mb-1 text-primary-700 text-sm">{{ errorButtons }}</p>
+                        <div class="row flex flex-col lg:flex-row gap-x-10 relative">
+                            <Input @datos="(nuevosDatos)=>{fecha = nuevosDatos}" tipo="fechaLibre" label="¿Cuándo fue?"/>
                             <Input @click.prevent="openModal" tipo="button" label="Valora tu experiencia" valor="Puntúa" img="/assets/icons/star.svg"/>
                             <div id="modalResenia"
                             class="bg-background-50 drop-shadow-sm rounded-xl font-normal p-3 flex-col gap-[5px] justify-center items-center cursor-pointer hidden">

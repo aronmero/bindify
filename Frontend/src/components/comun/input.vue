@@ -60,6 +60,7 @@ const emitirDatos = (e)=>{
         <input @change="emitirDatos" v-if="tipo == 'file'" accept="image/*" :type="tipo" hidden>
         <input @change="emitirDatos" v-if="tipo == 'hora'" type="time" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'fecha'" type="date" :min="diaActual" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
+        <input @change="emitirDatos" v-if="tipo == 'fechaLibre'" type="date" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <select @change="emitirDatos" v-if="tipo == 'selection'" class="bg-background-100 text-text-950 py-3 px-1 text-center rounded-xl cursor-pointer"> 
             <option value="" disabled selected>{{ placeholder }}</option>
             <option v-for="(value, clave) in opciones" :value="clave" :selected="value == valor">{{ value }}</option>
@@ -85,7 +86,7 @@ const emitirDatos = (e)=>{
         <div v-if="tipo == 'button'" class="relative flex flex-row items-center justify-start">
             <img 
             :src="img"
-            class="max-w-[30px] max-h-[30px] lg:block absolute lg:-translate-y-[2rem] lg:translate-x-[0.9rem]"
+            class="max-w-[30px] max-h-[30px] lg:block absolute -translate-y-[2rem] translate-x-[0.9rem]"
             />
         </div>
         <div class="absolute translate-y-11 translate-x-3 flex">
