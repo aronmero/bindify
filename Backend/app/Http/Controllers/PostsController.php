@@ -75,7 +75,7 @@ class PostsController extends Controller
                 )
                 ->whereIn('users-posts.user_id', $ids)
                 ->where('posts.active', '=', true)
-                ->orderBy('posts.created_at','desc')
+                ->orderBy('posts.created_at', 'desc')
                 ->get();
 
             return response()->json([
@@ -136,7 +136,7 @@ class PostsController extends Controller
     public function show(string $id)
     {
         try {
-            
+
             $post = Post::find($id);
 
             $data = [
@@ -167,14 +167,78 @@ class PostsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+
+            $user = Auth::user();
+            $post = Post::find($id);
+            $userVerificado = false;
+
+            foreach ($post->users as $usuario) {
+                if ($usuario->id == $user->id) {
+                    $userVerificado = true;
+                }
+            }
+
+            if ($userVerificado) {
+                $post->update([
+                    'image' => $request->image,
+                    'title' => $request->title,
+                    'description' => $request->description,
+                    'post_type_id' => $request->post_type_id,
+                    'start_date' => $request->start_date,
+                    'end_date' => $request->end_date,
+                ]);
+            }
+
+            //TODO Hacer que solo devuelva algunos datos del usuario
+            return response()->json([
+                'status' => true,
+                'message' => 'Post actualizado',
+                'data' => $post
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 404);
+        }
+
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Cambia el estado de la publicación
      */
     public function destroy(string $id)
     {
-        //
+        try {
+
+            $user = Auth::user();
+            $post = Post::find($id);
+            $userVerificado = false;
+
+            foreach ($post->users as $usuario) {
+                if ($usuario->id == $user->id) {
+                    $userVerificado = true;
+                }
+            }
+
+            if ($userVerificado) {
+                $post->update([
+                    'active' => false,
+                ]);
+            }
+
+            //TODO Hacer que solo devuelva algunos datos del usuario
+            return response()->json([
+                'status' => true,
+                'message' => 'Post eliminado',
+                'data' => $post
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 404);
+        }
     }
 }
