@@ -238,6 +238,10 @@
     }
 
     #calendar-prev {
+        // transform: rotate(180deg);
+    }
+
+    #calendar-next {
         transform: rotate(180deg);
     }
 
