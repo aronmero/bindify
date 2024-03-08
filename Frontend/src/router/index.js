@@ -20,6 +20,9 @@ const routes = [
   { path: "/busqueda", component: () => import("@/views/Misc/search.vue") },
   { path: "/resenia", component: () => import("@/views/Misc/crearResena.vue") },
   { path: "/validar", component: () => import("@/views/Misc/validarComercio.vue") },
+
+  //vista de seguidos, temporal
+  {path : "/seguidos", component: () =>import("@/views/perfiles/seguidos.vue")},
   
   //Sprint 2
   { path: "/notificaciones", component: () => import("@/views/Misc/notificaciones.vue") },
@@ -38,6 +41,7 @@ const routes = [
   children:[
     {path:"fidelidad", component:() => import("@/components/perfiles/containers/contenedorVistaFidelidad.vue")},
     {path:"favoritos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")}
+
   ]},
   { path: "/tarjeta-fidelidad", component: () => import("@/views/perfiles/tarjetaFidelidad.vue")},
   { path: "/perfil/edit", component: () => import("@/views/perfiles/editarPerfil.vue") },
