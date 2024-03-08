@@ -1,4 +1,4 @@
-export const municipios = () => [
+export const municipios =  [
     {
         id: 1,
         name: 'Los Llanos'
@@ -27,4 +27,13 @@ export const municipios = () => [
         id: 7,
         name: 'Tijarafe'
     },
-]
+];
+
+export const obtener_municipio = (municipality_id) => {
+    let found = null;
+
+    municipios.forEach(municipio =>  {
+        if (municipio.id == municipality_id) found = municipio 
+    });
+    return found;
+}

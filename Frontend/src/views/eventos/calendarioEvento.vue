@@ -10,11 +10,14 @@
 
 <template >
     <Header />
-    <Grid style="max-height:100vh; overflow-y:scroll; background:#fff; margin: 20px 0px 40px 0px;">
-        <template v-slot:Left >
+    <Grid style="max-height:100vh; overflow-y:scroll; background:#fff; ">
+        <template v-slot:Left  >
+   
         </template>
-           <VistaCalendario/>
-        <template v-slot:Right > </template>
+           <VistaCalendario />
+        <template v-slot:Right >
+
+        </template>
     </Grid>
     <Footer />
 </template>
