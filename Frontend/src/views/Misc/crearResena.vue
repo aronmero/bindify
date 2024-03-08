@@ -150,12 +150,12 @@ const setearPuntuacion = (e)=>{
             <section class="w-full mt-5 mb-5">
                 <form action="javascript:void(0);" class="flex flex-col gap-y-5">
                     <Input @datos="(nuevosDatos)=>{titulo = nuevosDatos}" tipo="text" requerido="true" label="Título" :error="errorTitle" :valor="titulo"/>
-                    <Input @datos="(nuevosDatos)=>{descripcion = nuevosDatos}" tipo="texto" label="Cuéntanos un poco más" :error="errorDesc" :valor="descripcion"/>
+                    <Input @datos="(nuevosDatos)=>{descripcion = nuevosDatos}" tipo="texto" requerido="true" label="Cuéntanos un poco más" :error="errorDesc" :valor="descripcion"/>
                     <Input @datos="(nuevosDatos)=>{imagen = nuevosDatos}" tipo="file" label="Incluye una imágen" clase="banner"/>
                     <div class="buttons flex flex-col gap-y-5">
                         <p v-if="errorButtons != null" class="mb-1 text-primary-700 text-sm">{{ errorButtons }}</p>
                         <div class="row flex flex-col lg:flex-row gap-y-6 gap-x-10 relative">
-                            <Input @datos="(nuevosDatos)=>{fecha = nuevosDatos}" tipo="fechaLibre" label="¿Cuándo fue?"/>
+                            <Input @datos="(nuevosDatos)=>{fecha = nuevosDatos}" tipo="fechaLibre" label="¿Cuándo fue?" requerido="false"/>
                             <div id="modalResenia"
                             class="bg-background-50 rounded-xl font-normal flex-col gap-[5px] justify-evenly items-start lg:items-center cursor-pointer flex h-[4rem] lg:h-[5.5rem]">
                                 <p>{{ textoResenia }}</p>
