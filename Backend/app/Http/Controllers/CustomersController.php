@@ -15,7 +15,37 @@ class CustomersController extends Controller
 {
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena un nuevo cliente en la base de datos.
+     *
+     * Este método crea un nuevo cliente y lo almacena en la base de datos.
+     *
+     * @response 200 {
+     *   "status": true,
+     *   "message": "Customer creado.",
+     *   "data": {
+     *     // Datos del cliente creado
+     *   }
+     * }
+     *
+     * @response 400 {
+     *   "status": false,
+     *   "error": "mensaje_de_error"
+     * }
+     * @response 409 {
+     *   "status": false,
+     *   "error": "Error de entrada duplicada:"
+     * }
+     * @response 500 {
+     *   "status": false,
+     *   "error": "ErrorException"
+     * }
+     * * @response 404 {
+     *   "status": false,
+     *   "error": "ErrorException"
+     * }
+     *
+     * @param  \Illuminate\Http\Request  $request - La solicitud HTTP recibida.
+     * @return \Illuminate\Http\JsonResponse - Respuesta JSON que indica si el cliente se creó correctamente o no.
      */
     public function store(Request $request)
     {
@@ -39,20 +69,20 @@ class CustomersController extends Controller
                 'birth_date' => $request->birth_date,
             ]);
 
-            $data =  Customer::join('users', 'customers.user_id', '=', 'users.id')
-            ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
-            ->select(
-                'email',
-                'phone',
-                'municipalities.name AS municipality_name',
-                'avatar',
-                'username',
-                'users.name',
-                'gender',
-                'birth_date'
-            )
-            ->where('users.id', '=', $user->id)
-            ->firstOrFail();
+            $data = Customer::join('users', 'customers.user_id', '=', 'users.id')
+                ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
+                ->select(
+                    'email',
+                    'phone',
+                    'municipalities.name AS municipality_name',
+                    'avatar',
+                    'username',
+                    'users.name',
+                    'gender',
+                    'birth_date'
+                )
+                ->where('users.id', '=', $user->id)
+                ->firstOrFail();
 
             return response()->json([
                 "status" => true,
@@ -91,8 +121,41 @@ class CustomersController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Muestra el cliente especificado por su id
+     *
+     * Este método devuelve la información del cliente especificado por su ID de usuario.
+     * 
+     * @urlParam id string required El ID del cliente.
+     *
+     *@response 200 {
+     *     "status": true,
+     *     "data": {
+     *         "email": "correo_electronico",
+     *         "phone": "numero_de_telefono",
+     *         "municipality_name": "nombre_del_municipio",
+     *         "avatar": "avatar",
+     *         "username": "nombre_de_usuario",
+     *         "name": "nombre",
+     *         "gender": "genero",
+     *         "birth_date": "fecha_de_nacimiento"
+     *     }
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "error": "Cliente no encontrado"
+     * }
+     * 
+     * @response 409 {
+     *     "status": false,
+     *     "error": "Error de entrada duplicada: mensaje_de_error"
+     * }
+     *
+     * @param  string  $id - El ID del cliente.
+     * @return \Illuminate\Http\JsonResponse - La respuesta JSON que contiene los datos del cliente o un mensaje de error si no se encuentra el cliente.
      */
+
+
     public function show(string $id)
     {
 
@@ -144,7 +207,54 @@ class CustomersController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualiza el Cliente especificado por su Id
+     *
+     * Este método actualiza la información del cliente especificado por su ID de usuario.
+     * 
+     * @urlParam id string required El ID del cliente.
+     * @bodyParam email string required El correo electrónico del cliente.
+     * @bodyParam password string required La contraseña del cliente.
+     * @bodyParam phone string required El número de teléfono del cliente.
+     * @bodyParam municipality_id int required El ID del municipio del cliente.
+     * @bodyParam avatar string El avatar del cliente.
+     * @bodyParam username string required El nombre de usuario del cliente.
+     * @bodyParam nombre string required El nombre del cliente.
+     * @bodyParam gender string required El género del cliente.
+     * @bodyParam birth_date date required La fecha de nacimiento del cliente.
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "message": "Customer actualizado.",
+     *     "data": {
+     *         "email": "correo_electronico",
+     *         "phone": "numero_de_telefono",
+     *         "municipality_name": "nombre_del_municipio",
+     *         "avatar": "avatar",
+     *         "username": "nombre_de_usuario",
+     *         "name": "nombre",
+     *         "gender": "genero",
+     *         "birth_date": "fecha_de_nacimiento"
+     *     }
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "error": "Customer no encontrado"
+     * }
+     * 
+     * @response 409 {
+     *     "status": false,
+     *     "error": "Error de entrada duplicada: mensaje_de_error"
+     * }
+     *
+     * @response 500 {
+     *     "status": false,
+     *     "error": "mensaje_de_error"
+     * }
+     *
+     * @param  Request  $request - La solicitud HTTP que contiene los datos del cliente a actualizar.
+     * @param  string  $id - El ID del cliente.
+     * @return \Illuminate\Http\JsonResponse - La respuesta JSON que indica si el cliente se ha actualizado correctamente o si ha ocurrido un error.
      */
     public function update(Request $request, string $id)
     {
@@ -168,20 +278,20 @@ class CustomersController extends Controller
             $user->save();
             $customer->save();
 
-            $data =  Customer::join('users', 'customers.user_id', '=', 'users.id')
-            ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
-            ->select(
-                'email',
-                'phone',
-                'municipalities.name AS municipality_name',
-                'avatar',
-                'username',
-                'users.name',
-                'gender',
-                'birth_date'
-            )
-            ->where('users.id', '=', $user->id)
-            ->firstOrFail();
+            $data = Customer::join('users', 'customers.user_id', '=', 'users.id')
+                ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
+                ->select(
+                    'email',
+                    'phone',
+                    'municipalities.name AS municipality_name',
+                    'avatar',
+                    'username',
+                    'users.name',
+                    'gender',
+                    'birth_date'
+                )
+                ->where('users.id', '=', $user->id)
+                ->firstOrFail();
 
             return response()->json([
                 "status" => true,

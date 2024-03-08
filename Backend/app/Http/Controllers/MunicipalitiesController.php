@@ -2,31 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Municipality;
 use Illuminate\Http\Request;
-use App\Models\Category;
-use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Exception;
 
-class CategoryController extends Controller
+class MunicipalitiesController extends Controller
 {
     /**
-     * Muestra una lista de todas las categorías.
+     * Muestra una lista de los recursos.
      *
-     * Este método devuelve una lista de todas las categorías.
-     * Si se encuentran categorías, devuelve una respuesta JSON con los datos de las categorías y un estado 200.
-     * Si no se encuentran categorías, devuelve una respuesta JSON con un mensaje de error y un estado 404.
+     * Este método devuelve una lista de todos los municipios.
+     * Si se encuentran municipios, devuelve una respuesta JSON con los datos de los municipios y un estado 200.
+     * Si no se encuentran municipios, devuelve una respuesta JSON con un mensaje de error y un estado 404.
      * Si ocurre algún otro error durante el proceso, devuelve una respuesta JSON con un mensaje de error y un estado 500.
      *
-     * @return \Illuminate\Http\JsonResponse - Una respuesta JSON que contiene los datos de las categorías o un mensaje de error.
+     * @return \Illuminate\Http\JsonResponse - Una respuesta JSON que contiene los datos de los municipios o un mensaje de error.
      *
      * @response 200 {
      *   "status": true,
      *   "data": [
      *     {
-     *       // Datos de la categoría 1
+     *       // Datos del municipio 1
      *     },
      *     {
-     *       // Datos de la categoría 2
+     *       // Datos del municipio 2
      *     },
      *     // ...
      *   ]
@@ -45,13 +45,13 @@ class CategoryController extends Controller
     public function index()
     {
         try {
-            // Obtener todas las categorías
-            $categorias = Category::all();
+            // Obtener todos los municipios
+            $municipalities = Municipality::all();
 
-            // Devolver una respuesta con los datos de las categorías
-            return response()->json(['status' => true, 'data' => $categorias], 200);
+            // Devolver una respuesta con los datos de los municipios
+            return response()->json(['status' => true, 'data' => $municipalities], 200);
         } catch (ModelNotFoundException $e) {
-            // Manejar el caso en el que no se encuentren categorías
+            // Manejar el caso en el que no se encuentren municipios
             return response()->json(['status' => false, 'message' => 'No se encontró ninguna categoría'], 404);
         } catch (Exception $e) {
             // Manejar cualquier otro error
