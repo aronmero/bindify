@@ -46,31 +46,45 @@ class SearchController extends Controller
      * }
      */
 
-    public function commercesByMunicipality(string $municipality)
+    public function commerces(Request $request)
     {
 
         try {
 
-            Municipality::where('name', $municipality)->firstOrFail();
-
             $commerces = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
                 ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
                 ->join('categories', 'commerces.category_id', '=', 'categories.id')
+                ->join('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
                 ->select(
                     'email',
                     'phone',
-                    'municipalities.name AS municipality_name',
                     'avatar',
                     'username',
-                    'users.name',
                     'address',
                     'commerces.description',
+                    'municipalities.name',
                     'categories.name AS categories_name',
                     'schedule',
-                    'commerces.active'
+                    'commerces.avg',
+                    \DB::raw('count(reviews.commerce_id) as review_count')
                 )
-                ->where('municipalities.name', '=', $municipality)
+                ->where('commerces.active','=', true)
+                ->where('users.username', 'LIKE', $request->name . '%')
+                ->groupBy('email', 'phone', 'avatar', 'username', 'address', 'commerces.description', 'categories.name', 'schedule', 'commerces.avg', 'municipalities.name',)
                 ->get();
+
+                if($request->municipality) {
+                    Municipality::where('name', $request->municipality)->firstOrFail();
+                    $commerces = $commerces->where('municipalities.name', '=', $request->municipality);
+                }
+
+                if($request->name) {
+                    $commerces = $commerces->where('users.username', 'LIKE', $request->name . '%');
+                }
+
+                if($request->category) {
+                    $commerces = $commerces->where('categories.name', '=', $request->category);
+                }
 
             return response()->json([
                 "status" => true,
@@ -81,7 +95,7 @@ class SearchController extends Controller
 
             return response()->json([
                 "status" => false,
-                "error" => "Municipio $municipality no encontrado",
+                "error" => "Municipio $request->municipality no encontrado",
             ], 404);
 
         } catch (Exception $e) {
@@ -134,19 +148,27 @@ class SearchController extends Controller
 
             $hashtag = Hashtag::where('name', $hashtag)->firstOrFail();
 
-            $commerces = $hashtag->commerces->map(function ($commerce) {
-                return [
-                    'user_id' => $commerce->user_id,
-                    'address' => $commerce->address,
-                    'description' => $commerce->description,
-                    'verification_token_id' => $commerce->verification_token_id,
-                    'category_id' => $commerce->category_id,
-                    'verificated' => $commerce->verificated,
-                    'schedule' => $commerce->schedule,
-                    'avg' => $commerce->avg,
-                    'active' => $commerce->active,
-                ];
-            });
+            $commerces = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
+            ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
+            ->join('categories', 'commerces.category_id', '=', 'categories.id')
+            ->join('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
+            ->select(
+                'email',
+                'phone',
+                'avatar',
+                'username',
+                'address',
+                'commerces.description',
+                'categories.name AS categories_name',
+                'schedule',
+                'commerces.avg',
+                \DB::raw('count(reviews.commerce_id) as review_count')
+            )
+            ->where('hashtags.name', '=', $hashtag)
+            ->where('commerces.active','=', true)
+            ->groupBy('email', 'phone', 'avatar', 'username', 'address', 'commerces.description', 'categories.name', 'schedule', 'commerces.avg')
+            ->get();
+
 
             return response()->json([
                 "status" => true,
