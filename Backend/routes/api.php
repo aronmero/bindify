@@ -10,6 +10,7 @@ use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\MunicipalitiesController;
+use App\Http\Controllers\UsersController;
 use App\Models\Follower;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +50,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('commerces/hashtag/{hashtag}', [SearchController::class, 'commercesByHashtag']);
     Route::get('posts/{idMunicipity}', [SearchController::class, 'postsByMunicipality']);
     Route::get('posts/hashtag/{hashtag}', [SearchController::class, 'postsByHashtag']);
+    Route::get('profile/{username}', [UsersController::class, 'show']);
 
 });
 
