@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Municipality;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -23,11 +24,19 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+
+        $municipality_id = $this->faker->numberBetween(1, Municipality::count());
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => static::$password ??= Hash::make('1234'),
+            'phone'=> Str::random(10),
+            'municipality_id'=> $municipality_id,
+            'avatar'=> Str::random(10),
+            'banner'=> Str::random(10),
+            'username'=> fake()->name(),
             'remember_token' => Str::random(10),
         ];
     }

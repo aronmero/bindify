@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 
 
         // Municipios
-        for ($i = 1; $i <= 30; $i++) {
+        for ($i = 1; $i <= 12; $i++) {
             DB::table('municipalities')->insert([
                 'name' => 'Municipio ' . $i,
                 'created_at' => now(),
@@ -59,8 +59,15 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        $this->call([
+            UsersTableSeeder::class,
+            CommercesTableSeeder::class,
+            CustomersTableSeeder::class,
+            ReviewsTableSeeder::class,
+        ]);
+
         // Usuarios
-        for ($i = 1; $i <= 30; $i++) {
+        /*for ($i = 1; $i <= 30; $i++) {
             DB::table('users')->insert([
                 'email' => 'usuario' . $i . '@example.com',
                 'password' => bcrypt('password' . $i),
@@ -114,7 +121,7 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-        }
+        }*/
 
         // Notificaciones
         for ($i = 1; $i <= 30; $i++) {
@@ -155,6 +162,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        /*
         // Reviews
         for ($i = 1; $i <= 30; $i++) {
             DB::table('reviews')->insert([
@@ -166,7 +174,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
-
+*/
         // Seeder for commerces-hashtags
         for ($i = 1; $i <= 10; $i++) {
             DB::table('commerces-hashtags')->insert([
