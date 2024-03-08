@@ -97,7 +97,7 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
 <template>
     <h1 class="title">Título</h1>
     <div class="container">
-        <form @submit.prevent="registro" class="form max-w-[1500px]">
+        <form @submit.prevent="registro" class="form max-w-[700px]">
             <div class="formulario-container">
                 <div class="grupo">
                     <Input tipo="text" requerido="true" img="/assets/icons/person.svg" v-model='usuario' label="Usuario"/>
@@ -134,11 +134,11 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
         
             <div class="formulario-container-comercio">
                 <div class="grupo">
-                    <Input tipo="text" requerido="true" img="/assets/icons/person.svg" v-model='direccion' label="Dirección"/>
+                    <Input tipo="text" requerido="true" img="/assets/icons/location.svg" v-model='direccion' label="Dirección"/>
                 </div>
                 <br/>
                 <div class="grupo">
-                    <Input tipo="texto" img="/assets/icons/comments.svg" valor="Escribe una descripción" v-model='descripcion' label="Descripcion"/>
+                    <Input tipo="texto" img="/assets/icons/comments.svg" valor="Introduce una descripción" v-model='descripcion' label="Descripcion"/>
                 </div>
                 <br/>
                 <div class="grupo">
@@ -168,23 +168,198 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
 
 <style scoped lang="scss">
 @media screen and (min-width: 100px) and (max-width: 450px) {
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
+    * {
+        font-family: 'Inter', 'Times New Roman', Times, serif;
+    }
+
+    .container {
+        width: 85%;
+        margin: 0 auto;
+        margin-top: 20px;
+    }
+
+    .formulario-container {
+        width: 100%;
+    }
+
+    .formulario-container-comercio {
+        width: 100%;
+    }
+
+    h1 {
+        margin-top: 50px;
+        text-align: center;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+
+    .grupo {
+        font-size: 15px;
+        width: 95%;
+    }
+
+    .registrarse {
+        border-radius: 15px;
+        font-size: 20px;
+        width: 85%;
+        margin: 0 auto;
+    }
+
+    .volver {
+        display: flex;
+        justify-content: end;
+        letter-spacing: 0.02em;
+        margin-top: 7px;
+        margin-right: 15px;
+        font-size: 15px;
+        width: 80%;
+        margin: 0 auto;
+        margin-bottom: 35px;
+
+        button {
+            font-weight: bold;
+            margin-left: 7px;
+        }
+    }
 }
 
 
 @media screen and (min-width: 451px) and (max-width: 1050px) {
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+    * {
+        font-family: 'Inter', 'Times New Roman', Times, serif;
+    }
+
+    .container {
+        width: 85%;
+        margin: 0 auto;
+        margin-top: 20px;
+    }
+
+    .formulario-container {
+        width: 100%;
+    }
+
+    .formulario-container-comercio {
+        width: 100%;
+    }
+
+    h1 {
+        margin-top: 50px;
+        text-align: center;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+
+    .grupo {
+        font-size: 15px;
+        width: 100%;
+    }
     
+    .registrarse {
+        border-radius: 15px;
+        font-size: 20px;
+        width: 85%;
+        margin: 0 auto;
+    }
+
+    .volver {
+        display: flex;
+        justify-content: end;
+        letter-spacing: 0.02em;
+        margin-top: 5px;
+        margin-right: 15px;
+        font-size: 20px;
+        width: 80%;
+        margin: 0 auto;
+        margin-bottom: 35px;
+
+        button {
+            font-weight: bold;
+            margin-left: 7px;
+        }
+    }
 }
 
 
+
 @media screen and (min-width: 1051px) and (max-width: 1250px) {
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+    * {
+        font-family: 'Inter', 'Times New Roman', Times, serif;
+    }
+
+    .container {
+        width: 85%;
+        margin: 0 auto;
+        margin-top: 20px;
+    }
+
+    .formulario-container {
+        width: 100%;
+        margin-right: 15px;
+    }
+
+    .formulario-container-comercio {
+        width: 100%;
+        margin-left: 15px;
+    }
+
+    h1 {
+        margin-top: 50px;
+        text-align: center;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    form {
+        display: flex;
+        justify-content: space-around;
+        max-width: 1000px;
+    }
+
+    .grupo {
+        font-size: 15px;
+        width: 100%;
+    }
     
+    .registrarse {
+        border-radius: 15px;
+        font-size: 20px;
+        width: 85%;
+        margin: 0 auto;
+    }
+
+    .volver {
+        display: flex;
+        justify-content: end;
+        letter-spacing: 0.02em;
+        margin-top: 5px;
+        margin-right: 15px;
+        font-size: 20px;
+        width: 80%;
+        margin: 0 auto;
+        margin-bottom: 35px;
+
+        button {
+            font-weight: bold;
+            margin-left: 7px;
+        }
+    }
 }
 
 
 @media screen and (min-width: 1251px) and (max-width: 1450px) {
     
 }
+
+
 
 
 @media screen and (min-width: 1451px) and (max-width: 1750px) {
@@ -248,7 +423,6 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
             margin-left: 7px;
         }
     }
-
 }
 
 
@@ -268,7 +442,9 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
     form {
         display: flex;
         justify-content: space-around;
+        min-width: 1500px;
     }
+
 
     .formulario-container {
         width: 100%;
