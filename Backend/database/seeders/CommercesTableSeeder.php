@@ -13,6 +13,6 @@ class CommercesTableSeeder extends Seeder
      */
     public function run(): void
     {
-        Commerce::factory()->count(20)->create();
+        Commerce::factory()->count(5)->create();
     }
 }

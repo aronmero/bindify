@@ -28,7 +28,7 @@ class CommerceFactory extends Factory
             'description' => $this->faker->sentence,
             'verification_token_id' => $this->faker->randomNumber(),
             'verificated' => $this->faker->boolean,
-            'schedule' => $this->faker->time('H:i:s'),
+            'schedule' => null,
             'active' => $this->faker->boolean,
         ];
     }
