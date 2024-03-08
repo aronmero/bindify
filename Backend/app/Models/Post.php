@@ -34,7 +34,7 @@ class Post extends Model
 
     public function users(){
 
-        return $this->belongsToMany(User::class, 'users-posts', 'user_id', 'post_id');
+        return $this->belongsToMany(User::class, 'users-posts', 'post_id', 'user_id');
 
     }
 

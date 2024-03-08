@@ -50,10 +50,8 @@ const emitirDatos = (e)=>{
             <p v-if="requerido" class="text-primary-700 text-xl">*</p>
             <p v-if="error != null" class="text-primary-700 text-sm ms-3">{{ error }}</p>
         </div>
-        <input @change="emitirDatos" v-if="requerido == 'true' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img != null" :type="tipo" required class="ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
-        <input @change="emitirDatos" v-if="requerido == 'false' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img != null" :type="tipo" class="ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
-        <input @change="emitirDatos" v-if="requerido == 'true' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img == null" :type="tipo" required class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
-        <input @change="emitirDatos" v-if="requerido == 'false' && tipo != 'submit' && tipo != 'selection' && tipo != 'file' && img == null" :type="tipo" class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
+        <input @change="emitirDatos" v-if="(tipo == 'text' || tipo == 'password' || tipo == 'email') && img != null" :type="tipo" class="ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
+        <input @change="emitirDatos" v-if="(tipo == 'text' || tipo == 'password' || tipo == 'email') && img == null" :type="tipo" class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'button'" :type="tipo" class="ps-12 bg-background-100 text-text-950 py-3 rounded-xl w-fit px-4 cursor-pointer" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'submit' && clase == 'claro'" :type="tipo" :value="valor" class="bg-secondary-400 text-text-950 py-3 px-1 rounded-xl cursor-pointer">
         <input @change="emitirDatos" v-if="tipo == 'submit' && clase == 'oscuro'" :type="tipo" :value="valor" class="bg-background-800 text-text-50 py-3 px-1 rounded-xl cursor-pointer">

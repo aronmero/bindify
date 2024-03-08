@@ -21,8 +21,8 @@ class CommercesController extends Controller
      */
     public function __construct()
     {
-        $this->middleware("can:ver commerce")->only("show");
-        $this->middleware("can:editar commerce")->only("store", "update");
+        $this->middleware("can:ver commerces")->only("show");
+        $this->middleware("can:editar commerces")->only("store", "update");
     }
     /**
      * Almacena un nuevo recurso creado en el almacenamiento.
@@ -122,12 +122,12 @@ class CommercesController extends Controller
                     'municipalities.name AS municipality_name',
                     'avatar',
                     'username',
-                    'name',
-                    'address',
-                    'description',
+                    'users.name',
+                    'commerces.address',
+                    'commerces.description',
                     'categories.name AS categories_name',
                     'schedule',
-                    'active'
+                    'commerces.active'
                 )
                 ->where('users.id', '=', $id)
                 ->get();
@@ -169,25 +169,25 @@ class CommercesController extends Controller
     public function update(Request $request, string $id)
     {
 
-        // try {
-        $user = User::find($id);
-        $request->request->remove('verificated');
-        $user->update($request->only('phone', 'municipality_id', 'avatar', 'username', 'name'));
+        try {
+            $user = User::find($id);
+            $request->request->remove('verificated');
+            $user->update($request->only('phone', 'municipality_id', 'avatar', 'username', 'name'));
 
 
-        $commerce = Commerce::find($id);
-        $commerce->update($request->only('address', 'category_id', 'schedule'));
+            $commerce = Commerce::find($id);
+            $commerce->update($request->only('address', 'category_id', 'schedule', 'description'));
 
-        return response()->json([
-            'status' => true,
-            'message' => 'comercio actualizado',
-        ], 200);
-        // } catch (Throwable $th) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'error' => $th->getMessage(),
-        //     ], 404);
-        // }
+            return response()->json([
+                'status' => true,
+                'message' => 'comercio actualizado',
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage(),
+            ], 404);
+        }
 
     }
 

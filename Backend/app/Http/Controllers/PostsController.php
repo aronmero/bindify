@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostsRequest;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -74,7 +76,7 @@ class PostsController extends Controller
                 )
                 ->whereIn('users-posts.user_id', $ids)
                 ->where('posts.active', '=', true)
-                ->orderBy('posts.created_at','desc')
+                ->orderBy('posts.created_at', 'desc')
                 ->get();
 
             return response()->json([
@@ -84,25 +86,49 @@ class PostsController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message' => throw $th,
+                'message' => $th->getMessage(),
             ], 404);
         }
     }
 
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePostsRequest $request)
     {
-        //
+        try {
+            $user = Auth::user();
+
+            $post = Post::create([
+                'image' => $request->image,
+                'title' => $request->title,
+                'description' => $request->description,
+                'post_type_id' => $request->post_type_id,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'active' => true,
+            ]);
+
+            try {
+                $post->users()->attach($user->id);
+            } catch (\Throwable $th) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $th->getMessage(),
+                ], 404);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Post creado',
+                'data' => $post
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 404);
+        }
     }
 
     /**
@@ -110,7 +136,31 @@ class PostsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+
+            $post = Post::find($id);
+
+            $data = [
+                'image' => $post->image,
+                'title' => $post->title,
+                'description' => $post->description,
+                'post_type_name' => $post->post_type->name,
+                'start_date' => $post->start_date,
+                'end_date' => $post->end_date,
+                'active' => $post->active,
+            ];
+
+
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 404);
+        }
     }
 
     /**
@@ -118,14 +168,78 @@ class PostsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+
+            $user = Auth::user();
+            $post = Post::find($id);
+            $userVerificado = false;
+
+            foreach ($post->users as $usuario) {
+                if ($usuario->id == $user->id) {
+                    $userVerificado = true;
+                }
+            }
+
+            if ($userVerificado) {
+                $post->update([
+                    'image' => $request->image,
+                    'title' => $request->title,
+                    'description' => $request->description,
+                    'post_type_id' => $request->post_type_id,
+                    'start_date' => $request->start_date,
+                    'end_date' => $request->end_date,
+                ]);
+            }
+
+            //TODO Hacer que solo devuelva algunos datos del usuario
+            return response()->json([
+                'status' => true,
+                'message' => 'Post actualizado',
+                'data' => $post
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 404);
+        }
+
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Cambia el estado de la publicación
      */
     public function destroy(string $id)
     {
-        //
+        try {
+
+            $user = Auth::user();
+            $post = Post::find($id);
+            $userVerificado = false;
+
+            foreach ($post->users as $usuario) {
+                if ($usuario->id == $user->id) {
+                    $userVerificado = true;
+                }
+            }
+
+            if ($userVerificado) {
+                $post->update([
+                    'active' => false,
+                ]);
+            }
+
+            //TODO Hacer que solo devuelva algunos datos del usuario
+            return response()->json([
+                'status' => true,
+                'message' => 'Post eliminado',
+                'data' => $post
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 404);
+        }
     }
 }

@@ -8,20 +8,6 @@ use Illuminate\Http\Request;
 class HashtagsController extends Controller
 {
     /**
-     * Constructor de la clase.
-     *
-     * Este método establece los middlewares de autorización para las acciones del controlador.
-     * Se aplica el middleware "ver hashtag" solo a la acción "index" y el middleware "editar hashtag" a las acciones "index" y "store".
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('can:ver hashtag')->only('index');
-        $this->middleware('can:editar hashtag')->only('index', 'store');
-
-    }
-    /**
      * Muestra todos los hashtags disponibles.
      *
      * Este método devuelve una lista de todos los hashtags disponibles en el sistema.

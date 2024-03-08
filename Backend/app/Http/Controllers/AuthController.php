@@ -51,7 +51,7 @@ class AuthController extends Controller
                 'tipo' => $tipo
             ];
 
-            return response($response, 201);
+            return response()->json($response, 201);
         }
 
         return response()->json(['error' => 'Ususario no encontrado'], 404);
@@ -91,37 +91,52 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
         if ($request->empresa) {
-            if ($request->verificationToken != null) {
+            try {
+                if ($request->verificationToken != null) {
                 $user->assignRole('ayuntamiento');
             } else {
-                $user->assignRole('comercio');
+                $user->assignRole('commerce');
             }
+            } catch (\Throwable $th) {
+                $user->delete();
+                return response()->json(["status"=> false, 'error'=> $th->getMessage()],500);
+            }
+            
 
             $commerce = Commerce::create([
             'user_id' => $user->id,
             'address' => $request->address,
             'description' => $request->description,
-            'verification_token_id' => $request->verification_token_id,
             'category_id' => $request->category_id,
+            'verification_token_id' => $request->verification_token_id,
             'verificated'=> false,
-            'schedule' => $request->schedule
+            'schedule' => $request->schedule,
+            'active'=> true,
         ]);
-            $commerce->user()->attach($user->id);
         } else {
-            $user->assignRole('cliente');
+            try {
+                $user->assignRole('customer');
+            } catch (\Throwable $th) {
+                $user->delete();
+                return response()->json(['status'=> false, 'error'=> $th->getMessage()],500);
+            }
+            
             $customer = Customer::create([
                 'user_id' => $user->id,
             ]);
-            $customer->user()->attach($user->id);
         }
 
+        $token = $user->createtoken('my_app_token')->plainTextToken;
+        $tipo = $user->getRoleNames();
 
         $response = [
             'message' => 'Usuario creado correctamente',
             'user' => $user,
+            'token'=> $token,
+            'tipo'=> $tipo,
         ];
 
 
-        return response($response, 201);
+        return response()->json($response, 201);
     }
 }
