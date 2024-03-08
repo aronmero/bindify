@@ -102,8 +102,8 @@
     })
 </script>
 <template>
-    <div :class="props.type + ' widget card mb-3'">
-        <div class="card-body">
+    <div class=" flex justify-end items-center mb-3  ">
+        <div class="card-body events-calendar xl:w-[450px] sm:w-[400px] sm:p-0">
             <h5 class="card-title">{{ title }}</h5>
             <p class="card-text">{{ desc }}</p>
             <div class="calendar-container">
@@ -136,10 +136,11 @@
 </template>
 <style lang="scss">
     @import './../styles/calendario/variables', './../styles/calendario/mixins';
+
     .calendar-container {
         margin:20px 0px;
-        width: 70%;
-        height:fit-content;
+        width:100%;
+        height:450px;
         padding:20px;
         border-radius: 10px;
         box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
@@ -238,5 +239,33 @@
 
     #calendar-prev {
         transform: rotate(180deg);
+    }
+
+    @media screen and (max-width: 640px) {
+        .calendar-container {
+            padding:0px 10px;
+            height:350px;
+            margin-top:0px;
+            .calendar-body {
+                padding:10px;
+            }
+            header {
+                padding:5px 10px;
+                .calendar-current-date {
+                    font-size:.9rem;
+                }
+            }
+            .events-calendar {
+                max-width:100%;
+                a {
+                    padding:7px 0px;
+                    font-size:.7rem;
+                }
+            }   
+        }
+        .card {
+            padding:5px 10px;
+        }
+       
     }
 </style>

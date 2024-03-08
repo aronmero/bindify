@@ -1,6 +1,8 @@
 import { random } from "../helpers/random";
 import { lorem } from "../helpers/lorem";
 
+import {categorias} from "./categorias";
+
 /**
  * Retorna un array de prueba
  * @author 'David Martín Concepción'
@@ -79,3 +81,16 @@ export const posts = [
         institucional: true
     }
 ];
+
+
+
+
+export const obtener_tipo = (tipo_id) => {
+    let found = null;
+    posts.some((post) =>  {
+        if (post.post_type == tipo_id) found = p 
+    });
+    return found;
+}
+
+

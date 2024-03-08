@@ -37,6 +37,7 @@
         padding-left:10px;
         font-weight:bold;
         margin:20px 0px;
+        font-size:.9rem;
     }
     .filters {
         border-radius:10px;
