@@ -17,6 +17,7 @@ class Commerce extends Model
         "user_id",
         "address",
         'description',
+        'category_id',
         'verification_token_id',
         'verificated',
         'opening_hour',
