@@ -98,6 +98,7 @@ class AuthController extends Controller
                 $user->assignRole('commerce');
             }
             } catch (\Throwable $th) {
+                $user->delete();
                 return response()->json(["status"=> false, 'error'=> $th->getMessage()],500);
             }
             
@@ -113,7 +114,13 @@ class AuthController extends Controller
             'active'=> true,
         ]);
         } else {
-            $user->assignRole('customer');
+            try {
+                $user->assignRole('customer');
+            } catch (\Throwable $th) {
+                $user->delete();
+                return response()->json(['status'=> false, 'error'=> $th->getMessage()],500);
+            }
+            
             $customer = Customer::create([
                 'user_id' => $user->id,
             ]);
