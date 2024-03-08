@@ -39,7 +39,7 @@ const routes = [
     {path:"fidelidad", component:() => import("@/components/perfiles/containers/contenedorVistaFidelidad.vue")},
     {path:"favoritos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")}
   ]},
-
+  { path: "/tarjeta-fidelidad", component: () => import("@/views/perfiles/tarjetaFidelidad.vue")},
   { path: "/perfil/edit", component: () => import("@/views/perfiles/editarPerfil.vue") },
 
   { path: "/publicacion/new", component: () => import("@/views/publicaciones/crearPublicacion.vue") },
