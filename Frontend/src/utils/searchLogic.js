@@ -14,11 +14,22 @@ export default function useSearchLogic() {
         return comercios.filter(comercio => comercio.category === category.value);
     });
 
-   
+    const getCategories = computed(() => {
+        let categories = [];
+        comercios.forEach(comercio => {
+            if (!categories.includes(comercio.category)) {
+                categories.push(comercio.category);
+            }
+        });
+        return categories;
+    });
+
 
     return {
         category,
         filteredCommerces,
+        getCategories
         
     };
 }
+

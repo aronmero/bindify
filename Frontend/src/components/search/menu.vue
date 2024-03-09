@@ -18,16 +18,16 @@
 
 
 <template>
-    <div class="relative w-full overflow-hidden">
-        <div class="absolute md:hidden left-0  flex items-center h-full" @click="scrollLeft">
+    <div class="relative w-full overflow-hidden shadow-2xl">
+        <div class="absolute sm:hidden left-0  flex items-center h-full" @click="scrollLeft">
             <img :src="arrowLeftSVG" class="size-6 cursor-pointer">
         </div>
 
-        <div class="absolute md:hidden right-0  flex items-center h-full" @click="scrollRight">
+        <div class="absolute sm:hidden right-0  flex items-center h-full" @click="scrollRight">
             <img :src="arrowRightSVG" class="size-6 cursor-pointer">
         </div>
 
-        <div class="flex items-center p-3 shadow-2xl w-full bg-white gap-x-5 overflow-x-auto" ref="scrollContainer" style="scroll-behavior: smooth;">
+        <div class="flex items-center p-3  w-full bg-white gap-x-5 overflow-x-auto" ref="scrollContainer" style="scroll-behavior: smooth;">
             <div v-for="(option, index) in menuOptions" :key="index">
                 <optionMenu :icon="option.icon" :name="option.name" />
             </div>
@@ -47,4 +47,3 @@
         scroll-behavior: smooth;
     }
 </style>
-

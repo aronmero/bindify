@@ -10,20 +10,18 @@
     import commercesResults from "@/components/search/commercesResults.vue";
     import useSearchLogic from "@/utils/searchLogic";
 
-    const {filteredCommerces} = useSearchLogic();
+    const {filteredCommerces, getCategories} = useSearchLogic();
 
-   
-    
 
 </script>
 
 <template>
     <Header />
     <Grid><template v-slot:Left> </template>
-        <form class="flex flex-col gap-y-8 ">
+        <form class="flex flex-col gap-y-8 rounded-md p-2 ">
             <div class="flex items-center flex-wrap gap-y-4 gap-x-3">
                 <searchBar />
-                <selectCategory />
+                <selectCategory :categories="getCategories" />
                 <locationButton />
                 <searchButton />
                 <div class="flex items-center gap-x-1 cursor-pointer">
@@ -45,4 +43,3 @@
 
 </style>
 
-../../utils/searchLogic

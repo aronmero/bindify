@@ -17,7 +17,7 @@
 </script>
 
 <template>
-    <div class="flex flex-col items-center cursor-pointer" @click="selectedOption(name)">
+    <div class="flex flex-col items-center cursor-pointer transition-all duration-300 ease-in hover:scale-110" @click="selectedOption(name)">
         <img :src="icon" class="size-7 icon" />
         <p class="text-gray-400 text-md">{{ name }}</p>
     </div>
