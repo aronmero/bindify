@@ -131,6 +131,8 @@ class ReviewsController extends Controller
             // Devolver respuesta con las reviews formateadas
             return response()->json(['status' => true, 'reviews' => $reviewsArray,], 200);
         }
+
+        return response()->json(['status'=> false, 'message'=> 'Reviews no encontradas',],404);
     }
 
 
@@ -180,7 +182,7 @@ class ReviewsController extends Controller
                 'note' => $request->note,
             ]);
 
-            Utils::AVG_Reviews($request->commerce_id);
+            Utils::AVG_Reviews($review->commerce_id);
 
             // Devolver una respuesta de éxito
             return response()->json([
