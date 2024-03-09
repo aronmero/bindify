@@ -54,9 +54,10 @@ class SearchController extends Controller
 
             $commerces = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
             ->join('categories', 'commerces.category_id', '=', 'categories.id')
-            ->join('municipalities, users.municipality_id', '=', 'municipalities.id')
+            ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
             ->leftjoin('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
             ->select(
+                'commerces.user_id',
                 'email',
                 'phone',
                 'avatar',
@@ -69,7 +70,7 @@ class SearchController extends Controller
                 DB::raw('count(reviews.commerce_id) as review_count')
             )
             ->where('commerces.active','=', '1')
-            ->groupBy('email', 'phone', 'avatar', 'users.username', 'address', 'commerces.description', 'categories_name', 'schedule', 'commerces.avg',);
+            ->groupBy('commerces.user_id','email', 'phone', 'avatar', 'users.username', 'address', 'commerces.description', 'categories_name', 'schedule', 'commerces.avg',);
 
             if($request->municipality) {
                 Municipality::where('name', $request->municipality)->firstOrFail();
@@ -163,7 +164,7 @@ class SearchController extends Controller
             }
 
             if($request->post_type) {
-                $posts = $posts->where('post_type', '=', $request->post_type);
+                $posts = $posts->where('post_types.name', '=', $request->post_type);
             }
 
             $posts = $posts->get();
