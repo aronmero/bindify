@@ -27,8 +27,8 @@ class UsersController extends Controller
      * @return \Illuminate\Http\JsonResponse - Una respuesta JSON con la información del usuario o un mensaje de error.
      *
      * Ejemplo de respuesta exitosa:
-     * 
-     * @response 200 { 
+     *
+     * @response 200 {
      *   "status": true,
      *   "data": {
      *       "email": "correo@example.com",
@@ -48,7 +48,7 @@ class UsersController extends Controller
      * }
      *
      * Ejemplo de respuesta de error:
-     * 
+     *
      * @response 404 {
      *   "status": false,
      *   "error": "Usuario no encontrado"
@@ -65,7 +65,7 @@ class UsersController extends Controller
                 "error" => $th->getMessage(),
             ], 404);
         }
-        
+
 
         if ($user->getRoleNames() == "customer") {
 
@@ -78,7 +78,7 @@ class UsersController extends Controller
                         'phone',
                         'municipalities.name AS municipality_name',
                         'avatar',
-                        //'banner',
+                        'banner',
                         'username',
                         'users.name',
                         'gender',
@@ -119,7 +119,7 @@ class UsersController extends Controller
                         'phone',
                         'municipalities.name AS municipality_name',
                         'avatar',
-                        //'banner',
+                        'banner',
                         'username',
                         'users.name',
                         'address',
@@ -158,15 +158,15 @@ class UsersController extends Controller
 
     /**
      * Actualiza la información de un usuario específico.
-     * 
-     * Comprueba que un usuario por su nombre sea de tipo costumer o commercie 
-     * para luego poder actualizar los campos respectivos de cada uno 
+     *
+     * Comprueba que un usuario por su nombre sea de tipo costumer o commercie
+     * para luego poder actualizar los campos respectivos de cada uno
      *
      * @param \Illuminate\Http\Request $request - La solicitud HTTP con los datos de actualización.
      * @param string $username - El nombre de usuario del usuario a actualizar.
      *
      * @return \Illuminate\Http\JsonResponse - Una respuesta JSON con el resultado de la actualización o un mensaje de error.
-     * 
+     *
      *@response 200 {
      *   "status": true,
      *   "data": "Datos del usuario recien actualizado"
@@ -179,14 +179,14 @@ class UsersController extends Controller
      *   "status": false,
      *   "error": "Usuario no encontrado"
      * }
-     * 
+     *
      */
 
 
     public function update(Request $request, string $username)
     {
         try {
-            // Elimina campos que no queremos actualizar 
+            // Elimina campos que no queremos actualizar
             $request->request->remove("username");
             $request->request->remove("phone");
             $request->request->remove("email");
@@ -224,15 +224,15 @@ class UsersController extends Controller
 
     /**
      * Elimina un usuario específico.
-     * 
+     *
      * Si el usuario es un costumer , se elimina de la base de datos directamente
-     * pero si es un Commerce , cambia el valor del campo active a false 
+     * pero si es un Commerce , cambia el valor del campo active a false
      * por lo que no se borra de la base de datos
      *
      * @param string $username - El nombre de usuario del usuario a eliminar.
      *
      * @return \Illuminate\Http\JsonResponse - Una respuesta JSON con el resultado de la eliminación o un mensaje de error.
-     * 
+     *
      *  *@response 200 {
      *   "status": true,
      *   "data": "Usuario eliminado exitosamente"
@@ -245,7 +245,7 @@ class UsersController extends Controller
      *   "status": false,
      *   "error": "Usuario no encontrado"
      * }
-     * 
+     *
      */
 
 

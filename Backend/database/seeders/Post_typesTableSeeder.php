@@ -14,7 +14,7 @@ class Post_typesTableSeeder extends Seeder
     public function run(): void
     {
         Post_type::create([
-            'name' => 'Oferta',
+            'name' => 'Post',
         ]);
         Post_type::create([
             'name' => 'Evento',
