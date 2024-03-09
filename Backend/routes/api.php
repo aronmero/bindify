@@ -46,8 +46,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('follow/{id}', [FollowersController::class , 'follow']);
     Route::get('follows', [FollowersController::class , 'showFollows']);
     Route::get('home', [PostsController::class , 'home']);
-    Route::post('search/commerces', [SearchController::class, 'commerces']);
-
+    Route::get('search/commerces', [SearchController::class, 'commerces']);
+    Route::get('search/posts', [SearchController::class, 'posts']);
 });
 
 Route::post('login', [AuthController::class, 'login']);
