@@ -58,11 +58,16 @@ export const users = [
     },
 ];
 
+/**
+ * Encuentra el usuario por ID
+ * @param {*} usuario_id 
+ * @returns 
+ */
+
 export const encontrar_usuario_por_id = (usuario_id) => {
     let encontrado = false;
     users.forEach(usuario => {
         if(usuario.id == usuario_id) encontrado = usuario;
     })
-    console.log(encontrado);
     return encontrado;
 }

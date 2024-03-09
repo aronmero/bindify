@@ -30,16 +30,25 @@ export const comentarios = [
 
 ];
 
-
+/**
+ * Obtiene del listado mockeado los comentarios en base al ID del POST
+ * @param {*} post_id 
+ * @returns 
+ */
 export const comentarios_por_post = (post_id) => {
     let comentarios_list = []
     comentarios.forEach(comentario => {
         if(comentario.post_id == post_id) comentarios_list.push(comentario);
     })
-    console.log(comentarios_list)
+
     return comentarios_list;
 }
-
+/**
+ * Agrega el comentario al listado
+ * @param {*} post_id 
+ * @param {*} usuario_id 
+ * @param {*} content 
+ */
 export const agregar_comentario = (post_id, usuario_id, content) => {
     comentarios.push({
         id: comentarios.length + 1,

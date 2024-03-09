@@ -1,8 +1,6 @@
 import { random } from "../helpers/random";
 import { lorem } from "../helpers/lorem";
 
-import {categorias} from "./categorias";
-
 /**
  * Retorna un array de prueba
  * @author 'David Martín Concepción'
