@@ -11,12 +11,13 @@ import FollowedFeed from "@/components/seguidos/followedFeed.vue";
 <template>
     <Header />
     <Grid><template v-slot:Left> </template>
-        <div class="text-center font-bold text-2xl m-2 ">Seguidos</div>
-       
+        <div class="text-center m-4 font-bold text-2xl">Seguidos</div>
+    
+        <div class="w-full md:w-3/4 m-auto" >
         <div class="text-center text-2xl font-semibold">
-            <div class="md:w-3/4 m-auto">
-                <FollowedFeed />
-            </div>
+            <FollowedFeed />
+        </div>
+
         </div>
         <template v-slot:Right>  </template>
     </Grid>
