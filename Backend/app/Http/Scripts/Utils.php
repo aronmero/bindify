@@ -110,7 +110,7 @@ class Utils
       // Guarda los cambios en la base de datos
       $commerce->save();
 
-      return response()->json(['status' => true, 'message' => 'Media calculada e insertada en el comercio con el id:' . $id . " con una puntuacion media de :" . $averageScore], 500);
+      return response()->json(['status' => true, 'message' => 'Media calculada e insertada en el comercio con el id:' . $id . " con una puntuacion media de :" . $averageScore], 200);
     } catch (\Exception $e) {
       return response()->json(['status' => false, 'message' => 'Error al insertar la puntuación media en la tabla de comercios'], 500);
     }
