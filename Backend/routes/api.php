@@ -46,11 +46,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('follow/{id}', [FollowersController::class , 'follow']);
     Route::get('follows', [FollowersController::class , 'showFollows']);
     Route::get('home', [PostsController::class , 'home']);
-    Route::get('commerces/{municipity}', [SearchController::class, 'commercesByMunicipality']);
-    Route::get('commerces/hashtag/{hashtag}', [SearchController::class, 'commercesByHashtag']);
-    Route::get('posts/{idMunicipity}', [SearchController::class, 'postsByMunicipality']);
-    Route::get('posts/hashtag/{hashtag}', [SearchController::class, 'postsByHashtag']);
-    Route::get('profile/{username}', [UsersController::class, 'show']);
+    Route::post('search/commerces', [SearchController::class, 'commerces']);
 
 });
 
