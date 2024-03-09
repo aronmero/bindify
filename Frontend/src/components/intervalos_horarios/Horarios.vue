@@ -1,3 +1,5 @@
 <script setup></script>
-<template></template>
+<template>
+    Horarios
+</template>
 <style scopedlang="scss"></style>
