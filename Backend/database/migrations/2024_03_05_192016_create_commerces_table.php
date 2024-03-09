@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->boolean('verificated');
             $table->string('schedule', 300)->nullable();
-            $table->decimal('avg', 2, 2)->nullable();
+            $table->float('avg')->default(0);
             $table->boolean('active');
             $table->timestamps();
         });
