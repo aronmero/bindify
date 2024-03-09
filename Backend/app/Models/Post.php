@@ -16,6 +16,8 @@ class Post extends Model
         'title',
         'description',
         'post_type_id',
+        'start_date',
+        'end_date',
         'schedule',
         'active',
     ];

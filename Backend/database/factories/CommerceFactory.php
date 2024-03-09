@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,16 +19,26 @@ class CommerceFactory extends Factory
      */
     public function definition(): array
     {
-        $userId = User::whereNotIn('id', function ($query) {
-            $query->select('user_id')->from('commerces')
-                ->unionAll($query->select('user_id')->from('customers'));
-        })->pluck('id')->first();
+        $userId = User::leftJoin('customers', 'customers.user_id', '=', 'users.id')
+        ->leftJoin('commerces', 'commerces.user_id', '=', 'users.id')
+        ->whereNull('customers.user_id')
+        ->whereNull('commerces.user_id')
+        ->pluck('users.id')
+        ->first();
+
+        $user = User::find($userId);
+        $user->assignRole('commerce');
+
+        $postsNotInUsersPosts = Post::whereNotIn('id', function($query) {
+            $query->select('post_id')->from('users-posts');
+        })->get();
 
         return [
             'user_id' => $userId,
             'address' => $this->faker->address,
             'description' => $this->faker->sentence,
-            'verification_token_id' => $this->faker->randomNumber(),
+            'verification_token_id' => 1,
+            'category_id' => rand(1, Category::count()),
             'verificated' => $this->faker->boolean,
             'schedule' => null,
             'active' => $this->faker->boolean,

@@ -18,14 +18,19 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
 
-        $userId = User::whereNotIn('id', function ($query) {
-            $query->select('user_id')->from('commerces')
-                  ->unionAll($query->select('user_id')->from('customers'));
-        })->pluck('id')->first();
+        $userId = User::leftJoin('customers', 'customers.user_id', '=', 'users.id')
+        ->leftJoin('commerces', 'commerces.user_id', '=', 'users.id')
+        ->whereNull('customers.user_id')
+        ->whereNull('commerces.user_id')
+        ->pluck('users.id')
+        ->first();
+
+        $user = User::find($userId);
+        $user->assignRole('customer');
 
         return [
             'user_id' => $userId,
-            'gender' => $this->faker->randomElement(['male', 'female']),
+            'gender' => $this->faker->randomElement(['Masculino', 'Femenino']),
             'birth_date' => $this->faker->date(),
         ];
     }
