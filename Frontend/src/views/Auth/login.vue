@@ -6,7 +6,13 @@
     const password = ref('');
 
     function Login() {
-        
+        const emailRegex = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)/;
+
+        if (emailRegex.test(email.value) && password.value.length >= 4) {
+            alert("se ha iniciado sesión");
+        } else {
+            console.log("Error");
+        }
     }
 
     function OlvidarPassword() {

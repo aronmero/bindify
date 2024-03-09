@@ -58,7 +58,7 @@ function login() {
     router.push("/login");
 }
 
-const array = ["S/C de La Palma", "Villa de Mazo", "Los Llanos de Aridane", "Fuencaliente", "El Paso"];
+const array = ["S/C de La Palma", "Villa de Mazo", "Los Llanos de Aridane", "Fuencaliente", "El Paso", "Puntagorda", "Puntallana", "Breña Baja", "Breña Alta", "Garafía", "Barlovento", "San Andrés y Sauces", "Tazacorte"];
 </script>
 
 
@@ -71,11 +71,11 @@ const array = ["S/C de La Palma", "Villa de Mazo", "Los Llanos de Aridane", "Fue
             <h1 class="title">Título</h1>
             <form @submit.prevent="registro" class="form max-w-[700px]">
                 <div class="grupo">
-                    <Input tipo="text" requerido="true" img="/assets/icons/person.svg" v-model='usuario' label="Usuario"/>
+                    <Input tipo="text" requerido="true" img="/assets/icons/maleUser.svg" v-model='usuario' label="Usuario"/>
                 </div>
                 <br/>
                 <div class="grupo">
-                    <Input tipo="text" requerido="true" img="/assets/icons/person.svg" v-model='nombre' label="Nombre"/>
+                    <Input tipo="text" requerido="true" img="/assets/icons/maleUser.svg" v-model='nombre' label="Nombre"/>
                 </div>
                 <br/>
                 <div class="grupo">
@@ -87,11 +87,11 @@ const array = ["S/C de La Palma", "Villa de Mazo", "Los Llanos de Aridane", "Fue
                 </div>
                 <br/>
                 <div class="grupo">
-                    <Input tipo="selection" requerido="true" :opciones=array img="/assets/icons/cityHall.svg" valor="Selecciona el municipio en el que vives" v-model='municipio' label="Municipio"/>
+                    <Input tipo="selection" requerido="true" :opciones=array img="/assets/icons/cityHall.svg" placeholder="Selecciona el municipio en el que vives" v-model='municipio' label="Municipio"/>
                 </div>
                 <br/>
                 <div class="grupo">
-                    <Input tipo="file" clase="perfil" requerido="true" img="/assets/icons/user.svg" valor="Haz click para seleccionar una imagen" v-model='avatar' label="Avatar"/>
+                    <Input tipo="file" clase="perfil" requerido="true" img="/assets/icons/user.svg" placeholder="Haz click para seleccionar una imagen" v-model='avatar' label="Avatar"/>
                 </div>
                 <br/>
                 <div class="grupo">
@@ -395,6 +395,7 @@ const array = ["S/C de La Palma", "Villa de Mazo", "Los Llanos de Aridane", "Fue
         display: flex;
         justify-content: end;
         letter-spacing: 0.02em;
+        font-size: 20px;
         margin-top: 5px;
         margin-right: 15px;
 
