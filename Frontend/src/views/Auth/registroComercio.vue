@@ -1,6 +1,7 @@
 <script setup>
 import Input from '@/components/comun/input.vue';
 import router from '@/router/index.js';
+import Modal from '@/views/Auth/registroComercio-modal.vue';
 import { ref } from 'vue';
 
 const usuario = ref('');
@@ -15,7 +16,7 @@ const direccion = ref('');
 const descripcion = ref('');
 const token = ref('');
 const categoria = ref('');
-const horarios = ref('');
+const showModal = ref(false);
 
 function registro() {
     const emailRegex = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)/;
@@ -84,12 +85,14 @@ function login() {
     router.push("/login");
 }
 
+/*
 function Horarios() {
     //router.push("/horarios-modal");
     console.log("nada aun");
 }
+*/
 
-const array = ["S/C de La Palma", "Villa de Mazo", "Los Llanos de Aridane", "Fuencaliente", "El Paso"];
+const array = ["S/C de La Palma", "Villa de Mazo", "Los Llanos de Aridane", "Fuencaliente", "El Paso", "Puntagorda", "Puntallana", "Breña Baja", "Breña Alta", "Garafía", "Barlovento", "San Andrés y Sauces", "Tazacorte"];
 const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", "Limón"];
 </script>
 
@@ -97,14 +100,14 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
 <template>
     <h1 class="title">Título</h1>
     <div class="container">
-        <form @submit.prevent="registro" class="form max-w-[700px]">
+        <form @submit.prevent="registro">
             <div class="formulario-container">
                 <div class="grupo">
-                    <Input tipo="text" requerido="true" img="/assets/icons/person.svg" v-model='usuario' label="Usuario"/>
+                    <Input tipo="text" requerido="true" img="/assets/icons/maleUser.svg" v-model='usuario' label="Usuario"/>
                 </div>
                 <br/>
                 <div class="grupo">
-                    <Input tipo="text" requerido="true" img="/assets/icons/person.svg" v-model='nombre' label="Nombre"/>
+                    <Input tipo="text" requerido="true" img="/assets/icons/maleUser.svg" v-model='nombre' label="Nombre"/>
                 </div>
                 <br/>
                 <div class="grupo">
@@ -116,11 +119,11 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
                 </div>
                 <br/>
                 <div class="grupo">
-                    <Input tipo="selection" requerido="true" :opciones=array img="/assets/icons/cityHall.svg" valor="Selecciona el municipio en el que vives" v-model='municipio' label="Municipio"/>
+                    <Input tipo="selection" requerido="false" :opciones=array img="/assets/icons/cityHall.svg" placeholder="Selecciona el municipio en el que vives" v-model='municipio' label="Municipio"/>
                 </div>
                 <br/>
                 <div class="grupo">
-                    <Input tipo="file" clase="perfil" requerido="true" img="/assets/icons/user.svg" valor="Haz click para seleccionar una imagen" v-model='avatar' label="Avatar"/>
+                    <Input tipo="file" clase="perfil" requerido="false" img="/assets/icons/user.svg" placeholder="Haz click para seleccionar una imagen" v-model='avatar' label="Avatar"/>
                 </div>
                 <br/>
                 <div class="grupo">
@@ -138,19 +141,27 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
                 </div>
                 <br/>
                 <div class="grupo">
-                    <Input tipo="texto" img="/assets/icons/comments.svg" valor="Introduce una descripción" v-model='descripcion' label="Descripcion"/>
+                    <Input tipo="texto" img="/assets/icons/comments.svg" placeholder="Introduce una descripción" v-model='descripcion' label="Descripcion"/>
                 </div>
                 <br/>
                 <div class="grupo">
-                    <Input tipo="text" requerido="true" img="/assets/icons/token.svg" v-model='token' label="Token"/>
+                    <Input tipo="text" requerido="false" img="/assets/icons/token.svg" v-model='token' label="Token"/>
                 </div>
                 <br/>
                 <div class="grupo">
-                    <Input tipo="selection" requerido="true" :opciones=categoriasArray img="/assets/icons/sorting.svg" valor="Selecciona una categoría" v-model='categoria' label="Categoria"/>
+                    <Input tipo="selection" requerido="true" :opciones=categoriasArray img="/assets/icons/sorting.svg" placeholder="Selecciona una categoría" v-model='categoria' label="Categoria"/>
                 </div>
                 <br/><br/>
                 <div class="grupo">
-                    <Input tipo="submit" @click="Horarios" clase="oscuro" valor="Horarios"/>
+                    <Input tipo="submit" requerido="true" @click="showModal = true" style="font-size: 20px;" clase="oscuro" valor="Horarios"/>
+
+                    <Teleport to="body">
+                        <modal :show="showModal" @close="showModal = false">
+                            <template #header>
+                            
+                            </template>
+                        </modal>
+                    </Teleport>
                 </div>
             </div>
         </form>
@@ -195,10 +206,9 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
         font-weight: bold;
     }
 
-
     .grupo {
-        font-size: 15px;
-        width: 95%;
+        font-size: 20px;
+        width: 100%;
     }
 
     .registrarse {
@@ -214,7 +224,7 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
         letter-spacing: 0.02em;
         margin-top: 7px;
         margin-right: 15px;
-        font-size: 15px;
+        font-size: 20px;
         width: 80%;
         margin: 0 auto;
         margin-bottom: 35px;
@@ -235,7 +245,7 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
     }
 
     .container {
-        width: 85%;
+        width: 80%;
         margin: 0 auto;
         margin-top: 20px;
     }
@@ -246,6 +256,10 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
 
     .formulario-container-comercio {
         width: 100%;
+    }
+
+    form {
+        max-width: 1500px;
     }
 
     h1 {
@@ -264,7 +278,7 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
     .registrarse {
         border-radius: 15px;
         font-size: 20px;
-        width: 85%;
+        width: 80%;
         margin: 0 auto;
     }
 
@@ -288,7 +302,7 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
 
 
 
-@media screen and (min-width: 1051px) and (max-width: 1250px) {
+@media screen and (min-width: 1051px) and (max-width: 1450px) {
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
     * {
@@ -321,7 +335,7 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
     form {
         display: flex;
         justify-content: space-around;
-        max-width: 1000px;
+        max-width: 1500px;
     }
 
     .grupo {
@@ -355,13 +369,6 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
 }
 
 
-@media screen and (min-width: 1251px) and (max-width: 1450px) {
-    
-}
-
-
-
-
 @media screen and (min-width: 1451px) and (max-width: 1750px) {
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
@@ -378,6 +385,7 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
     form {
         display: flex;
         justify-content: space-around;
+        max-width: 1500px;
     }
 
     .formulario-container {
@@ -434,7 +442,7 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
     }
 
     .container {
-        width: 80%;
+        width: 90%;
         margin: 0 auto;
         margin-top: 20px;
     }
@@ -442,7 +450,7 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
     form {
         display: flex;
         justify-content: space-around;
-        min-width: 1500px;
+        min-width: 1600px;
     }
 
 

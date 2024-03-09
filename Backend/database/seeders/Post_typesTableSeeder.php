@@ -2,22 +2,22 @@
 
 namespace Database\Seeders;
 
-use App\Models\Review;
+use App\Models\Post_type;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class ReviewsTableSeeder extends Seeder
+class Post_typesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-
-        $cantidad = 100;
-
-        for ($i = 0; $i < $cantidad; $i++) {
-            Review::factory()->create();
-        }
+        Post_type::create([
+            'name' => 'Oferta',
+        ]);
+        Post_type::create([
+            'name' => 'Evento',
+        ]);
     }
 }
