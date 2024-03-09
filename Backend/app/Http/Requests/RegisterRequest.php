@@ -29,6 +29,7 @@ class RegisterRequest extends FormRequest
             'municipality_id' => ['exists:municipalities,id'],
             'empresa' => ['required', 'boolean'],
             'name'=> ['required'],
+            'verification_token'=> ['exists:verification_tokens, token'],
         ];
     }
 }
