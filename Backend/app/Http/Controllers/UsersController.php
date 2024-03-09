@@ -8,10 +8,13 @@ use App\Models\User;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
-
+    public function __construct() {
+        $this->middleware("can:admin")->only("destroy");
+    }
     /**
      * Muestra la información de un usuario específico.
      *
@@ -53,8 +56,16 @@ class UsersController extends Controller
      */
     public function show(string $username)
     {
-
-        $user = User::where("username", $username)->firstOrFail();
+        try {
+            $user = User::where("username", $username)->firstOrFail();
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => false,
+                "message" => "Usuario no encontrado",
+                "error" => $th->getMessage(),
+            ], 404);
+        }
+        
 
         if ($user->getRoleNames() == "customer") {
 
@@ -177,7 +188,10 @@ class UsersController extends Controller
         try {
             // Busca al usuario por su nombre de usuario
             $user = User::where("username", $username)->firstOrFail();
-
+            // Revisa si el usuario es él mismo el que se va a cambiar
+            if (Auth::user()->id != $user->id) {
+                return response()->json(["status" => false, "message" => "No autorizado"], 401);
+            }
             // Determina el rol del usuario
             if ($user->getRoleNames() == "customer") {
                 // Si el usuario es un cliente, actualiza los detalles como cliente
@@ -231,7 +245,7 @@ class UsersController extends Controller
      */
 
 
-    public function delete(string $username)
+    public function destroy(string $username)
     {
         try {
             // Busca al usuario por su nombre de usuario
