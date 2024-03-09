@@ -42,7 +42,7 @@ class CommentsController extends Controller
             'user_id' => 'required|integer', // ID del usuario que realiza el comentario
             'content' => 'required|string', // Contenido del comentario
             'comment_id' => 'nullable|integer', // ID del comentario padre en caso de que exista
-       ]);
+        ]);
        */
 
 

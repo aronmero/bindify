@@ -50,6 +50,7 @@ class AuthController extends Controller
 
             $response = [
                 'user_id' => $user->id,
+                'username'=> $user->username,
                 'token' => $token,
                 'tipo' => $tipo
             ];
