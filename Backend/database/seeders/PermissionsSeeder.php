@@ -30,9 +30,9 @@ class PermissionsSeeder extends Seeder
         $perm_editar_reviews = Permission::create(['name' => 'editar reviews']);
         $perm_ver_followers = Permission::create(['name' => 'ver followers']);
         $perm_editar_followers = Permission::create(['name' => 'editar followers']);
-        $perm_ver_comment = Permission::create(['name' => 'ver comment']);
-        $perm_editar_comment = Permission::create(['name' => 'editar comment']);
-        $perm_verificar_commerce = Permission::create(['name' => 'verificar commerce']);
+        $perm_ver_comment = Permission::create(['name' => 'ver comments']);
+        $perm_editar_comment = Permission::create(['name' => 'editar comments']);
+        $perm_verificar_commerce = Permission::create(['name' => 'verificar commerces']);
 
         // Asignar permisos a roles
         $rol_commerce->givePermissionTo($perm_ver_comment);
