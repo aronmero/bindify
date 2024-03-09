@@ -102,7 +102,7 @@ class Utils
     // Insertar la puntuación media en la tabla de comercios
     try {
       // Encuentra el comercio por su ID
-      $commerce = Commerce::findOrFail($id);
+      $commerce = Commerce::select('avg')->where('user_id', $id)->first();
 
       // Actualiza el campo avg con la puntuación media
       $commerce->avg = $averageScore;
