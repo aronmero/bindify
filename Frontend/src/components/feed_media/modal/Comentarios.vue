@@ -44,10 +44,13 @@
     /**
      * Controla la dinámica de cerrar este modal desde el hijo
      * Llama a la función padre abrirComentarios()
+     * Limpia el intervalo para evitar bugs
+     * Cambia el estilo de overflow para volver a permitir el scroll en background
      */
     const cerrarModal = () => {
         props.handler();
         clearInterval(interval);
+        document.body.style.overflow= "scroll"
     };
 
     const refrescarPosicion = () => {
@@ -123,6 +126,12 @@
         }, 1000);
     }
 
+    /**
+     * Bloqueamos overflow en background
+     * */
+
+    document.body.style.overflow= "hidden";
+
 </script>
 
 <template>
@@ -162,6 +171,9 @@
 </template>
 
 <style scoped lang="scss">
+    body {
+        overflow:hidden;
+    }
     .screen-modal {
         background:rgba(255, 255, 255, 1);
         position:fixed;
@@ -169,9 +181,8 @@
         height:100%;
         left:0px;
         top:0;
-        backdrop-filter: blur(8px);
         overflow:hidden;
-        z-index:10;
+        z-index:50;
         overscroll-behavior: contain;
         .wrapper {
             scroll-behavior: smooth;
