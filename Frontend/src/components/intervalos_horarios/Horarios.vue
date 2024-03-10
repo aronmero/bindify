@@ -1,75 +1,79 @@
 <script setup>
-import { ref } from 'vue';
-import BackSVG from '@public/assets/icons/forward.svg';
 
-import { comercios, obtener_rango_horarios } from '../feed_media/mocks/comercios';
-import Intervalo from './widgets/Intervalo.vue';
+    import { ref } from 'vue';
+    import BackSVG from '@public/assets/icons/forward.svg';
 
-const comercio = comercios[0];
+    import { comercios, obtener_rango_horarios } from '../feed_media/mocks/comercios';
+    import Intervalo from './widgets/Intervalo.vue';
 
-const schedule = comercio.schedule;
-/**
- * Creo una referencia para el modal
- */
-const modal = ref(null);
+    const props = defineProps([
+        'referencia_padre'
+    ]);
 
-/**
- * Obtengo el rango de horarios
- * */
+    const datos_padre = ref(props.referencia_padre)
+    const comercio = comercios[0];
 
-const horario = ref(obtener_rango_horarios(1));
-/* *
- * Borrar el intervalo
- * @param index - index del elemento a borrar
-* */
+    /**
+     * Creo una referencia para el modal
+     */
+    const modal = ref(null);
 
+    /**
+     * Obtengo el rango de horarios de ese comercio
+     * */
 
+    let horario =   ref(obtener_rango_horarios(1));; 
 
-let horario_string = "";
+    /* *
+    * Borrar el intervalo
+    * @param index - index del elemento a borrar
+    * */
+    const borrar_intervalo = (index) => {
+        let pos = "";
+        console.log(`borrando ${index}`);
+        horario.value.splice(index, 1);
+        horario.value = horario.value;
+    }
 
-/**
- *  Obtengo los horarios
- * */
+    /**
+     * Crear intervalo nuevo
+     * */
+    const crear_intervalo = () => {
+        horario.value.push({
+            hora_apertura: '00:00',
+            hora_cierre: '00:00',
+            dia: 'Lunes'
+        })
+    }
+    /**
+     * Cambiar el intervalo ya existente
+     * @param index - index del elemento a cambiar
+     * @param campo - campo a cambiar
+     * @param valor - valor del campo a cambiar
+     * */
 
-horario.value.forEach(string => {
-    horario_string += ref(`${string.hora_apertura} a ${string.hora_cierre} - ${string.dia}`);
-});
+    const cambiar_intervalo = (index, hora_apertura, hora_cierre, dia) => {
+        horario.value[index].hora_apertura = hora_apertura;
+        horario.value[index].hora_cierre = hora_cierre;
+        horario.value[index].dia = dia;
+        console.log(horario.value[index])
+    }
 
-/**
- * Borrar el intervalo 
- * */
+    /**
+     * Cierra el modal
+     * */
+    const cerrarModal = () => {
+        document.body.style.overflow= "scroll"
+    };
 
-const borrar_intervalo = (index) => {
-    console.log(`borrando ${index}`);
-    horario.value.splice(index, 1);
-    console.log(horario.value);
-}
-
-/**
- * Crear intervalo nuevo
- * */
-const crear_intervalo = () => {
-    horario.value.push({
-        hora_apertura: '00:00',
-        hora_cierre: '00:00',
-        dia: 'Lunes'
-    })
-}
-/**
- * Cambiar el intervalo ya existente
- * @param index - index del elemento a cambiar
- * @param campo - campo a cambiar
- * @param valor - valor del campo a cambiar
- * */
-
-const cambiar_intervalo = (index, hora_apertura, hora_cierre, dia) => {
-    console.log("cambiado");
-    horario.value[index].hora_apertura = hora_apertura;
-    horario.value[index].hora_cierre = hora_cierre;
-    horario.value[index].dia = dia;
-    console.log(horario.value[index]);
-    console.log(horario.value);
-}
+    /**
+     * 
+     * Enviar cambios
+     * 
+     * */
+     const enviar_cambios = () => {
+        datos_padre.value = horario.value;
+     }
 
 </script>
 <template>
@@ -88,27 +92,17 @@ const cambiar_intervalo = (index, hora_apertura, hora_cierre, dia) => {
             </nav>
             <!-- El listado de comentarios -->
             <div ref="comentario_handler"
-                class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
+                class="comentarios flex flex-col items-start max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
                 <h2>Actualmente:</h2>
-                <div>
-                   {{ horario_string.value}}
-                </div>
                 <Intervalo v-for="(intervalo, index) in horario" :intervalo="intervalo" :index="index"
-                    :borrar_intervalo="borrar_intervalo" 
-                    :cambiar_intervalo="cambiar_intervalo"
-                />
-
-            </div>
-
-            <div>
-                <button @click="() => crear_intervalo()" class="bg-[#FE822F] w-[200px] h-[50px] rounded-xl">Agregar intervalo</button>
-                
-            </div>
-
-            <!-- Formulario para enviar comentario -->
-            <div style="z-index: 99 !important;" class=" chat w-[100%] bg-[#fff] h-[50px] flex items-center fixed bottom-[50px] sm:bottom-[50px] md:bottom-[50px] lg:bottom-[10px]  xl:bottom-[10px] 2xl:bottom-[10px] p-[30px_20px]">
-
-            </div>
+                    :borrar_intervalo="borrar_intervalo" :cambiar_intervalo="cambiar_intervalo" />
+                    <div>
+                        <button @click="() => crear_intervalo()" class="bg-[#FE822F] w-[200px] h-[50px] rounded-xl">Agregar intervalo</button>
+                    </div>
+                    <div>
+                        <button @click="() => enviar_cambios()" class="mt-[10px] bg-[#404040] text-white w-[200px] h-[50px] rounded-xl">Aplicar y volver</button>
+                    </div>
+                </div>
         </div>
     </div>
 </template>
@@ -141,4 +135,5 @@ body {
     .chat {
         z-index: 99 !important;
     }
-}</style>
+}
+</style>
