@@ -41,8 +41,6 @@ async function tryLogin() {
     }
 }
 
-console.log(JSON.parse(sessionStorage.getItem("usuario")))
-
 function OlvidarPassword() {
     /* Funcion que redirecciona al modal o vista para recuperar la contraseña */
 }
