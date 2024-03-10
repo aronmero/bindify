@@ -29,8 +29,6 @@
     const modal_comentarios = ref(null);
     const comentariosVisibles = ref(false);
 
-
-
     const increaseLike = () => {
         //post.value.likes++;
     };
@@ -48,11 +46,11 @@
     /* Son estilos personalizados para acortar y mejorar la visibilidad del codigo principal */
 
     const estilos = {
-        post: ' w-[100%] min-h-[800px] flex flex-col overflow-hidden ',
+        post: ' w-[100%] min-h-[200px]  flex flex-col overflow-hidden ',
         post_avatar: '',
         modal: ' absolute bg-white min-w-[200px] rounded-lg p-2 flex flex-col items-start justify-center ',
         modal_button: ' flex items-center font-medium w-[100%]  ',
-        modal_superior_dcha: ' top-[100px] right-[20px] '
+        modal_superior_dcha: ' top-[100px] right-[0px] '
     };
 
     const redirect = (url) => {
@@ -82,7 +80,7 @@
 
         <!-- Contenedor del header del post -->
         <div class=" post-header w-[100%] h-[60px] flex items-center ">
-            <div class=" w-[50px] h-[50px] rounded-full overflow-hidden mr-2">
+            <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden mr-2">
                 <img @click="redirect(`comercio/${post.usuario.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.usuario.avatar" alt="avatar_usuario">
             </div>
             <div class=" flex flex-col items-start w-[100%] h-[100%] ">
@@ -95,8 +93,10 @@
         </div>
 
         <!-- Contenedor de la imagen del post -->
-        <div class=" post-content w-[100%] h-[600px] rounded-2xl  overflow-hidden mt-5 ">
-            <img @click="redirect(`post/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
+
+        <div class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl  overflow-hidden mt-5 ">
+            <img @click="redirect(`evento/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
+
         </div>
 
         <!-- Contenedor de botones del post -->
@@ -153,7 +153,7 @@
 
         <!-- Contenedor del header del post -->
         <div class=" post-header w-[100%] h-[60px] flex items-center ">
-            <div class=" w-[50px] h-[50px] rounded-full overflow-hidden mr-2 ">
+            <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden mr-2 ">
                 <img @click="redirect(`comercio/${post.usuario.id}`)"  class=" cursor-pointer w-[100%] h-[100%] object-cover  " :src="post.usuario.avatar" alt="avatar_usuario">
             </div>
             <div  class=" flex flex-col items-start texts w-[100%]  h-[100%]  ">
@@ -166,8 +166,9 @@
         </div>
 
         <!-- Contenedor de la imagen del post -->
-        <div class=" post-content w-[100%] h-[600px] rounded-2xl overflow-hidden mt-5 mb-5 ">
-            <img @click="redirect(`post/${post.id}`)" class=" w-[100%] h-[100%] object-cover  " :src="post.image" :alt="post.titulo">
+
+        <div class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl overflow-hidden mt-5 mb-5 ">
+            <img @click="redirect(`evento/${post.id}`)" class=" w-[100%] h-[100%] object-cover  " :src="post.image" :alt="post.titulo">
         </div>
 
         <!-- post footer -->
@@ -197,7 +198,6 @@
         </div>
         <!-- Contenido del Post -->
         <div class="information">
-
             <h1>
                 <img :src="IconoTipo" alt="icono-evento">
                 {{ post.title }}
@@ -234,8 +234,8 @@
 
         <!-- post header -->
         <div class=" post-header w-[100%] h-[fit-content] flex items-center pt-3 pb-4 ">
-            <div class=" w-[50px] h-[50px] rounded-full overflow-hidden  mr-2 ">
-                <img @click="redirect(`ayuntamiento/${post.usuario.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover mr-2" :src="post.usuario.avatar" alt="avatar_usuario">
+            <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden  mr-2 ">
+                <img @click="redirect(`ayuntamiento/${post.usuario.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover" :src="post.usuario.avatar" alt="avatar_usuario">
             </div>
             <div @click="redirect(`ayuntamiento/${post.id}`)" class=" cursor-pointer flex flex-col items-start texts w-[100%] h-[100%] ">
                 <b>{{ post.usuario.nombre }}</b>
@@ -247,8 +247,9 @@
         </div>
 
         <!-- post image -->
-        <div class=" post-content w-[100%] h-[600px] rounded-2xl overflow-hidden ">
-            <img @click="redirect(`post/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
+
+        <div class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl overflow-hidden ">
+            <img @click="redirect(`evento/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
         </div>
 
         <!-- post footer -->
@@ -280,7 +281,6 @@
             </h1>
             <span>{{ post.description }}</span>
         </div>
-
 
         <!-- Modal de Evento Institucional -->
         <div :class="` badge modal modal-izq ${estilos.modal}  ${estilos.modal_inferior_izq}`">
@@ -342,6 +342,15 @@
         padding: 20px 0px;
         height: fit-content;
 
+        .avatar-wrapper {
+            height:50px;
+            width:60px;
+            border-radius:50% !important;
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+            img {
+                transform:scale(1.5);
+            }
+        }
         .post-content {
             box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
             img {
