@@ -23,21 +23,21 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             MunicipalitiesTableSeeder::class,
+            UsersTableSeeder::class,
             HashtagsTableSeeder::class,
             Verification_tokensTableSeeder::class,
             CategoriesTableSeeder::class,
+            PermissionsSeeder::class,
+            CommercesTableSeeder::class,
             Post_typesTableSeeder::class,
             PostsTableSeeder::class,
             PostsHashtagsTableSeeder::class,
-            PermissionsSeeder::class,
-            UsersTableSeeder::class,
-            CommercesTableSeeder::class,
             CommercesHashtagsTableSeeder::class,
             CustomersTableSeeder::class,
             ReviewsTableSeeder::class,
             CommentsTableSeeder::class,
             FollowersTableSeeder::class,
-            UsersPostsTableSeeder::class,
+            // UsersPostsTableSeeder::class,
         ]);
 
     }

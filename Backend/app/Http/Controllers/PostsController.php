@@ -56,8 +56,7 @@ class PostsController extends Controller
                 $ids[] = $seguido->id;
             }
 
-            $listado = DB::table("posts")
-                ->join('users-posts', 'users-posts.post_id', '=', 'posts.id')
+            $listado = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
                 ->join('users', 'users.id', '=', 'users-posts.user_id')
                 ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
                 ->select(
@@ -78,6 +77,10 @@ class PostsController extends Controller
                 ->where('posts.active', '=', true)
                 ->orderBy('posts.created_at', 'desc')
                 ->get();
+
+            $listado->each(function ($post) {
+                $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+            });
 
             return response()->json([
                 'status' => true,
@@ -148,6 +151,7 @@ class PostsController extends Controller
                 'start_date' => $post->start_date,
                 'end_date' => $post->end_date,
                 'active' => $post->active,
+                'hastags' => $post->hashtags->pluck('name')
             ];
 
 
@@ -203,7 +207,6 @@ class PostsController extends Controller
                 'message' => $th->getMessage(),
             ], 404);
         }
-
     }
 
     /**

@@ -33,7 +33,7 @@ class Commerce extends Model
 
     public function hashtags(){
 
-        return $this->belongsToMany(Hashtag::class, 'commerces-hashtags', 'hashtag_id', 'commerce_id');
+        return $this->belongsToMany(Hashtag::class, 'commerces-hashtags', 'commerce_id', 'hashtag_id');
 
     }
 
