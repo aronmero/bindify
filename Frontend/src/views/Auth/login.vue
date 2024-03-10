@@ -1,768 +1,92 @@
-<script setup>
-    import router from '@/router/index.js';
-    import { ref } from 'vue';
+<script setup lang="ts">
+import router from '@/router/index.js';
+import { ref } from 'vue';
+import Input from '@/components/comun/input.vue';
+import { login } from "@/api/auth.js";
+import { useStorage } from '@vueuse/core'
 
-    const email = ref('');
-    const password = ref('');
+const email = ref(null);
+const password = ref(null);
+const errorMsg = ref(null);
+const errorEmail = ref(null);
+const errorPass = ref(null);
 
-    function Login() {
-        const emailRegex = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)/;
+async function tryLogin() {
+    let isValido = true;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    //console.log(emailRegex.test(email.value));
+    if (!emailRegex.test(email.value)) {
+        errorEmail.value = "Es necesario indicar un email para iniciar sesión.";
+        isValido = false;
+    } else {
+        errorEmail.value = null;
+    }
 
-        if (emailRegex.test(email.value) && password.value.length >= 4) {
-            alert("se ha iniciado sesión");
+    if (password.value == null || password.value.length < 4) {
+        errorPass.value = "La contraseña es demasiado corta";
+        isValido = false;
+    } else {
+        errorPass.value = null;
+    }
+
+    if (isValido) {
+        const data = await login(email.value, password.value);
+        console.log(data);
+        if (data.status) {
+            sessionStorage.setItem("usuario", JSON.stringify({ "usuario": data.message }));
+            router.push("/")
         } else {
-            console.log("Error");
+            errorMsg.value = "Email o contraseña incorrecta"
         }
     }
+}
 
-    function OlvidarPassword() {
-        
-    }
+console.log(JSON.parse(sessionStorage.getItem("usuario")))
 
-    function Registro() {
-        router.push("/registro");
-    }
+function OlvidarPassword() {
+    /* Funcion que redirecciona al modal o vista para recuperar la contraseña */
+}
+
+function Registro() {
+    router.push("/registro");
+}
 </script>
 
 <template>
-    <div class="container">
-        <div class="imagen-container">
-            <img src="@public/img/fondo.png" alt="imagen">
+    <div class="mt-[45px] flex flex-col lg:flex-row justify-center items-center">
+        <div class="w-[45vw] lg:flex justify-center items-center hidden">
+            <img src="/img/fondo.png" alt="imagen">
         </div>
-        <div class="formulario-container">
-            <h2 class="title">Título</h2>
-            <p class="subtitle">Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto.</p>
-            <form @submit.prevent="Login" class="form">
-                <div class="grupos">
-                    <label>Email: </label>
-                    <i class="bx bx-envelope"></i>
-                    <input type="email" id="email" v-model="email" placeholder="Email" required>
-                </div>
-                <div class="grupos">
-                    <label>Contraseña: </label>
-                    <i class="bx bx-lock-alt"></i>
-                    <input type="password" id="password" v-model="password" placeholder="Contraseña" required>
-                </div>
-                <div class="login">
-                    <input type="submit" value="Iniciar Sesión">
-                </div>
-                <div class="olvidarPassword">
-                    <p @click="OlvidarPassword" class="olvidarPassword">¿Olvidaste tu contraseña?</p>
-                </div>
-                <div class="links">
-                    <p>O inicie sesión con:</p>
-                    <div class="social-media-buttons">
-                        <button class="social-media-button">
-                            <img src="@public/img/google-logo.png" alt="Google">
-                        </button>
-
-                        <button class="social-media-button">
-                            <img src="@public/img/instagram-logo.png" alt="Instagram">
-                        </button>
-
-                        <button class="social-media-button">
-                            <img src="@public/img/facebook-logo.png" alt="Facebook">
-                        </button>
-                    </div>
-                </div>
-                <div class="registro">
-                    <p>¿No tienes una cuenta?</p>
-                    <button @click="Registro" class="Registro-button">Regístrate</button>
-                </div>
+        <div class="min-h-[80vh] w-[95vw] lg:w-[45vw] flex flex-col gap-0 lg:gap-5 justify-between items-center">
+            <header class="flex flex-col gap-y-3 w-[80%] lg:w-auto mt-5 lg:mt-0">
+                <h2 class="lg:text-4xl text-2xl text-center">Inicio de sesión</h2>
+                <p class="text-center lg:text-lg">Inicia sesión en la aplicación para poder ver todas las ofertas.</p>
+            </header>
+            <form @submit.prevent="tryLogin" class="lg:w-[60%] w-[80%] h-[50%] flex flex-col justify-evenly gap-y-5">
+                <Input @datos="(nuevosDatos) => { email = nuevosDatos }" tipo="text" label="Email" :valor="email"
+                    :error="errorEmail" />
+                <Input @datos="(nuevosDatos) => { password = nuevosDatos }" tipo="password" label="Password"
+                    class="-mt-2" :valor="password" :error="errorPass" />
+                <Input tipo="submit" clase="oscuro" valor="Iniciar sesión" />
+                <p @click="OlvidarPassword" class="font-semibold lg:text-base text-sm text-right cursor-pointer -mt-3">
+                    ¿Olvidaste tu
+                    contraseña?</p>
             </form>
+            <p class="color">{{ errorMsg }}</p>
+            <div class="flex flex-col gap-y-5">
+                <p class="text-center">O inicie sesión con:</p>
+                <div class="social-media-buttons flex w-full justify-evenly gap-x-5">
+                    <Input tipo="button" clase="social" img="/img/google-logo.png" />
+                    <Input tipo="button" clase="social" img="/img/facebook-logo.png" />
+                    <Input tipo="button" clase="social" img="/img/instagram-logo.png" />
+                </div>
+            </div>
+            <div class="flex gap-x-2 items-center justify-center">
+                <p>¿No tienes una cuenta?</p>
+                <button @click="Registro" class="font-semibold">Regístrate</button>
+            </div>
         </div>
     </div>
 </template>
 
-<style scoped lang="scss">
-@media screen and (min-width: 100px) and (max-width: 450px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-    .container {
-        margin: 0 auto;
-        display: flex;
-        margin-top: 25px;
-        width: 90%;
-        padding: 10px;
-        background-color: #EBEBEB;
-    }
-
-    .imagen-container {
-        display: none;
-    }
-
-    .title {
-        font-family: "Inter", 'Times New Roman', Times, serif;
-        font-size: 30px;
-        font-weight: bolder;
-        text-align: center;
-    }
-
-    .subtitle {
-        margin-top: 10px;
-    }
-    
-    .grupos {
-        position: relative;
-        margin-top: 20px;
-    }
-
-    .grupos input {
-        width: 100%;
-        border-radius: 10px;
-        padding: 12px 12px 12px 12px;
-        outline: none;
-    }
-
-    .grupos input::placeholder {
-        color: transparent;
-    }
-
-    .grupos i {
-        position: absolute;
-        top: 65%;
-        left: 10px;
-        font-size: 20px;
-        transform: translateY(-50%);
-    }
-
-    
-    .login input {
-        background-color: black;
-        color: white;
-        border-radius: 15px;
-        width: 100%;
-        padding: 10px;
-        margin-top: 15px;
-    }
-
-    .olvidarPassword {
-        text-align: end;
-        margin-bottom: 25px;
-        p {
-            font-size: 14px;
-        }
-    }
-
-    .links {
-        p {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-    }
-
-    .social-media-buttons {
-        display: flex;
-        justify-content: space-around;
-    }
-    
-    .social-media-button {
-        background-color: white;
-        border-radius: 15px;
-        padding: 10px;
-        margin-bottom: 15px;
-    }
-
-    .social-media-button img {
-        width: 25px;
-        height: 25px;
-    }
-
-    .registro {
-        display: flex;
-        justify-content: center;
-
-        button {
-            margin-left: 5px;
-            font-weight: bold;
-        }
-    }
-}
-
-
-@media screen and (min-width: 451px) and (max-width: 576px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-    .container {
-        margin: 0 auto;
-        width: 80%;
-        display: flex;
-        margin-top: 60px;
-        background-color: #EBEBEB;
-        padding: 50px;
-    }
-
-    .imagen-container {
-        display: none;
-    }
-
-    .formulario-container {
-        width: 100%;
-        height: 75vh;
-        margin-left: 25px;
-    }
-
-    .title {
-        font-family: "Inter", 'Times New Roman', Times, serif;
-        font-size: 50px;
-        font-weight: bolder;
-        margin-bottom: 10px;
-        text-align: center;
-    }
-
-    .subtitle {
-        margin-bottom: 50px;
-    }
-    
-    .grupos {
-        margin-top: 20px;
-        position: relative;
-    }
-
-    .grupos input {
-        width: 100%;
-        padding: 12px 12px 12px 45px;
-        border-radius: 10px;
-        outline: none;
-    }
-
-    .grupos input::placeholder {
-        color: transparent;
-    }
-
-    .grupos i {
-        position: absolute;
-        top: 65%;
-        left: 10px;
-        font-size: 20px;
-        transform: translateY(-50%);
-    }
-
-    
-    .login input {
-        background-color: black;
-        color: white;
-        border-radius: 15px;
-        width: 100%;
-        padding: 15px;
-        margin: 20px 0 5px;
-    }
-
-    .olvidarPassword {
-        text-align: end;
-        margin-bottom: 25px;
-        p {
-            font-size: 14px;
-        }
-    }
-
-    .links {
-        p {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-    }
-
-    .social-media-buttons {
-        display: flex;
-        justify-content: space-between;
-    }
-    
-    .social-media-button {
-        background-color: white;
-        padding: 10px;
-        border-radius: 15px;
-        margin: 0 15px 30px;
-    }
-
-    .social-media-button img {
-        width: 50px;
-        height: 50px;
-    }
-
-    .registro {
-        display: flex;
-        justify-content: center;
-
-        button {
-            font-weight: bold;
-            margin-left: 5px;
-        }
-    }
-}
-
-
-@media screen and (min-width: 577px) and (max-width: 1250px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-    .container {
-        margin: 0 auto;
-        width: 85%;
-        display: flex;
-        margin-top: 100px;
-        background-color: #EBEBEB;
-        padding: 50px;
-    }
-
-    .imagen-container {
-        display: none;
-    }
-
-    .formulario-container {
-        margin-left: 50px;
-        width: 100%;
-    }
-
-    .title {
-        font-family: "Inter", 'Times New Roman', Times, serif;
-        font-size: 50px;
-        font-weight: bolder;
-        margin-bottom: 30px;
-        text-align: center;
-    }
-
-    .subtitle {
-        margin-bottom: 50px;
-    }
-
-    label {
-        display: none;
-    }
-
-    .grupos {
-        margin-top: 15px;
-        position: relative;
-    }
-
-    .grupos input {
-        width: 100%;
-        padding: 12px 12px 12px 45px;
-        border-radius: 10px;
-        outline: none;
-    }
-
-    .grupos input::placeholder {
-        color: black;
-        font-size: 17px;
-        letter-spacing: 0.02em;
-    }
-
-    .grupos i {
-        position: absolute;
-        top: 50%;
-        left: 10px;
-        font-size: 20px;
-        transform: translateY(-50%);
-    }
-
-
-    .login input {
-        background-color: black;
-        color: white;
-        border-radius: 15px;
-        width: 100%;
-        padding: 15px;
-        margin: 20px 0 5px;
-    }
-
-    .olvidarPassword {
-        text-align: end;
-        margin-bottom: 15px;
-    }
-
-    .links {
-        p {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-    }
-
-    .social-media-buttons {
-        display: flex;
-        justify-content: space-between;
-    }
-    
-    .social-media-button {
-        background-color: white;
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 25px
-    }
-
-    .social-media-button img {
-        width: 50px;
-        height: 50px;
-    }
-
-    .registro {
-        display: flex;
-        justify-content: center;
-
-        button {
-            font-weight: bold;
-            margin-left: 5px;
-        }
-    }
-}
-
-
-@media screen and (min-width: 1251px) and (max-width: 1450px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-    .container {
-        margin: 0 auto;
-        width: 60%;
-        display: flex;
-        margin-top: 150px;
-        background-color: #EBEBEB;
-        padding: 50px;
-    }
-
-    .imagen-container {
-        margin-right: 25px;
-
-        img {
-            width: 550px;
-            height: 550px;
-            background-size: cover;
-        }
-    }
-    
-    .formulario-container {
-        margin-left: 50px;
-        width: 50%;
-    }
-
-    .title {
-        font-family: "Inter", 'Times New Roman', Times, serif;
-        font-size: 50px;
-        font-weight: bolder;
-        margin-bottom: 30px;
-        text-align: center;
-    }
-
-    .subtitle {
-        display: none;
-    }
-
-    label {
-        display: none;
-    }
-
-    .grupos {
-        margin-top: 15px;
-        position: relative;
-    }
-
-    .grupos input {
-        width: 100%;
-        padding: 12px 12px 12px 45px;
-        border-radius: 10px;
-        outline: none;
-    }
-
-    .grupos input::placeholder {
-        color: black;
-        font-size: 17px;
-        letter-spacing: 0.02em;
-    }
-
-    .grupos i {
-        position: absolute;
-        top: 50%;
-        left: 10px;
-        font-size: 20px;
-        transform: translateY(-50%);
-    }
-
-
-    .login input {
-        background-color: black;
-        color: white;
-        border-radius: 15px;
-        width: 100%;
-        padding: 15px;
-        margin: 20px 0 5px;
-    }
-
-    .olvidarPassword {
-        text-align: end;
-        margin-bottom: 15px;
-        font-size: 13px;
-    }
-
-    .links {
-        p {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-    }
-
-    .social-media-buttons {
-        display: flex;
-        justify-content: space-between;
-    }
-    
-    .social-media-button {
-        background-color: white;
-        padding: 10px;
-        border-radius: 15px;
-        margin-bottom: 25px
-    }
-
-    .social-media-button img {
-        width: 50px;
-        height: 50px;
-    }
-
-    .registro {
-        display: flex;
-        justify-content: center;
-
-        button {
-            font-weight: bold;
-            margin-left: 5px;
-        }
-    }
-}
-
-
-@media screen and (min-width: 1451px) and (max-width: 1750px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-    .container {
-        margin: 0 auto;
-        width: 60%;
-        display: flex;
-        margin-top: 150px;
-        background-color: #EBEBEB;
-        padding: 50px;
-    }
-
-    .imagen-container {
-        margin-right: 25px;
-
-        img {
-            width: 550px;
-            height: 550px;
-            background-size: cover;
-        }
-    }
-
-    .formulario-container {
-        margin-left: 50px;
-        width: 50%;
-    }
-
-    .title {
-        font-family: "Inter", 'Times New Roman', Times, serif;
-        font-size: 50px;
-        font-weight: bolder;
-        margin-bottom: 30px;
-        text-align: center;
-    }
-
-    .subtitle {
-        display: none;
-    }
-
-    label {
-        display: none;
-    }
-
-    .grupos {
-        margin-top: 15px;
-        position: relative;
-    }
-
-    .grupos input {
-        width: 100%;
-        padding: 12px 12px 12px 45px;
-        border-radius: 10px;
-        outline: none;
-    }
-
-    .grupos input::placeholder {
-        color: black;
-        font-size: 17px;
-        letter-spacing: 0.02em;
-    }
-
-    .grupos i {
-        position: absolute;
-        top: 50%;
-        left: 10px;
-        font-size: 20px;
-        transform: translateY(-50%);
-    }
-
-
-    .login input {
-        background-color: black;
-        color: white;
-        border-radius: 15px;
-        width: 100%;
-        padding: 15px;
-        margin: 20px 0 5px;
-    }
-
-    .olvidarPassword {
-        text-align: end;
-        margin-bottom: 15px;
-    }
-
-    .links {
-        p {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-    }
-
-    .social-media-buttons {
-        display: flex;
-        justify-content: space-between;
-    }
-    
-    .social-media-button {
-        background-color: white;
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 15px
-    }
-
-    .social-media-button img {
-        width: 50px;
-        height: 50px;
-    }
-
-    .registro {
-        display: flex;
-        justify-content: center;
-
-        button {
-            font-weight: bold;
-            margin-left: 5px;
-        }
-    }
-}
-
-
-@media screen and (min-width: 1751px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-    .container {
-        margin: 0 auto;
-        width: 60%;
-        display: flex;
-        margin-top: 150px;
-        background-color: #EBEBEB;
-        padding: 50px;
-    }
-
-    .imagen-container {
-        margin-right: 25px;
-
-        img {
-            width: 550px;
-            height: 550px;
-            background-size: cover;
-        }
-    }
-
-    .formulario-container {
-        margin-left: 50px;
-        width: 50%;
-    }
-
-    .title {
-        font-family: "Inter", 'Times New Roman', Times, serif;
-        font-size: 50px;
-        font-weight: bolder;
-        margin-bottom: 30px;
-        text-align: center;
-    }
-
-    .subtitle {
-        display: none;
-    }
-
-    label {
-        display: none;
-    }
-
-    .grupos {
-        margin-top: 15px;
-        position: relative;
-    }
-
-    .grupos input {
-        width: 100%;
-        padding: 12px 12px 12px 45px;
-        border-radius: 10px;
-        outline: none;
-    }
-
-    .grupos input::placeholder {
-        color: black;
-        font-size: 17px;
-        letter-spacing: 0.02em;
-    }
-
-    .grupos i {
-        position: absolute;
-        top: 50%;
-        left: 10px;
-        font-size: 20px;
-        transform: translateY(-50%);
-    }
-
-
-    .login input {
-        background-color: black;
-        color: white;
-        border-radius: 15px;
-        width: 100%;
-        padding: 15px;
-        margin: 20px 0 5px;
-    }
-
-    .olvidarPassword {
-        text-align: end;
-        margin-bottom: 15px;
-    }
-
-    .links {
-        p {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-    }
-
-    .social-media-buttons {
-        display: flex;
-        justify-content: space-between;
-    }
-    
-    .social-media-button {
-        background-color: white;
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 15px
-    }
-
-    .social-media-button img {
-        width: 50px;
-        height: 50px;
-    }
-
-    .registro {
-        display: flex;
-        justify-content: center;
-
-        button {
-            font-weight: bold;
-            margin-left: 5px;
-        }
-    }
-}
-</style>
+<style scoped></style>
