@@ -1,8 +1,17 @@
-//Pillar de sesion storage o store de pinia cuando se realice
-const token = "1|LNSPOK5hwyhzxAYXbplfM1nlvB1yj8aOU11O3rTR0e414f0e";
 
-//Genera la opcion para una llamada de api
-export const genOptions = (metodo,body=null) => {
+/**
+ * Genera unas opciones para hacer una peticion a una api. Obtiene un token del SessionStorage
+ * @date 3/10/2024 - 5:32:17 PM
+ * @author Aarón Medina Rodríguez
+ *
+ * @param {String} metodo POST, GET, PATCH, DELETE
+ * @param {Object} [body=null]
+ * @returns {{ method: any; headers: { "Content-Type": string; "User-Agent": string; Accept: string; Authorization: string; }; body: any; }}
+ */
+export const genOptions = (metodo, body = null) => {
+  const user = JSON.parse(sessionStorage.getItem("usuario"));
+  const token = user.usuario.token;
+
   return {
     method: metodo,
     headers: {
@@ -15,8 +24,19 @@ export const genOptions = (metodo,body=null) => {
   };
 };
 
-//Genera la opcion para una llamada de api
+
+/**
+ * Genera unas opciones para hacer una peticion a una api. Obtiene un token del SessionStorage
+ * @date 3/10/2024 - 5:32:48 PM
+ * @author Aarón Medina Rodríguez
+ *
+ * @param {String} metodo POST, GET, PATCH, DELETE
+ * @returns {{ method: any; headers: { "Content-Type": string; "User-Agent": string; Accept: string; Authorization: string; } }}
+ */
 export const genOptionsWithoutBody = (metodo) => {
+  const user = JSON.parse(sessionStorage.getItem("usuario"));
+  const token = user.usuario.token;
+
   return {
     method: metodo,
     headers: {

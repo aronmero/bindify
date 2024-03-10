@@ -1,12 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import router from '@/router/index.js';
 import { ref } from 'vue';
 import Input from '@/components/comun/input.vue';
 import { login } from "@/api/auth.js";
+import { useStorage } from '@vueuse/core'
 
 const email = ref(null);
 const password = ref(null);
-const errorMsg= ref(null);
+const errorMsg = ref(null);
 const errorEmail = ref(null);
 const errorPass = ref(null);
 
@@ -27,17 +28,20 @@ async function tryLogin() {
     } else {
         errorPass.value = null;
     }
+
     if (isValido) {
-        
-        const data = await login(email.value,password.value);
+        const data = await login(email.value, password.value);
         console.log(data);
-        if(data.status){
+        if (data.status) {
+            sessionStorage.setItem("usuario", JSON.stringify({ "usuario": data.message }));
             router.push("/")
-        }else{
-            errorMsg.value="Email o contraseña incorrecta"
+        } else {
+            errorMsg.value = "Email o contraseña incorrecta"
         }
     }
 }
+
+console.log(JSON.parse(sessionStorage.getItem("usuario")))
 
 function OlvidarPassword() {
     /* Funcion que redirecciona al modal o vista para recuperar la contraseña */
@@ -61,11 +65,11 @@ function Registro() {
             <form @submit.prevent="tryLogin" class="lg:w-[60%] w-[80%] h-[50%] flex flex-col justify-evenly gap-y-5">
                 <Input @datos="(nuevosDatos) => { email = nuevosDatos }" tipo="text" label="Email" :valor="email"
                     :error="errorEmail" />
-                <Input @datos="(nuevosDatos) => { password = nuevosDatos }" tipo="password" label="Password" class="-mt-2"
-                    :valor="password" :error="errorPass" />
+                <Input @datos="(nuevosDatos) => { password = nuevosDatos }" tipo="password" label="Password"
+                    class="-mt-2" :valor="password" :error="errorPass" />
                 <Input tipo="submit" clase="oscuro" valor="Iniciar sesión" />
-                <p @click="OlvidarPassword"
-                    class="font-semibold lg:text-base text-sm text-right cursor-pointer -mt-3">¿Olvidaste tu
+                <p @click="OlvidarPassword" class="font-semibold lg:text-base text-sm text-right cursor-pointer -mt-3">
+                    ¿Olvidaste tu
                     contraseña?</p>
             </form>
             <p class="color">{{ errorMsg }}</p>
