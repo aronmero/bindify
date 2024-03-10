@@ -11,7 +11,7 @@ const routes = [
   { path: "/registro-comercio", component: () => import("@/views/Auth/registroComercio.vue") },
   { path: "/horarios-modal", component: () => import("@/views/Auth/horarios.vue") },
   
-  { path: "/evento", component: () => import("@/views/eventos/evento.vue") },
+  { path: "/post/:id", component: () => import("@/views/eventos/evento.vue") },
   { path: "/eventos", component: () => import("@/views/eventos/eventos.vue") },
   { path: "/eventos/new", component: () => import("@/views/eventos/crearEvento.vue") },
   { path: "/eventos/edit", component: () => import("@/views/eventos/editarEvento.vue") },

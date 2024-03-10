@@ -4,6 +4,17 @@ import Header from "@/components/comun/header.vue";
 import Footer from "@/components/comun/footer.vue";
 import Evento from "@/components/utils/evento.vue";
 
+import absoluteURL from "@/scripts/getFullUrl.js";
+import router from "@/router/index.js";
+import { ref, onMounted } from "vue";
+import { postId } from "@/api/publicacion/publicacion.js";
+
+const datos = ref([])
+
+const id=router.currentRoute.value.params.id
+onMounted(async () => {
+    datos.value = await postId("get",id);
+})
 
 
 </script>
@@ -11,9 +22,12 @@ import Evento from "@/components/utils/evento.vue";
 <template>
     <Header />
     <Grid><template v-slot:Left> </template>
-        <Evento :titulo="BLANK" :ubicacion="BLANK" :fechaInicio="BLANK" :fechaFin="BLANK" :dias="BLANK"
-            :descripcion="BLANK" />
+        <section v-if="datos.data !== undefined">
+            <Evento :url="absoluteURL()" :banner="datos.data.image" :titulo="datos.data.title" :ubicacion="BLANK" :fechaInicio="datos.data.start_date"
+                :fechaFin="datos.data.end_date" :dias="BLANK" :descripcion="datos.data.description" :tipo="datos.data.post_type_name" />
+        </section>
         <template v-slot:Right> </template>
+
     </Grid>
     <Footer />
 </template>
