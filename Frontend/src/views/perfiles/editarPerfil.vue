@@ -74,13 +74,16 @@ const tratarDatos = ()=>{
                 <button  class="lg:hidden absolute left-0">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
                 </button>
-                <h3 class="lg:text-xl">Editar Perfil</h3>
+                <h3 class="text-xl lg:text-2xl">Editar Perfil</h3>
             </header>
             <section class="w-full mt-5 mb-5">
                 <form action="javascript:void(0);" class="flex flex-col gap-y-5">
                     <Input @datos="(nuevosDatos)=>{nombre = nuevosDatos}" tipo="text" requerido="true" label="Nombre" :valor="nombre" :error="errorNombre"/>
-                    <Input @datos="(nuevosDatos)=>{imagenPerfil = nuevosDatos}" tipo="file" label="Imagen de perfil" requerido="true" clase="perfil" :error="errorIMG" :valor="imagenPerfil"/>
-                    <Input @datos="(nuevosDatos)=>{imagenBanner = nuevosDatos}" tipo="file" label="Imagen de fondo" requerido="true" clase="banner" :valor="imagenBanner"/>
+                    <div class="imagenes flex gap-x-10 lg:gap-x-32">
+                        <p v-if="errorIMG != null" class="text-primary-700 text-xs lg:text-sm ms-3">{{ errorIMG }}</p>
+                        <Input @datos="(nuevosDatos)=>{imagenPerfil = nuevosDatos}" tipo="file" label="Imagen de perfil" requerido="true" clase="perfil" :error="errorIMG" :valor="imagenPerfil"/>
+                        <Input @datos="(nuevosDatos)=>{imagenBanner = nuevosDatos}" tipo="file" label="Imagen de fondo" clase="banner" :valor="imagenBanner"/>
+                    </div>
                     <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" label="Teléfono" :valor="telefono"/>
                     <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" requerido="true" label="Teléfono" :valor="telefono" :error="errorPhone"/>
                     <Input @datos="(nuevosDatos)=>{email = nuevosDatos}" tipo="email" requerido="true" label="Email" :valor="email" :error="errorMail"/>
@@ -89,6 +92,7 @@ const tratarDatos = ()=>{
                     <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" @change="mostrarInformacion" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
                     <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{direccion = nuevosDatos}" tipo="text" requerido="true" label="Dirección" :valor="direccion" :error="errorDirec"/>
                     <Input v-if="tipoUsuario == 'comercio'" tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual"/>
+                    <Input @click="mostrarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
                     <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
                     <div class="cambiocontra flex flex-col gap-y-5">
                         <Input @datos="(nuevosDatos)=>{contraActual = nuevosDatos}" tipo="password" label="Contraseña Actual" :valor="contraActual" :error="errorContra"/>
@@ -96,7 +100,6 @@ const tratarDatos = ()=>{
                         <Input @datos="(nuevosDatos)=>{repetirNueva = nuevosDatos}" tipo="password" label="Repetir contraseña" :valor="repetirNueva" :error="errorContra"/>
                     </div>
                     <div class="flex flex-col items-center w-full justify-center mt-3 gap-y-10">
-                        <Input @click="mostrarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%]"/>
                         <Input @click="tratarDatos" tipo="submit" clase="oscuro" valor="Guardar Cambios" class="w-[50%]"/>
                     </div>
                 </form>

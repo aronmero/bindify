@@ -1,410 +1,116 @@
 <script setup>
-import Input from '@/components/comun/input.vue';
-import router from '@/router/index.js';
+import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
-const usuario = ref('');
-const nombre = ref('');
-const email = ref('');
-const telefono = ref('');
-const municipio = ref('');
-const avatar = ref('');
-const password = ref('');
-const password_confirm = ref('');
+import Input from "@/components/comun/input.vue";
 
-function registro() {
-    const emailRegex = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)/;
-    const telefonoRegex = /^\d{3}-\d{3}-\d{3}$/;
+let options = ["Los Llanos de Aridane", "Santa Cruz de la Palma", "Tijarafe", "El Paso", "Puntagorda", "Villa de Mazo"]; /* Cambiar por info del back */
+let optionsSex = ["M", "H"]; /* Cambiar por info del back */
+let arrayTipos = ["Particular", "Comercio"]; 
+let errorIMG = ref(null);
+let errorMunic = ref(null);
+let errorDate = ref(null);
+let errorCategory = ref(null);
+let errorUsuario = ref(null);
+let errorNombre = ref(null);
+let errorMail = ref(null);
+let errorDirec = ref(null);
+let errorPhone = ref(null);
+const router = useRouter();
+const horarioActual = ref("No tienes un horario registrado");
+const tipoUsuario = ref(null);
+const usuario = ref(null);
+const nombre = ref(null);
+const imagenPerfil = ref(null);
+const imagenBanner = ref(null);
+const telefono = ref(null);
+const email = ref(null);
+const municipio = ref(null);
+const fechaNac = ref(null);
+const sexo = ref(null);
+const direccion = ref(null);
+const categoria = ref(null);
+const contraNueva = ref(null);
+const repetirNueva = ref(null);
 
-    if (usuario.value.length <= 5) {
-        alert("Usuario debe tener al menos 6 caracteres");
-        return;
-    } else {
-        console.log(usuario.value);
+const mostrarInformacion = (e)=>{
+    let opciones = [...e.target.children];
+    let opcionSeleccionada = opciones.filter(opcion => opcion.selected == true);
+    if(opcionSeleccionada[0].textContent != null){
+        tipo.value = opcionSeleccionada[0].textContent;
     }
-
-    if (nombre.value.length <= 5) {
-        alert("Nombre debe tener al menos 6 caracteres");
-        return;
-    } else {
-        console.log(nombre.value);
-    }
-
-    if (!emailRegex.test(email.value)) {
-        alert("Email inválido");
-        return;
-    } else {
-        console.log(email.value);
-    }
-
-    if (!telefonoRegex.test(telefono.value)) {
-        alert("Teléfono inválido");
-        return;
-    } else {
-        console.log(telefono.value);
-    }
-
-    if (password.value !== password_confirm.value) {
-        alert("Las contraseñas no coinciden");
-        return;
-    } else {
-        console.log("coinciden: " + password.value + " = " + password_confirm.value);
-    }
-
-    alert("Registro exitoso");
 }
-
-function login() {
-    router.push("/login");
+/* Falta vincular modal de editar horario y hacer las validaciones */
+const tratarDatos = ()=>{
+    console.log(tipoUsuario.value);
+    console.log(nombre.value);
+    console.log(imagenPerfil.value);
+    console.log(imagenBanner.value);
+    console.log(telefono.value);
+    console.log(email.value);
+    console.log(municipio.value);
+    console.log(fechaNac.value);
+    console.log(sexo.value);
+    console.log(horarioActual.value);
+    console.log(direccion.value);
+    console.log(categoria.value);
+    console.log(contraNueva.value);
+    console.log(repetirNueva.value);
+    if(nombre.value.length == 0){
+        errorNombre.value = "El nombre no puede estar vacío.";
+    }else if(tipoUsuario.value == 'comercio' && telefono.value.length == 0){
+        errorNombre.value = null;
+        errorPhone.value = "Es necesario indicar un teléfono de contacto para tu negocio.";
+    }
 }
-
-const array = ["S/C de La Palma", "Villa de Mazo", "Los Llanos de Aridane", "Fuencaliente", "El Paso", "Puntagorda", "Puntallana", "Breña Baja", "Breña Alta", "Garafía", "Barlovento", "San Andrés y Sauces", "Tazacorte"];
 </script>
 
 
 <template>
-    <div class="container">
-        <div class="imagen-container">
+    <div class="flex w-[99vw] justify-center lg:justify-end mb-5">
+        <div class="fixed hidden lg:flex items-center top-0 left-16">
             <img src="@public/img/fondo.png" alt="Imagen Fondo">
         </div>
-        <div class="formulario-container">
-            <h1 class="title">Título</h1>
-            <form @submit.prevent="registro" class="form max-w-[700px]">
-                <div class="grupo">
-                    <Input tipo="text" requerido="true" img="/assets/icons/maleUser.svg" v-model='usuario' label="Usuario"/>
+        <div class="lg:w-[60vw] w-[90vw] flex flex-col lg:items-center mt-10">
+            <h1 class="text-center text-5xl mb-7">Registro</h1>
+            <form action="javascript:void(0);" class="flex flex-col gap-y-5 lg:w-[45%]">
+                <Input @datos="(nuevosDatos)=>{tipoUsuario = arrayTipos[nuevosDatos].toLowerCase()}" class="w-[40%]" tipo="selection" requerido="true" :opciones=arrayTipos placeholder="Tipos" v-model='tipoUsuario' label="Tipo de usuario" :valor="tipoUsuario"/>
+                <Input @datos="(nuevosDatos)=>{usuario = nuevosDatos}" tipo="text" requerido="true" label="Usuario" :valor="usuario" :error="errorUsuario"/>
+                <Input @datos="(nuevosDatos)=>{nombre = nuevosDatos}" tipo="text" requerido="true" label="Nombre" :valor="nombre" :error="errorNombre"/>
+                <div class="imagenes flex gap-x-10 lg:gap-x-20">
+                    <p v-if="errorIMG != null" class="text-primary-700 text-xs lg:text-sm ms-3">{{ errorIMG }}</p>
+                    <Input @datos="(nuevosDatos)=>{imagenPerfil = nuevosDatos}" tipo="file" label="Imagen de perfil" requerido="true" clase="perfil" :error="errorIMG" :valor="imagenPerfil"/>
+                    <Input @datos="(nuevosDatos)=>{imagenBanner = nuevosDatos}" tipo="file" label="Imagen de fondo" clase="banner" :valor="imagenBanner"/>
                 </div>
-                <br/>
-                <div class="grupo">
-                    <Input tipo="text" requerido="true" img="/assets/icons/maleUser.svg" v-model='nombre' label="Nombre"/>
+                <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" label="Teléfono" :valor="telefono"/>
+                <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" requerido="true" label="Teléfono" :valor="telefono" :error="errorPhone"/>
+                <Input @datos="(nuevosDatos)=>{email = nuevosDatos}" tipo="email" requerido="true" label="Email" :valor="email" :error="errorMail"/>
+                <Input @datos="(nuevosDatos)=>{municipio = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Municipio" :opciones="options" placeholder="Selecciona un municipio" :error="errorMunic" :valor="municipio"/>
+                <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{fechaNac = nuevosDatos}" tipo="fecha" requerido="true" label="Fecha de nacimiento" :valor="fechaNac" :error="errorDate"/>
+                <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" class="lg:w-[40%] w-[60%]" @change="mostrarInformacion" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
+                <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{direccion = nuevosDatos}" tipo="text" requerido="true" label="Dirección" :valor="direccion" :error="errorDirec"/>
+                <Input v-if="tipoUsuario == 'comercio'" tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual" class="pointer-events-none"/>
+                <Input v-if="tipoUsuario == 'comercio'" @click="mostrarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
+                <Input v-if="tipoUsuario == 'comercio'" tipo="text" label="Token (Si tienes)" :valor="token"/>
+                <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
+                <div class="cambiocontra flex flex-col gap-y-5">
+                    <Input @datos="(nuevosDatos)=>{contraNueva = nuevosDatos}" tipo="password" label="Contraseña Nueva" :valor="contraNueva" :error="errorContra"/>
+                    <Input @datos="(nuevosDatos)=>{repetirNueva = nuevosDatos}" tipo="password" label="Repetir contraseña" :valor="repetirNueva" :error="errorContra"/>
                 </div>
-                <br/>
-                <div class="grupo">
-                    <Input tipo="email" requerido="true" img="/assets/icons/mail.svg" v-model='email' label="Email"/>
-                </div>
-                <br/>
-                <div class="grupo">
-                    <Input tipo="tel" requerido="true" img="/assets/icons/phone.svg" v-model='telefono' label="Teléfono"/>
-                </div>
-                <br/>
-                <div class="grupo">
-                    <Input tipo="selection" requerido="true" :opciones=array img="/assets/icons/cityHall.svg" placeholder="Selecciona el municipio en el que vives" v-model='municipio' label="Municipio"/>
-                </div>
-                <br/>
-                <div class="grupo">
-                    <Input tipo="file" clase="perfil" requerido="true" img="/assets/icons/user.svg" placeholder="Haz click para seleccionar una imagen" v-model='avatar' label="Avatar"/>
-                </div>
-                <br/>
-                <div class="grupo">
-                    <Input tipo="password" requerido="true" img="/assets/icons/password.svg" v-model='password' label="Contraseña"/>
-                </div>
-                <br/>
-                <div class="grupo">
-                    <Input tipo="password" requerido="true" img="/assets/icons/password.svg" v-model='password_confirm' label="Confirmar Contraseña"/>
-                </div>
-                <br/><br/>
-                <div class="registrarse">
-                    <Input tipo="submit" @click="registro" clase="oscuro" valor="Registrarse"/>
-                </div>
-                <div class="volver">
-                    <p>¿Ya tienes una cuenta?</p>
-                    <button @click="login" class="login-button">Login</button>
+                <div class="flex flex-col items-center w-full justify-center mt-3 gap-y-10">
+                    <Input @click="tratarDatos" tipo="submit" clase="oscuro" valor="Guardar Cambios" class="w-[50%]"/>
                 </div>
             </form>
+            <div class="flex justify-center gap-x-1 mt-3">
+                <p>¿Ya tienes una cuenta?</p>
+                <button @click="router.push('/login')" class="font-semibold">Inicia sesión</button>
+            </div>
         </div>
     </div>
 </template>
 
 
-<style scoped lang="scss">
-@media screen and (min-width: 100px) and (max-width: 450px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+<style scoped>
 
-    .container {
-        font-family: 'Inter', 'Times New Roman', Times, serif;
-        display: flex;
-        width: 90%;
-        margin: 0 auto;
-        margin-top: 10px;
-    }
-
-    .imagen-container {
-        display: none;
-    }
-
-    .formulario-container {
-        padding: 10px;
-
-        h1 {
-            text-align: center;
-            font-size: 25px;
-            font-weight: bold;
-        }
-    }
-
-    .registrarse {
-        border-radius: 15px;
-        font-size: 20px;
-    }
-
-    .volver {
-        display: flex;
-        justify-content: end;
-        letter-spacing: 0.02em;
-        margin-top: 5px;
-        margin-right: 15px;
-
-        button {
-            font-weight: bold;
-            margin-left: 7px;
-        }
-    }
-}
-
-
-@media screen and (min-width: 451px) and (max-width: 1050px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-    .container {
-        font-family: 'Inter', 'Times New Roman', Times, serif;
-        display: flex;
-        width: 70%;
-        margin: 0 auto;
-        margin-top: 10px;
-    }
-
-    .imagen-container {
-        display: none;
-    }
-
-    .formulario-container {
-        margin-top: 50px;
-        width: 100%;
-        padding: 10px;
-
-        h1 {
-            text-align: center;
-        }
-    }
-    
-    .registrarse {
-        border-radius: 15px;
-        font-size: 20px;
-    }
-
-    .volver {
-        display: flex;
-        justify-content: end;
-        letter-spacing: 0.02em;
-        margin-top: 5px;
-        margin-right: 15px;
-
-        button {
-            font-weight: bold;
-            margin-left: 7px;
-        }
-    }
-}
-
-
-@media screen and (min-width: 1051px) and (max-width: 1250px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-    .container {
-        font-family: 'Inter', 'Times New Roman', Times, serif;
-        display: flex;
-        width: 100%;
-        margin: 0 auto;
-        margin-top: 10px;
-    }
-
-    .imagen-container {
-        img {
-            width: 1250px;
-            height: 1250px;
-        }
-    }
-
-    .formulario-container {
-        margin-top: 50px;
-        width: 100%;
-        padding: 10px;
-
-        h1 {
-            text-align: center;
-        }
-    }
-    
-    .registrarse {
-        border-radius: 15px;
-        font-size: 20px;
-    }
-
-    .volver {
-        display: flex;
-        justify-content: end;
-        letter-spacing: 0.02em;
-        margin-top: 5px;
-        margin-right: 15px;
-
-        button {
-            font-weight: bold;
-            margin-left: 7px;
-        }
-    }
-}
-
-
-@media screen and (min-width: 1251px) and (max-width: 1450px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-    .container {
-        font-family: 'Inter', 'Times New Roman', Times, serif;
-        display: flex;
-        width: 100%;
-        margin: 0 auto;
-        margin-top: 10px;
-    }
-
-    .imagen-container {
-        margin-right: 50px;
-        
-        img {
-            width: 1000px;
-            height: 1250px;
-        }
-    }
-
-    .formulario-container {
-        margin-top: 50px;
-        width: 100%;
-        padding: 10px;
-
-        h1 {
-            text-align: center;
-        }
-    }
-    
-    .registrarse {
-        border-radius: 15px;
-        font-size: 20px;
-    }
-
-    .volver {
-        display: flex;
-        justify-content: end;
-        letter-spacing: 0.02em;
-        margin-top: 5px;
-        margin-right: 15px;
-
-        button {
-            font-weight: bold;
-            margin-left: 7px;
-            text-decoration: underline;
-        }
-    }
-}
-
-
-@media screen and (min-width: 1451px) and (max-width: 1750px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-    .container {
-        font-family: 'Inter', 'Times New Roman', Times, serif;
-        display: flex;
-        width: 100%;
-        margin: 0 auto;
-        margin-top: 10px;
-    }
-
-    .imagen-container {
-        margin-right: 50px;
-        
-        img {
-            width: 1000px;
-            height: 1250px;
-        }
-    }
-
-    .formulario-container {
-        margin-top: 50px;
-        width: 100%;
-        padding: 10px;
-
-        h1 {
-            text-align: center;
-        }
-    }
-    
-    .registrarse {
-        border-radius: 15px;
-        font-size: 20px;
-    }
-
-    .volver {
-        display: flex;
-        justify-content: end;
-        letter-spacing: 0.02em;
-        margin-top: 5px;
-        margin-right: 15px;
-
-        button {
-            font-weight: bold;
-            margin-left: 7px;
-            text-decoration: underline;
-        }
-    }
-}
-
-
-@media screen and (min-width: 1751px) {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-    .container {
-        font-family: 'Inter', 'Times New Roman', Times, serif;
-        display: flex;
-        width: 80%;
-        margin: 0 auto;
-        margin-top: 10px;
-    }
-
-    .imagen-container {
-        margin-right: 50px;
-        
-        img {
-            width: 1000px;
-            height: 1250px;
-        }
-    }
-
-    .formulario-container {
-        margin-top: 50px;
-        width: 80%;
-        padding: 10px;
-
-        h1 {
-            text-align: center;
-        }
-    }
-
-    .registrarse {
-        border-radius: 15px;
-        font-size: 20px;
-    }
-
-    .volver {
-        display: flex;
-        justify-content: end;
-        letter-spacing: 0.02em;
-        font-size: 20px;
-        margin-top: 5px;
-        margin-right: 15px;
-
-        button {
-            font-weight: bold;
-            margin-left: 7px;
-            text-decoration: underline;
-        }
-    }
-}
 </style>
 
