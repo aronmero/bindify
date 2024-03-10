@@ -60,12 +60,14 @@ const router = createRouter({
  */
 router.beforeEach((to, from, next) => {
   const publicRoutes = ["/login", "/registro"];
-  const usuario  = JSON.parse(sessionStorage.getItem("usuario"));
+  const usuario = JSON.parse(sessionStorage.getItem("usuario"));
 
-  //if (!publicRoutes.includes(to.path) && !usuario) {
-  //  next("/login");
-  //} else {
+  if (!publicRoutes.includes(to.path) && !usuario) {
+    next("/login");
+  } else if (publicRoutes.includes(to.path) && usuario) {
+    next("/");
+  } else {
     next();
-  //}
+  }
 });
 export default router;

@@ -1,5 +1,3 @@
-import { genOptionsWithoutBody } from "@/api/api.js";
-
 export async function login(email,pass) {
     try {
       const options = genOptionsLogin("POST");
@@ -28,7 +26,7 @@ const genOptionsLogin = (metodo) => {
     headers: {
       "Content-Type": "application/json",
       "User-Agent": "insomnia/8.6.0",
-      Accept: "application/json"
+      "Accept": "application/json"
     }
   };
 };
