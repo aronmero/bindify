@@ -19,7 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('municipality_id');
             $table->string('avatar')->nullable();
             $table->string('username')->unique();
-            $table->string('name')->unique();
+            $table->string('name');
+            $table->string('banner')->nullable();
             $table->rememberToken();
             $table->timestamps();
 

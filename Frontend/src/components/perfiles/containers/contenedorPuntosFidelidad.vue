@@ -7,7 +7,7 @@ defineProps({
 });
 </script>
 <template>
-  <div class="flex justify-center items-center gap-20 m-4 md:gap-48">
+  <div class="flex justify-center items-center gap-20 m-4 lg:gap-48">
     <textoEnNegrita :texto="comercio" />
     <textoEnNegrita :texto="puntos" />
   </div>

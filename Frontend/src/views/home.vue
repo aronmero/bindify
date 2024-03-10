@@ -9,20 +9,23 @@
     /* Trends */
     import TrendsOfertas from "../components/feed_media/widgets/TrendsOfertas.vue";
     import TrendsComercios from "../components/feed_media/widgets/TrendsComercios.vue";
+
     
 </script>
 
 <template >
     <Header />
-    <Grid>
-        <template v-slot:Left  >
-            <!-- Se listan los trends de la barra de navegación izquierda -->
-            <TrendsOfertas  v-if="true"/>
-            <TrendsComercios  v-if="true"/>
-        </template>
-            <FeedPosts  />
-        <template v-slot:Right > </template>
-    </Grid>
+    <div class=" feed-wrap relative ">
+        <Grid>
+            <template v-slot:Left  >
+                <!-- Se listan los trends de la barra de navegación izquierda -->
+                <TrendsOfertas  v-if="true"/>
+                <TrendsComercios  v-if="true"/>
+            </template>
+                <FeedPosts  />
+            <template v-slot:Right></template>
+        </Grid>
+    </div>
     <Footer />
 </template>
 

@@ -7,8 +7,12 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\Commerce;
 use App\Models\Customer;
 use App\Models\User;
+use App\Models\Verification_token;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -25,8 +29,8 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse - Una respuesta JSON que contiene el token de acceso y el tipo de usuario o un mensaje de error.
      *
      * Ejemplo de la solicitud
-     * 
-     * @response 201 { 
+     *
+     * @response 201 {
      *   "user_id": 1,
      *   "token": "access_token",
      *   "tipo": ["rol_1", "rol_2", ...]
@@ -42,19 +46,23 @@ class AuthController extends Controller
         if (Auth::attempt($credenciales)) {
             $user = User::where('email', $datos->email)->first();
             $tipo = $user->getRoleNames();
-            
+
             $token = $user->createtoken('my_app_token')->plainTextToken;
 
             $response = [
+                'status' => true,
+                'message'=>[
                 'user_id' => $user->id,
+                'username'=> $user->username,
                 'token' => $token,
-                'tipo' => $tipo
+                'tipo' => $tipo[0]
+                ]
             ];
 
-            return response($response, 201);
+            return response()->json($response, 201);
         }
 
-        return response()->json(['error' => 'Ususario no encontrado'], 404);
+        return response()->json(['status' => false, 'error' => 'Ususario no encontrado'], 404);
     }
 
     /**
@@ -77,51 +85,85 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-        $user = User::create([
-            'email' => $request->email,
-            'password' => $request->password,
-            'phone' => $request->phone,
-            'municipality_id' => $request->municipality_id,
-            'avatar' => $request->avatar,
-            'username' => $request->username,
-            'name' => $request->name
-        ]);
-
-        
-        $credentials = $request->only('email', 'password');
-        Auth::attempt($credentials);
-        if ($request->empresa) {
-            if ($request->verificationToken != null) {
-                $user->assignRole('ayuntamiento');
-            } else {
-                $user->assignRole('comercio');
-            }
-
-            $commerce = Commerce::create([
-            'user_id' => $user->id,
-            'address' => $request->address,
-            'description' => $request->description,
-            'verification_token_id' => $request->verification_token_id,
-            'category_id' => $request->category_id,
-            'verificated'=> false,
-            'schedule' => $request->schedule
-        ]);
-            $commerce->user()->attach($user->id);
-        } else {
-            $user->assignRole('cliente');
-            $customer = Customer::create([
-                'user_id' => $user->id,
+        try {
+            $user = User::create([
+                'email' => $request->email,
+                'password' => $request->password,
+                'phone' => $request->phone,
+                'municipality_id' => $request->municipality_id,
+                'avatar' => $request->avatar,
+                'username' => $request->username,
+                'name' => $request->name
             ]);
-            $customer->user()->attach($user->id);
+        } catch (Exception $th) {
+            return response()->json(['status' => false, 'message' => 'Datos de creacion de usuario incorrectos', 'error' => $th->getMessage()], 500);
         }
 
+
+
+        $credentials = $request->only('email', 'password');
+        try {
+            Auth::attempt($credentials);
+        } catch (AuthorizationException $e) {
+            return response()->json(['status' => false, 'message' => 'Usuario no encontrado', 'error' => $e->getMessage()], 500);
+        }
+        if ($request->empresa) {
+            try {
+                $verification_token_id = Verification_token::select('id')->where('token', '=', $request->verification_token)->first();
+                if ($verification_token_id != null) {
+                    $user->assignRole('ayuntamiento');
+                } else {
+                    $user->assignRole('commerce');
+                }
+            } catch (Exception $th) {
+                $user->delete();
+                return response()->json(["status" => false, 'error' => $th->getMessage()], 500);
+            }
+            try {
+                $commerce = Commerce::create([
+                    'user_id' => $user->id,
+                    'address' => $request->address,
+                    'description' => $request->description,
+                    'category_id' => $request->category_id,
+                    'verification_token_id' => $verification_token_id,
+                    'verificated' => false,
+                    'schedule' => $request->schedule,
+                    'active' => true,
+                ]);
+            } catch (Exception $th) {
+                $user->delete();
+                return response()->json(['status' => false, 'message' => 'Datos de creacion de comercion erroneos', 'error' => $th->getMessage()], 500);
+            }
+        } else {
+            try {
+                $user->assignRole('customer');
+            } catch (Exception $th) {
+                $user->delete();
+                return response()->json(['status' => false, 'error' => $th->getMessage()], 500);
+            }
+            try {
+                $customer = Customer::create([
+                    'user_id' => $user->id,
+                    'gender' => $request->gender,
+                    'birth_date'=> $request->birth_date,
+                ]);
+            } catch (Exception $th) {
+                $user->delete();
+                return response()->json(['status' => false, 'message' => 'Datos de creacion de comercio erroneos', 'error' => $th->getMessage()], 500);
+            }
+        }
+
+        $token = $user->createtoken('my_app_token')->plainTextToken;
+        $tipo = $user->getRoleNames();
 
         $response = [
             'message' => 'Usuario creado correctamente',
             'user' => $user,
+            'token' => $token,
+            'tipo' => $tipo,
         ];
 
 
-        return response($response, 201);
+        return response()->json($response, 201);
     }
 }

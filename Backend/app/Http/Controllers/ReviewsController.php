@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Review;
+use App\Http\Scripts\Utils;
 
 class ReviewsController extends Controller
 {
@@ -46,7 +47,9 @@ class ReviewsController extends Controller
                 'note' => $request->note,
             ]);
 
+            $commerceId = $review->commerce_id;
             $review->save();
+            Utils::AVG_Reviews($commerceId);
 
             return response()->json([
                 'status' => true,
@@ -129,6 +132,8 @@ class ReviewsController extends Controller
             // Devolver respuesta con las reviews formateadas
             return response()->json(['status' => true, 'reviews' => $reviewsArray,], 200);
         }
+
+        return response()->json(['status'=> false, 'message'=> 'Reviews no encontradas',],404);
     }
 
 
@@ -162,31 +167,37 @@ class ReviewsController extends Controller
      * }
      */
     public function update(Request $request, string $id)
-    {
-        try {
-            // Buscar la review por su ID
-            $review = Review::find($id);
+{
+    try {
+        // Buscar la review por su ID
+        $review = Review::find($id);
 
-            // Verificar si la review existe
-            if (!$review) {
-                return response()->json(['status' => false, 'message' => 'La review no existe',], 404);
-            }
-
-            // Actualizar la review con los datos proporcionados en la solicitud
-            $review->update([
-                'comment' => $request->comment,
-                'note' => $request->note,
-            ]);
-
-            // Devolver una respuesta de éxito
-            return response()->json([
-                'status' => true, 'message' => 'review actualizada exitosamente',
-            ], 200);
-        } catch (\Exception $e) {
-            // En caso de excepción, devolver una respuesta de error
-            return response()->json(['status' => false, 'message' => 'Error al actualizar la review: ' . $e->getMessage(),], 500);
+        // Verificar si la review existe
+        if (!$review) {
+            return response()->json(['status' => false, 'message' => 'La review no existe',], 404);
         }
+
+        // Guardar el commerce_id antes de actualizar la revisión
+        $commerce_id = $review->commerce_id;
+
+        // Actualizar la review con los datos proporcionados en la solicitud
+        $review->update([
+            'comment' => $request->comment,
+            'note' => $request->note,
+        ]);
+
+        // Calcular y actualizar la puntuación media
+        Utils::AVG_Reviews($commerce_id);
+
+        // Devolver una respuesta de éxito
+        return response()->json([
+            'status' => true, 'message' => 'Review actualizada exitosamente',
+        ], 200);
+    } catch (\Exception $e) {
+        // En caso de excepción, devolver una respuesta de error
+        return response()->json(['status' => false, 'message' => 'Error al actualizar la review: ' . $e->getMessage(),], 500);
     }
+}
 
 
     /**
@@ -227,8 +238,12 @@ class ReviewsController extends Controller
                 return response()->json(['status' => false, 'message' => 'La review no existe',], 404);
             }
 
+            // Guardar el commerce_id antes de eliminar la revisión
+            $commerce_id = $review->commerce_id;
             // Eliminar la review
             $review->delete();
+
+            Utils::AVG_Reviews($commerce_id);
 
             // Devolver una respuesta de éxito
             return response()->json([

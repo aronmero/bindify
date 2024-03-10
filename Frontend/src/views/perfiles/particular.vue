@@ -7,15 +7,30 @@ import contenedorBtnsPerfilUser from "@/components/perfiles/containers/contenedo
 import textoEnNegrita from "@/components/perfiles/widgets/textoEnNegrita.vue";
 import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
+import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { RouterLink, RouterView } from "vue-router";
+let clickedLink = null
+const estilos = {
+  
+  hoverLinks: "transition ease-in-out hover:text-accent-400",
+};
 
+function pintar(evento) {
+  if(clickedLink!=null){
+    clickedLink.classList.remove("text-accent-400")
+  }
+  console.log(evento.target.innerHTML);
+  evento.target.classList.add("text-accent-400");
+  clickedLink = evento.target
+}
 </script>
 
-<template >
+<template>
   <Header />
   <Grid
     ><template v-slot:Left></template>
-    <div class="flex flex-col gap-6">
+    <btnAtras titulo="Perfil"></btnAtras>
+    <div class="flex flex-col gap-10">
       <div>
         <imgsPerfil
           rutaBaner="https://placehold.co/600x400"
@@ -24,26 +39,40 @@ import { RouterLink, RouterView } from "vue-router";
           altTextPerfil="foto perfil"
         ></imgsPerfil>
       </div>
-      <div class="flex flex-col gap-6 justify-evenly md:flex-row">
+      <div class="flex flex-col gap-6 justify-evenly lg:flex-row">
         <div class="flex flex-col">
-          <textoEnNegrita :texto="users[0].name" class="text-base md:text-xl" />
-          <textoEnNegrita texto="15" class="text-base md:text-xl" />
+          <textoEnNegrita :texto="users[0].name" class="text-base lg:text-xl" />
+          <textoEnNegrita texto="15" class="text-base lg:text-xl" />
           <textoNormal
             texto="Following"
-            class="text-sm md:text-base"
+            class="text-sm lg:text-base"
           ></textoNormal>
         </div>
 
         <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser>
       </div>
-      <div class="flex w-full justify-center gap-6 ">
-        <RouterLink to="/particular/fidelidad">
-          <textoEnNegrita texto="Fidelidad" class="text-sm md:text-base" />
+      <div class="flex w-full justify-center gap-6">
+        <RouterLink to="/perfil/particular/fidelidad">
+          <textoEnNegrita
+            @click="pintar"
+            texto="Fidelidad"
+            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          />
         </RouterLink>
-        <RouterLink to="/particular/favoritos">
-          <textoEnNegrita texto="Favoritos" class="text-sm md:text-base" />
+        <RouterLink to="/perfil/particular/favoritos">
+          <textoEnNegrita
+            @click="pintar"
+            texto="Favoritos"
+            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          />
         </RouterLink>
-        
+        <RouterLink to="/perfil/particular/favoritos">
+          <textoEnNegrita
+            @click="pintar"
+            texto="Seguidos"
+            :class="`text-sm lg:text-base ${estilos.hoverLinks}`"
+          />
+        </RouterLink>
       </div>
       <RouterView></RouterView>
     </div>
@@ -53,9 +82,4 @@ import { RouterLink, RouterView } from "vue-router";
   <Footer />
 </template>
 
-<style scoped>
-  /* .contenedorRutasPerfiles .activelink button{
-  color: #c94203;
-  background-color: #2e0505;
-} */
-</style>
+<style scoped></style>

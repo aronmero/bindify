@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
@@ -46,31 +47,45 @@ class SearchController extends Controller
      * }
      */
 
-    public function commercesByMunicipality(string $municipality)
+    public function commerces(Request $request)
     {
 
         try {
-
-            Municipality::where('name', $municipality)->firstOrFail();
 
             $commerces = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
-                ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
-                ->join('categories', 'commerces.category_id', '=', 'categories.id')
-                ->select(
-                    'email',
-                    'phone',
-                    'municipalities.name AS municipality_name',
-                    'avatar',
-                    'username',
-                    'users.name',
-                    'address',
-                    'commerces.description',
-                    'categories.name AS categories_name',
-                    'schedule',
-                    'commerces.active'
-                )
-                ->where('municipalities.name', '=', $municipality)
-                ->get();
+            ->join('categories', 'commerces.category_id', '=', 'categories.id')
+            ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
+            ->leftjoin('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
+            ->select(
+                'commerces.user_id',
+                'email',
+                'phone',
+                'avatar',
+                'users.username',
+                'address',
+                'commerces.description',
+                'categories.name AS categories_name',
+                'schedule',
+                'commerces.avg',
+                DB::raw('count(reviews.commerce_id) as review_count')
+            )
+            ->where('commerces.active','=', '1')
+            ->groupBy('commerces.user_id','email', 'phone', 'avatar', 'users.username', 'address', 'commerces.description', 'categories_name', 'schedule', 'commerces.avg',);
+
+            if($request->municipality) {
+                Municipality::where('name', $request->municipality)->firstOrFail();
+                $commerces = $commerces->where('municipalities.name', '=', $request->municipality);
+            }
+
+            if($request->name) {
+                $commerces = $commerces->where('users.username', 'LIKE', $request->name . '%');
+            }
+
+            if($request->category) {
+                $commerces = $commerces->where('categories.name', '=', $request->category);
+            }
+
+            $commerces = $commerces->get();
 
             return response()->json([
                 "status" => true,
@@ -81,7 +96,7 @@ class SearchController extends Controller
 
             return response()->json([
                 "status" => false,
-                "error" => "Municipio $municipality no encontrado",
+                "error" => "Municipio $request->municipality no encontrado",
             ], 404);
 
         } catch (Exception $e) {
@@ -93,83 +108,6 @@ class SearchController extends Controller
         }
 
     }
-
-
-    /**
-     * Muestra una lista de comercios por hashtag.
-     *
-     * Este método devuelve una lista de comercios asociados a un hashtag dado.
-     *
-     * @urlParam hashtag string required El nombre del hashtag.
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "data": [
-     *         {
-     *             "user_id": "ID_del_usuario",
-     *             "address": "dirección_del_comercio",
-     *             "description": "descripción_del_comercio",
-     *             "verification_token_id": "ID_del_token_de_verificación",
-     *             "category_id": "ID_de_la_categoría",
-     *             "verificated": "verificado_o_no",
-     *             "schedule": "horario_del_comercio",
-     *             "avg": "promedio_de_valoraciones",
-     *             "active": "activo_o_inactivo"
-     *         },
-     *         ...
-     *     ]
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "error": "mensaje_de_error"
-     * }
-     */
-
-
-    public function commercesByHashtag(string $hashtag)
-    {
-
-        try {
-
-            $hashtag = Hashtag::where('name', $hashtag)->firstOrFail();
-
-            $commerces = $hashtag->commerces->map(function ($commerce) {
-                return [
-                    'user_id' => $commerce->user_id,
-                    'address' => $commerce->address,
-                    'description' => $commerce->description,
-                    'verification_token_id' => $commerce->verification_token_id,
-                    'category_id' => $commerce->category_id,
-                    'verificated' => $commerce->verificated,
-                    'schedule' => $commerce->schedule,
-                    'avg' => $commerce->avg,
-                    'active' => $commerce->active,
-                ];
-            });
-
-            return response()->json([
-                "status" => true,
-                "data" => $commerces
-            ], 200);
-
-        } catch (ModelNotFoundException $e) {
-
-            return response()->json([
-                "status" => false,
-                "error" => "Hashtag $hashtag no encontrado",
-            ], 404);
-
-        } catch (Exception $e) {
-
-            return response()->json([
-                "status" => false,
-                "error" => $e->getMessage()
-            ], 404);
-        }
-
-    }
-
 
     /**
      * Muestra una lista de publicaciones por municipio.
@@ -201,20 +139,35 @@ class SearchController extends Controller
      * }
      */
 
-    public function postsByMunicipality(string $municipality)
+    public function posts(Request $request)
     {
 
         try {
-
-            Municipality::where('name', $municipality)->firstOrFail();
 
             $posts = Post::join('post_types', 'post_types.id', '=', 'posts.post_type_id')
-                ->join('users-posts', 'users-posts.post_id', '=', 'posts.id')
-                ->join('users', 'users.id', '=', 'users-posts.user_id')
-                ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
-                ->select('users.avatar', 'users.username', 'users.name', 'posts.image', 'posts.title', 'posts.description', 'post_types.name', 'posts.active', )
-                ->where('municipalities.name', '=', $municipality)
-                ->get();
+            ->join('users-posts', 'users-posts.post_id', '=', 'posts.id')
+            ->join('users', 'users.id', '=', 'users-posts.user_id')
+            ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
+            ->select(
+                'users.avatar',
+                'users.username',
+                'users.name',
+                'posts.image',
+                'posts.title',
+                'posts.description',
+                'post_types.name AS post_type',
+            );
+
+            if($request->municipality) {
+                Municipality::where('name', $request->municipality)->firstOrFail();
+                $posts = $posts->where('municipalities.name', '=', $request->municipality);
+            }
+
+            if($request->post_type) {
+                $posts = $posts->where('post_types.name', '=', $request->post_type);
+            }
+
+            $posts = $posts->get();
 
             return response()->json([
                 "status" => true,
@@ -225,7 +178,7 @@ class SearchController extends Controller
 
             return response()->json([
                 "status" => false,
-                "error" => "Municipio $municipality no encontrado",
+                "error" => "Municipio $request->municipality no encontrado",
             ], 404);
 
         } catch (Exception $e) {
@@ -238,70 +191,4 @@ class SearchController extends Controller
 
     }
 
-    /**
-     * Muestra una lista de publicaciones por hashtag.
-     *
-     * Este método devuelve una lista de publicaciones asociadas a un hashtag dado.
-     *
-     * @urlParam hashtag string required El nombre del hashtag.
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "data": [
-     *         {
-     *             "image": "imagen_de_la_publicación",
-     *             "title": "título_de_la_publicación",
-     *             "description": "descripción_de_la_publicación",
-     *             "post_type_id": "ID_del_tipo_de_publicación",
-     *             "schedule": "horario_de_la_publicación",
-     *             "active": "activo_o_inactivo"
-     *         },
-     *         ...
-     *     ]
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "error": "mensaje_de_error"
-     * }
-     */
-    public function postsByHashtag(string $hashtag)
-    {
-
-        try {
-
-            $hashtag = Hashtag::where('name', $hashtag)->firstOrFail();
-
-            $posts = $hashtag->posts->map(function ($post) {
-                return [
-                    'image' => $post->image,
-                    'title' => $post->title,
-                    'description' => $post->description,
-                    'post_type_id' => $post->post_type_id,
-                    'schedule' => $post->schedule,
-                    'active' => $post->active,
-                ];
-            });
-
-            return response()->json([
-                "status" => true,
-                "data" => $posts
-            ], 200);
-
-        } catch (ModelNotFoundException $e) {
-
-            return response()->json([
-                "status" => false,
-                "error" => "Hashtag $hashtag no encontrado",
-            ], 404);
-
-        } catch (Exception $e) {
-
-            return response()->json([
-                "status" => false,
-                "error" => $e->getMessage()
-            ], 404);
-        }
-
-    }
 }

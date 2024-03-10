@@ -10,7 +10,7 @@ defineProps({
 </script>
 <template>
   <div class="flex flex-col">
-            <textoEnNegrita :texto="amount" class="text-base md:text-xl" />
+            <textoEnNegrita :texto="amount" class="text-base lg:text-xl" />
             <textoNormal
               :texto="tipo"
               class="text-sm md:text-base"

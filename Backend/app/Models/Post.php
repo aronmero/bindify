@@ -16,6 +16,8 @@ class Post extends Model
         'title',
         'description',
         'post_type_id',
+        'start_date',
+        'end_date',
         'schedule',
         'active',
     ];
@@ -28,13 +30,13 @@ class Post extends Model
 
     public function hashtags(){
 
-        return $this->belongsToMany(Hashtag::class, 'posts-hashtags', 'hashtag_id', 'post_id');
+        return $this->belongsToMany(Hashtag::class, 'posts-hashtags', 'post_id', 'hashtag_id');
 
     }
 
     public function users(){
 
-        return $this->belongsToMany(User::class, 'users-posts', 'user_id', 'post_id');
+        return $this->belongsToMany(User::class, 'users-posts', 'post_id', 'user_id');
 
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commerce;
 use App\Models\Customer;
 use App\Models\Municipality;
 use App\Models\User;
@@ -124,7 +125,7 @@ class CustomersController extends Controller
      * Muestra el cliente especificado por su id
      *
      * Este método devuelve la información del cliente especificado por su ID de usuario.
-     * 
+     *
      * @urlParam id string required El ID del cliente.
      *
      *@response 200 {
@@ -145,7 +146,7 @@ class CustomersController extends Controller
      *     "status": false,
      *     "error": "Cliente no encontrado"
      * }
-     * 
+     *
      * @response 409 {
      *     "status": false,
      *     "error": "Error de entrada duplicada: mensaje_de_error"
@@ -177,6 +178,8 @@ class CustomersController extends Controller
                 )
                 ->where('users.id', '=', $id)
                 ->firstOrFail();
+
+
 
             return response()->json([
                 "status" => true,
@@ -210,7 +213,7 @@ class CustomersController extends Controller
      * Actualiza el Cliente especificado por su Id
      *
      * Este método actualiza la información del cliente especificado por su ID de usuario.
-     * 
+     *
      * @urlParam id string required El ID del cliente.
      * @bodyParam email string required El correo electrónico del cliente.
      * @bodyParam password string required La contraseña del cliente.
@@ -241,7 +244,7 @@ class CustomersController extends Controller
      *     "status": false,
      *     "error": "Customer no encontrado"
      * }
-     * 
+     *
      * @response 409 {
      *     "status": false,
      *     "error": "Error de entrada duplicada: mensaje_de_error"

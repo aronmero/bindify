@@ -1,0 +1,23 @@
+export const dias = [
+    'Lunes',
+    'Lunes(T)',
+    'Lunes(N)',
+    'Martes',
+    'Martes(T)',
+    'Martes(N)',
+    'Miércoles',
+    'Miércoles(T)',
+    'Miércoles(N)',
+    'Jueves',
+    'Jueves(T)',
+    'Jueves(N)',
+    'Viernes',
+    'Viernes(T)',
+    'Viernes(N)',
+    'Sábado',
+    'Sábado(T)',
+    'Sábado(N)',
+    'Domingo',
+    'Domingo(T)',
+    'Domingo(N)'
+];

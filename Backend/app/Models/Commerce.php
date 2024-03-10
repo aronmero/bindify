@@ -17,6 +17,7 @@ class Commerce extends Model
         "user_id",
         "address",
         'description',
+        'category_id',
         'verification_token_id',
         'verificated',
         'opening_hour',
@@ -32,7 +33,7 @@ class Commerce extends Model
 
     public function hashtags(){
 
-        return $this->belongsToMany(Hashtag::class, 'commerces-hashtags', 'hashtag_id', 'commerce_id');
+        return $this->belongsToMany(Hashtag::class, 'commerces-hashtags', 'commerce_id', 'hashtag_id');
 
     }
 

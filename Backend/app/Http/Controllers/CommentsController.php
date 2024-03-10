@@ -10,7 +10,11 @@ use Exception;
 
 class CommentsController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware("can:ver comments")->only("show");
+        $this->middleware("can:editar comments")->only("store", "update", "destroy");
+    }
     /**
      * Store de un nuevo comentario.
      *
@@ -38,7 +42,7 @@ class CommentsController extends Controller
             'user_id' => 'required|integer', // ID del usuario que realiza el comentario
             'content' => 'required|string', // Contenido del comentario
             'comment_id' => 'nullable|integer', // ID del comentario padre en caso de que exista
-       ]);
+        ]);
        */
 
 

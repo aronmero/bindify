@@ -6,7 +6,7 @@
 
 <template>
     <Suspense>
-        <Feed 
+        <Feed  
             v-for="post in posts" 
             :post="post"
         /> 

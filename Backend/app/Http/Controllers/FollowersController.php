@@ -101,10 +101,10 @@ class FollowersController extends Controller
 
 
             if (!$seguir) {
-                $user->follower()->detach($id);
+                $user->follows()->detach($id);
                 $mensaje = "Usuario dejado de seguir";
             } else {
-                $user->follower()->attach($id);
+                $user->follows()->attach($id);
                 $mensaje = "Usuario seguido";
             }
 
