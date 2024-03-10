@@ -5,13 +5,14 @@ import Input from "@/components/comun/input.vue";
 import { login } from "@/Api/auth.js";
 import { useStorage } from "@vueuse/core";
 
-const email = ref(null);
-const password = ref(null);
-const errorMsg = ref(null);
-const errorEmail = ref(null);
-const errorPass = ref(null);
+const email = ref("");
+const password = ref("");
+const errorMsg = ref("");
+const errorEmail = ref("");
+const errorPass = ref("");
 
 async function tryLogin() {
+<<<<<<< HEAD
   let isValido = true;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   //console.log(emailRegex.test(email.value));
@@ -28,6 +29,24 @@ async function tryLogin() {
   } else {
     errorPass.value = null;
   }
+=======
+    let isValido = true;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    //console.log(emailRegex.test(email.value));
+    if (!emailRegex.test(email.value)) {
+        errorEmail.value = "Es necesario indicar un email para iniciar sesión.";
+        isValido = false;
+    } else {
+        errorEmail.value = "";
+    }
+
+    if (password.value == null || password.value.length < 4) {
+        errorPass.value = "La contraseña es demasiado corta";
+        isValido = false;
+    } else {
+        errorPass.value = "";
+    }
+>>>>>>> 1a9f3520696a16d8630aaf8a69031f8a0fbc6a92
 
   if (isValido) {
     const data = await login(email.value, password.value);
@@ -44,8 +63,11 @@ async function tryLogin() {
   }
 }
 
+<<<<<<< HEAD
 console.log(JSON.parse(sessionStorage.getItem("usuario")));
 
+=======
+>>>>>>> 1a9f3520696a16d8630aaf8a69031f8a0fbc6a92
 function OlvidarPassword() {
   /* Funcion que redirecciona al modal o vista para recuperar la contraseña */
 }

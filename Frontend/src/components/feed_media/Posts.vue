@@ -6,9 +6,9 @@
 
 <template>
     <Suspense>
-        <Feed 
-                v-for="post in posts" 
-                :post="post"
+        <Feed  
+            v-for="post in posts" 
+            :post="post"
         /> 
     </Suspense>
 </template>
