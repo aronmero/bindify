@@ -96,14 +96,14 @@
 
         <!-- Contenedor de la imagen del post -->
         <div class=" post-content w-[100%] h-[600px] rounded-2xl  overflow-hidden mt-5 ">
-            <img @click="redirect(`evento/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
+            <img @click="redirect(`post/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
         </div>
 
         <!-- Contenedor de botones del post -->
         <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
             <!-- Rating -->
             <button class=" flex flex-row items-center mr-3 ">
-                <img @click="redirect(`evento/${post.id}`)" :src="StarSVG" />
+                <img @click="redirect(`post/${post.id}`)" :src="StarSVG" />
                 {{ post.rating }}
             </button>
 
@@ -167,7 +167,7 @@
 
         <!-- Contenedor de la imagen del post -->
         <div class=" post-content w-[100%] h-[600px] rounded-2xl overflow-hidden mt-5 mb-5 ">
-            <img @click="redirect(`evento/${post.id}`)" class=" w-[100%] h-[100%] object-cover  " :src="post.image" :alt="post.titulo">
+            <img @click="redirect(`post/${post.id}`)" class=" w-[100%] h-[100%] object-cover  " :src="post.image" :alt="post.titulo">
         </div>
 
         <!-- post footer -->
@@ -248,7 +248,7 @@
 
         <!-- post image -->
         <div class=" post-content w-[100%] h-[600px] rounded-2xl overflow-hidden ">
-            <img @click="redirect(`evento/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
+            <img @click="redirect(`post/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
         </div>
 
         <!-- post footer -->

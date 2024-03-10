@@ -142,8 +142,8 @@ class PostsController extends Controller
     {
         try {
             // Obtener el post
-            $post = Post::findOrFail($id);
-    
+            $post = Post::with('users')->findOrFail($id);
+
             // Obtener datos del post
             $postData = [
                 'image' => $post->image,
@@ -157,10 +157,10 @@ class PostsController extends Controller
                 'fecha_creacion' => $post->created_at,
                 'hastags' => $post->hashtags->pluck('name')
             ];
-    
+
             // Obtener los 5 primeros comentarios del post
             $comments = Comment::where('post_id', $id)->with('user')->take(5)->get();
-    
+
             // Formatear los datos de los comentarios
             $formattedComments = [];
             foreach ($comments as $comment) {
@@ -173,19 +173,35 @@ class PostsController extends Controller
                 ];
                 $formattedComments[] = $formattedComment;
             }
-    
+
+            // Obtener los propietarios del post
+            $formattedUsers = [];
+
+            $usersFromPost=$post ->users;
+           
+            foreach ($usersFromPost as $user) {
+                $formattedUser = [
+                    'name' => $user->name,
+                    'username' => $user->username,
+                    'avatar' => $user->avatar,
+                    'id' => $user->id
+                ];
+                $formattedUsers[] = $formattedUser;
+            }
+
             // Combinar los datos del post y los comentarios
             $data = [
                 'post' => $postData,
+                'users' => $formattedUsers,
                 'comments' => $formattedComments
             ];
-    
+
             return response()->json(['status' => true, 'data' => $data], 200);
         } catch (\Throwable $th) {
             return response()->json(['status' => false, 'message' => $th->getMessage()], 404);
         }
     }
-    
+
     /**
      * Update the specified resource in storage.
      */
