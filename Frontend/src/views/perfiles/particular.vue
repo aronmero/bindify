@@ -9,19 +9,21 @@ import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { RouterLink, RouterView } from "vue-router";
-let clickedLink = null
+import { getUserData } from "@/Api/perfiles/perfil.js";
+
+getUserData();
+let clickedLink = null;
 const estilos = {
-  
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
 
 function pintar(evento) {
-  if(clickedLink!=null){
-    clickedLink.classList.remove("text-accent-400")
+  if (clickedLink != null) {
+    clickedLink.classList.remove("text-accent-400");
   }
   console.log(evento.target.innerHTML);
   evento.target.classList.add("text-accent-400");
-  clickedLink = evento.target
+  clickedLink = evento.target;
 }
 </script>
 

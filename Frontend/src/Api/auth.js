@@ -1,4 +1,4 @@
-import { genOptionsWithoutBody } from "@/api/api.js";
+import { genOptionsWithoutBody } from "@/Api/api.js";
 
 export async function login(email,pass) {
     try {

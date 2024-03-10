@@ -13,12 +13,14 @@ import contenedorFollower from "@/components/perfiles/containers/contenedorFollo
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
 import { RouterLink, RouterView } from "vue-router";
+import { ref } from "vue";
 let clickedLink = null;
+let userExterno = ref(false)
 const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
 // Al recargar la pagina se quita la marca arregla a futuro con variables de estado
-// a lo mejor 
+// a lo mejor
 function pintar(evento) {
   if (clickedLink != null) {
     clickedLink.classList.remove("text-accent-400");
@@ -94,9 +96,14 @@ function pintar(evento) {
         <!-- <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser> -->
         <div class="flex justify-center">
           <RouterLink to="/perfil/edit">
-
             <btnConText
               texto="EDIT PROFILE"
+              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+            ></btnConText>
+          </RouterLink>
+          <RouterLink to="" v-if="userExterno">
+            <btnConText
+              texto="Segir"
               class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
             ></btnConText>
           </RouterLink>
