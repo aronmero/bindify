@@ -8,7 +8,9 @@ import particular from "@/views/perfiles/particular.vue";
 import ayuntamiento from "@/views/perfiles/ayuntamiento.vue";
 
 import { ref } from "vue";
-let tipoUsuario = ref("comercio");
+// let tipoUsuario = ref("comercio");
+// let tipoUsuario = ref("particular");
+let tipoUsuario = ref("ayuntamiento");
 </script>
 
 <template>

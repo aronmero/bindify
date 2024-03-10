@@ -93,10 +93,13 @@ function pintar(evento) {
 
         <!-- <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser> -->
         <div class="flex justify-center">
-          <btnConText
-            texto="EDIT PROFILE"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
-          ></btnConText>
+          <RouterLink to="/perfil/edit">
+
+            <btnConText
+              texto="EDIT PROFILE"
+              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+            ></btnConText>
+          </RouterLink>
         </div>
       </div>
 

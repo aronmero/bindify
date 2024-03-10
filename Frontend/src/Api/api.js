@@ -1,5 +1,5 @@
 //Pillar de sesion storage o store de pinia cuando se realice
-const token = "1|LNSPOK5hwyhzxAYXbplfM1nlvB1yj8aOU11O3rTR0e414f0e";
+const token = "1|I5Kw8TZEdql19hGx5ETymRhFLDI689J7AHgwjiMQ9d66027b";
 
 //Genera la opcion para una llamada de api
 export const genOptions = (metodo,body=null) => {
