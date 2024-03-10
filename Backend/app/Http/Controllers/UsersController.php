@@ -277,4 +277,20 @@ class UsersController extends Controller
             return response()->json(["status" => false,"message" => "Usuario no encontrado en la base de datos:",  "error" => $e->getMessage()], 404);
         }
     }
+
+    public function posts(string $username)
+    {
+        try {
+
+
+
+        } catch (QueryException $e) {
+            // Devuelve una respuesta JSON con un mensaje de error en caso de error de base de datos
+            return response()->json(["status" => false, "message" => "Error en la base de datos :", "error" => $e->getMessage()], 500);
+        } catch (Exception $e) {
+            // Devuelve una respuesta JSON con un mensaje de error en caso de otra excepción
+            return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:", "error" => $e->getMessage()], 404);
+        }
+    }
+
 }
