@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { datetranslate } from '@/components/feed_media/helpers/datetranslate.js'
+
 import Calendar from "@/components/utils/calendar.vue";
 //https://vueuse.org/core/useClipboard/
 import { useClipboard } from '@vueuse/core'
@@ -13,6 +15,8 @@ const props = defineProps({
     dias: { type: String, default: "25" },
     descripcion: { type: String, default: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in tempus lorem. Donec eu felis erat. Aenean eu augue congue, congue ligula vitae, accumsan neque. Mauris auctor lobortis tempor. In hac habitasse platea dictumst. Ut egestas eget nunc quis convallis. Suspendisse potenti. Vivamus commodo lectus quis maximus facilisis. " },
     tipo: { type: String, default: "Evento" },
+    user:{Object},
+    fecha_publicacion: String
 });
 
 //Abre y cierra el modal
@@ -44,6 +48,17 @@ const copyModal = (e) => {
 </script>
 
 <template>
+    <div class=" post-header w-[100%] h-[60px] flex items-center ">
+        <div class=" w-[50px] h-[50px] rounded-full overflow-hidden mr-2">
+            <img v-for="user in props.user" @click="$router.push(`/usuario/${user.id}`)"
+                class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="user.avatar" alt="avatar_usuario">
+        </div>
+        <div class=" flex flex-col items-start w-[100%] h-[100%] ">
+            <b v-for="user in props.user">{{ user.name }}</b>
+            <small>{{ datetranslate(props.fecha_publicacion) }}</small>
+        </div>
+    </div>
+
     <div>
         <div class="flex justify-center mx-[-10px]"><img :src="banner"
                 class="max-w-[680px] max-h-[440px] min-w-[320px] min-h-[230px] w-full"></div>
@@ -58,19 +73,16 @@ const copyModal = (e) => {
             </div>
         </div>
         <div>
-            <div class="flex"><img src="@public/assets/icons/time.svg" class="w-[20px] mr-[5px]">Publicado hace {{
-            props.dias }}
-                dias</div>
             <div class="flex" v-if="tipo == 'Evento' && props.ubicacion != null"><img
                     src="@public/assets/icons/location.svg" class="w-[20px] mr-[5px]">{{ props.ubicacion
                 }}
             </div>
             <div class="flex" v-if="tipo == 'Evento' && props.fechaInicio != null && props.fechaFin != null"><img
                     src="@public/assets/icons/schedule.svg" class="w-[20px] mr-[5px]">{{
-            props.fechaInicio }}
+                    props.fechaInicio }}
                 al {{ props.fechaFin }}</div>
         </div>
-        <div> {{ props.descripcion }}</div>
+        <div> {{ props.descripcion }}</div> 
         <div class="text-[24px] font-bold my-[30px]" v-if="tipo == 'Evento'">Periodo del evento</div>
         <div v-if="tipo == 'Evento'">
             <Calendar />
