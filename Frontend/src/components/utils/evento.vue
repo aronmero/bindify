@@ -65,7 +65,7 @@ const copyModal = (e) => {
                     src="@public/assets/icons/location.svg" class="w-[20px] mr-[5px]">{{ props.ubicacion
                 }}
             </div>
-            <div class="flex" v-if="props.fechaInicio != null && props.fechaFin != null"><img
+            <div class="flex" v-if="tipo == 'Evento' && props.fechaInicio != null && props.fechaFin != null"><img
                     src="@public/assets/icons/schedule.svg" class="w-[20px] mr-[5px]">{{
             props.fechaInicio }}
                 al {{ props.fechaFin }}</div>

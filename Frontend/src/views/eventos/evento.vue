@@ -7,13 +7,13 @@ import Evento from "@/components/utils/evento.vue";
 import absoluteURL from "@/scripts/getFullUrl.js";
 import router from "@/router/index.js";
 import { ref, onMounted } from "vue";
-import { postShow } from "@/Api/api.js";
+import { postId } from "@/api/publicacion/publicacion.js";
 
 const datos = ref([])
 
 const id=router.currentRoute.value.params.id
 onMounted(async () => {
-    datos.value = await postShow("get",id);
+    datos.value = await postId("get",id);
 })
 
 
@@ -24,7 +24,7 @@ onMounted(async () => {
     <Grid><template v-slot:Left> </template>
         <section v-if="datos.data !== undefined">
             <Evento :url="absoluteURL()" :banner="datos.data.image" :titulo="datos.data.title" :ubicacion="BLANK" :fechaInicio="datos.data.start_date"
-                :fechaFin="datos.data.end_date" :dias="BLANK" :descripcion="datos.data.description" />
+                :fechaFin="datos.data.end_date" :dias="BLANK" :descripcion="datos.data.description" :tipo="datos.data.post_type_name" />
         </section>
         <template v-slot:Right> </template>
 
