@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 
-
 export const optionSelected = defineStore({
     id : "idOptionSelected",
     state: () =>({
-        optionSelected : ("Botánica"),
+        optionSelected : (""),
+        optionSelectedLocation : ("")
+
     }),
     actions : {
         getOptionSelected(){
@@ -12,6 +13,13 @@ export const optionSelected = defineStore({
         },
         setOptionSelected(option){
             this.optionSelected = option; 
+        },
+        getOptionSelectedLocation(){
+            return this.optionSelectedLocation;
+        },
+        setOptionSelectedLocation(option){
+            this.optionSelectedLocation = option; 
         }
+
     }
 })
