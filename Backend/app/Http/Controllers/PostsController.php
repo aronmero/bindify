@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostsRequest;
 use App\Models\Post;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -140,33 +141,51 @@ class PostsController extends Controller
     public function show(string $id)
     {
         try {
-
-            $post = Post::find($id);
-
-            $data = [
+            // Obtener el post
+            $post = Post::findOrFail($id);
+    
+            // Obtener datos del post
+            $postData = [
                 'image' => $post->image,
                 'title' => $post->title,
                 'description' => $post->description,
-                'post_type_name' => $post->post_type->name,
+                'post_type_name' => optional($post->post_type)->name,
                 'start_date' => $post->start_date,
                 'end_date' => $post->end_date,
                 'active' => $post->active,
+                'ubicacion' => $post->ubicacion,
+                'fecha_creacion' => $post->created_at,
                 'hastags' => $post->hashtags->pluck('name')
             ];
-
-
-            return response()->json([
-                'status' => true,
-                'data' => $data,
-            ], 200);
+    
+            // Obtener los 5 primeros comentarios del post
+            $comments = Comment::where('post_id', $id)->with('user')->take(5)->get();
+    
+            // Formatear los datos de los comentarios
+            $formattedComments = [];
+            foreach ($comments as $comment) {
+                $formattedComment = [
+                    'username' => $comment->user->username,
+                    'content' => $comment->content,
+                    'comment_id' => $comment->id,
+                    'avatar' => $comment->user->avatar,
+                    'user_id' => $comment->user->id
+                ];
+                $formattedComments[] = $formattedComment;
+            }
+    
+            // Combinar los datos del post y los comentarios
+            $data = [
+                'post' => $postData,
+                'comments' => $formattedComments
+            ];
+    
+            return response()->json(['status' => true, 'data' => $data], 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-            ], 404);
+            return response()->json(['status' => false, 'message' => $th->getMessage()], 404);
         }
     }
-
+    
     /**
      * Update the specified resource in storage.
      */
