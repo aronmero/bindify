@@ -8,7 +8,7 @@ import { RouterLink } from "vue-router";
   >
     <nav class="w-[50px] flex justify-center items-center">
       <RouterLink to="/">
-        <img
+        <img title="Inicio" alt="Inicio" 
           src="/assets/icons/home.svg"
           class="max-w-[20px] max-h-[20px]"
         />
@@ -16,21 +16,21 @@ import { RouterLink } from "vue-router";
     </nav>
     <nav class="w-[50px] flex justify-center items-center">
       <RouterLink to="/busqueda">
-        <img
+        <img title="Busqueda" 
           src="/assets/icons/search.svg"
           class="max-w-[20px] max-h-[20px]"
-      /></RouterLink>
+          alt="Busqueda" /></RouterLink>
     </nav>
     <nav class="w-[50px] flex justify-center items-center">
       <RouterLink to="/calendario">
-        <img
+        <img title="Calendario"  alt="Calendario"
           src="/assets/icons/schedule.svg"
           class="max-w-[20px] max-h-[20px] "
       /></RouterLink>
     </nav>
     <nav class="w-[50px] flex justify-center items-center">
       <RouterLink to="/">
-        <img
+        <img  title="Perfil" alt="Perfil"
           src="/assets/icons/user.svg"
           class="max-w-[20px] max-h-[20px] "
       /></RouterLink>
