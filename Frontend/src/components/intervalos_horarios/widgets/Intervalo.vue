@@ -12,9 +12,6 @@
     });
 
     const intervalo = ref(props.intervalo);
-
-    
-
     const hora_apertura = ref(intervalo.value.hora_apertura);
     const hora_cierre = ref(intervalo.value.hora_cierre);
     const dia = ref(intervalo.value.dia);
@@ -24,15 +21,15 @@
 <template>
     <div class="label flex">
         <label for="">
-            <input @blur="(e) => props.cambiar_intervalo(props.index, 'hora_apertura', e.target.value)"  v-if="intervalo.hora_apertura != 'Cerrado'" type="time" :value="hora_apertura">
-            <input @blur="(e) => props.cambiar_intervalo(props.index, 'hora_apertura', e.target.value)" v-else type="time" value="00:00">
+            <input @blur="(e) => props.cambiar_intervalo(props.index, hora_apertura, hora_cierre, dia)"  v-if="intervalo.hora_apertura != 'Cerrado'" type="time" :value="hora_apertura">
+            <input @blur="(e) => props.cambiar_intervalo(props.index, hora_apertura, hora_cierre, dia)" v-else type="time" value="00:00">
         </label>
         <label for="">
-            <input @blur="(e) => props.cambiar_intervalo(props.index, 'hora_cierre', e.target.value)" v-if="intervalo.hora_cierre != 'Cerrado'" type="time" :value="hora_cierre">
-            <input @blur="(e) => props.cambiar_intervalo(props.index, 'hora_cierre', e.target.value)" v-else type="time" value="00:00">
+            <input @blur="(e) => props.cambiar_intervalo(props.index, hora_apertura, hora_cierre, dia)" v-if="intervalo.hora_cierre != 'Cerrado'" type="time" :value="hora_cierre">
+            <input @blur="(e) => props.cambiar_intervalo(props.index, hora_apertura, hora_cierre, dia)" v-else type="time" value="00:00">
         </label>
         <label for="">
-            <select name="" id="" @change="(e) => props.cambiar_intervalo(props.index, 'dia', e.target.value)">
+            <select name="" id="" @change="(e) => props.cambiar_intervalo(props.index, hora_apertura, hora_cierre, dia)">
                 <option v-for="day in dias" :value="day" :selected="day == intervalo.dia">{{ day }} </option>
             </select>
         </label>

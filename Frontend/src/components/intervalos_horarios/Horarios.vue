@@ -17,6 +17,10 @@ const modal = ref(null);
  * */
 
 const horario = ref(obtener_rango_horarios(1));
+/**
+ * Borrar el intervalo
+ * @param index - index del elemento a borrar
+ * */
 
 const borrar_intervalo = (index) => {
     console.log(`borrando ${index}`);
@@ -24,6 +28,9 @@ const borrar_intervalo = (index) => {
     console.log(horario.value);
 }
 
+/**
+ * Crear intervalo nuevo
+ * */
 const crear_intervalo = () => {
     horario.value.push({
         hora_apertura: '00:00',
@@ -31,12 +38,18 @@ const crear_intervalo = () => {
         dia: 'Lunes'
     })
 }
+/**
+ * Cambiar el intervalo ya existente
+ * @param index - index del elemento a cambiar
+ * @param campo - campo a cambiar
+ * @param valor - valor del campo a cambiar
+ * */
 
-const cambiar_intervalo = (index, campo, valor) => {
-    if(campo == 'hora_apertura') horario.value[index].hora_apertura = valor;
-    if(campo == 'hora_cierre') horario.value[index].hora_cierre = valor;
-    if(campo == 'dia') horario.value[index].dia = valor;
+const cambiar_intervalo = (index, hora_apertura, hora_cierre, dia) => {
     console.log("cambiado");
+    horario.value[index].hora_apertura = hora_apertura;
+    horario.value[index].hora_cierre = hora_cierre;
+    horario.value[index].dia = dia;
     console.log(horario.value[index]);
 }
 
