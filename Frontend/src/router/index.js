@@ -55,4 +55,17 @@ const router = createRouter({
   routes,
 });
 
+/**
+ * Guard antes de cada vista excepto login y registro, bloquea el aceso al resto de vistas si no hay sesion iniciada
+ */
+router.beforeEach((to, from, next) => {
+  const publicRoutes = ["/login", "/registro"];
+  const usuario  = JSON.parse(sessionStorage.getItem("usuario"));
+
+  if (!publicRoutes.includes(to.path) && !usuario) {
+    next("/login");
+  } else {
+    next();
+  }
+});
 export default router;

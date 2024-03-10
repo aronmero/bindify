@@ -5,11 +5,11 @@ import Input from '@/components/comun/input.vue';
 import { login } from "@/api/auth.js";
 import { useStorage } from '@vueuse/core'
 
-const email = ref(null);
-const password = ref(null);
-const errorMsg = ref(null);
-const errorEmail = ref(null);
-const errorPass = ref(null);
+const email = ref("");
+const password = ref("");
+const errorMsg = ref("");
+const errorEmail = ref("");
+const errorPass = ref("");
 
 async function tryLogin() {
     let isValido = true;
@@ -19,14 +19,14 @@ async function tryLogin() {
         errorEmail.value = "Es necesario indicar un email para iniciar sesión.";
         isValido = false;
     } else {
-        errorEmail.value = null;
+        errorEmail.value = "";
     }
 
     if (password.value == null || password.value.length < 4) {
         errorPass.value = "La contraseña es demasiado corta";
         isValido = false;
     } else {
-        errorPass.value = null;
+        errorPass.value = "";
     }
 
     if (isValido) {
@@ -40,8 +40,6 @@ async function tryLogin() {
         }
     }
 }
-
-console.log(JSON.parse(sessionStorage.getItem("usuario")))
 
 function OlvidarPassword() {
     /* Funcion que redirecciona al modal o vista para recuperar la contraseña */
