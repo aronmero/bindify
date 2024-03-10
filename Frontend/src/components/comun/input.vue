@@ -94,13 +94,13 @@ const emitirDatos = (e)=>{
             class="max-w-[40px] max-h-[40px] lg:block absolute -translate-y-[2.45rem] pointer-events-none"
             />
         </div>
-        <button v-if="tipo == 'password'" @click.prevent="cambiarVision" class="absolute translate-y-5 -translate-x-2 self-end hover:bg-background-100 p-2 rounded-full">
+        <button v-if="tipo == 'password'" @click.prevent="cambiarVision" class="absolute translate-y-[0.8rem] -translate-x-2 self-end hover:bg-background-100 p-2 rounded-full">
             <img
                 :src="ojo"
                 class="max-w-[30px] max-h-[30px] lg:block"
             />
         </button>
-        <div class="absolute translate-y-11 translate-x-3 flex">
+        <div class="absolute translate-y-[1rem] translate-x-3 flex">
             <img v-if="tipo != 'submit' && tipo != 'selection' && tipo != 'file' && tipo != 'fecha' && tipo != 'button'"
             :src="img"
             class="max-w-[30px] max-h-[30px] lg:block"
@@ -109,9 +109,11 @@ const emitirDatos = (e)=>{
             :src="img"
             class="max-w-[30px] max-h-[30px] lg:block w-[4rem] pointer-events-none select-none hidden"
             /> -->
+        </div>
+        <div class="self-end -translate-y-[2.9rem] -translate-x-[0.25rem] pointer-events-none">
             <img v-if="tipo == 'selection'"
                 src="/assets/icons/expandArrow.svg"
-                class="max-w-[40px] max-h-[40px] lg:block lg:translate-x-[38.9rem] translate-x-[80vw] py-1 px-2 pointer-events-none"
+                class="max-w-[40px] max-h-[40px] lg:block py-1 px-2 pointer-events-none"
             />
         </div>
     </div>
