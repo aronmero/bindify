@@ -95,7 +95,7 @@
         <!-- Contenedor de la imagen del post -->
 
         <div class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl  overflow-hidden mt-5 ">
-            <img @click="redirect(`evento/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
+            <img @click="redirect(`post/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
 
         </div>
 
@@ -168,7 +168,7 @@
         <!-- Contenedor de la imagen del post -->
 
         <div class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl overflow-hidden mt-5 mb-5 ">
-            <img @click="redirect(`evento/${post.id}`)" class=" w-[100%] h-[100%] object-cover  " :src="post.image" :alt="post.titulo">
+            <img @click="redirect(`post/${post.id}`)" class=" w-[100%] h-[100%] object-cover  " :src="post.image" :alt="post.titulo">
         </div>
 
         <!-- post footer -->
@@ -249,7 +249,7 @@
         <!-- post image -->
 
         <div class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl overflow-hidden ">
-            <img @click="redirect(`evento/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
+            <img @click="redirect(`post/${post.id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
         </div>
 
         <!-- post footer -->
