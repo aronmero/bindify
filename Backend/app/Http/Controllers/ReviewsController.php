@@ -47,8 +47,9 @@ class ReviewsController extends Controller
                 'note' => $request->note,
             ]);
 
+            $commerceId = $review->commerce_id;
             $review->save();
-            Utils::AVG_Reviews($request->commerce_id);
+            Utils::AVG_Reviews($commerceId);
 
             return response()->json([
                 'status' => true,

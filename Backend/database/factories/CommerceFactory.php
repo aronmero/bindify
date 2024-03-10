@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Verification_token;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -29,15 +30,24 @@ class CommerceFactory extends Factory
         $user = User::find($userId);
         $user->assignRole('commerce');
 
-        $postsNotInUsersPosts = Post::whereNotIn('id', function($query) {
-            $query->select('post_id')->from('users-posts');
-        })->get();
+        $aux = rand(1, 10);
+
+        $verification_token_id = null;
+
+
+        if ($aux == 1) {
+
+            $verification_token_id = Verification_token::select('id')
+            ->inRandomOrder()
+            ->first();
+
+        }
 
         return [
             'user_id' => $userId,
             'address' => $this->faker->address,
             'description' => $this->faker->sentence,
-            'verification_token_id' => 1,
+            'verification_token_id' => $verification_token_id,
             'category_id' => rand(1, Category::count()),
             'verificated' => $this->faker->boolean,
             'schedule' => null,
