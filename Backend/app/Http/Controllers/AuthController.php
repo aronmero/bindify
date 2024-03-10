@@ -8,6 +8,7 @@ use App\Models\Commerce;
 use App\Models\Customer;
 use App\Models\User;
 use App\Models\Verification_token;
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,8 +29,8 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse - Una respuesta JSON que contiene el token de acceso y el tipo de usuario o un mensaje de error.
      *
      * Ejemplo de la solicitud
-     * 
-     * @response 201 { 
+     *
+     * @response 201 {
      *   "user_id": 1,
      *   "token": "access_token",
      *   "tipo": ["rol_1", "rol_2", ...]
@@ -49,16 +50,19 @@ class AuthController extends Controller
             $token = $user->createtoken('my_app_token')->plainTextToken;
 
             $response = [
+                'status' => true,
+                'message'=>[
                 'user_id' => $user->id,
                 'username'=> $user->username,
                 'token' => $token,
                 'tipo' => $tipo
+                ]
             ];
 
             return response()->json($response, 201);
         }
 
-        return response()->json(['error' => 'Ususario no encontrado'], 404);
+        return response()->json(['status' => false, 'error' => 'Ususario no encontrado'], 404);
     }
 
     /**
@@ -91,7 +95,7 @@ class AuthController extends Controller
                 'username' => $request->username,
                 'name' => $request->name
             ]);
-        } catch (\Throwable $th) {
+        } catch (Exception $th) {
             return response()->json(['status' => false, 'message' => 'Datos de creacion de usuario incorrectos', 'error' => $th->getMessage()], 500);
         }
 
@@ -105,13 +109,13 @@ class AuthController extends Controller
         }
         if ($request->empresa) {
             try {
-                $verification_token_id = Verification_token::select('id')->where('token', '=', $request->verification_token)->get();
-                if ($request->verificationToken != null) {
+                $verification_token_id = Verification_token::select('id')->where('token', '=', $request->verification_token)->first();
+                if ($verification_token_id != null) {
                     $user->assignRole('ayuntamiento');
                 } else {
                     $user->assignRole('commerce');
                 }
-            } catch (\Throwable $th) {
+            } catch (Exception $th) {
                 $user->delete();
                 return response()->json(["status" => false, 'error' => $th->getMessage()], 500);
             }
@@ -126,14 +130,14 @@ class AuthController extends Controller
                     'schedule' => $request->schedule,
                     'active' => true,
                 ]);
-            } catch (\Throwable $th) {
+            } catch (Exception $th) {
                 $user->delete();
                 return response()->json(['status' => false, 'message' => 'Datos de creacion de comercion erroneos', 'error' => $th->getMessage()], 500);
             }
         } else {
             try {
                 $user->assignRole('customer');
-            } catch (\Throwable $th) {
+            } catch (Exception $th) {
                 $user->delete();
                 return response()->json(['status' => false, 'error' => $th->getMessage()], 500);
             }
@@ -143,9 +147,9 @@ class AuthController extends Controller
                     'gender' => $request->gender,
                     'birth_date'=> $request->birth_date,
                 ]);
-            } catch (\Throwable $th) {
+            } catch (Exception $th) {
                 $user->delete();
-                return response()->json(['status' => false, 'message' => 'Datos de creacion de comercion erroneos', 'error' => $th->getMessage()], 500);
+                return response()->json(['status' => false, 'message' => 'Datos de creacion de comercio erroneos', 'error' => $th->getMessage()], 500);
             }
         }
 
