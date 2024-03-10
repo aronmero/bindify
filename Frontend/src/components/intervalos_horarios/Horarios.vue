@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import BackSVG from '@public/assets/icons/forward.svg';
+
 import { comercios, obtener_rango_horarios } from '../feed_media/mocks/comercios';
 import Intervalo from './widgets/Intervalo.vue';
 
@@ -17,9 +18,25 @@ const modal = ref(null);
  * */
 
 const horario = ref(obtener_rango_horarios(1));
-/**
+/* *
  * Borrar el intervalo
  * @param index - index del elemento a borrar
+* */
+
+
+
+let horario_string = "";
+
+/**
+ *  Obtengo los horarios
+ * */
+
+horario.value.forEach(string => {
+    horario_string += ref(`${string.hora_apertura} a ${string.hora_cierre} - ${string.dia}`);
+});
+
+/**
+ * Borrar el intervalo 
  * */
 
 const borrar_intervalo = (index) => {
@@ -51,6 +68,7 @@ const cambiar_intervalo = (index, hora_apertura, hora_cierre, dia) => {
     horario.value[index].hora_cierre = hora_cierre;
     horario.value[index].dia = dia;
     console.log(horario.value[index]);
+    console.log(horario.value);
 }
 
 </script>
@@ -72,17 +90,19 @@ const cambiar_intervalo = (index, hora_apertura, hora_cierre, dia) => {
             <div ref="comentario_handler"
                 class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
                 <h2>Actualmente:</h2>
-
-                <textarea class="w-[100%] h-[400px]" :value="schedule"></textarea>
+                <div>
+                   {{ horario_string.value}}
+                </div>
                 <Intervalo v-for="(intervalo, index) in horario" :intervalo="intervalo" :index="index"
                     :borrar_intervalo="borrar_intervalo" 
                     :cambiar_intervalo="cambiar_intervalo"
-                    />
+                />
 
             </div>
 
             <div>
                 <button @click="() => crear_intervalo()" class="bg-[#FE822F] w-[200px] h-[50px] rounded-xl">Agregar intervalo</button>
+                
             </div>
 
             <!-- Formulario para enviar comentario -->

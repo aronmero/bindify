@@ -15,7 +15,7 @@
 
 <template >
     <Header />
-    <div class="feed-wrap relative">
+    <div class=" feed-wrap relative ">
         <Grid>
             <template v-slot:Left  >
                 <!-- Se listan los trends de la barra de navegación izquierda -->
