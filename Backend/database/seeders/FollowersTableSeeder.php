@@ -36,7 +36,6 @@ class FollowersTableSeeder extends Seeder
             )
             ->select('users.id as followerId')
             ->whereNull('followers.follower_id')
-            ->where('users.id', '!=', $followsId->followsId)
             ->inRandomOrder()
             ->first();
 
