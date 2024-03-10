@@ -14,3 +14,16 @@ export const genOptions = (metodo,body=null) => {
     body: body,
   };
 };
+
+//Genera la opcion para una llamada de api
+export const genOptionsWithoutBody = (metodo) => {
+  return {
+    method: metodo,
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": "insomnia/8.6.0",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    }
+  };
+};
