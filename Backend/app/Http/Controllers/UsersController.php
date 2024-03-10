@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware("can:admin")->only("destroy");
     }
     /**
@@ -91,14 +92,12 @@ class UsersController extends Controller
                     "status" => true,
                     "data" => $customer
                 ], 200);
-
             } catch (QueryException $e) {
 
                 return response()->json([
                     "status" => false,
                     "error" => $e->getMessage()
                 ], 500);
-
             } catch (Exception $e) {
 
                 return response()->json([
@@ -106,7 +105,6 @@ class UsersController extends Controller
                     "error" => $e->getMessage()
                 ], 404);
             }
-
         } else {
 
             try {
@@ -129,21 +127,30 @@ class UsersController extends Controller
                         'commerces.active'
                     )
                     ->where('users.username', '=', $username)
+                    ->get();
+
+                $commerce->each(function ($commerce) {
+
+                    $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
+                    ->select('user_id')
+                    ->where('users.username', '=', $commerce->username)
                     ->firstOrFail();
 
+                    $hashtags = Commerce::find($commerceId->user_id)->hashtags->pluck('name')->toArray();
+                    $commerce->hashtags = $hashtags;
+
+                });
 
                 return response()->json([
                     "status" => true,
                     "data" => $commerce
                 ], 200);
-
             } catch (QueryException $e) {
 
                 return response()->json([
                     "status" => false,
                     "error" => $e->getMessage()
                 ], 500);
-
             } catch (Exception $e) {
 
                 return response()->json([
@@ -151,9 +158,7 @@ class UsersController extends Controller
                     "error" => $e->getMessage()
                 ], 404);
             }
-
         }
-
     }
 
     /**
@@ -271,19 +276,16 @@ class UsersController extends Controller
             return response()->json(["status" => true, "message" => "Usuario eliminado exitosamente"], 200);
         } catch (QueryException $e) {
             // Devuelve una respuesta JSON con un mensaje de error en caso de error de base de datos
-            return response()->json(["status" => false,"message" => "Error en la base de datos :", "error" => $e->getMessage()], 500);
+            return response()->json(["status" => false, "message" => "Error en la base de datos :", "error" => $e->getMessage()], 500);
         } catch (Exception $e) {
             // Devuelve una respuesta JSON con un mensaje de error en caso de otra excepción
-            return response()->json(["status" => false,"message" => "Usuario no encontrado en la base de datos:",  "error" => $e->getMessage()], 404);
+            return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:",  "error" => $e->getMessage()], 404);
         }
     }
 
     public function posts(string $username)
     {
         try {
-
-
-
         } catch (QueryException $e) {
             // Devuelve una respuesta JSON con un mensaje de error en caso de error de base de datos
             return response()->json(["status" => false, "message" => "Error en la base de datos :", "error" => $e->getMessage()], 500);
@@ -292,5 +294,4 @@ class UsersController extends Controller
             return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:", "error" => $e->getMessage()], 404);
         }
     }
-
 }
