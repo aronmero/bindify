@@ -7,7 +7,7 @@ import Evento from "@/components/utils/evento.vue";
 import absoluteURL from "@/scripts/getFullUrl.js";
 import router from "@/router/index.js";
 import { ref, onMounted } from "vue";
-import { postId } from "@/api/publicacion/publicacion.js";
+import { postId } from "@/Api/publicacion/publicacion.js";
 
 const datos = ref([])
 
