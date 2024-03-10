@@ -2,8 +2,7 @@
 import router from '@/router/index.js';
 import { ref } from 'vue';
 import Input from '@/components/comun/input.vue';
-//import { login } from "@/api/auth.js";
-import { useStorage } from '@vueuse/core'
+import { login } from "@/api/auth.js";
 
 const email = ref("");
 const password = ref("");
@@ -11,10 +10,17 @@ const errorMsg = ref("");
 const errorEmail = ref("");
 const errorPass = ref("");
 
+/**
+ * Intenta realizar el inicio de sesion. Comprueba los valores introducidos y realiza una peticion a la API,
+ *  almacena los datos de usuario devueltos y redirige, en caso de error muestra un mensaje.
+ * @date 3/10/2024 - 9:57:22 PM
+ * @author Aarón Medina Rodríguez
+ *
+ * @async
+ */
 async function tryLogin() {
     let isValido = true;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    //console.log(emailRegex.test(email.value));
     if (!emailRegex.test(email.value)) {
         errorEmail.value = "Es necesario indicar un email para iniciar sesión.";
         isValido = false;
@@ -33,10 +39,14 @@ async function tryLogin() {
         const data = await login(email.value, password.value);
         console.log(data);
         if (data.status) {
-            sessionStorage.setItem("usuario", JSON.stringify({ "usuario": data.message }));
-            router.push("/")
+            sessionStorage.setItem(
+                "usuario",
+                JSON.stringify({ usuario: data.message })
+            );
+            router.push("/");
+            router.go();
         } else {
-            errorMsg.value = "Email o contraseña incorrecta"
+            errorMsg.value = "Email o contraseña incorrecta";
         }
     }
 }
