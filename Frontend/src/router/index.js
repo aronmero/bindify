@@ -25,16 +25,16 @@ const routes = [
   { path: "/notificaciones", component: () => import("@/views/Misc/notificaciones.vue") },
 
   //Estas tres se deberian reducir a una vista con 3 modos segun el tipo de usuario
-  { path: "/ayuntamiento", component: () => import("@/views/perfiles/ayuntamiento.vue") },
-
-  { path: "/comercio", component: () => import("@/views/perfiles/comercio.vue"),
+  { path: "/perfil", component: () => import("@/views/perfiles/perfil.vue") },
+  { path: "/perfil/ayuntamiento", component: () => import("@/views/perfiles/ayuntamiento.vue") },
+  { path: "/perfil/comercio", component: () => import("@/views/perfiles/comercio.vue"),
    children:[
     {path:"posts", component:() => import("@/components/perfiles/containers/contenedorVistaPosts.vue")},
     {path:"eventos", component:() => import("@/components/perfiles/containers/contenedorVistaEventos.vue")},
     {path:"resenias", component:() => import("@/components/perfiles/containers/contenedorVistaResenias.vue")}
   ]},
 
-  { path: "/particular", component: () => import("@/views/perfiles/particular.vue"), 
+  { path: "/perfil/particular", component: () => import("@/views/perfiles/particular.vue"), 
   children:[
     {path:"fidelidad", component:() => import("@/components/perfiles/containers/contenedorVistaFidelidad.vue")},
     {path:"favoritos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")}

@@ -1,20 +1,32 @@
 <script setup>
 import Grid from "@/components/comun/layout.vue";
-
 import Header from "@/components/comun/header.vue";
 import Footer from "@/components/comun/footer.vue";
-
 import imgsPerfil from "@/components/perfiles/containers/imgsPerfil.vue";
 import btnConImg from "@/components/perfiles/widgets/btnConImg.vue";
 import btnConText from "@/components/perfiles/widgets/btnConText.vue";
 import contenedorBtnsPerfilUser from "@/components/perfiles/containers/contenedorBtnsPerfilUser.vue";
 import textoEnNegrita from "@/components/perfiles/widgets/textoEnNegrita.vue";
 import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
-
 import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPuntuacion.vue";
 import contenedorFollower from "@/components/perfiles/containers/contenedorFollower.vue";
+import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
 import { RouterLink, RouterView } from "vue-router";
+let clickedLink = null;
+const estilos = {
+  hoverLinks: "transition ease-in-out hover:text-accent-400",
+};
+// Al recargar la pagina se quita la marca arregla a futuro con variables de estado
+// a lo mejor 
+function pintar(evento) {
+  if (clickedLink != null) {
+    clickedLink.classList.remove("text-accent-400");
+  }
+  console.log(evento.target.innerHTML);
+  evento.target.classList.add("text-accent-400");
+  clickedLink = evento.target;
+}
 </script>
 
 <template>
@@ -22,6 +34,7 @@ import { RouterLink, RouterView } from "vue-router";
   <Grid
     ><template v-slot:Left></template>
     <div class="flex flex-col gap-6">
+      <btnAtras titulo="Perfil"></btnAtras>
       <div>
         <imgsPerfil
           rutaBaner="https://placehold.co/600x400"
@@ -31,39 +44,45 @@ import { RouterLink, RouterView } from "vue-router";
         ></imgsPerfil>
       </div>
 
-      <div class="flex flex-col gap-6 justify-evenly">
+      <div class="flex flex-col gap-10 justify-evenly">
         <div class="flex flex-col">
-          <textoEnNegrita :texto="users[1].name" class="text-base md:text-xl" />
+          <textoEnNegrita :texto="users[1].name" class="text-base lg:text-xl" />
         </div>
-        <div class="flex justify-center items-start gap-6 md:gap-20">
-          <div class="flex flex-col">
-            <textoNormal texto="C. Jose Lopez" class="text-sm md:text-base" />
-            <textoNormal texto="123-123-123" class="text-sm md:text-base" />
-            <textoNormal
-              texto="blooms@gmail.com"
-              class="text-sm md:text-base"
-            />
+        <div
+          class="flex flex-col justify-center lg:items-start gap-10 lg:gap-20 lg:flex-row"
+        >
+          <div class="flex justify-center lg:items-start gap-28 lg:gap-20">
+            <div class="flex flex-col">
+              <textoNormal texto="C. Jose Lopez" class="text-sm lg:text-base" />
+              <textoNormal texto="123-123-123" class="text-sm lg:text-base" />
+              <textoNormal
+                texto="blooms@gmail.com"
+                class="text-sm lg:text-base"
+              />
+            </div>
+            <contenedorPuntuacion puntuacion="4.1" cantidadResenias="312" />
           </div>
-          <contenedorPuntuacion puntuacion="4.1" cantidadResenias="312" />
-          <div class="flex flex-col">
-            <textoEnNegrita texto="Horario" class="text-sm md:text-base" />
-            <textoNormal
-              texto="Lun-Vier: 8:00-15:00"
-              class="text-sm md:text-base"
-            />
-            <textoNormal
-              texto="Sabado: 8:00-12:00"
-              class="text-sm md:text-base"
-            />
+          <div class="flex flex-row gap-4 justify-center lg:flex-col lg:gap-0">
+            <textoEnNegrita texto="Horario:" class="text-sm lg:text-base" />
+            <div class="flex flex-col">
+              <textoNormal
+                texto="Lun-Vier: 8:00-15:00"
+                class="text-sm lg:text-base"
+              />
+              <textoNormal
+                texto="Sabado: 8:00-12:00"
+                class="text-sm lg:text-base"
+              />
+            </div>
           </div>
         </div>
-        <div class="flex justify-center items-center gap-6 md:gap-20">
+        <div class="flex justify-center items-center gap-40 lg:gap-20">
           <div class="flex flex-col">
-            <textoNormal texto="Foristería" class="text-sm md:text-base" />
+            <textoNormal texto="Foristería" class="text-sm lg:text-base" />
           </div>
           <div class="flex flex-col">
-            <textoNormal texto="#floristeria" class="text-sm md:text-base" />
-            <textoNormal texto="#flores" class="text-sm md:text-base" />
+            <textoNormal texto="#floristeria" class="text-sm lg:text-base" />
+            <textoNormal texto="#flores" class="text-sm lg:text-base" />
           </div>
         </div>
         <div class="flex gap-6 justify-center">
@@ -74,22 +93,39 @@ import { RouterLink, RouterView } from "vue-router";
 
         <!-- <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser> -->
         <div class="flex justify-center">
-          <btnConText texto="EDIT PROFILE" class="w-48"></btnConText>
+          <btnConText
+            texto="EDIT PROFILE"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+          ></btnConText>
         </div>
       </div>
 
       <div class="flex w-full justify-center gap-6">
-        <RouterLink to="/comercio/posts">
-          <textoEnNegrita texto="Posts" class="text-sm md:text-base" />
+        <RouterLink to="/perfil/comercio/posts">
+          <textoEnNegrita
+            @click="pintar"
+            texto="Posts"
+            class="text-sm lg:text-base"
+            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          />
         </RouterLink>
-        <RouterLink to="/comercio/eventos">
-          <textoEnNegrita texto="Eventos" class="text-sm md:text-base" />
+        <RouterLink to="/perfil/comercio/eventos">
+          <textoEnNegrita
+            @click="pintar"
+            texto="Eventos"
+            class="text-sm lg:text-base"
+            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          />
         </RouterLink>
-        <RouterLink to="/comercio/resenias">
-          <textoEnNegrita texto="Reseñas" class="text-sm md:text-base" />
+        <RouterLink to="/perfil/comercio/resenias">
+          <textoEnNegrita
+            @click="pintar"
+            texto="Reseñas"
+            class="text-sm lg:text-base"
+            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          />
         </RouterLink>
       </div>
-      <div></div>
       <RouterView></RouterView>
     </div>
 

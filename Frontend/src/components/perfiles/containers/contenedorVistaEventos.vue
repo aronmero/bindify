@@ -1,7 +1,8 @@
 <script setup>
-  import FeedPost from "@/components/feed_media/Posts.vue"
+  import FeedPost from "@/components/perfiles/containers/TipoPost.vue"
+  import { posts } from '@/components/perfiles/helpers/posts.js';
 </script>
 <template>
-  <FeedPost></FeedPost>
+  <FeedPost v-for="post in posts" :post="post"></FeedPost>
 </template>
 <style scoped></style>
