@@ -6,23 +6,18 @@ import imgsPerfil from "@/components/perfiles/containers/imgsPerfil.vue";
 import contenedorBtnsPerfilUser from "@/components/perfiles/containers/contenedorBtnsPerfilUser.vue";
 import textoEnNegrita from "@/components/perfiles/widgets/textoEnNegrita.vue";
 import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
-import imgRectangular from "@/components/perfiles/widgets/imgRectangular.vue"
+import imgRectangular from "@/components/perfiles/widgets/imgRectangular.vue";
+
+import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
-
-
 </script>
 
-<template >
+<template>
   <Header />
   <Grid
     ><template v-slot:Left></template>
+    <btnAtras titulo="Tarjeta Fidelidad"></btnAtras>
     <div class="flex flex-col gap-1 items-center">
-      <header class="flex items-center relative w-[90vw] justify-center">
-                <button class="lg:hidden absolute left-0">
-                    <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
-                </button>
-                <h3 class="lg:text-xl">Tarjeta de Fidelidad</h3>
-            </header>
       <div>
         <imgsPerfil
           rutaBaner="https://placehold.co/600x400"
@@ -31,11 +26,14 @@ import { users } from "@/components/perfiles/helpers/users.js";
           altTextPerfil="foto perfil"
         ></imgsPerfil>
       </div>
-      <div class="flex flex-col justify-evenly md:flex-row">
-        <textoEnNegrita :texto="users[0].name" class="text-base md:text-xl" />
+      <div class="flex flex-col justify-evenly lg:flex-row">
+        <textoEnNegrita :texto="users[0].name" class="text-base lg:text-xl" />
       </div>
-      <imgRectangular ruta="/img/codigo-qr.svg" class="size-80"></imgRectangular>
-      <div class="flex flex-col justify-center gap-x-2 md:flex-row mb-3">
+      <imgRectangular
+        ruta="/img/codigo-qr.svg"
+        class="size-80"
+      ></imgRectangular>
+      <div class="flex flex-col justify-center gap-x-2 lg:flex-row mb-3">
         <textoNormal texto="Tu número de identificación es:"></textoNormal>
         <textoEnNegrita texto="U1hP8e4Vw9kN7Z3cE2gS"></textoEnNegrita>
       </div>

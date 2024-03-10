@@ -19,11 +19,11 @@ defineProps({
             <div class="flex justify-between">
               <imgRedonda :ruta="rutaPerfil"></imgRedonda>
               <div class="flex flex-col">
-                <textoEnNegrita :texto="nombre" class="text-base md:text-xl" />
+                <textoEnNegrita :texto="nombre" class="text-base lg:text-xl" />
                 
                 <textoNormal
                 :texto="fecha"
-                class="text-sm md:text-base"
+                class="text-sm lg:text-base"
                 ></textoNormal>
               </div>
               <div class="flex justify-end w-full">
@@ -32,10 +32,10 @@ defineProps({
             </div>
             <div class="flex flex-col ">
               
-              <textoEnNegrita :texto="titulo" class="text-base md:text-xl" />
+              <textoEnNegrita :texto="titulo" class="text-base lg:text-xl" />
               <textoNormal
                 :texto="texto"
-                class="text-sm md:text-base pb-2"
+                class="text-sm lg:text-base pb-2"
               ></textoNormal>
               <img :src="imagen" :alt="imagenAltText" class="scale-90">
             </div>
