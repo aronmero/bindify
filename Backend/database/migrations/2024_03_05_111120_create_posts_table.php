@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->boolean('active');
+            $table->string('ubicacion')->default("");
             $table->timestamps();
         });
     }
