@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('description', 300);
             $table->unsignedBigInteger('verification_token_id')->nullable();
-            $table->foreign('verification_token_id')->references('id')->on('verification_tokens')->onDelete('cascade');
+            $table->foreign('verification_token_id')->nullable()->references('id')->on('verification_tokens')->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->boolean('verificated');
             $table->string('schedule', 300)->nullable();

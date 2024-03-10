@@ -14,6 +14,7 @@ const datos = ref([])
 const id=router.currentRoute.value.params.id
 onMounted(async () => {
     datos.value = await postId("get",id);
+    console.log(datos.value)
 })
 
 
@@ -23,8 +24,8 @@ onMounted(async () => {
     <Header />
     <Grid><template v-slot:Left> </template>
         <section v-if="datos.data !== undefined">
-            <Evento :url="absoluteURL()" :banner="datos.data.image" :titulo="datos.data.title" :ubicacion="BLANK" :fechaInicio="datos.data.start_date"
-                :fechaFin="datos.data.end_date" :dias="BLANK" :descripcion="datos.data.description" :tipo="datos.data.post_type_name" />
+            <Evento :url="absoluteURL()" :banner="datos.data.post.image" :titulo="datos.data.post.title" :ubicacion="BLANK" :fechaInicio="datos.data.post.start_date"
+                :fechaFin="datos.data.post.end_date" :dias="BLANK" :descripcion="datos.data.post.description" :tipo="datos.data.post.post_type_name" :user="datos.data.users" :fecha_publicacion="datos.data.post.fecha_creacion"/>
         </section>
         <template v-slot:Right> </template>
 
