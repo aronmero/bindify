@@ -12,9 +12,12 @@ const routes = [
   { path: "/horarios-modal", component: () => import("@/views/Auth/horarios.vue") },
 
   { path: "/post/:id", component: () => import("@/views/eventos/evento.vue") },
+  { path: "/post/nuevo", component: () => import("@/views/publicaciones/crearPublicacion.vue") },
+  { path: "/post/:id/editar", component: () => import("@/views/publicaciones/editarPublicacion.vue") },
+
   { path: "/eventos", component: () => import("@/views/eventos/eventos.vue") },
-  { path: "/eventos/new", component: () => import("@/views/eventos/crearEvento.vue") },
-  { path: "/eventos/edit", component: () => import("@/views/eventos/editarEvento.vue") },
+  //{ path: "/eventos/new", component: () => import("@/views/eventos/crearEvento.vue") },
+  //{ path: "/eventos/edit", component: () => import("@/views/eventos/editarEvento.vue") },
   { path: "/calendario", component: () => import("@/views/eventos/calendarioEvento.vue") },
 
   //Esto permite hacer /busqueda/informatica y que sea /busqueda?q=informatica
@@ -43,7 +46,6 @@ const routes = [
       { path: "resenias", component: () => import("@/components/perfiles/containers/contenedorVistaResenias.vue") }
     ]
   },
-
   {
     path: "/perfil/particular", component: () => import("@/views/perfiles/particular.vue"),
     children: [
@@ -54,8 +56,6 @@ const routes = [
   { path: "/tarjeta-fidelidad", component: () => import("@/views/perfiles/tarjetaFidelidad.vue") },
   { path: "/perfil/edit", component: () => import("@/views/perfiles/editarPerfil.vue") },
 
-  { path: "/publicacion/new", component: () => import("@/views/publicaciones/crearPublicacion.vue") },
-  { path: "/publicacion/edit", component: () => import("@/views/publicaciones/editarPublicacion.vue") },
   { path: "/validate", component: () => import("@/views/Misc/validate.vue") }
 ];
 
@@ -68,16 +68,24 @@ const router = createRouter({
 });
 
 /**
- * Guard antes de cada vista excepto login y registro, bloquea el aceso al resto de vistas si no hay sesion iniciada
+ * Guard antes de cada vista excepto login y registro, bloquea el aceso al resto de vistas si no hay sesion iniciada.
+ * Guard para las vistas de publicaciones si no es un commercio
  */
 router.beforeEach((to, from, next) => {
   const publicRoutes = ["/login", "/registro"];
-  const usuario = JSON.parse(sessionStorage.getItem("usuario"));
+  const comercioRoutes = ["/post/nuevo"];
+  const userData = JSON.parse(sessionStorage.getItem("usuario"));
 
-  if (!publicRoutes.includes(to.path) && !usuario) {
+  if (!publicRoutes.includes(to.path) && !userData) {
     next("/login");
-  } else if (publicRoutes.includes(to.path) && usuario) {
+  } else if (publicRoutes.includes(to.path) && userData) {
     next("/");
+  } else if (to.path.match(/^\/post\/[\w-]+\/editar$/) || comercioRoutes.includes(to.path)) {
+    if (userData.usuario.tipo !== "commerce" && userData.usuario.tipo !== "ayuntamiento") {
+      next("/");
+    } else {
+      next();
+    }
   } else {
     next();
   }
