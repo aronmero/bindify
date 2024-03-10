@@ -97,3 +97,44 @@ export const obtener_rango_horarios = (comercio_id) => {
     }
     
 }
+
+export const filtrar_rango_horarios = (datos_string) => {
+
+    let exportar = [];
+    if(datos_string != null) {
+
+        let semana = datos_string.split(/\n| (?=a)|(?<=a) |-/);
+        let filtrado = semana.filter((intervalo) => intervalo != "a" && intervalo.trim() !== " " && intervalo.trim() !== "");
+        exportar = []
+
+        console.log(filtrado)
+
+        for (let index = 0; index < filtrado.length; index++) {
+            if(index % 3 == 0) {
+                exportar.push({
+                    hora_apertura: filtrado[index].trim(),
+                    hora_cierre: filtrado[index + 1].trim(),
+                    dia: filtrado[index + 2].trim()
+                })
+            }
+        }
+       
+    }
+
+    return exportar;
+    
+}
+
+export const pasar_a_string_horario = (array_objeto) => {
+    let string_final = "";
+
+    if(array_objeto.length >= 1) {
+        /* formato: 08:00 a 15:00 - Lunes \n     */
+        array_objeto.forEach(intervalo => {
+            string_final += ` ${intervalo.hora_apertura} a ${intervalo.hora_cierre} - ${intervalo.dia} \n`;
+        });
+        return string_final;
+    }
+
+    string_final = "Debes introducir al menos un intervalo."
+}

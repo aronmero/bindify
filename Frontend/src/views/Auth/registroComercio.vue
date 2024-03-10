@@ -2,7 +2,15 @@
 import Input from '@/components/comun/input.vue';
 import router from '@/router/index.js';
 import Modal from '@/views/Auth/registroComercio-modal.vue';
+
+
 import { ref } from 'vue';
+
+/** Importa el Modal de Horarios */
+import Horarios from '../../components/intervalos_horarios/Horarios.vue';
+
+/* Genera la referencia para controlar el estado de mostrado u oculto */
+const controlador_modal = ref(false);
 
 const usuario = ref('');
 const nombre = ref('');
@@ -16,7 +24,7 @@ const direccion = ref('');
 const descripcion = ref('');
 const token = ref('');
 const categoria = ref('');
-const showModal = ref(false);
+
 
 function registro() {
     const emailRegex = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)/;
@@ -91,16 +99,37 @@ function Horarios() {
     console.log("nada aun");
 }
 */
+/** Controla la dinámica de mostrar y ocultar el modal */
+const controlarModal = (e) => {
+    e.preventDefault();
+    if(controlador_modal.value) {
+        controlador_modal.value = false;
+    } else {
+        controlador_modal.value = true;
+    }
+}
 
 const array = ["S/C de La Palma", "Villa de Mazo", "Los Llanos de Aridane", "Fuencaliente", "El Paso", "Puntagorda", "Puntallana", "Breña Baja", "Breña Alta", "Garafía", "Barlovento", "San Andrés y Sauces", "Tazacorte"];
 const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", "Limón"];
+const horarioActual = ref(" 08:00 a 15:00 - Lunes \n 08:00 a 15:00 - Lunes(T) \n 08:00 a 15:00 - Martes \n 08:00 a 15:00 - Miércoles \n 08:00 a 15:00 - Jueves \n 08:00 a 15:00 - Viernes \n Cerrado a Cerrado - Sabado \n  Cerrado a Cerrado - Domingo ");
+/** 
+ * Agrega el cambio de horario
+ * @author 'David'
+ * */
+const obtenerCambioHorario = (cambio) => {
+    horarioActual.value = cambio;
+    console.log("obtenido cambio")
+    controlador_modal.value = false;
+}
+
 </script>
 
 
 <template>
     <h1 class="title">Título</h1>
     <div class="container">
-        <form @submit.prevent="registro">
+        <!-- <form @submit.prevent="registro"> -->
+            <form>
             <div class="formulario-container">
                 <div class="grupo">
                     <Input tipo="text" requerido="true" img="/assets/icons/maleUser.svg" v-model='usuario' label="Usuario"/>
@@ -151,20 +180,26 @@ const categoriasArray = ["Pera", "Manzana", "Plátano", "Mandarina", "Naranja", 
                 <div class="grupo">
                     <Input tipo="selection" requerido="true" :opciones=categoriasArray img="/assets/icons/sorting.svg" placeholder="Selecciona una categoría" v-model='categoria' label="Categoria"/>
                 </div>
+                <div class="grupo">
+                    <Input tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual"/>
+                </div>
+                <br/><br/>
                 <br/><br/>
                 <div class="grupo">
-                    <Input tipo="submit" requerido="true" @click="showModal = true" style="font-size: 20px;" clase="oscuro" valor="Horarios"/>
+                    <Input tipo="submit" requerido="true" @click="(e) => controlarModal(e)" style="font-size: 20px;" clase="oscuro" valor="Horarios"/>
 
-                    <Teleport to="body">
+                    <!-- Modal de Intervalos Horarios -->
+                 
+                    <!-- <Teleport to="body">
                         <modal :show="showModal" @close="showModal = false">
                             <template #header>
-                            
                             </template>
                         </modal>
-                    </Teleport>
+                    </Teleport> -->
                 </div>
             </div>
         </form>
+        <Horarios v-if="controlador_modal" :referencia_padre="horarioActual" :controlar_modal="controlarModal" :enviar_cambios="obtenerCambioHorario" />
     </div>
     <br/><br/>
     <div class="registrarse">

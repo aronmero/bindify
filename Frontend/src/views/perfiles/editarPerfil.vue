@@ -6,6 +6,12 @@ import Header from "@/components/comun/header.vue";
 import Footer from "@/components/comun/footer.vue";
 
 import Input from "@/components/comun/input.vue";
+
+import Horarios from '@/components/intervalos_horarios/Horarios.vue'
+
+/* Genera la referencia para controlar el estado de mostrado u oculto */
+const controlador_modal = ref(false);
+
 let options = ["Los Llanos de Aridane", "Santa Cruz de la Palma", "Tijarafe", "El Paso", "Puntagorda", "Villa de Mazo"]; /* Cambiar por info del back */
 let optionsSex = ["M", "H"]; /* Cambiar por info del back */
 let errorIMG = ref(null);
@@ -16,7 +22,7 @@ let errorNombre = ref(null);
 let errorMail = ref(null);
 let errorDirec = ref(null);
 let errorPhone = ref(null);
-const horarioActual = ref(" 08:00 a 15:00 - Lunes \n 08:00 a 15:00 - Martes \n 08:00 a 15:00 - Miércoles \n 08:00 a 15:00 - Jueves \n 08:00 a 15:00 - Viernes \n Cerrado - Sábado \n Cerrado - Domingo");
+const horarioActual = ref(" 08:00 a 15:00 - Lunes \n 08:00 a 15:00 - Lunes(T) \n 08:00 a 15:00 - Martes \n 08:00 a 15:00 - Miércoles \n 08:00 a 15:00 - Jueves \n 08:00 a 15:00 - Viernes \n Cerrado a Cerrado - Sabado \n  Cerrado a Cerrado - Domingo ");
 const tipoUsuario = ref("comercio");
 const nombre = ref(null);
 const imagenPerfil = ref(null);
@@ -63,13 +69,34 @@ const tratarDatos = ()=>{
         errorPhone.value = "Es necesario indicar un teléfono de contacto para tu negocio.";
     }
 }
+/** Controla la apertura del modal de horarios */
+const controlarModal = () => {
+    console.log(horarioActual)
+    console.log(controlador_modal.value)
+    if(controlador_modal.value) {
+        controlador_modal.value = false;
+    } else {
+        controlador_modal.value = true;
+    }
+   
+}
+/**
+ * Agrega el cambio de horario
+ * @author 'David'
+ * */
+const obtenerCambioHorario = (cambio) => {
+    horarioActual.value = cambio;
+    console.log("obtenido cambio")
+    controlador_modal.value = false;
+}
+
 </script>
 
 <template>
     <Header />
     <Grid>
         <template v-slot:Left></template>
-        <tempalte class="flex flex-col items-center justify-center">
+        <template class="flex flex-col items-center justify-center">
             <header class="flex items-center relative w-[90vw] justify-center">
                 <button  class="lg:hidden absolute left-0">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
@@ -92,7 +119,7 @@ const tratarDatos = ()=>{
                     <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" @change="mostrarInformacion" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
                     <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{direccion = nuevosDatos}" tipo="text" requerido="true" label="Dirección" :valor="direccion" :error="errorDirec"/>
                     <Input v-if="tipoUsuario == 'comercio'" tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual"/>
-                    <Input @click="mostrarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
+                    <Input @click="controlarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
                     <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
                     <div class="cambiocontra flex flex-col gap-y-5">
                         <Input @datos="(nuevosDatos)=>{contraActual = nuevosDatos}" tipo="password" label="Contraseña Actual" :valor="contraActual" :error="errorContra"/>
@@ -103,8 +130,11 @@ const tratarDatos = ()=>{
                         <Input @click="tratarDatos" tipo="submit" clase="oscuro" valor="Guardar Cambios" class="w-[50%]"/>
                     </div>
                 </form>
+                
             </section>
-        </tempalte>
+            <!-- Modal de Intervalos Horarios -->
+            <Horarios v-if="controlador_modal" :referencia_padre="horarioActual" :controlar_modal="controlarModal" :enviar_cambios="obtenerCambioHorario" />
+        </template>
         <template v-slot:Right></template>
     </Grid>
     <Footer />

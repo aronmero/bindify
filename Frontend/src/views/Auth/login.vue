@@ -2,7 +2,7 @@
 import router from '@/router/index.js';
 import { ref } from 'vue';
 import Input from '@/components/comun/input.vue';
-import { login } from "@/api/auth.js";
+//import { login } from "@/api/auth.js";
 import { useStorage } from '@vueuse/core'
 
 const email = ref("");

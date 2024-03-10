@@ -62,10 +62,10 @@ router.beforeEach((to, from, next) => {
   const publicRoutes = ["/login", "/registro"];
   const usuario  = JSON.parse(sessionStorage.getItem("usuario"));
 
-  if (!publicRoutes.includes(to.path) && !usuario) {
-    next("/login");
-  } else {
+  //if (!publicRoutes.includes(to.path) && !usuario) {
+  //  next("/login");
+  //} else {
     next();
-  }
+  //}
 });
 export default router;
