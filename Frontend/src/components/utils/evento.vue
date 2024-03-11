@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { datetranslate } from '@/components/notificaciones/helpers/datetranslate.js'
 
+import Comentario from '@/components/feed_media/widgets/Comentario.vue';
 import Calendar from "@/components/utils/calendar.vue";
 //https://vueuse.org/core/useClipboard/
 import { useClipboard } from '@vueuse/core'
@@ -15,8 +16,9 @@ const props = defineProps({
     dias: { type: String, default: "25" },
     descripcion: { type: String, default: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in tempus lorem. Donec eu felis erat. Aenean eu augue congue, congue ligula vitae, accumsan neque. Mauris auctor lobortis tempor. In hac habitasse platea dictumst. Ut egestas eget nunc quis convallis. Suspendisse potenti. Vivamus commodo lectus quis maximus facilisis. " },
     tipo: { type: String, default: "Evento" },
-    user:{Object},
-    fecha_publicacion: String
+    user: Object,
+    fecha_publicacion: String,
+    comentarios: Array,
 });
 
 //Abre y cierra el modal
@@ -75,19 +77,26 @@ const copyModal = (e) => {
         <div>
             <div class="flex" v-if="tipo == 'Evento' && props.ubicacion != null"><img
                     src="@public/assets/icons/location.svg" class="w-[20px] mr-[5px]">{{ props.ubicacion
-                }}
+                    }}
             </div>
             <div class="flex" v-if="tipo == 'Evento' && props.fechaInicio != null && props.fechaFin != null"><img
                     src="@public/assets/icons/schedule.svg" class="w-[20px] mr-[5px]">{{
-                    props.fechaInicio }}
+                        props.fechaInicio }}
                 al {{ props.fechaFin }}</div>
         </div>
-        <div> {{ props.descripcion }}</div> 
+        <div> {{ props.descripcion }}</div>
         <div class="text-[24px] font-bold my-[30px]" v-if="tipo == 'Evento'">Periodo del evento</div>
         <div v-if="tipo == 'Evento'">
             <Calendar />
         </div>
         <div class="text-[24px] font-bold my-[30px]">Comentarios</div>
+        <div>
+            <template v-if="props.comentarios != null">
+                <Comentario v-if="props.comentarios.length >= 1" v-for="comentario in props.comentarios"
+                    :comentario="comentario" />
+                <Comentario v-else :comentario="{ content: 'No hay comentarios, ¡se el primero!' }" />
+            </template>
+        </div>
     </div>
 </template>
 
