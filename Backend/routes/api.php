@@ -41,7 +41,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('review', ReviewsController::class)->except(['index']);
     Route::apiResource('hashtag', HashtagsController::class)->except(['show', 'update', 'destroy']);
     Route::apiResource('municipality', MunicipalitiesController::class)->except(['show', 'update', 'destroy', 'store']);
-    Route::apiResource('user', UsersController::class)->except(['index', 'store', 'posts']);
+    Route::apiResource('user', UsersController::class)->except(['index', 'store', 'posts']);    
+    Route::get('profile', [UsersController::class,'profile']);
     Route::get('user/{username}/posts', [UsersController::class , 'posts']);
     Route::get('user/{username}/events', [UsersController::class, 'events']);
     Route::apiResource('category', CategoryController::class)->except(['show', 'update', 'destroy', 'store']);
