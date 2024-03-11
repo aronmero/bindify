@@ -40,12 +40,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('comment', CommentsController::class)->except(['index']);
     Route::apiResource('review', ReviewsController::class)->except(['index']);
     Route::apiResource('hashtag', HashtagsController::class)->except(['show', 'update', 'destroy']);
-    Route::apiResource('municipality', MunicipalitiesController::class)->except(['show', 'update', 'destroy', 'store']);
     Route::apiResource('user', UsersController::class)->except(['index', 'store', 'posts']);    
     Route::get('profile', [UsersController::class,'profile']);
     Route::get('user/{username}/posts', [UsersController::class , 'posts']);
     Route::get('user/{username}/events', [UsersController::class, 'events']);
-    Route::apiResource('category', CategoryController::class)->except(['show', 'update', 'destroy', 'store']);
 // Route::apiResource('post_type', Post_typesController::class)->except(['show', 'update', 'destroy', 'store']);
 // Route::apiResource('notification', NotificationsController::class)->except(['index', 'destroy']);
     Route::get('follower', [FollowersController::class , 'showFollowers']);
@@ -58,6 +56,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     /** Añadido por David */
     Route::get('home_todos', [PostsController::class, 'home_todos']);
 });
-
+   
+Route::apiResource('municipality', MunicipalitiesController::class)->only('index');    
+Route::apiResource('category', CategoryController::class)->only('index');
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
