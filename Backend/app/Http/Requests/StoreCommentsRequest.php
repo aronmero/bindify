@@ -29,7 +29,25 @@ class StoreCommentsRequest extends FormRequest
         ];
     }
 
-    
-
-
+    public function messages()
+    {
+        return [
+            'post_id' => [
+                'required' => 'El tipo de publicación es obligatorio',
+                'integer' => 'Tipo de dato incorrecto',
+            ],
+            'user_id' => [
+                'required' => 'El id del usuario es obligatorio',
+                'integer' => 'Tipo de dato incorrecto',
+            ],
+            'content' => [
+                'string' => 'El dato no es el adecuado, string requerido',
+                'required' => 'el contenido del comentario es obligatorio',
+            ],
+            'comment_id' => [
+                'nullable' => 'El id del comentario puede ser nulo',
+                'integer' => 'Tipo de dato incorrecto',
+            ]
+        ];
+    }
 }
