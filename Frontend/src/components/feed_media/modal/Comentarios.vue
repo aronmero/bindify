@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,onBeforeUnmount  } from 'vue';
 import Comentario from '../widgets/Comentario.vue';
 import { comentarios_por_post } from './../mocks/comentarios';
 import { encontrar_usuario_por_id } from './../mocks/users';
@@ -62,12 +62,18 @@ const cerrarModal = () => {
     document.body.style.overflow = "scroll"
 };
 
+//Elimina el intervalo antes de cambiar de ruta.
+onBeforeUnmount(() => {
+    clearInterval(interval);
+});
+
 const refrescarPosicion = () => {
-    console.log(comentario_handler.value.getBoundingClientRect());
-    console.log(comentario_handler.value.scrollHeight);
+    // console.log(comentario_handler.value.getBoundingClientRect());
+    // console.log(comentario_handler.value.scrollHeight);
     comentario_handler.value.scrollTop = comentario_handler.value.scrollHeight;
 }
 
+/*
 const agregar_comentario = async (post_id, user_id, texto) => {
     en_comentarios.value.push({
         id: en_comentarios.length + 1,
@@ -76,79 +82,63 @@ const agregar_comentario = async (post_id, user_id, texto) => {
         content: texto,
         active: true
     });
-}
+}*/
 
 /**
 * Enviar el comentario
 */
-const enviarComentarioPorSubmit = async (post_id, user_id, event) => {
+const enviarComentarioPorSubmit = async (post_id, event) => {
     if (event.key == 'Enter') {
         let texto = event.target.value;
         if (!posteado.value) {
             if (texto != "") {
-                /**
-                *  Cambiar por la función de lógica backend de enviar comentario
-                * */
-                const body=JSON.stringify({ "content": texto, "post_id": post_id })
-                const response = await storeCommentsOfPost(body)
-              
+                const body = JSON.stringify({ "content": `${texto}`, "post_id": post_id })
+                const response = await storeCommentsOfPost(body);
+
                 if (response.status) {
                     refrescarPosicion()
-                } else {
-                    console.error(response)
-                }
-                /*
-                agregar_comentario(user_id, post_id, texto)
-                    .then(() => refrescarPosicion() );
-                */
+                } 
             }
 
             antiSpamFunction();
         }
-        event.target.value = "";
     }
 };
 
-const enviarComentarioPorClick = async (post_id, user_id, texto) => {
-
-    /**
-     *  Cambiar por la función de lógica backend de enviar comentario
-     * */
+const enviarComentarioPorClick = async (post_id, texto) => {
 
     if (!posteado.value && texto != "") {
-        const body=JSON.stringify({ "content": texto, "post_id": post_id })
+        const body = JSON.stringify({ "content": texto, "post_id": post_id })
         const response = await storeCommentsOfPost(body)
-      
+
         if (response.status) {
             refrescarPosicion()
-        } else {
-            console.error(response)
         }
-        /*
-        agregar_comentario(user_id, post_id, texto)
-            .then(() => refrescarPosicion());
-        */
     }
-    chat_input.value = "";
+
     antiSpamFunction();
-    texto = "";
 };
 
 /**
 * Función que se encarga de evitar que el usuario desde el front envíe las peticiones que quiera
 * */
 const antiSpamFunction = () => {
+    chat_input.value.value= ""
     chat_input.value.readonly = true;
+
     let secs = 0;
     posteado.value = true;
 
     interval = setInterval(() => {
         secs++;
+
         chat_input.value.placeholder = `Debes esperar ${60 - secs} segundos para enviar otro comentario.`;
+
         if (secs == 60) {
             clearInterval(interval);
             posteado.value = false;
             chat_input.value.placeholder = `Agregar comentario.`;
+
         };
     }, 1000);
 }
@@ -156,7 +146,6 @@ const antiSpamFunction = () => {
 /**
  * Bloqueamos overflow en background
  * */
-
 document.body.style.overflow = "hidden";
 
 </script>
@@ -180,8 +169,8 @@ document.body.style.overflow = "hidden";
                 <div ref="comentario_handler"
                     class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
                     <template v-if="comentarios != null">
-                        <Comentario v-if="comentarios.comentarios.length >= 1" v-for="comentario in comentarios.comentarios"
-                            :comentario="comentario" />
+                        <Comentario v-if="comentarios.comentarios.length >= 1"
+                            v-for="comentario in comentarios.comentarios" :comentario="comentario" />
                         <Comentario v-else :comentario="{ content: 'No hay comentarios, ¡se el primero!' }" />
                     </template>
                 </div>
@@ -192,11 +181,11 @@ document.body.style.overflow = "hidden";
                     <!-- Avatar del usuario -->
                     <img class=" w-[50px] h-[50px] bg-[#f3f3f3] rounded-full " :src="user.avatar" alt="">
                     <!-- Input de Enviar datos -->
-                    <input ref="chat_input" @keydown="(e) => enviarComentarioPorSubmit(post.id, 1, e)"
+                    <input ref="chat_input" @keydown="(e) => enviarComentarioPorSubmit(post.id, e)"
                         class=" outline-none  w-[100%] h-[100%] p-[30px_20px] " type="text"
                         placeholder="Agregar comentario">
                     <!-- Botón de Enviar  -->
-                    <button class="p-[20px]" @click="(e) => enviarComentarioPorClick(post.id, 1, chat_input.value)">
+                    <button class="p-[20px]" @click="(e) => enviarComentarioPorClick(post.id, chat_input.value)">
                         <img class="rotate-180" :src="EnviarSVG" alt="submit" />
                     </button>
                 </div>
@@ -234,4 +223,5 @@ body {
     .chat {
         z-index: 99 !important;
     }
-}</style>
+}
+</style>
