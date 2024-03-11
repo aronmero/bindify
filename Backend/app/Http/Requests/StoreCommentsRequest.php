@@ -33,7 +33,7 @@ class StoreCommentsRequest extends FormRequest
     {
         return [
             'post_id' => [
-                'required' => 'El tipo de publicación es obligatorio',
+                'required' => 'El id de la publicacion es obligatorio',
                 'integer' => 'Tipo de dato incorrecto',
             ],
             'user_id' => [
