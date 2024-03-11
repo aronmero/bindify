@@ -10,18 +10,27 @@ import { genOptions } from "@/Api/api.js";
  * @param {Number} id de la publicacion
  * @returns {Object}
  */
-export async function getUserData(metodo, id,body=null) {
+export async function getUserData(metodo, ruta,body=null) {
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     console.log(user)
-    // try {
-    //   const options = genOptions(metodo,body);
-    //   const response = await fetch(
-    //     `http://127.0.0.1:8000/api/post/${id}`,
-    //     options
-    //   );
-    //   const data = await response.json();
-    //   return data;
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    try {
+      const options = genOptions(metodo,body);
+      const response = await fetch(`${ruta}/${user.usuario.username}?=`, options);
+      const data = await response.json();
+      return data.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+export async function getUserPosts(metodo, ruta,body=null) {
+    const user = JSON.parse(sessionStorage.getItem("usuario"));
+    console.log(user)
+    try {
+      const options = genOptions(metodo,body);
+      const response = await fetch(`${ruta}/${user.usuario.username}?=`, options);
+      const data = await response.json();
+      return data.data;
+    } catch (error) {
+      console.error(error);
+    }
   }

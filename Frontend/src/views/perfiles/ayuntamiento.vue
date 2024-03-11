@@ -13,7 +13,11 @@ import contenedorFollower from "@/components/perfiles/containers/contenedorFollo
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
 import { RouterLink, RouterView } from "vue-router";
+import { getUserData } from "@/api/perfiles/perfil.js";
+import { ref } from "vue";
 let clickedLink = null;
+let userData = ref(null);
+let userExterno = ref(false);
 const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
@@ -27,36 +31,52 @@ function pintar(evento) {
   evento.target.classList.add("text-accent-400");
   clickedLink = evento.target;
 }
+
+async function responseCatcher() {
+  userData.value = await getUserData("get", "http://127.0.0.1:8000/api/user/");
+  console.log(userData.value);
+}
+
+responseCatcher();
 </script>
 
 <template>
   <Header />
   <Grid
     ><template v-slot:Left></template>
-    <div class="flex flex-col gap-6">
-      <btnAtras titulo="Perfil"></btnAtras>
+    <btnAtras titulo="Perfil"></btnAtras>
+    <div class="flex flex-col gap-6" v-if="userData != null">
       <div>
         <imgsPerfil
-          rutaBaner="https://placehold.co/600x400"
+          :rutaBaner="userData[0].banner"
           altTextBaner="foto baner"
-          :rutaPerfil="users[1].avatar"
+          :rutaPerfil="userData[0].avatar"
           altTextPerfil="foto perfil"
         ></imgsPerfil>
       </div>
 
       <div class="flex flex-col gap-10 justify-evenly">
         <div class="flex flex-col">
-          <textoEnNegrita :texto="users[1].name" class="text-base lg:text-xl" />
+          <textoEnNegrita
+            :texto="userData[0].username"
+            class="text-base lg:text-xl"
+          />
         </div>
         <div
           class="flex flex-col justify-center lg:items-start gap-10 lg:gap-20 lg:flex-row"
         >
           <div class="flex justify-center lg:items-start gap-28 lg:gap-20">
             <div class="flex flex-col">
-              <textoNormal texto="C. Jose Lopez" class="text-sm lg:text-base" />
-              <textoNormal texto="123-123-123" class="text-sm lg:text-base" />
               <textoNormal
-                texto="blooms@gmail.com"
+                :texto="userData[0].addess"
+                class="text-sm lg:text-base"
+              />
+              <textoNormal
+                :texto="userData[0].phone"
+                class="text-sm lg:text-base"
+              />
+              <textoNormal
+                :texto="userData[0].email"
                 class="text-sm lg:text-base"
               />
             </div>
@@ -78,11 +98,17 @@ function pintar(evento) {
         </div>
         <div class="flex justify-center items-center gap-40 lg:gap-20">
           <div class="flex flex-col">
-            <textoNormal texto="Foristería" class="text-sm lg:text-base" />
+            <textoNormal
+              :texto="userData[0].categories_name"
+              class="text-sm lg:text-base"
+            />
           </div>
           <div class="flex flex-col">
-            <textoNormal texto="#floristeria" class="text-sm lg:text-base" />
-            <textoNormal texto="#flores" class="text-sm lg:text-base" />
+            <textoNormal
+              v-for="hashtag in userData[0].hashtags"
+              :texto="hashtag"
+              class="text-sm lg:text-base"
+            />
           </div>
         </div>
         <div class="flex gap-6 justify-center">
@@ -99,11 +125,17 @@ function pintar(evento) {
               class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
             ></btnConText>
           </RouterLink>
+          <RouterLink to="" v-if="userExterno">
+            <btnConText
+              texto="Segir"
+              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+            ></btnConText>
+          </RouterLink>
         </div>
       </div>
 
       <div class="flex w-full justify-center gap-6">
-        <RouterLink to="/perfil/ayuntamiento/posts">
+        <RouterLink to="/perfil/comercio/posts">
           <textoEnNegrita
             @click="pintar"
             texto="Posts"
@@ -111,7 +143,7 @@ function pintar(evento) {
             :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
           />
         </RouterLink>
-        <RouterLink to="/perfil/ayuntamiento/eventos">
+        <RouterLink to="/perfil/comercio/eventos">
           <textoEnNegrita
             @click="pintar"
             texto="Eventos"
@@ -119,14 +151,7 @@ function pintar(evento) {
             :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
           />
         </RouterLink>
-        <!-- <RouterLink to="/perfil/comercio/resenias">
-          <textoEnNegrita
-            @click="pintar"
-            texto="Reseñas"
-            class="text-sm lg:text-base"
-            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
-          />
-        </RouterLink> -->
+        
       </div>
       <RouterView></RouterView>
     </div>

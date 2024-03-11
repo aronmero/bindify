@@ -8,14 +8,16 @@ import particular from "@/views/perfiles/particular.vue";
 import ayuntamiento from "@/views/perfiles/ayuntamiento.vue";
 
 import { ref } from "vue";
-// let tipoUsuario = ref("comercio");
-let tipoUsuario = ref("particular");
+const user = JSON.parse(sessionStorage.getItem("usuario"));
+console.log(user.usuario.tipo);
+let tipoUsuario = ref(user.usuario.tipo);
+// let tipoUsuario = ref("particular");
 // let tipoUsuario = ref("ayuntamiento");
 </script>
 
 <template>
-  <comercio v-if="tipoUsuario == 'comercio'"></comercio>
-  <particular v-if="tipoUsuario == 'particular'"></particular>
+  <comercio v-if="tipoUsuario == 'commerce'"></comercio>
+  <particular v-if="tipoUsuario == 'customer'"></particular>
   <ayuntamiento v-if="tipoUsuario == 'ayuntamiento'"></ayuntamiento>
 </template>
 
