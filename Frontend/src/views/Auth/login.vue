@@ -2,7 +2,7 @@
 import router from '@/router/index.js';
 import { ref } from 'vue';
 import Input from '@/components/comun/input.vue';
-import { login } from "@/Api/auth.js";
+import { login } from "@/api/auth.js";
 
 const email = ref("");
 const password = ref("");
@@ -95,7 +95,6 @@ function Registro() {
             </div>
         </div>
     </div>
-  </div>
 </template>
 
 <style scoped></style>

@@ -2,20 +2,22 @@
     // import { posts } from './mocks/posts.js';
     import Feed from './tipos_post/TipoPost.vue';
     
-    import {obtener_posts} from '@/api/home/publicaciones';
+    import {obtener_posts, obtener_posts_seguidos} from '@/api/home/publicaciones';
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     console.log(user);
 
-    const posts_request = await obtener_posts();
-    const posts = posts_request;
+    // const posts_feed = await obtener_posts_seguidos();
+    //let posts = posts_feed.data;
 
-    console.log(posts_request);
+    const posts_request = await obtener_posts();
+    let posts = posts_request.data;
+    console.log(posts);
+    
 </script>
 
 <template>
     <Suspense>
         <Feed 
-            v-if="posts.length >= 1" 
             v-for="post in posts" 
             :post="post"
         /> 

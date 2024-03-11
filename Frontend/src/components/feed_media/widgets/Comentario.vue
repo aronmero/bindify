@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import MoreSVG from '@public/assets/icons/ellipsis.svg';
 import { encontrar_usuario_por_id } from './../mocks/users';
+import { datetranslatesql } from './../helpers/datetranslate.js'
 import StarSVG from '@public/assets/icons/star.svg';
 import StarEmptySVG from '@public/assets/icons/starEmpty.svg';
 
@@ -17,10 +18,12 @@ const props = defineProps({
 });
 
 const comentario = props.comentario;
+
+const user = comentario.username;
+
 /**
  * Obtenemos el usuario para poder mostrar el avatar 
  * */
-const user = encontrar_usuario_por_id(comentario.user_id);
 
 /**
  * Creo la referencia para poder utilizar ocultar y mostrar el modal
@@ -68,17 +71,18 @@ const abrirModal = () => {
         <!-- Header del comentario -->
         <div class=" header-comentario flex ">
             <!-- Avatar del usuario -->
-            <img v-if="user.avatar != null" class=" mr-[10px] " :src="user.avatar" alt="">
+            <img  class=" mr-[10px] " :src="user.avatar" alt="">
             <!-- Textos del usuario -->
-            <div class="textos m-l">
-                <b> {{ user.name }}</b>
+            <div class="textos m-l flex flex-col">
+                <b> {{ user }}</b>
+                <small>{{ datetranslatesql(comentario.comment_creation) }}</small>
                 <button click="" class=" mt-[-15px] rating flex h-[fit-content] items-center justify-start "
                     v-if="user.rating != null">
-                    <img class="  " :src="StarSVG" v-for="index in Math.floor(user.rating)" alt="star"
+                    <img class="  " :src="StarSVG" v-for="index in Math.floor(user.avg)" alt="star"
                         :title="user.rating" />
-                    <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(user.rating))" alt="star"
+                    <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(user.avg))" alt="star"
                         :title="user.rating" />
-                    <small>({{ user.rating }})</small>
+                    <small>({{ user.avg }})</small>
                 </button>
             </div>
             <!-- Botón de Ver Más -->

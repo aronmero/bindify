@@ -13,15 +13,13 @@ export async function obtener_posts() {
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     const token = user.usuario.token;
 
-    let data = await fetch(`http://192.168.58.178:8000/api/home_todos`, {
+    let data = await fetch(`http://127.0.0.1:8000/api/home_todos`, {
         method: 'GET',
         headers: {
           "Content-Type": "application/json",
           "User-Agent": "insomnia/8.6.0",
           Accept: "application/json",
-          //Authorization: `Bearer ${token}`,
-          Authorization: `Bearer 2|qhhfJx1poadmfgEoDvUQlaLL5XaXYlO76xUrrWCoc733e426`
-          
+          Authorization: `Bearer ${token}`,
         }
     })
         .then(res => res.json())
