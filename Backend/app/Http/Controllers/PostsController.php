@@ -13,9 +13,9 @@ class PostsController extends Controller
 {
 
     /**
-     * Muestra una lista de publicaciones para el usuario actual.
+     * Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.
      *
-     * Este método devuelve una lista de publicaciones para el usuario autenticado.
+     * Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.
      *
      * @authenticated
      *
@@ -87,6 +87,39 @@ class PostsController extends Controller
             ], 404);
         }
     }
+
+    /**
+     * Muestra una lista de publicaciones para el usuario actual.
+     *
+     * Este método devuelve una lista de publicaciones para el usuario autenticado.
+     *
+     * @authenticated
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "data": [
+     *         {
+     *             "post_id": "ID_de_la_publicación",
+     *             "image": "imagen_de_la_publicación",
+     *             "title": "título_de_la_publicación",
+     *             "description": "descripción_de_la_publicación",
+     *             "name": "nombre_del_tipo_de_publicación",
+     *             "start_date": "fecha_de_inicio_de_la_publicación",
+     *             "end_date": "fecha_de_finalización_de_la_publicación",
+     *             "created_at": "fecha_de_creación_de_la_publicación",
+     *             "username": "nombre_de_usuario",
+     *             "user_id": "ID_del_usuario",
+     *             "avatar": "avatar_del_usuario"
+     *         },
+     *         ...
+     *     ]
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
+     */
 
     public function home()
     {
