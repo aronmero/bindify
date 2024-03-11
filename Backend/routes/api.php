@@ -33,10 +33,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::apiResource('commerce', CommercesController::class)->except(['index', 'destroy']);
     Route::apiResource('post', PostsController::class)->except(['index']);
     
-    Route::apiResource('customer', CustomersController::class)->except(['index', 'destroy']);
     Route::apiResource('comment', CommentsController::class)->except(['index']);
     Route::apiResource('review', ReviewsController::class)->except(['index']);
     Route::apiResource('hashtag', HashtagsController::class)->except(['show', 'update', 'destroy']);
@@ -52,8 +50,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('follow/{id}', [FollowersController::class , 'follow']);
     Route::get('follows', [FollowersController::class , 'showFollows']);
     Route::get('home', [PostsController::class , 'home']);
-    Route::get('search/commerces', [SearchController::class, 'commerces']);
-    Route::get('search/posts', [SearchController::class, 'posts']);
+    Route::get('search', [SearchController::class, 'search']);
 
     /** Añadido por David */
     Route::get('home_todos', [PostsController::class, 'home_todos']);

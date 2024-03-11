@@ -56,6 +56,8 @@ class UsersController extends Controller
      *   "error": "Usuario no encontrado"
      * }
      */
+
+ //TODO Hacer show de el usuario logueado
     public function show(string $username)
     {
         try {
