@@ -312,7 +312,7 @@ class UsersController extends Controller
                     'users.id AS user_id',
                     'users.avatar'
                 )
-                ->where('users-posts.user_id', '=', $id->user_id);
+                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.posts_types_id', '=', 1);
 
 
             if ($user->username != $username) {
@@ -320,7 +320,62 @@ class UsersController extends Controller
             }
 
             $posts = $posts->orderBy('posts.created_at', 'desc')
-            ->get();
+                ->get();
+
+            $posts->each(function ($post) {
+                $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+            });
+
+            return response()->json([
+                "status" => true,
+                "data" => $posts
+            ], 200);
+        } catch (QueryException $e) {
+            // Devuelve una respuesta JSON con un mensaje de error en caso de error de base de datos
+            return response()->json(["status" => false, "message" => "Error en la base de datos :", "error" => $e->getMessage()], 500);
+        } catch (Exception $e) {
+            // Devuelve una respuesta JSON con un mensaje de error en caso de otra excepción
+            return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:", "error" => $e->getMessage()], 404);
+        }
+    }
+    public function events(string $username)
+    {
+        try {
+
+            $user = Auth::user();
+
+            $id = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
+                ->select('user_id')
+                ->where('users.username', '=', $username)
+                ->firstOrFail();
+
+
+            $posts = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
+                ->join('users', 'users.id', '=', 'users-posts.user_id')
+                ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                ->select(
+                    'posts.id AS post_id',
+                    'posts.image',
+                    'posts.title',
+                    'posts.description',
+                    'posts.description',
+                    'post_types.name',
+                    'posts.start_date',
+                    'posts.end_date',
+                    'posts.created_at',
+                    'users.username',
+                    'users.id AS user_id',
+                    'users.avatar'
+                )
+                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.posts_types_id', '=', 2);
+
+
+            if ($user->username != $username) {
+                $posts = $posts->where('posts.active', '=', true);
+            }
+
+            $posts = $posts->orderBy('posts.created_at', 'desc')
+                ->get();
 
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
