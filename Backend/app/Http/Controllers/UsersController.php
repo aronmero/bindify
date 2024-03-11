@@ -56,6 +56,8 @@ class UsersController extends Controller
      *   "error": "Usuario no encontrado"
      * }
      */
+
+ //TODO Hacer show de el usuario logueado
     public function show(string $username)
     {
         try {
@@ -395,6 +397,112 @@ class UsersController extends Controller
         } catch (Exception $e) {
             // Devuelve una respuesta JSON con un mensaje de error en caso de otra excepción
             return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:", "error" => $e->getMessage()], 404);
+        }
+    }
+
+    public function profile()
+    {
+        $username = Auth::user()->username;
+        try {
+            $user = User::where("username", $username)->firstOrFail();
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => false,
+                "message" => "Usuario no encontrado",
+                "error" => $th->getMessage(),
+            ], 404);
+        }
+
+
+        if ($user->getRoleNames() == "customer") {
+
+            try {
+
+                $customer = Customer::join('users', 'customers.user_id', '=', 'users.id')
+                    ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
+                    ->select(
+                        'email',
+                        'phone',
+                        'municipalities.name AS municipality_name',
+                        'avatar',
+                        'banner',
+                        'username',
+                        'users.name',
+                        'gender',
+                        'birth_date'
+                    )
+                    ->where('users.username', '=', $username)
+                    ->firstOrFail();
+
+                return response()->json([
+                    "status" => true,
+                    "data" => $customer
+                ], 200);
+            } catch (QueryException $e) {
+
+                return response()->json([
+                    "status" => false,
+                    "error" => $e->getMessage()
+                ], 500);
+            } catch (Exception $e) {
+
+                return response()->json([
+                    "status" => false,
+                    "error" => $e->getMessage()
+                ], 404);
+            }
+        } else {
+
+            try {
+
+                $commerce = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
+                    ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
+                    ->join('categories', 'commerces.category_id', '=', 'categories.id')
+                    ->select(
+                        'email',
+                        'phone',
+                        'municipalities.name AS municipality_name',
+                        'avatar',
+                        'banner',
+                        'username',
+                        'users.name',
+                        'address',
+                        'commerces.description',
+                        'categories.name AS categories_name',
+                        'schedule',
+                        'commerces.active'
+                    )
+                    ->where('users.username', '=', $username)
+                    ->get();
+
+                $commerce->each(function ($commerce) {
+
+                    $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
+                        ->select('user_id')
+                        ->where('users.username', '=', $commerce->username)
+                        ->firstOrFail();
+
+                    $hashtags = Commerce::find($commerceId->user_id)->hashtags->pluck('name')->toArray();
+                    $commerce->hashtags = $hashtags;
+                });
+
+                return response()->json([
+                    "status" => true,
+                    "data" => $commerce
+                ], 200);
+            } catch (QueryException $e) {
+
+                return response()->json([
+                    "status" => false,
+                    "error" => $e->getMessage()
+                ], 500);
+            } catch (Exception $e) {
+
+                return response()->json([
+                    "status" => false,
+                    "error" => $e->getMessage()
+                ], 404);
+            }
         }
     }
 }

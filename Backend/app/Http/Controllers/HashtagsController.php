@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Hashtag;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreHashtagRequest;
 
 class HashtagsController extends Controller
 {
@@ -62,23 +63,34 @@ class HashtagsController extends Controller
      *     "status": false,
      *     "message": "mensaje_de_error"
      * }
+     * @response 400 {
+     *      "status": false,
+     *     "message": "el hashtag ya existe"
+     * }
      */
 
-    public function store(Request $request)
+    public function store(StoreHashtagRequest $request)
     {
-        try {
-            $data = Hashtag::create($request->all());
+        // Verificar si el hashtag ya existe en la base de datos
+        $existingHashtag = Hashtag::where('name', $request->name)->first();
 
-            return response()->json([
-                'status' => true,
-                'data' => $data->id
-            ], 200);
-
-        } catch (\Throwable $th) {
+        // Si el hashtag ya existe, devolver una respuesta con un mensaje de error
+        if ($existingHashtag) {
             return response()->json([
                 'status' => false,
-                'message' => $th->getMessage(),
-            ], 404);
+                'message' => 'El hashtag ya existe en la base de datos.'
+            ], 400);
         }
+
+        // Si el hashtag no existe, intentar guardarlo en la base de datos
+        $hashtag = Hashtag::create([
+            'name' => $request->name
+        ]);
+
+        // Devolver una respuesta de éxito si se guardó correctamente
+        return response()->json([
+            'status' => true,
+            'message' => 'Hashtag creado exitosamente.'
+        ], 200);
     }
 }
