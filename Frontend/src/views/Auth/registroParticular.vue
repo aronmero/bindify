@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { solicitarCategorias, solicitarMunicipios } from '@/Api/Auth/desplegables_registro.js';
 
 /** Importa el Modal de Horarios */
 import Horarios from '../../components/intervalos_horarios/Horarios.vue';
@@ -8,9 +9,10 @@ import Horarios from '../../components/intervalos_horarios/Horarios.vue';
 import { register } from '../../Api/auth';
 import Input from "@/components/comun/input.vue";
 
-let options = ["Los Llanos de Aridane", "Santa Cruz de la Palma", "Tijarafe", "El Paso", "Puntagorda", "Villa de Mazo"]; /* Cambiar por info del back */
-let optionsSex = ["M", "H"]; /* Cambiar por info del back */
-let arrayTipos = ["Particular", "Comercio"]; 
+let options = ref("null"); /* Cambiar por info del back */
+let optionsSex = [{id: 0, name: "M"}, {id: 1, name: "H"}]; /* Cambiar por info del back */
+let arrayTipos = [{id: 0, name: "Particular"}, {id: 1, name: "Comercio"}];
+let optionsCategory = ref("null");
 let errorIMG = ref(null);
 let errorMunic = ref(null);
 let errorDate = ref(null);
@@ -45,13 +47,11 @@ const isValid = ref(null);
 /* Genera la referencia para controlar el estado de mostrado u oculto */
 const controlador_modal = ref(false);
 
-const mostrarInformacion = (e)=>{
-    let opciones = [...e.target.children];
-    let opcionSeleccionada = opciones.filter(opcion => opcion.selected == true);
-    if(opcionSeleccionada[0].textContent != null){
-        tipo.value = opcionSeleccionada[0].textContent;
-    }
+const solicitarDatosApi = async()=>{
+    optionsCategory.value = await solicitarCategorias("GET").then(data => data = data.data);
+    options.value = await solicitarMunicipios("GET").then(data => data = data.data);
 }
+solicitarDatosApi();
 /* Falta vincular modal de editar horario y hacer las validaciones */
 const tratarDatos = ()=>{
     /* Mostrar todos los errores a la vez */
@@ -284,7 +284,7 @@ const controlarModal = () => {
         <div class="xl:w-[60vw] w-[90vw] flex flex-col lg:items-center mt-10">
             <h1 class="text-center text-5xl mb-7">Registro</h1>
             <form action="javascript:void(0);" class="flex flex-col gap-y-5 lg:w-[55%] xl:w-[45%]">
-                <Input @datos="(nuevosDatos)=>{tipoUsuario = arrayTipos[nuevosDatos].toLowerCase()}" class="lg:w-[50%]" tipo="selection" requerido="true" :opciones=arrayTipos placeholder="Tipos" v-model='tipoUsuario' label="Tipo de usuario" :valor="tipoUsuario" :error="errorType"/>
+                <Input @datos="(nuevosDatos)=>{tipoUsuario = arrayTipos[nuevosDatos].name.toLowerCase()}" class="lg:w-[50%]" tipo="selection" requerido="true" :opciones="arrayTipos" placeholder="Tipos" v-model='tipoUsuario' label="Tipo de usuario" :valor="tipoUsuario" :error="errorType"/>
                 <Input @datos="(nuevosDatos)=>{usuario = nuevosDatos}" tipo="text" requerido="true" label="Usuario" :valor="usuario" :error="errorUsuario"/>
                 <Input @datos="(nuevosDatos)=>{nombre = nuevosDatos}" tipo="text" requerido="true" label="Nombre" :valor="nombre" :error="errorNombre"/>
                 <div class="imagenes flex gap-x-10 xl:gap-x-20">
@@ -299,10 +299,8 @@ const controlarModal = () => {
                 <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{fechaNac = nuevosDatos}" tipo="fechaLibre" requerido="true" label="Fecha de nacimiento" :valor="fechaNac" :error="errorDate"/>
                 <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" class="xl:w-[40%] w-[60%]" @change="mostrarInformacion" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
                 <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{direccion = nuevosDatos}" tipo="text" requerido="true" label="Dirección" :valor="direccion" :error="errorDirec"/>
-                <Input v-if="tipoUsuario == 'comercio'" tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual" class="pointer-events-none"/>
-                <Input v-if="tipoUsuario == 'comercio'"  @click="(e) => controlarModal(e)" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
-                <Input v-if="tipoUsuario == 'comercio'" tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual" class="pointer-events-none" :error="errorSche"/>
-                <Input v-if="tipoUsuario == 'comercio'" @click="mostrarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
+                <Input v-if="tipoUsuario == 'comercio'" tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual" class="pointer-events-none"  :error="errorSche"/>
+                <Input v-if="tipoUsuario == 'comercio'"  @click="controlarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
                 <Input v-if="tipoUsuario == 'comercio'" tipo="text" label="Token (Si tienes)" :valor="token"/>
                 <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
                 <div class="cambiocontra flex flex-col gap-y-5">
