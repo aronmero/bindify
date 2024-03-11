@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { datetranslate } from '@/components/feed_media/helpers/datetranslate.js'
+import { datetranslate } from '@/components/notificaciones/helpers/datetranslate.js'
 
 import Calendar from "@/components/utils/calendar.vue";
 //https://vueuse.org/core/useClipboard/
