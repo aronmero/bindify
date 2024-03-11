@@ -37,20 +37,14 @@ class CommentsController extends Controller
      */
     public function store(StoreCommentsRequest $request)
     {
-        // Validar los datos de la solicitud
-        /*/ $request->validate([
-            'post_id' => 'required|integer', // ID de la publicación a la que pertenece el comentario
-            'user_id' => 'required|integer', // ID del usuario que realiza el comentario
-            'content' => 'required|string', // Contenido del comentario
-            'comment_id' => 'nullable|integer', // ID del comentario padre en caso de que exista
-        ]);
-       */
-
 
         try {
+            // Obtener el usuario autenticado
+            $user = auth()->user();
+
             // Crear un nuevo comentario
             $comment = new Comment();
-            $comment->user_id = $request->user_id;
+            $comment->user_id = $user->id; // Asignar el ID de usuario
             $comment->post_id = $request->post_id;
             $comment->content = $request->content;
             $comment->comment_id = $request->comment_id;  // Asignar el comentario padre
