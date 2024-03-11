@@ -50,13 +50,6 @@ class PostsController extends Controller
         try {
             $user = Auth::user();
 
-            /*$follows = $user->follows;
-            $ids = [];
-
-            foreach ($follows as $seguido) {
-                $ids[] = $seguido->id;
-            }*/
-
             $listado = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
                 ->join('users', 'users.id', '=', 'users-posts.user_id')
                 ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
