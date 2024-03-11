@@ -9,18 +9,18 @@ import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { RouterLink, RouterView } from "vue-router";
-import { getUserData } from "@/api/perfiles/perfil.js";
+import { getUserData } from "@/Api/perfiles/perfil.js";
 import { ref } from "vue";
 let userData = ref(null);
 
 // console.log(getUserData("get"));
 
 async function responseCatcher() {
-  userData.value = await getUserData("get", "http://apiproyecto.ajdevprojects.com/api/user/");
+  userData.value = await getUserData("get");
   console.log(userData.value);
 }
-
 responseCatcher();
+
 let clickedLink = null;
 const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",

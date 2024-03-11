@@ -6,19 +6,31 @@ import Footer from "@/components/comun/footer.vue";
 import comercio from "@/views/perfiles/comercio.vue";
 import particular from "@/views/perfiles/particular.vue";
 import ayuntamiento from "@/views/perfiles/ayuntamiento.vue";
-
+import router from "@/router/index.js";
 import { ref } from "vue";
 const user = JSON.parse(sessionStorage.getItem("usuario"));
 console.log(user.usuario.tipo);
 let tipoUsuario = ref(user.usuario.tipo);
-// let tipoUsuario = ref("particular");
-// let tipoUsuario = ref("ayuntamiento");
+
+// const username=router.currentRoute.value.params.username
+
+// console.log(username)
+
+switch(tipoUsuario.value){
+  case "commerce":
+      router.push("/perfil/comercio")
+    break;
+  case "customer":
+    router.push("/perfil/customer")
+    break;
+  case "ayuntamiento":
+    router.push("/perfil/ayuntamiento")
+    break;
+}
 </script>
 
 <template>
-  <comercio v-if="tipoUsuario == 'commerce'"></comercio>
-  <particular v-if="tipoUsuario == 'customer'"></particular>
-  <ayuntamiento v-if="tipoUsuario == 'ayuntamiento'"></ayuntamiento>
+
 </template>
 
 <style scoped></style>
