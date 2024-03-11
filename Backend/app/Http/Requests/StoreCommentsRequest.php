@@ -23,7 +23,6 @@ class StoreCommentsRequest extends FormRequest
     {
         return [
             'post_id' => 'required|integer', // ID de la publicación a la que pertenece el comentario
-            'user_id' => 'required|integer', // ID del usuario que realiza el comentario
             'content' => 'required|string', // Contenido del comentario
             'comment_id' => 'nullable|integer', // ID del comentario padre en caso de que exista
         ];
@@ -34,10 +33,6 @@ class StoreCommentsRequest extends FormRequest
         return [
             'post_id' => [
                 'required' => 'El id de la publicacion es obligatorio',
-                'integer' => 'Tipo de dato incorrecto',
-            ],
-            'user_id' => [
-                'required' => 'El id del usuario es obligatorio',
                 'integer' => 'Tipo de dato incorrecto',
             ],
             'content' => [
