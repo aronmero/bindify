@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-
+import { register } from '../../Api/auth';
 import Input from "@/components/comun/input.vue";
 
 let options = ["Los Llanos de Aridane", "Santa Cruz de la Palma", "Tijarafe", "El Paso", "Puntagorda", "Villa de Mazo"]; /* Cambiar por info del back */
@@ -17,7 +17,7 @@ let errorMail = ref(null);
 let errorDirec = ref(null);
 let errorPhone = ref(null);
 const router = useRouter();
-const horarioActual = ref("No tienes un horario registrado");
+const horarioActual = ref(null);
 const tipoUsuario = ref(null);
 const usuario = ref(null);
 const nombre = ref(null);
@@ -33,16 +33,17 @@ const categoria = ref(null);
 const contraNueva = ref(null);
 const repetirNueva = ref(null);
 
-const mostrarInformacion = (e)=>{
+/* const mostrarInformacion = (e)=>{
     let opciones = [...e.target.children];
     let opcionSeleccionada = opciones.filter(opcion => opcion.selected == true);
     if(opcionSeleccionada[0].textContent != null){
         tipo.value = opcionSeleccionada[0].textContent;
     }
-}
+} */
 /* Falta vincular modal de editar horario y hacer las validaciones */
 const tratarDatos = ()=>{
     console.log(tipoUsuario.value);
+    console.log(usuario.value);
     console.log(nombre.value);
     console.log(imagenPerfil.value);
     console.log(imagenBanner.value);
@@ -50,19 +51,42 @@ const tratarDatos = ()=>{
     console.log(email.value);
     console.log(municipio.value);
     console.log(fechaNac.value);
-    console.log(sexo.value);
+    console.log(optionsSex[sexo.value]);
     console.log(horarioActual.value);
     console.log(direccion.value);
     console.log(categoria.value);
     console.log(contraNueva.value);
     console.log(repetirNueva.value);
-    if(nombre.value.length == 0){
+    if(tipoUsuario.value == 'particular'){
+        console.log("entro");
+        let datos = {
+            "email": email.value,
+            "password": contraNueva.value,
+            "phone": telefono.value,
+            "municipality_id": municipio.value,
+            "avatar": URL.createObjectURL(imagenPerfil.value), /* No tiene mucho sentido esto */
+            "username": usuario.value,
+            "name": nombre.value,
+            "category_id": categoria.value,
+            "empresa": false,
+            "schedule": null,
+            "address": null,
+            "gender": optionsSex[sexo.value],
+            "birth_date": fechaNac.value,
+        }
+        register(datos);
+    }else{
+
+    }
+   /*  if(nombre.value.length == 0){
         errorNombre.value = "El nombre no puede estar vacío.";
     }else if(tipoUsuario.value == 'comercio' && telefono.value.length == 0){
         errorNombre.value = null;
         errorPhone.value = "Es necesario indicar un teléfono de contacto para tu negocio.";
-    }
-}
+    }else{
+        
+    }*/
+} 
 </script>
 
 

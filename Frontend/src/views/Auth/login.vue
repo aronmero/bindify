@@ -60,7 +60,7 @@ function Registro() {
 </script>
 
 <template>
-    <div class="mt-[45px] flex flex-col lg:flex-row justify-center items-center">
+    <div class="mt-[1rem] flex flex-col lg:flex-row justify-center items-center">
         <div class="w-[45vw] lg:flex justify-center items-center hidden">
             <img src="/img/fondo.png" alt="imagen">
         </div>
@@ -70,6 +70,7 @@ function Registro() {
                 <p class="text-center lg:text-lg">Inicia sesión en la aplicación para poder ver todas las ofertas.</p>
             </header>
             <form @submit.prevent="tryLogin" class="lg:w-[60%] w-[80%] h-[50%] flex flex-col justify-evenly gap-y-5">
+                <p class="text-center text-primary-700 text-xs lg:text-sm ms-3">{{ errorMsg }}</p>
                 <Input @datos="(nuevosDatos) => { email = nuevosDatos }" tipo="text" label="Email" :valor="email"
                     :error="errorEmail" />
                 <Input @datos="(nuevosDatos) => { password = nuevosDatos }" tipo="password" label="Password"
@@ -79,7 +80,6 @@ function Registro() {
                     ¿Olvidaste tu
                     contraseña?</p>
             </form>
-            <p class="color">{{ errorMsg }}</p>
             <div class="flex flex-col gap-y-5">
                 <p class="text-center">O inicie sesión con:</p>
                 <div class="social-media-buttons flex w-full justify-evenly gap-x-5">
