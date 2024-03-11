@@ -1,5 +1,5 @@
 //Pillar de sesion storage o store de pinia cuando se realice
-import { genOptions,urlApi } from "@/api/api.js";
+import { genOptions,urlApi } from "@/Api/api.js";
 
 /**
  * Devuelve la notificación por consola del estado actual de la petición
