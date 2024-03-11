@@ -55,6 +55,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     /** Añadido por David */
     Route::get('home_todos', [PostsController::class, 'home_todos']);
+    Route::get('comment_detailed/{id}', [CommentsController::class, 'show_home']);
 });
 
 Route::post('login', [AuthController::class, 'login']);

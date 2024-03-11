@@ -7,6 +7,10 @@
     import EnviarSVG from '@public/assets/icons/forward.svg';
     import { obtener_comentarios_post, agregar_comentario_post } from '@/api/home/comentarios'
 
+    /**
+     * Define props
+     */
+
     const props = defineProps({
         post: Object,
         handler: Function
@@ -48,6 +52,7 @@
      * Limpia el intervalo para evitar bugs
      * Cambia el estilo de overflow para volver a permitir el scroll en background
      */
+
     const cerrarModal = () => {
         props.handler();
         clearInterval(interval);
@@ -58,11 +63,10 @@
     /**
      * Refresca la posición del modal de comentarios
      */
-
+    
     const refrescarPosicion = () => {
         comentario_handler.value.scrollTop = comentario_handler.value.scrollHeight;
     }
-
 
     /**
     * Enviar el comentario
@@ -75,8 +79,6 @@
                     /**
                     *  Cambiar por la función de lógica backend de enviar comentario
                     * */
-
-
                     agregar_comentario_post(post_id, texto)
                         .then(() => refrescarPosicion() );
                     
