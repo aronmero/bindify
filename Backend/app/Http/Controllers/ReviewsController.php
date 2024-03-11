@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreReviewsRequest;
+use App\Http\Requests\UpdateReviewsRequest;
 use Illuminate\Http\Request;
 use App\Models\Review;
 use App\Http\Scripts\Utils;
@@ -36,7 +38,7 @@ class ReviewsController extends Controller
      *   "message": "Error al crear la review: mensaje_de_error"
      * }
      */
-    public function store(Request $request)
+    public function store(StoreReviewsRequest $request)
     {
         try {
             // Crear una nueva Review
@@ -166,7 +168,7 @@ class ReviewsController extends Controller
      *   "message": "Error al actualizar la review: mensaje_de_error"
      * }
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateReviewsRequest $request, string $id)
 {
     try {
         // Buscar la review por su ID

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommentsRequest;
+use App\Http\Requests\UpdateCommentsRequest;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Models\Post;
@@ -145,7 +146,7 @@ class CommentsController extends Controller
      *   "message": "Comentario no encontrado"
      * }
      */
-    public function update(Request $request, int $id)
+    public function update(UpdateCommentsRequest $request, int $id)
     {
         try {
             // Buscar el comentario por su ID
