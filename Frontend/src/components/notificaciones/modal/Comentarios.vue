@@ -1,9 +1,8 @@
 <script setup>
     import { ref } from 'vue';
-    // import Comentario from '../widgets/Comentario.vue';
-    import router from '@/router/index.js'
-    import { comentarios_por_post } from '@/components/notificaciones/mocks/comentarios';
-    import {encontrar_usuario_por_id} from '@/components/notificaciones/mocks/users';
+    import Comentario from '../widgets/Comentario.vue';
+    import { comentarios_por_post } from './../mocks/comentarios';
+    import {encontrar_usuario_por_id} from './../mocks/users';
     import BackSVG from '@public/assets/icons/forward.svg';
     import EnviarSVG from '@public/assets/icons/forward.svg';
 
@@ -38,7 +37,7 @@
      * Obtiene el comentario por la id del post
      */
 
-    //let en_comentarios = ref(comentarios_por_post(post.id));
+    let en_comentarios = ref(comentarios_por_post(post.id));
 
     let interval;
 
@@ -108,49 +107,70 @@
         texto = "";
      };
 
+     /**
+     * Función que se encarga de evitar que el usuario desde el front envíe las peticiones que quiera
+     * */
+    const antiSpamFunction = () => {
+        chat_input.value.readonly = true;
+        let secs = 0;
+        posteado.value = true;
+        
+         interval = setInterval(() => {
+            secs++;
+            chat_input.value.placeholder = `Debes esperar ${60 - secs} segundos para enviar otro comentario.`;
+            if(secs == 60) {
+                clearInterval(interval); 
+                posteado.value = false;
+                chat_input.value.placeholder = `Agregar comentario.`;
+            };
+        }, 1000);
+    }
+
     /**
      * Bloqueamos overflow en background
      * */
 
     document.body.style.overflow= "hidden";
-    /**
-     * Redirecciona a Home
-     * */
-    const back = () => {
-        router.push('/');
-    }
 
 </script>
 
 <template>
     <KeepAlive>
-        <div ref="modal" :id="`notificaciones_${user.id}`" class="screen-modal flex flex-col items-center py-[50px]">
-            <!-- El wrapper para dar forma al contenedor del centro -->
-            <div class="wrapper h-[90%] sm:h-[80%] md:h-[90%] xl:h-[85%] 2xl:w-[40%] xl:w-[60%] lg:w-[60%] md:w-[100%] sm:w-[100%] w-[100%] mt-5relative ">
-                <!-- Header superior -->
-                <nav class="w-[100%] 2xl:h-[100px] h-[80px] flex items-center justify-start mb-5">
-                        <!-- Boton de cerrar -->
-                        <button @click="back()">
-                            <img class="w-[30px] ml-3 cursor-pointer" :src="BackSVG" alt="">
-                        </button>
-                        <!-- Mensaje central de comentarios -->
-                        <h2 class="w-[90%] text-center">Notificaciones</h2>
-                </nav>
-                <!-- El listado de comentarios -->
-                <div ref="comentario_handler" class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
-                    <!-- <Comentario v-if="en_comentarios.length >= 1" v-for="comentario in en_comentarios" :comentario="comentario"/>
-                    <Comentario v-else  :comentario="{content: 'No hay comentarios, ¡se el primero!'}"/> -->
-                </div>
-                
+    <div ref="modal" :id="`comentarios_${post.id}`" class="screen-modal flex flex-col items-center py-[50px]">
+        <!-- El wrapper para dar forma al contenedor del centro -->
+        <div class="wrapper h-[90%] sm:h-[80%] md:h-[90%] xl:h-[85%] 2xl:w-[40%] xl:w-[60%] lg:w-[60%] md:w-[100%] sm:w-[100%] w-[100%] mt-5relative ">
+            <!-- Header superior -->
+            <nav class="w-[100%] 2xl:h-[100px] h-[80px] flex items-center justify-start mb-5">
+                    <!-- Boton de cerrar -->
+                    <button @click="() => cerrarModal()">
+                        <img class="w-[30px] ml-3 cursor-pointer" :src="BackSVG" alt="">
+                    </button>
+                    <!-- Mensaje central de comentarios -->
+                    <h2 class="w-[90%] text-center">Comentarios</h2>
+            </nav>
+            <!-- El listado de comentarios -->
+            <div ref="comentario_handler" class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
+                <Comentario v-if="en_comentarios.length >= 1" v-for="comentario in en_comentarios" :comentario="comentario"/>
+                <Comentario v-else  :comentario="{content: 'No hay comentarios, ¡se el primero!'}"/>
+            </div>
             
+            <!-- Formulario para enviar comentario -->
+            <div style="z-index: 99 !important;" class=" chat w-[100%] bg-[#fff] h-[50px] flex items-center fixed bottom-[50px] sm:bottom-[50px] md:bottom-[50px] lg:bottom-[10px]  xl:bottom-[10px] 2xl:bottom-[10px] p-[30px_20px]">
+                <!-- Avatar del usuario -->
+                <img class=" w-[50px] h-[50px] bg-[#f3f3f3] rounded-full " :src="user.avatar" alt="">
+                <!-- Input de Enviar datos -->
+                <input ref="chat_input" @keydown="(e) => enviarComentarioPorSubmit(post.id, 1, e)" class=" outline-none  w-[100%] h-[100%] p-[30px_20px] " type="text" placeholder="Agregar comentario">
+                <!-- Botón de Enviar  -->
+                <button class="p-[20px]" @click="(e) => enviarComentarioPorClick(post.id, 1, chat_input.value)">
+                    <img class="rotate-180" :src="EnviarSVG" alt="submit"/>
+                </button>
             </div>
         </div>
-    </KeepAlive>
+    </div>
+</KeepAlive>
 </template>
 
 <style scoped lang="scss">
-
-
     body {
         overflow:hidden;
     }

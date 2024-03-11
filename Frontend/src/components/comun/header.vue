@@ -40,7 +40,7 @@ import router from '@/router/index.js';
         </RouterLink>
       </nav>
       <nav class="w-[50px] flex justify-center items-center">
-        <RouterLink to="/">
+        <RouterLink to="/notificaciones">
           <img src="/assets/icons/bell.svg" title="Notificaciones" class="max-w-[30px] max-h-[30px]"
             alt="Notificaciones" />
         </RouterLink>

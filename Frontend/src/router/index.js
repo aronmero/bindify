@@ -71,7 +71,7 @@ const router = createRouter({
  * Guard antes de cada vista excepto login y registro, bloquea el aceso al resto de vistas si no hay sesion iniciada.
  * Guard para las vistas de publicaciones si no es un commercio
  */
-router.beforeEach((to, from, next) => {
+/*router.beforeEach((to, from, next) => {
   const publicRoutes = ["/login", "/registro"];
   const comercioRoutes = ["/post/nuevo"];
   const userData = JSON.parse(sessionStorage.getItem("usuario"));
@@ -89,5 +89,5 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
-});
+});*/
 export default router;

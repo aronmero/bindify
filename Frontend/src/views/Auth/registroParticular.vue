@@ -2,6 +2,9 @@
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
+/** Importa el Modal de Horarios */
+import Horarios from '../../components/intervalos_horarios/Horarios.vue';
+
 import Input from "@/components/comun/input.vue";
 
 let options = ["Los Llanos de Aridane", "Santa Cruz de la Palma", "Tijarafe", "El Paso", "Puntagorda", "Villa de Mazo"]; /* Cambiar por info del back */
@@ -33,6 +36,9 @@ const categoria = ref(null);
 const contraNueva = ref(null);
 const repetirNueva = ref(null);
 
+/* Genera la referencia para controlar el estado de mostrado u oculto */
+const controlador_modal = ref(false);
+
 const mostrarInformacion = (e)=>{
     let opciones = [...e.target.children];
     let opcionSeleccionada = opciones.filter(opcion => opcion.selected == true);
@@ -63,6 +69,30 @@ const tratarDatos = ()=>{
         errorPhone.value = "Es necesario indicar un teléfono de contacto para tu negocio.";
     }
 }
+
+/** 
+ * Agrega el cambio de horario
+ * @author 'David'
+ * */
+ const obtenerCambioHorario = (cambio) => {
+    horarioActual.value = cambio;
+    console.log("obtenido cambio")
+    controlador_modal.value = false;
+}
+
+
+/** Controla la dinámica de mostrar y ocultar el modal
+ * @author David Martín Concepción
+ */
+const controlarModal = () => {
+    console.log("test")
+    if(controlador_modal.value) {
+        controlador_modal.value = false;
+    } else {
+        controlador_modal.value = true;
+    }
+}
+
 </script>
 
 
@@ -90,7 +120,7 @@ const tratarDatos = ()=>{
                 <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" class="lg:w-[40%] w-[60%]" @change="mostrarInformacion" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
                 <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{direccion = nuevosDatos}" tipo="text" requerido="true" label="Dirección" :valor="direccion" :error="errorDirec"/>
                 <Input v-if="tipoUsuario == 'comercio'" tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual" class="pointer-events-none"/>
-                <Input v-if="tipoUsuario == 'comercio'" @click="mostrarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
+                <Input v-if="tipoUsuario == 'comercio'"  @click="(e) => controlarModal(e)" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
                 <Input v-if="tipoUsuario == 'comercio'" tipo="text" label="Token (Si tienes)" :valor="token"/>
                 <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
                 <div class="cambiocontra flex flex-col gap-y-5">
@@ -107,6 +137,7 @@ const tratarDatos = ()=>{
             </div>
         </div>
     </div>
+    <Horarios v-if="controlador_modal" :referencia_padre="horarioActual" :controlar_modal="controlarModal" :enviar_cambios="obtenerCambioHorario" />
 </template>
 
 

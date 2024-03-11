@@ -1,7 +1,6 @@
 <script setup>
 import Input from '@/components/comun/input.vue';
 import router from '@/router/index.js';
-import Modal from '@/views/Auth/registroComercio-modal.vue';
 
 
 import { ref } from 'vue';
@@ -99,7 +98,9 @@ function Horarios() {
     console.log("nada aun");
 }
 */
-/** Controla la dinámica de mostrar y ocultar el modal */
+/** Controla la dinámica de mostrar y ocultar el modal
+ * @author David Martín Concepción
+ */
 const controlarModal = (e) => {
     e.preventDefault();
     if(controlador_modal.value) {
