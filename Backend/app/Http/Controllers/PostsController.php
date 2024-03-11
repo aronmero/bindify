@@ -45,6 +45,56 @@ class PostsController extends Controller
      * }
      */
 
+    public function home_todos()
+    {
+        try {
+            $user = Auth::user();
+
+            /*$follows = $user->follows;
+            $ids = [];
+
+            foreach ($follows as $seguido) {
+                $ids[] = $seguido->id;
+            }*/
+
+            $listado = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
+                ->join('users', 'users.id', '=', 'users-posts.user_id')
+                ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                ->select(
+                    'posts.id AS post_id',
+                    'posts.image',
+                    'posts.title',
+                    'posts.description',
+                    'posts.description',
+                    'post_types.name',
+                    'posts.start_date',
+                    'posts.end_date',
+                    'posts.created_at',
+                    'users.username',
+                    'users.id AS user_id',
+                    'users.avatar'
+                )
+                //->whereIn('users-posts.user_id', $ids)
+                ->where('posts.active', '=', true)
+                ->orderBy('posts.created_at', 'desc')
+                ->get();
+
+            $listado->each(function ($post) {
+                $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+            });
+
+            return response()->json([
+                'status' => true,
+                'data' => $listado,
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 404);
+        }
+    }
+
     public function home()
     {
         try {
