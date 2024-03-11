@@ -85,6 +85,11 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
+        if ($request->empresa == true) {
+            $request->validate([
+                'phone'=> 'required',
+            ]);
+        }
         try {
             $user = User::create([
                 'email' => $request->email,

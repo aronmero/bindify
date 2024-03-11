@@ -24,7 +24,7 @@ class RegisterRequest extends FormRequest
         return [
             'password' => ['required'],
             'email' => ['required', 'unique:users,email'],
-            'phone' => ['required', 'unique:users,phone'],
+            'phone' => ['unique:users,phone'],
             'username' => ['required', 'unique:users,username'],
             'municipality_id' => ['exists:municipalities,id'],
             'empresa' => ['required', 'boolean'],
