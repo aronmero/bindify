@@ -12,21 +12,27 @@ const user = JSON.parse(sessionStorage.getItem("usuario"));
 console.log(user.usuario.tipo);
 let tipoUsuario = ref(user.usuario.tipo);
 
-// const username=router.currentRoute.value.params.username
+const username=router.currentRoute.value.params.username
 
-// console.log(username)
+console.log(username)
 
-switch(tipoUsuario.value){
-  case "commerce":
-      router.push("/perfil/comercio")
-    break;
-  case "customer":
-    router.push("/perfil/customer")
-    break;
-  case "ayuntamiento":
-    router.push("/perfil/ayuntamiento")
-    break;
+if(username ==undefined){
+  switch(tipoUsuario.value){
+    case "commerce":
+        router.push("/perfil/comercio")
+      break;
+    case "customer":
+      router.push("/perfil/customer")
+      break;
+    case "ayuntamiento":
+      router.push("/perfil/ayuntamiento")
+      break;
+  }
+
+}else{
+  console.log("ver perfil otro usuario")
 }
+
 </script>
 
 <template>

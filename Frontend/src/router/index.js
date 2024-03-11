@@ -39,7 +39,7 @@ const routes = [
   { path: "/notificaciones", component: () => import("@/views/Misc/notificaciones.vue") },
 
   //Estas tres se deberian reducir a una vista con 3 modos segun el tipo de usuario
-  // { path: "/perfil/:username", component: () => import("@/views/perfiles/perfil.vue") },
+  { path: "/perfil/:username", component: () => import("@/views/perfiles/perfil.vue") },
   { path: "/perfil", component: () => import("@/views/perfiles/perfil.vue") },
   { path: "/perfil/ayuntamiento", component: () => import("@/views/perfiles/ayuntamiento.vue"),
     children:[
