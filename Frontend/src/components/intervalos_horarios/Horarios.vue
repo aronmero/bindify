@@ -1,11 +1,9 @@
 <script setup>
-
-    import { ref } from 'vue';
     import BackSVG from '@public/assets/icons/forward.svg';
-    import HorarioSVG from '@public/assets/icons/time.svg';
+import { ref } from 'vue';
 
     import { comercios, filtrar_rango_horarios, pasar_a_string_horario } from '../feed_media/mocks/comercios';
-    import Intervalo from './widgets/Intervalo.vue';
+import Intervalo from './widgets/Intervalo.vue';
 
     const props = defineProps({
         referencia_padre: String,
@@ -25,7 +23,7 @@
      * Obtengo el rango de horarios de ese comercio
      * */
 
-    //let horario =   ref(obtener_rango_horarios(1)); 
+    //let horario =   ref(obtener_rango_horarios(1));
     let horario = ref(filtrar_rango_horarios(datos_padre.value));
 
     console.log(horario);
@@ -67,26 +65,26 @@
      * Cierra el modal
      * */
     const cerrarModal = () => {
-        document.body.style.overflow= "scroll";
+        document.body.style.overflow = "scroll";
         props.controlar_modal();
     };
 
     /**
-     * 
+     *
      * Enviar cambios
-     * 
+     *
      * */
      //const enviar_cambios = () => {
      //   datos_padre.value = horario.value;
      //   cerrarModal()
      //}
-
 </script>
+
 <template>
     <div ref="modal" :id="`horarios_${comercio.id}`" class="screen-modal flex flex-col items-center py-[50px]">
         <!-- El wrapper para dar forma al contenedor del centro -->
         <div
-            class="wrapper h-[90%] sm:h-[80%] md:h-[90%] xl:h-[85%] 2xl:w-[40%] xl:w-[60%] lg:w-[60%] md:w-[100%] sm:w-[100%] w-[100%] mt-5relative ">
+            class="wrapper h-[90%] sm:h-[80%] md:h-[90%] xl:h-[85%] 2xl:w-[40%] xl:w-[60%] lg:w-[60%] md:w-[100%] sm:w-[100%] w-[100%] mt-5">
             <!-- Header superior -->
             <nav class="w-[100%] 2xl:h-[100px] h-[80px] flex items-center justify-start mb-5">
                 <!-- Boton de cerrar -->
@@ -98,50 +96,51 @@
             </nav>
             <!-- El listado de intervalos -->
             <div ref="handler"
-                class="comentarios flex flex-col items-center max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
-                <h2 class=" flex items-center "> 
+                class="comentarios flex flex-col items-center max-h-[100%] overflow-y-scroll">
+                <h2 class=" flex items-center ">
                     Intervalos horarios actuales
                 </h2>
                 <Intervalo v-for="(intervalo, index) in horario" :intervalo="intervalo" :index="index"
                     :borrar_intervalo="borrar_intervalo" :cambiar_intervalo="cambiar_intervalo" />
-                    <b v-if="horario.length == 0" class="p-[20px]">Aún no has añadido ningún horario.</b>
-                    <div class="w-[100%] flex flex-col items-center justify-start w-[200px] ">
-                        <button @click="() => crear_intervalo()" class=" bg-[#FE822F] w-[100%]  h-[50px] rounded-xl">Agregar intervalo</button>
-                    
-                        <button @click="() => props.enviar_cambios(pasar_a_string_horario(horario))" class="mt-[10px] bg-[#404040] text-white w-[100%] h-[50px] rounded-xl">Aplicar y volver</button>
-                    </div>
+                <b v-if="horario.length == 0" class="p-[20px]">Aún no has añadido ningún horario.</b>
+                <div id="footer" class="w-[100%] flex flex-col items-center justify-start w-[200px] ">
+                    <button @click="() => crear_intervalo()" class=" bg-[#FE822F] w-[100%]  h-[50px] rounded-xl">Agregar intervalo</button>
+                
+                    <button @click="() => props.enviar_cambios(pasar_a_string_horario(horario))" class="mt-[10px] bg-[#404040] text-white w-[100%] h-[50px] rounded-xl">Aplicar y volver</button>
                 </div>
+            </div>
         </div>
     </div>
 </template>
+
 <style scoped lang="scss">
-body {
-    overflow: hidden;
-}
+    body {
+        overflow: hidden;
+    }
 
-.screen-modal {
-    background: rgba(255, 255, 255, 1);
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    left: 0px;
-    top: 0;
-    overflow: hidden;
-    z-index: 50;
-    overscroll-behavior: contain;
+    .screen-modal {
+        background: rgba(255, 255, 255, 1);
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0px;
+        top: 0;
+        overflow: hidden;
+        z-index: 50;
+        overscroll-behavior: contain;
 
-    .wrapper {
-        scroll-behavior: smooth;
+        .wrapper {
+            //scroll-behavior: smooth;
 
-        nav {
-            h2 {
-                font-weight: bold;
+            nav {
+                h2 {
+                    font-weight: bold;
+                }
             }
         }
-    }
 
-    .chat {
-        z-index: 99 !important;
+        .chat {
+            z-index: 99 !important;
+        }
     }
-}
 </style>

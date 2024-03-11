@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { login } from "@/Api/auth.js";
+import Input from '@/components/comun/input.vue';
 import router from '@/router/index.js';
 import { ref } from 'vue';
-import Input from '@/components/comun/input.vue';
-import { login } from "@/Api/auth.js";
 
 const email = ref("");
 const password = ref("");
@@ -11,12 +11,8 @@ const errorEmail = ref("");
 const errorPass = ref("");
 
 /**
- * Intenta realizar el inicio de sesion. Comprueba los valores introducidos y realiza una peticion a la API,
+ *  Intenta realizar el inicio de sesion. Comprueba los valores introducidos y realiza una peticion a la API,
  *  almacena los datos de usuario devueltos y redirige, en caso de error muestra un mensaje.
- * @date 3/10/2024 - 9:57:22 PM
- * @author Aarón Medina Rodríguez
- *
- * @async
  */
 async function tryLogin() {
     let isValido = true;
@@ -51,7 +47,8 @@ async function tryLogin() {
 }
 
 function OlvidarPassword() {
-    /* Funcion que redirecciona al modal o vista para recuperar la contraseña */
+    /* Función que redirecciona al modal o vista para recuperar la contraseña */
+    router.push("/password-modal");
 }
 
 function Registro() {
@@ -60,9 +57,9 @@ function Registro() {
 </script>
 
 <template>
-    <div class="mt-[45px] flex flex-col lg:flex-row justify-center items-center">
-        <div class="w-[45vw] lg:flex justify-center items-center hidden">
-            <img src="/img/fondo.png" alt="imagen">
+    <div id="container" class="mt-[15px] flex flex-col lg:flex-row justify-center items-center">
+        <div id="imagen-container-fondo" class="w-[40vw] lg:flex justify-center items-center hidden">
+            <img src="/img/fondo.png" alt="imagen-fondo">
         </div>
         <div class="min-h-[80vh] w-[95vw] lg:w-[45vw] flex flex-col gap-0 lg:gap-5 justify-between items-center">
             <header class="flex flex-col gap-y-3 w-[80%] lg:w-auto mt-5 lg:mt-0">
@@ -75,9 +72,9 @@ function Registro() {
                 <Input @datos="(nuevosDatos) => { password = nuevosDatos }" tipo="password" label="Password"
                     class="-mt-2" :valor="password" :error="errorPass" />
                 <Input tipo="submit" clase="oscuro" valor="Iniciar sesión" />
-                <p @click="OlvidarPassword" class="font-semibold lg:text-base text-sm text-right cursor-pointer -mt-3">
-                    ¿Olvidaste tu
-                    contraseña?</p>
+                <button @click="OlvidarPassword" class="font-semibold lg:text-base text-sm text-right cursor-pointer -mt-3">
+                    ¿Olvidaste tu contraseña?
+                </button>
             </form>
             <p class="color">{{ errorMsg }}</p>
             <div class="flex flex-col gap-y-5">
@@ -96,4 +93,16 @@ function Registro() {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+@media screen and (min-width: 900px) and (max-width: 1700px) {
+    #container {
+        margin-top: 25px;
+    }
+
+    #imagen-container-fondo img {
+        width: 100%;
+        height: 90vh;
+    }
+}
+
+</style>
