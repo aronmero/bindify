@@ -30,17 +30,25 @@ class CommerceFactory extends Factory
         $user = User::find($userId);
         $user->assignRole('commerce');
 
-        $aux = rand(1, 10);
+        $aux1 = rand(1, 10);
 
         $verification_token_id = null;
 
 
-        if ($aux == 1) {
+        if ($aux1 == 1) {
 
             $verification_token_id = Verification_token::select('id')
             ->inRandomOrder()
             ->first();
 
+        }
+
+        $aux2 = rand(1, 12);
+
+        $active = false;
+
+        if($aux2 > 1){
+            $active = true;
         }
 
         return [
@@ -51,7 +59,7 @@ class CommerceFactory extends Factory
             'category_id' => rand(1, Category::count()),
             'verificated' => $this->faker->boolean,
             'schedule' => null,
-            'active' => $this->faker->boolean,
+            'active' => $active,
         ];
     }
 }
