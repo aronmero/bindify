@@ -92,6 +92,7 @@ class CommentsController extends Controller
      *   "message": "No se encontraron comentarios para esta publicación"
      * }
      */
+
     public function show(string $id)
     {
         // Obtener todos los comentarios relacionados con la publicación
@@ -221,4 +222,7 @@ class CommentsController extends Controller
             return response()->json(['status' => false, 'message' => 'Error al eliminar el comentario'], 400);
         }
     }
+
+     //TODO respuestas a cometario
+
 }
