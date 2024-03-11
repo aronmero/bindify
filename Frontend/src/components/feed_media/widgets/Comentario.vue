@@ -33,17 +33,17 @@ const modalHandler = ref(false);
 const opcionesModal = [
     {
         name: "Borrar Comentario",
-        action: `comentario/${comentario._id}/delete`,
+        action: `/comentario/${comentario.comment_id}/delete`,
         icon: DeleteSVG
     },
     {
         name: "Ver perfil",
-        action: `perfil/${user._id}`,
+        action: `/perfil/${comentario.username}`,
         icon: UserSVG
     },
     {
         name: "Reseñas",
-        action: `perfil/${user._id}`,
+        action: `/perfil/${comentario.username}`,
         icon: StarSVG
     }
 ];
@@ -68,12 +68,12 @@ const abrirModal = () => {
         <!-- Header del comentario -->
         <div class=" header-comentario flex ">
             <!-- Avatar del usuario -->
-            <img v-if="user.avatar != null" class=" mr-[10px] " :src="user.avatar" alt="">
+            <img v-if="comentario.avatar != null" class=" mr-[10px] " :src="comentario.avatar" alt="">
             <!-- Textos del usuario -->
             <div class="textos m-l">
-                <b> {{ user.name }}</b>
+                <b> {{ comentario.username }}</b>
                 <button click="" class=" mt-[-15px] rating flex h-[fit-content] items-center justify-start "
-                    v-if="user.rating != null">
+                    v-if="comentario.rating != null">
                     <img class="  " :src="StarSVG" v-for="index in Math.floor(user.rating)" alt="star"
                         :title="user.rating" />
                     <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(user.rating))" alt="star"
@@ -82,7 +82,7 @@ const abrirModal = () => {
                 </button>
             </div>
             <!-- Botón de Ver Más -->
-            <button v-if="user.name != null" @click="() => abrirModal()" class="w-[20px] h-[20px] absolute right-10">
+            <button v-if="comentario.username != null" @click="() => abrirModal()" class="w-[20px] h-[20px] absolute right-10">
                 <img class="  " :src="MoreSVG" alt="">
             </button>
         </div>

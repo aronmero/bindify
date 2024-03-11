@@ -91,6 +91,7 @@ class UsersController extends Controller
                     )
                     ->where('users.username', '=', $username)
                     ->firstOrFail();
+                $customer->tipo = 'customer';
 
                 return response()->json([
                     "status" => true,
@@ -152,8 +153,10 @@ class UsersController extends Controller
                     )
                     ->get();
 
-                $commerce->each(function ($commerce) {
 
+                $commerce->each(function ($commerce) {
+                    $user = User::where("username", $commerce->username)->firstOrFail();
+                    $commerce->tipo = ($user->getRoleNames() == "ayuntamiento")?"ayuntamiento":"commerce";
                     $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
                         ->select('user_id')
                         ->where('users.username', '=', $commerce->username)
