@@ -1,15 +1,16 @@
 <script setup>
   import FeedPost from "@/components/perfiles/containers/TipoPost.vue"
   import { posts } from '@/components/perfiles/helpers/posts.js';
-  import { getUserData } from "@/api/perfiles/perfil.js";
-  
+  import { getUserPosts } from "@/Api/perfiles/perfil.js";
+  import { ref } from "vue";
+  let userPosts= ref(null);
   async function responseCatcher() {
-  userData.value = await getUserData("get", "http://127.0.0.1:8000/api/user/");
-  console.log(userData.value);
+  userPosts.value = await getUserPosts("get");
+  console.log(userPosts.value);
 }
 responseCatcher();
 </script>
 <template>
-  <FeedPost v-for="post in posts" :post="post"></FeedPost>
+  <FeedPost v-for="post in userPosts" :post="post"></FeedPost>
 </template>
 <style scoped></style>
