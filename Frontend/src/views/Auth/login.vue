@@ -49,7 +49,7 @@ async function tryLogin() {
         }
     }
   }
-}
+
 
 function OlvidarPassword() {
   /* Funcion que redirecciona al modal o vista para recuperar la contraseña */
