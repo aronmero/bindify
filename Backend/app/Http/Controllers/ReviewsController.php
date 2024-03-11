@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreReviewsRequest;
 use App\Http\Requests\UpdateReviewsRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Review;
 use App\Http\Scripts\Utils;
@@ -74,7 +75,7 @@ class ReviewsController extends Controller
      * Esta función obtiene y formatea las reviews asociadas con un comercio específico.
      * Si no se encuentran reviews para el comercio, devuelve un mensaje de error.
      *
-     * @param int $id - El ID del comercio para el que se desean obtener las reviews.
+     * @param string $username - El username del comercio para el que se desean obtener las reviews.
      *
      * @return \Illuminate\Http\JsonResponse - Respuesta JSON que contiene las reviews formateadas.
      *
@@ -100,10 +101,13 @@ class ReviewsController extends Controller
      *   "message": "No se encontraron reviews para este comercio"
      * }
      */
-    public function show(int $id)
+    public function show(string $username)
     {
-        // Obtener todas las reviews para el comercio con el ID dado
-        $reviews = Review::where('commerce_id', $id)->get();
+        // Obtener todas las reviews para el comercio con el username dado
+
+        $user = User::where('username', $username)->first();
+
+        $reviews = Review::where('commerce_id', $user->id)->get();
 
         if ($reviews->isEmpty()) {
             return response()->json(['status' => false, 'message' => 'No se encontraron reviews para el comercio',], 401);
