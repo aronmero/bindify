@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostsRequest;
+use App\Http\Requests\UpdatePostsRequest;
 use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Http\Request;
@@ -177,8 +178,8 @@ class PostsController extends Controller
             // Obtener los propietarios del post
             $formattedUsers = [];
 
-            $usersFromPost=$post ->users;
-           
+            $usersFromPost = $post->users;
+
             foreach ($usersFromPost as $user) {
                 $formattedUser = [
                     'name' => $user->name,
@@ -205,7 +206,7 @@ class PostsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePostsRequest $request, string $id)
     {
         try {
 
@@ -227,14 +228,47 @@ class PostsController extends Controller
                     'post_type_id' => $request->post_type_id,
                     'start_date' => $request->start_date,
                     'end_date' => $request->end_date,
+                    'ubicacion' => $request->ubicacion,
                 ]);
+
+                //Obtener los datos del post
+                $postData = [
+                    'image' => $post->image,
+                    'title' => $post->title,
+                    'description' => $post->description,
+                    'post_type_name' => optional($post->post_type)->name,
+                    'start_date' => $post->start_date,
+                    'end_date' => $post->end_date,
+                    'active' => $post->active,
+                    'ubicacion' => $post->ubicacion,
+                    'fecha_creacion' => $post->created_at,
+                    'hastags' => $post->hashtags->pluck('name')
+                ];
+
+                $formattedUsers = [];
+
+                $usersFromPost = $post->users;
+
+                foreach ($usersFromPost as $user) {
+                    $formattedUser = [
+                        'name' => $user->name,
+                        'username' => $user->username,
+                        'avatar' => $user->avatar,
+                        'id' => $user->id
+                    ];
+                    $formattedUsers[] = $formattedUser;
+                }
+                $data = [
+                    'post' => $postData,
+                    'users' => $formattedUsers,
+                ];
             }
 
             //TODO Hacer que solo devuelva algunos datos del usuario
             return response()->json([
                 'status' => true,
                 'message' => 'Post actualizado',
-                'data' => $post
+                'data' => $data
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
@@ -265,13 +299,26 @@ class PostsController extends Controller
                 $post->update([
                     'active' => false,
                 ]);
+
+                $postData = [
+                    'image' => $post->image,
+                    'title' => $post->title,
+                    'description' => $post->description,
+                    'post_type_name' => optional($post->post_type)->name,
+                    'start_date' => $post->start_date,
+                    'end_date' => $post->end_date,
+                    'active' => $post->active,
+                    'ubicacion' => $post->ubicacion,
+                    'fecha_creacion' => $post->created_at,
+                    'hastags' => $post->hashtags->pluck('name')
+                ];
             }
 
             //TODO Hacer que solo devuelva algunos datos del usuario
             return response()->json([
                 'status' => true,
                 'message' => 'Post eliminado',
-                'data' => $post
+                'data' => $postData
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
