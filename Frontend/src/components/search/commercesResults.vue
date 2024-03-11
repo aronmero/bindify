@@ -10,7 +10,7 @@
 </script>
 
 <template>
-    <section class="flex flex-col gap-y-5">
+    <section class="flex  flex-col gap-y-2">
         <div v-for="comercio in comercios" >
             <commerceCard :commerce="comercio" />
         </div>        

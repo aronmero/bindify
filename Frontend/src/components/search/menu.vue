@@ -1,37 +1,25 @@
 <script setup>
     import optionMenu from "@/components/search/menuOption.vue";
-    import menuOptions from "@/data/menuData.js";
-    import arrowRightSVG from "/assets/icons/arrow-right.svg";
-    import arrowLeftSVG from "/assets/icons/arrow-left.svg";
-    import { ref } from "vue";
+    import { defineProps } from "vue";
 
-    const scrollContainer = ref(null); //referencia al container donde haremos el scroll
+    defineProps({
+        title : String,
+        menuOptions : Array
+    })
 
-    const scrollLeft = () => {
-        scrollContainer.value.scrollLeft -= 200; 
-    };
-
-    const scrollRight = () => {
-        scrollContainer.value.scrollLeft += 200; 
-    };
 </script>
 
 
 <template>
-    <div class="relative w-full overflow-hidden">
-        <div class="absolute md:hidden left-0  flex items-center h-full" @click="scrollLeft">
-            <img :src="arrowLeftSVG" class="size-6 cursor-pointer">
-        </div>
-
-        <div class="absolute md:hidden right-0  flex items-center h-full" @click="scrollRight">
-            <img :src="arrowRightSVG" class="size-6 cursor-pointer">
-        </div>
-
-        <div class="flex items-center p-3 shadow-2xl w-full bg-white gap-x-5 overflow-x-auto" ref="scrollContainer" style="scroll-behavior: smooth;">
-            <div v-for="(option, index) in menuOptions" :key="index">
-                <optionMenu :icon="option.icon" :name="option.name" />
+    <div class="w-full ">
+        <div class="font-bold mb-4 text-xl tracking-wide ">filtrar por {{ title }}</div>
+        <a href="#results">
+            <div class="flex flex-wrap gap-x-3 gap-y-2">
+                <div v-for="(option, index) in menuOptions" :key="index">
+                    <optionMenu  :name="option.name" :type="title" :icon="option.icon"/>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 </template>
 
@@ -43,8 +31,5 @@
     }
 
    
-    .scroll-container {
-        scroll-behavior: smooth;
-    }
+   
 </style>
-

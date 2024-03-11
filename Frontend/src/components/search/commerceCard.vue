@@ -1,35 +1,52 @@
 <script setup>
+
+
     defineProps({
         commerce : Object,
     })
 
-    import viewProfileButton from './viewProfileButton.vue';
     import starSVG from '/assets/icons/star.svg';
+
+    import { setRandomGradient } from '@/utils/randomGradient.js';
+
+ 
 
 </script>
 
 
 <template>
-    <div class="w-full flex items-center gap-x-2 md:gap-x-3  md:mt-0 mb-2 md:mb-4 fade-in">
-        <img :src="commerce.image" alt="profile-picture" class="size-[60px] md:size-[130px] rounded-full">
-        <div class="flex flex-col justify-center">
-            <div class="flex items-center gap-x-1"><h1 class="text-[22px] md:text-[28px] font-semibold ">{{ commerce.name }}</h1><span class="flex inline-items  md:mt-2"><img :src="starSVG" class="size-5 mt-2 md:mt-0 md:size-8"><p class="text-[18px] md:text-[25px] font-bold mt-[6px] md:mt-0">{{ commerce.qualification.note }}</p> <p class="text-[9px] md:text-xs mt-4 cursor-pointer hover:underline">({{ commerce.qualification.reviews }})</p> </span></div>
-            <h3 class="text-[17px] md:text-[20px] text-[#7d7d7d] mt-[-5px] md:mt-[-10px] truncate">{{ commerce.description }}</h3>
-            <div class="md:flex flex-col flex-start text-sm hidden">
-                <h5 class="font-bold">Horario</h5>
-                <p>Lunes a Viernes:</p>
-                <p>Sábados:</p>
-                <p>Domingos:</p>
+    <!--
+    <div class="flex items-center gap-x-2 p-2 transition-colors duration-300 ease-in hover:bg-[#eeeeee] cursor-pointer">
+        <img :src="commerce.image" alt="profile-image" class="size-20 rounded-full" />
+        <div class="flex flex-col flex-1 m-1">
+            <div class="flex items-center gap-x-2">
+                <h1 class="font-bold text-[1.6em] md:text-[1.8em]">{{ commerce.name }}</h1>
+                <div class="flex items-center mt-1">
+                    <img :src="starSVG" alt="star" class="size-5 md:size-7" />
+                    <p class="font-bold text-[1em] md:text-[1.4em]">{{ commerce.qualification.note }}</p>
+                </div>
+                <small class="text-xs mt-2">{{ commerce.qualification.reviews }} votos</small>
+            </div>
+            <div class="flex items-center justify-between m-1">
+                <div>
+                    <h2 class="text-[#818181] font-semibold  text-[1.2em] md:text-[1.5em] mt-[-0.4em] md:mt-[-1.2rem]">{{ commerce.category }}</h2>
+                    <div class="flex flex-wrap items-center gap-x-2 text-xs">
+                        <ul v-for="(hastag, index) in commerce.hastags" :key="index" >
+                            <li :style="{ background: setRandomGradient() }" class="p-1 font-bold text-white rounded-full transition duration-100 ease-in hover:scale-105">{{ hastag }}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="flex-col text-xs items-end hidden md:flex">
+                    <p class="font-semibold">Contacto </p>
+                    <p>{{ commerce.phone }}</p>
+                    <p>{{ commerce.email }}</p>
+                    <p>{{ commerce.address }}</p>
+                </div>
             </div>
         </div>
-        <div class="flex flex-col items-end text-sm flex-grow">
-            <viewProfileButton />
-            <p class="font-bold hidden md:block">Correo: {{ commerce.email }}</p>
-            <p class="md:flex items-center truncate hidden">{{ commerce.address }}</p>
-            <h6 class="font-semibold text-lg  hidden md:block">{{ commerce.phone }}</h6>
-        </div>
     </div>
-    <hr>
+    -->
+    <h1>{{ commerce.name }}</h1>
 </template>
 
 
@@ -49,3 +66,4 @@
         }
     }
 </style>
+

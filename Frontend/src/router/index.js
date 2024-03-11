@@ -32,6 +32,9 @@ const routes = [
   { path: "/resenia", component: () => import("@/views/Misc/crearResena.vue") },
   { path: "/validar", component: () => import("@/views/Misc/validarComercio.vue") },
 
+  //vista de seguidos, temporal
+  {path : "/seguidos", component: () =>import("@/views/perfiles/seguidos.vue")},
+  
   //Sprint 2
   { path: "/notificaciones", component: () => import("@/views/Misc/notificaciones.vue") },
 
