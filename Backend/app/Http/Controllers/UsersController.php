@@ -56,8 +56,6 @@ class UsersController extends Controller
      *   "error": "Usuario no encontrado"
      * }
      */
-
- //TODO Hacer show de el usuario logueado
     public function show(string $username)
     {
         try {
@@ -90,6 +88,7 @@ class UsersController extends Controller
                     )
                     ->where('users.username', '=', $username)
                     ->firstOrFail();
+                $customer->tipo = 'customer';
 
                 return response()->json([
                     "status" => true,
@@ -132,8 +131,9 @@ class UsersController extends Controller
                     ->where('users.username', '=', $username)
                     ->get();
 
-                $commerce->each(function ($commerce) {
 
+                $commerce->each(function ($commerce, $user) {
+                    $commerce->tipo = ($user->getRoleNames() == "ayuntamiento")?"ayuntamiento":"commerce";
                     $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
                         ->select('user_id')
                         ->where('users.username', '=', $commerce->username)
@@ -281,7 +281,7 @@ class UsersController extends Controller
             return response()->json(["status" => false, "message" => "Error en la base de datos :", "error" => $e->getMessage()], 500);
         } catch (Exception $e) {
             // Devuelve una respuesta JSON con un mensaje de error en caso de otra excepción
-            return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:",  "error" => $e->getMessage()], 404);
+            return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:", "error" => $e->getMessage()], 404);
         }
     }
 
@@ -300,7 +300,7 @@ class UsersController extends Controller
             $posts = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
                 ->join('users', 'users.id', '=', 'users-posts.user_id')
                 ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
-                ->join('commerces','commerces.user_id', '=', 'users-posts.user_id')
+                ->join('commerces', 'commerces.user_id', '=', 'users-posts.user_id')
                 ->select(
                     'posts.id AS post_id',
                     'posts.image',
@@ -315,7 +315,7 @@ class UsersController extends Controller
                     'users.id AS user_id',
                     'users.avatar'
                 )
-                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.post_type_id', '=', 1) -> where('commerces.active', '=',1);
+                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.post_type_id', '=', 1)->where('commerces.active', '=', 1);
 
 
 
@@ -354,10 +354,10 @@ class UsersController extends Controller
                 ->firstOrFail();
 
 
-                $posts = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
+            $posts = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
                 ->join('users', 'users.id', '=', 'users-posts.user_id')
                 ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
-                ->join('commerces','commerces.user_id', '=', 'users-posts.user_id')
+                ->join('commerces', 'commerces.user_id', '=', 'users-posts.user_id')
                 ->select(
                     'posts.id AS post_id',
                     'posts.image',
@@ -372,7 +372,7 @@ class UsersController extends Controller
                     'users.id AS user_id',
                     'users.avatar'
                 )
-                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.post_type_id', '=', 2) -> where('commerces.active', '=',1);
+                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.post_type_id', '=', 2)->where('commerces.active', '=', 1);
 
 
 
