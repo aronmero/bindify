@@ -16,10 +16,10 @@ export async function getUserData(metodo,body=null) {
     console.log(user)
     try {
       const options = genOptions(metodo,body);
-      const response = await fetch(`${urlApi}/api/user/${user.usuario.username}?=`, options);
+      const response = await fetch(`${urlApi}/api/profile`, options);
       const data = await response.json();
-      sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
-      // console.log(data.data)
+      //sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
+      console.log("hola")
       return data.data;
     } catch (error) {
       console.error(error);

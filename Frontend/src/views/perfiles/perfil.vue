@@ -12,26 +12,38 @@ const user = JSON.parse(sessionStorage.getItem("usuario"));
 console.log(user.usuario.tipo);
 let tipoUsuario = ref(user.usuario.tipo);
 
-const username=router.currentRoute.value.params.username
+// let username=router.currentRoute.value.params.username
 
-console.log(username)
+// console.log(username)
+// username = "hola"
+// if(user.usuario.username == undefined){
+//   username = user.usuario.username
+// }
 
-if(username ==undefined){
+//   switch(tipoUsuario.value){
+//     case "commerce":
+//         router.push(`/perfil/comercio/:${username}`)
+//       break;
+//     case "customer":
+//       router.push(`/perfil/customer/:${username}`)
+//       break;
+//     case "ayuntamiento":
+//       router.push(`/perfil/ayuntamiento/:${username}`)
+//       break;
+//   }
   switch(tipoUsuario.value){
     case "commerce":
-        router.push("/perfil/comercio")
+        router.push(`/perfil/comercio`)
       break;
     case "customer":
-      router.push("/perfil/customer")
+      router.push(`/perfil/customer`)
       break;
     case "ayuntamiento":
-      router.push("/perfil/ayuntamiento")
+      router.push(`/perfil/ayuntamiento`)
       break;
   }
 
-}else{
-  console.log("ver perfil otro usuario")
-}
+
 
 </script>
 
