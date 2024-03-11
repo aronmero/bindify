@@ -95,7 +95,6 @@ function Registro() {
             </div>
         </div>
     </div>
-  </div>
 </template>
 
 <style scoped></style>
