@@ -1,7 +1,21 @@
 <script setup>
+    /**
+     * Componente que muestra un botón de scroll hacia arriba cuando el usuario ha scrollado más de 200px
+     * @module scrollUpButton
+     * @author Adrian Manso
+     */
     import { ref } from 'vue';
 
-    const scrollUp = ref(false); //variable que controla si se muestra el boton de scroll up
+    /**
+     * Variable que controla si se muestra el botón de scroll hacia arriba.
+     * @type {boolean}
+     */
+    const scrollUp = ref(false);
+
+    /**
+     * Función que maneja el evento de scroll para mostrar u ocultar el botón de scroll hacia arriba.
+     * 
+     */
 
     window.addEventListener('scroll', () => { //evento que controla si se muestra el boton de scroll up
         if (window.scrollY > 200) { //si el scroll es mayor a 200px
@@ -10,6 +24,10 @@
             scrollUp.value = false; //oculta el boton
         }
     });
+
+    /**
+     * Función que hace scroll hacia arriba de manera suave.
+     */
 
     const scrollToTop = () => { //funcion que hace scroll hasta arriba
         window.scrollTo({

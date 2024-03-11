@@ -10,6 +10,7 @@
     import hashtagSection from "@/components/search/hashtagSection.vue";
     import scrollUpButton from "@/components/comun/scrollUpButton.vue";
     import Filter from "@/components/search/filter.vue";
+    
 
     const {filteredCommerces} = useSearchLogic();
 
@@ -27,9 +28,10 @@
             <hashtagSection />
             <Menu title="categorias" :menuOptions="categoriesOptions"/>
             <Menu title="localizaciones" :menuOptions="locationOptions" />
-            <p class="text-[#bdbdbd] mb-[-10px] ">{{ filteredCommerces.length > 1 ? filteredCommerces.length + " comercios encontrados" : filteredCommerces.length === 0 ? "Sin resultados" :  filteredCommerces.length +  " comercio encontrado" }}</p>
+            <p class="text-[#c6c6c6] mb-[-10px] text-md ml-2 ">{{ filteredCommerces.length > 1 ? filteredCommerces.length + " comercios encontrados" : filteredCommerces.length === 0 ? "Sin resultados" :  filteredCommerces.length +  " comercio encontrado" }}</p>
             <commercesResults :comercios="filteredCommerces" id="results" />
             <scrollUpButton />
+          
         </div>
         <template v-slot:Right>  </template>
     </Grid>
@@ -37,6 +39,9 @@
 </template>
 
 <style scoped>
+    html{
+        scroll-behavior: smooth;
+    }
    
     
 </style>

@@ -1,11 +1,11 @@
 export const categoriesOptions = [
-    {name : "Restaurante"},
-    {name : "Botánica"},
-    {name : "Joyería"},
-    {name : "Informática"},
-    {name : "Supermercado"},
-    {name : "Deportes"},
-    { name : "Decoración"},
+    {name : "Restaurante", icon : ".././assets/icons/restaurant.svg"},
+    {name : "Botánica", icon : ".././assets/icons/plant.svg"},
+    {name : "Joyería", icon : ".././assets/icons/jewelry.svg"},
+    {name : "Informática", icon : ".././assets/icons/computer.svg"},
+    {name : "Supermercado", icon : ".././assets/icons/supermarket.svg"},
+    {name : "Deportes", icon : ".././assets/icons/sport.svg"},
+    { name : "Decoración", icon : ".././assets/icons/deco.svg" },
 ];
 
 export const locationOptions = [
