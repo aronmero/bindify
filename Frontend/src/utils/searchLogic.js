@@ -1,10 +1,13 @@
 import { ref, watch, computed } from 'vue';
 import { optionSelected } from "@/stores/option";
 import { inputSearch } from '@/stores/inputSearch';
-import comercios from "@/data/comerciosData.js";
+import { getCommerces } from '@/Api/busqueda/busqueda.js';
+
 
 //logica para buscar comercios por categorías
 export default function useSearchLogic() {
+    let comercios = ref([]);
+    
     let category = ref(optionSelected().getOptionSelected()); //creamos una referencia reactiva para la categoría
     let location = ref(optionSelected().getOptionSelectedLocation()); //creamos una referencia reactiva para la localización
     let searchValue = ref(inputSearch().getInputSearch()); //creamos una referencia reactiva para la búsqueda (input de búsqueda
@@ -24,25 +27,23 @@ export default function useSearchLogic() {
     const filteredCommerces = computed(() => {
         if(searchValue.value !== ""){
             if(category.value !== "" && location.value !== "" ){
-                return comercios.filter(comercio => comercio.category === category.value && comercio.location === location.value && comercio.name.toLowerCase().includes(searchValue.value.toLowerCase()));
+                return comercios.value.filter(comercio => comercio.category === category.value && comercio.location === location.value && comercio.name.toLowerCase().includes(searchValue.value.toLowerCase()));
             }else if(location.value !== ""){
-                return comercios.filter(comercio => comercio.location === location.value && comercio.name.toLowerCase().includes(searchValue.value.toLowerCase()));
+                return comercios.value.filter(comercio => comercio.location === location.value && comercio.name.toLowerCase().includes(searchValue.value.toLowerCase()));
             }else if(category.value !== ""){
-                return comercios.filter(comercio => comercio.category === category.value && comercio.name.toLowerCase().includes(searchValue.value.toLowerCase()));
+                return comercios.value.filter(comercio => comercio.category === category.value && comercio.name.toLowerCase().includes(searchValue.value.toLowerCase()));
             }
-            return comercios.filter(comercio => comercio.name.toLowerCase().includes(searchValue.value.toLowerCase()));
+            return comercios.value.filter(comercio => comercio.username.toLowerCase().includes(searchValue.value.toLowerCase()));
         }else{
             if(category.value !== "" && location.value !== "" ){
-                return comercios.filter(comercio => comercio.category === category.value && comercio.location === location.value);
+                return comercios.value.filter(comercio => comercio.category === category.value && comercio.location === location.value);
             }else if(location.value !== ""){
-                return comercios.filter(comercio => comercio.location === location.value);
+                return comercios.value.filter(comercio => comercio.location === location.value);
             }else if(category.value !== ""){
-                return comercios.filter(comercio => comercio.category === category.value);
+                return comercios.value.filter(comercio => comercio.category === category.value);
             }
-            return comercios;
+            return comercios.value;
         }
-        
-        
     });
 
     const getCategories = computed(() => {
@@ -73,12 +74,20 @@ export default function useSearchLogic() {
         }
     }
 
+    const apiRequest = async () => {
+        await getCommerces("GET").then((response) => {
+            comercios.value = response;
+        }).catch((error) => {
+            console.error("Error al obtener los comercios:", error);
+        });
+    }
 
     return {
         category,
         filteredCommerces,
         getCategories,
-        selectedOption
+        selectedOption,
+        apiRequest, 
     };
 }
 

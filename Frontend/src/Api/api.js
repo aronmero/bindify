@@ -19,6 +19,7 @@ export const genOptions = (metodo, body = null) => {
       "User-Agent": "insomnia/8.6.0",
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
+      
     },
     body: body,
   };

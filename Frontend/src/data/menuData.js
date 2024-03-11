@@ -1,3 +1,25 @@
+import {getMunicipalities} from "@/Api/municipios/municipios.js";
+import {getPopularHashtags} from "@/Api/popular_hashtags/popular_hashtags.js";
+
+export let locationOptions = [];
+export let popularsHastags = [];
+
+export const apiMunicipalitiesRequest = async () => { //fecth para obtener los municipios registrados
+    await getMunicipalities("GET").then((response) => {
+        locationOptions = response;
+    }).catch((error) => {
+        console.error("Error al obtener los municipios:", error);
+    });
+}
+
+export const apiPopularHashtagRequest = async () => { //fecth para obtener los hashtags mas populares
+    await getPopularHashtags("GET").then((response) => {
+        popularsHastags = response;
+    }).catch((error) => {
+        console.error("Error al obtener los comercios:", error);
+    });
+}
+
 export const categoriesOptions = [
     {name : "Restaurante", icon : ".././assets/icons/restaurant.svg"},
     {name : "Botánica", icon : ".././assets/icons/plant.svg"},
@@ -5,33 +27,11 @@ export const categoriesOptions = [
     {name : "Informática", icon : ".././assets/icons/computer.svg"},
     {name : "Supermercado", icon : ".././assets/icons/supermarket.svg"},
     {name : "Deportes", icon : ".././assets/icons/sport.svg"},
-    { name : "Decoración", icon : ".././assets/icons/deco.svg" },
-];
-
-export const locationOptions = [
-    {name : "Santa Cruz de La Palma"},
-    {name : "Los Llanos de Aridane"},
-    {name : "Breña Alta"},
-    {name : "Breña Baja"},
-    {name : "El Paso"},
-    {name : "Fuencaliente"},
-    {name : "Garafía"},
-    {name : "Puntagorda"},
-    {name : "Puntallana"},
-    {name : "San Andrés y Sauces"},
-    {name : "Tazacorte"},
-    {name : "Tijarafe"},
+    {name : "Decoración", icon : ".././assets/icons/deco.svg" },
 ];
 
 
-export const popularsHastags = [
-    {name : "#comida"},
-    {name : "#airelibre"},
-    {name : "#lapalma"},
-    {name : "#tecnología"},
-    {name : "#deportes"},
-    {name : "#volcan"},
-    {name : "#playa"},
-    {name : "#naturaleza"},
-];
+
+
+
 

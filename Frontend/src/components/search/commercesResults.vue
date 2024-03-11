@@ -3,9 +3,7 @@
         comercios : Array
     })
 
-
     import commerceCard from "./commerceCard.vue";
-
 
 </script>
 

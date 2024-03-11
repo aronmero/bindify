@@ -11,6 +11,6 @@
 
 <template>
     <div :style="{ background: setRandomGradient() }" class="random-gradient p-1 text-sm rounded-md text-white font-bold transition duration-100 ease-in hover:scale-105 cursor-pointer">
-        {{ name }}
+        #{{ name }}
     </div>
 </template>
