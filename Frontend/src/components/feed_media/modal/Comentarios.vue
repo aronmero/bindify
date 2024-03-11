@@ -5,7 +5,7 @@
     import {encontrar_usuario_por_id} from './../mocks/users';
     import BackSVG from '@public/assets/icons/forward.svg';
     import EnviarSVG from '@public/assets/icons/forward.svg';
-
+    import { getCommentsOfPost } from "@/Api/publicacion/comentarios.js";
 
     const props = defineProps({
         post: Object,
@@ -32,6 +32,15 @@
     const chat_input = ref(null);
 
     const user = encontrar_usuario_por_id(1);
+
+    /**
+     * Obtiene los comentarios de la api
+     */
+    let comentarios=ref(null);
+    const apiCall= async ()=>{
+        await getCommentsOfPost(3).then(data=>comentarios.value=data)
+    }
+    apiCall();
 
     /**
      * Obtiene el comentario por la id del post
@@ -150,8 +159,10 @@
             </nav>
             <!-- El listado de comentarios -->
             <div ref="comentario_handler" class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
-                <Comentario v-if="en_comentarios.length >= 1" v-for="comentario in en_comentarios" :comentario="comentario"/>
-                <Comentario v-else  :comentario="{content: 'No hay comentarios, ¡se el primero!'}"/>
+                <template v-if="comentarios!=null">
+                    <Comentario v-if="comentarios.comentarios.length >= 1" v-for="comentario in comentarios.comentarios" :comentario="comentario"/>
+                    <Comentario v-else  :comentario="{content: 'No hay comentarios, ¡se el primero!'}"/>
+                </template>
             </div>
             
             <!-- Formulario para enviar comentario -->
