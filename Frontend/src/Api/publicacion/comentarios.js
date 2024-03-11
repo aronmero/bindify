@@ -1,4 +1,4 @@
-import { genOptions,urlApi } from "@/Api/api.js";
+import { genOptions, urlApi } from "@/Api/api.js";
 
 /**
  * Devuelve los comentarios de una publicacion
@@ -10,17 +10,34 @@ import { genOptions,urlApi } from "@/Api/api.js";
  * @param {number} id de la publicacion
  * @returns {Object}
  */
-export async function getCommentsOfPost( id) {
-    try {
-      const options = genOptions("GET",null);
-      const response = await fetch(
-        `${urlApi}/api/comment/${id}`,
-        options
-      );
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
+export async function getCommentsOfPost(id) {
+  try {
+    const options = genOptions("GET", null);
+    const response = await fetch(`${urlApi}/api/comment/${id}`, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
   }
-  
+}
+
+/**
+ * Almacena un comentario en una publicacion
+ * @date 3/11/2024 - 5:25:58 PM
+ * @author Aaron Medina Rodriguez
+ *
+ * @export
+ * @async
+ * @param {number} id de la publicacion
+ * @returns {Object}
+ */
+export async function storeCommentsOfPost(body) {
+  try {
+    const options = genOptions("POST", body);
+    const response = await fetch(`${urlApi}/api/comment`, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
