@@ -298,6 +298,7 @@ class UsersController extends Controller
             $posts = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
                 ->join('users', 'users.id', '=', 'users-posts.user_id')
                 ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                ->join('commerces','commerces.user_id', '=', 'users-posts.user_id')
                 ->select(
                     'posts.id AS post_id',
                     'posts.image',
@@ -312,7 +313,8 @@ class UsersController extends Controller
                     'users.id AS user_id',
                     'users.avatar'
                 )
-                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.posts_types_id', '=', 1);
+                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.post_type_id', '=', 1) -> where('commerces.active', '=',1);
+
 
 
             if ($user->username != $username) {
@@ -350,9 +352,10 @@ class UsersController extends Controller
                 ->firstOrFail();
 
 
-            $posts = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
+                $posts = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
                 ->join('users', 'users.id', '=', 'users-posts.user_id')
                 ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                ->join('commerces','commerces.user_id', '=', 'users-posts.user_id')
                 ->select(
                     'posts.id AS post_id',
                     'posts.image',
@@ -367,7 +370,8 @@ class UsersController extends Controller
                     'users.id AS user_id',
                     'users.avatar'
                 )
-                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.posts_types_id', '=', 2);
+                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.post_type_id', '=', 2) -> where('commerces.active', '=',1);
+
 
 
             if ($user->username != $username) {
