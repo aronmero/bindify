@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Verification_token;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -51,11 +52,11 @@ class AuthController extends Controller
 
             $response = [
                 'status' => true,
-                'message'=>[
-                'user_id' => $user->id,
-                'username'=> $user->username,
-                'token' => $token,
-                'tipo' => $tipo[0]
+                'message' => [
+                    'user_id' => $user->id,
+                    'username' => $user->username,
+                    'token' => $token,
+                    'tipo' => $tipo[0]
                 ]
             ];
 
@@ -87,7 +88,7 @@ class AuthController extends Controller
     {
         if ($request->empresa == true) {
             $request->validate([
-                'phone'=> 'required',
+                'phone' => 'required',
             ]);
         }
         try {
@@ -114,12 +115,15 @@ class AuthController extends Controller
         }
         if ($request->empresa) {
             try {
-                $verification_token_id = Verification_token::select('id')->where('token', '=', $request->verification_token)->first();
-                if ($verification_token_id != null) {
+                if ($request->verification_token != null) {
+                    $verification_token_id = Verification_token::select('id')->where('token', '=', $request->verification_token)->firstOrFail();
                     $user->assignRole('ayuntamiento');
                 } else {
                     $user->assignRole('commerce');
                 }
+            } catch (ModelNotFoundException $e) {
+                $user->delete();
+                return response()->json(["status" => false, 'error' => 'Token de verificación incorrecto'], 404);
             } catch (Exception $th) {
                 $user->delete();
                 return response()->json(["status" => false, 'error' => $th->getMessage()], 500);
@@ -150,7 +154,7 @@ class AuthController extends Controller
                 $customer = Customer::create([
                     'user_id' => $user->id,
                     'gender' => $request->gender,
-                    'birth_date'=> $request->birth_date,
+                    'birth_date' => $request->birth_date,
                 ]);
             } catch (Exception $th) {
                 $user->delete();
