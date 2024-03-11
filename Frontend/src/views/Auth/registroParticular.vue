@@ -36,8 +36,10 @@ const categoria = ref(null);
 const contraNueva = ref(null);
 const repetirNueva = ref(null);
 const token = ref(null);
+const isValid = ref(null);
 
 const tratarDatos = ()=>{
+    /* Mostrar todos los errores a la vez */
     console.log(tipoUsuario.value);
     console.log(usuario.value);
     console.log(nombre.value);
@@ -54,185 +56,182 @@ const tratarDatos = ()=>{
     console.log(contraNueva.value);
     console.log(repetirNueva.value);
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if(tipoUsuario.value == null){
-        window.scroll({top:100, right:0, behavior: 'smooth'});
-        errorType.value = "Debe seleccionar un tipo de usuario.";
-    }else if(usuario.value == null || usuario.value.length == 0){
-        window.scroll({top:250, right:0, behavior: 'smooth'});
+    if(isValid.value == null || isValid.value == false){
+        if(tipoUsuario.value == null){
+            window.scroll({top:100, right:0, behavior: 'smooth'});
+            errorType.value = "Debe seleccionar un tipo de usuario.";
+            isValid.value = false;
+        }else{
             errorType.value = null;
+            isValid.value = true;
+        }
+        if(usuario.value == null || usuario.value.length == 0){
+            window.scroll({top:100, right:0, behavior: 'smooth'});
             errorUsuario.value = "Es necesario indicar un usuario para registrarse.";
-   }else if(nombre.value == null || nombre.value.length == 0){
-        window.scroll({top:300, right:0, behavior: 'smooth'});
-            errorType.value = null;
+            isValid.value = false;
+        }else{
             errorUsuario.value = null;
-        errorNombre.value = "Es necesario indicar tu nombre para identificarte en la aplicación.";
-   }else if(email.value == null || email.value.length == 0){
-        errorType.value = null;    
-        errorUsuario.value = null;
-        errorNombre.value = null;
-        errorMail.value = "Es necesario indicar un email.";
-   }else if(!emailRegex.test(email.value)) {
-        errorType.value = null;    
-        errorUsuario.value = null;
-        errorNombre.value = null
-        errorMail.value = "El email indcado no es válido.";
-   }else if(municipio.value == null || municipio.value.length == 0){
-        errorType.value = null;    
-        errorUsuario.value = null;
-        errorNombre.value = null;
-        errorMail.value = null;
-        errorMunic.value = "Debes seleccionar el municipio en el que vives."
-   }else if((contraNueva.value == null || contraNueva.value.length == 0) && (repetirNueva.value == null || repetirNueva.value.length == 0)){
-        errorType.value = null;    
-        errorUsuario.value = null;
-        errorNombre.value = null;
-        errorMail.value = null;
-        errorMunic.value = null;
-        errorContra.value = "Debe indicar y repetir una contraseña.";
-   }else if(contraNueva.value != repetirNueva.value){
-        errorType.value = null;    
-        errorUsuario.value = null;
-        errorNombre.value = null;
-        errorMail.value = null;
-        errorMunic.value = null;
-        errorContra.value = "Las contraseñas no coinciden.";
-        contraNueva.value = null;
-        repetirNueva.value = null;
-    }else{
+            isValid.value = true;
+        }
+        if(nombre.value == null || nombre.value.length == 0){
+            window.scroll({top:100, right:0, behavior: 'smooth'});
+            errorNombre.value = "Es necesario indicar tu nombre para identificarte en la aplicación.";
+            isValid.value = false;
+        }else{
+            errorNombre.value = null;
+            isValid.value = true;
+        }
+        if(email.value == null || email.value.length == 0){
+            errorMail.value = "Es necesario indicar un email.";
+            isValid.value = false;
+        }else{
+            if(!emailRegex.test(email.value)) {
+            errorMail.value = "El email indicado no es válido.";
+            isValid.value = false;
+            }else{
+                errorMail.value = null;
+                isValid.value = true;
+            }
+        }
+        if(municipio.value == null || municipio.value.length == 0){
+            errorMunic.value = "Debes seleccionar el municipio en el que vives.";
+            isValid.value = false;
+        }else{
+            errorMunic.value = null;
+            isValid.value = true;
+        }
+        if((contraNueva.value == null || contraNueva.value.length == 0) && (repetirNueva.value == null || repetirNueva.value.length == 0)){
+            errorContra.value = "Debe indicar y repetir una contraseña.";
+            isValid.value = false;
+        }else{
+            if(contraNueva.value != repetirNueva.value){
+            errorContra.value = "Las contraseñas no coinciden.";
+            isValid.value = false;
+            contraNueva.value = null;
+            repetirNueva.value = null;
+            }else{
+                errorContra.value = null;
+                isValid.value = true;
+            }
+        }
         if(tipoUsuario.value == 'particular'){
             if(fechaNac.value == null || fechaNac.value.length == 0){
-                errorType.value = null;
-                errorUsuario.value = null;
-                errorNombre.value = null;
-                errorMail.value = null;
-                errorMunic.value = null;
-                errorContra.value = null;
                 errorDate.value = "Debe indicar su fecha de nacimiento.";
+                isValid.value = false;
             }else{
-                errorUsuario.value = null;
-                errorNombre.value = null;
-                errorMail.value = null;
-                errorMunic.value = null;
-                errorContra.value = null;
                 errorDate.value = null;
-                let datos = {
-                    "email": email.value,
-                    "password": contraNueva.value,
-                    "phone": telefono.value,
-                    "municipality_id": municipio.value,
-                    "avatar": URL.createObjectURL(imagenPerfil.value), /* No tiene mucho sentido esto mirar esto en clase por que si el usuario no sube foto esto es una mierda */
-                    "username": usuario.value,
-                    "name": nombre.value,
-                    "category_id": categoria.value,
-                    "empresa": false,
-                    "schedule": horarioActual.value,
-                    "address": direccion.value,
-                    "gender": optionsSex[sexo.value],
-                    "birth_date": fechaNac.value,
-                }
-                let respuesta = register(datos);
-                if(respuesta.message.includes('correctamente')){
-                    email.value = null;
-                    tipoUsuario.value = null;
-                    usuario.value = null;
-                    nombre.value = null;
-                    imagenPerfil.value = null;
-                    municipio.value = null;
-                    contraNueva.value = null;
-                    repetirNueva.value = null;
-                    fechaNac.value = null;
-                    sexo.value = null;
-                    console.log("Usuario creado");
-                }else{
-                    console.log("Error de back en el registro");
-                }
+                isValid.value = true;
             }
         }else{
             if(telefono.value == null || telefono.value.length == 0){
-                errorType.value = null;
-                errorUsuario.value = null;
-                errorNombre.value = null;
-                errorMail.value = null;
-                errorMunic.value = null;
-                errorContra.value = null;
                 errorPhone.value = "Debe indicar el teléfono de su negocio.";
-            }else if(direccion.value == null || direccion.value.length == 0){
-                errorType.value = null;
-                errorUsuario.value = null;
-                errorNombre.value = null;
-                errorMail.value = null;
-                errorMunic.value = null;
-                errorContra.value = null;
-                errorPhone.value = null;
-                errorDirec.value = "Debe indicar la dirección de su negocio.";
-            }else if(horarioActual.value == null || horarioActual.value.length == 0){
-                errorType.value = null;
-                errorUsuario.value = null;
-                errorNombre.value = null;
-                errorMail.value = null;
-                errorMunic.value = null;
-                errorContra.value = null;
-                errorPhone.value = null;
-                errorDirec.value = null;
-                errorSche.value = "Debe indicar el horario de su negocio.";
-            }else if(categoria.value == null || categoria.value.length == 0){
-                errorType.value = null;
-                errorUsuario.value = null;
-                errorNombre.value = null;
-                errorMail.value = null;
-                errorMunic.value = null;
-                errorContra.value = null;
-                errorPhone.value = null;
-                errorDirec.value = null;
-                errorSche.value = null;
-                errorCategory.value = "Debe seleccionar la categoria de su negocio.";
+                isValid.value = false;
             }else{
-                errorType.value = null;
-                errorUsuario.value = null;
-                errorNombre.value = null;
-                errorMail.value = null;
-                errorMunic.value = null;
-                errorContra.value = null;
                 errorPhone.value = null;
+                isValid.value = true;
+            }
+            if(direccion.value == null || direccion.value.length == 0){
+                errorDirec.value = "Debe indicar la dirección de su negocio.";
+                isValid.value = false;
+            }else{
                 errorDirec.value = null;
+                isValid.value = true;
+            }
+            if(horarioActual.value == null || horarioActual.value.length == 0){
+                errorSche.value = "Debe indicar el horario de su negocio.";
+                isValid.value = false;
+            }else{
                 errorSche.value = null;
+                isValid.value = true;
+            }
+            if(categoria.value == null || categoria.value.length == 0){
+                errorCategory.value = "Debe seleccionar la categoria de su negocio.";
+                isValid.value = false;
+            }else{
                 errorCategory.value = null;
-                let datos = {
-                    "email": email.value,
-                    "password": contraNueva.value,
-                    "phone": telefono.value,
-                    "municipality_id": municipio.value,
-                    "avatar": URL.createObjectURL(imagenPerfil.value), /* No tiene mucho sentido esto */
-                    "username": usuario.value,
-                    "name": nombre.value,
-                    "category_id": categoria.value,
-                    "empresa": true,
-                    "schedule": horarioActual.value,
-                    "address": direccion.value,
-                    "gender": optionsSex[sexo.value],
-                    "birth_date": fechaNac.value,
-                    "verification_token_id": token.value,
-                }
-                let respuesta = register(datos);
-                if(respuesta.message.includes('correctamente')){
-                    email.value = null;
-                    tipoUsuario.value = null;
-                    usuario.value = null;
-                    nombre.value = null;
-                    imagenPerfil.value = null;
-                    municipio.value = null;
-                    contraNueva.value = null;
-                    repetirNueva.value = null;
-                    direccion.value = null;
-                    horarioActual.value = null;
-                    categoria.value = null;
-                    token.value = null;
-                    console.log("Usuario creado");
-                }else{
-                    console.log("Error de back en el registro");
-                }
+                isValid.value = true;
             }
         }
+    }else{
+        if(tipoUsuario.value == 'particular'){
+            let datos = {
+            "email": email.value,
+            "password": contraNueva.value,
+            "phone": telefono.value,
+            "municipality_id": municipio.value,
+            "avatar": URL.createObjectURL(imagenPerfil.value), /* No tiene mucho sentido esto mirar esto en clase por que si el usuario no sube foto esto es una mierda */
+            "username": usuario.value,
+            "name": nombre.value,
+            "category_id": categoria.value,
+            "empresa": false,
+            "schedule": horarioActual.value,
+            "address": direccion.value,
+            "gender": optionsSex[sexo.value],
+            "birth_date": fechaNac.value,
+            }
+            let respuesta = register(datos);
+            if(respuesta.status){
+                email.value = null;
+                tipoUsuario.value = null;
+                usuario.value = null;
+                nombre.value = null;
+                imagenPerfil.value = null;
+                municipio.value = null;
+                contraNueva.value = null;
+                repetirNueva.value = null;
+                fechaNac.value = null;
+                sexo.value = null;
+                sessionStorage.setItem(
+                    "usuario",
+                    JSON.stringify({ usuario: data.message })
+                );
+                router.push("/");
+                router.go();
+            }else{
+                console.log("Error de back en el registro"); /* Mostrar el error en algún lado */
+            }
+        }else{
+            let datos = {
+                "email": email.value,
+                "password": contraNueva.value,
+                "phone": telefono.value,
+                "municipality_id": municipio.value,
+                "avatar": URL.createObjectURL(imagenPerfil.value), /* No tiene mucho sentido esto */
+                "username": usuario.value,
+                "name": nombre.value,
+                "category_id": categoria.value,
+                "empresa": true,
+                "schedule": horarioActual.value,
+                "address": direccion.value,
+                "gender": optionsSex[sexo.value],
+                "birth_date": fechaNac.value,
+                "verification_token_id": token.value,
+            }
+            let respuesta = register(datos);
+            if(respuesta.status){
+                email.value = null;
+                tipoUsuario.value = null;
+                usuario.value = null;
+                nombre.value = null;
+                imagenPerfil.value = null;
+                municipio.value = null;
+                contraNueva.value = null;
+                repetirNueva.value = null;
+                direccion.value = null;
+                horarioActual.value = null;
+                categoria.value = null;
+                token.value = null;
+                sessionStorage.setItem(
+                    "usuario",
+                    JSON.stringify({ usuario: data.message })
+                );
+                router.push("/");
+                router.go();
+            }else{
+                console.log("Error de back en el registro"); /* Mostrar el error en algún lado */
+            }
+        }
+          
     }
 } 
 </script>
@@ -246,7 +245,7 @@ const tratarDatos = ()=>{
         <div class="xl:w-[60vw] w-[90vw] flex flex-col lg:items-center mt-10">
             <h1 class="text-center text-5xl mb-7">Registro</h1>
             <form action="javascript:void(0);" class="flex flex-col gap-y-5 lg:w-[55%] xl:w-[45%]">
-                <Input @datos="(nuevosDatos)=>{tipoUsuario = arrayTipos[nuevosDatos].toLowerCase()}" class="w-[40%]" tipo="selection" requerido="true" :opciones=arrayTipos placeholder="Tipos" v-model='tipoUsuario' label="Tipo de usuario" :valor="tipoUsuario" :error="errorType"/>
+                <Input @datos="(nuevosDatos)=>{tipoUsuario = arrayTipos[nuevosDatos].toLowerCase()}" class="lg:w-[50%]" tipo="selection" requerido="true" :opciones=arrayTipos placeholder="Tipos" v-model='tipoUsuario' label="Tipo de usuario" :valor="tipoUsuario" :error="errorType"/>
                 <Input @datos="(nuevosDatos)=>{usuario = nuevosDatos}" tipo="text" requerido="true" label="Usuario" :valor="usuario" :error="errorUsuario"/>
                 <Input @datos="(nuevosDatos)=>{nombre = nuevosDatos}" tipo="text" requerido="true" label="Nombre" :valor="nombre" :error="errorNombre"/>
                 <div class="imagenes flex gap-x-10 xl:gap-x-20">
@@ -270,7 +269,7 @@ const tratarDatos = ()=>{
                     <Input @datos="(nuevosDatos)=>{repetirNueva = nuevosDatos}" tipo="password" requerido="true" label="Repetir contraseña" :valor="repetirNueva" :error="errorContra"/>
                 </div>
                 <div class="flex flex-col items-center w-full justify-center mt-3 gap-y-10">
-                    <Input @click="tratarDatos" tipo="submit" clase="claro" valor="Registrarme" class="w-[50%]"/>
+                    <Input @click="tratarDatos" tipo="submit" clase="oscuro" valor="Registrarme" class="w-[50%]"/>
                 </div>
             </form>
             <div class="flex justify-center gap-x-1 mt-3">
