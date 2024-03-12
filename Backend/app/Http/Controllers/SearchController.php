@@ -6,6 +6,7 @@ use App\Models\Commerce;
 use App\Models\Municipality;
 use App\Models\Post;
 use App\Models\Review;
+use Illuminate\Support\Facades\Crypt;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -94,7 +95,7 @@ class SearchController extends Controller
 
                 $posts->each(function ($post) {
                     $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                    //crypt$post->post_id = Crypt::encryptString($post->post_id);
+                    $post->post_id = Crypt::encryptString($post->post_id);
                 });
 
                 return response()->json([

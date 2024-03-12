@@ -8,6 +8,7 @@ use App\Models\Comment;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class CommentsController extends Controller
 {
@@ -47,7 +48,6 @@ class CommentsController extends Controller
             $comment->user_id = $user->id; // Asignar el ID de usuario
             $comment->post_id = $request->post_id;
             $comment->content = $request->content;
-            $comment->father_id = $request->father_id;  // Asignar el comentario padre
             $comment->active = true; //comentario activo cuando se crea
             $comment->save();
 
@@ -91,14 +91,14 @@ class CommentsController extends Controller
     public function show(string $id)
     {
 
-        //crypttry {
-        //crypt    $id = Crypt::decryptString($id);
-        //crypt} catch (DecryptException $e) {
-        //crypt    return response()->json([
-        //crypt        'status' => false,
-        //crypt        'message' => 'Publicación inexistente',
-        //crypt    ], 500);
-        //crypt}
+        try {
+            $id = Crypt::decryptString($id);
+        } catch (DecryptException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Publicación inexistente',
+            ], 500);
+        }
 
         // Obtener todos los comentarios relacionados con la publicación
         $comentarios = Comment::where('post_id', $id)->with('user')->get();
@@ -112,13 +112,10 @@ class CommentsController extends Controller
         $comentariosFormateados = [];
         foreach ($comentarios as $comentario) {
             $comentarioFormateado = [
-                'id' => ($comentario->id),
-                //crypt'id' => Crypt::encryptString($comentario->id),
+                'id' => Crypt::encryptString($comentario->id),
                 'username' => $comentario->user->username, // Acceder al nombre del usuario a través de la relación
                 'content' => $comentario->content,
                 'comment_creation' => $comentario->created_at,
-                'father_id' => ($comentario->father_id),
-                //crypt'father_id' => Crypt::encryptString($comentario->father_id),
                 'avatar' => $comentario->user->avatar,
             ];
             $comentariosFormateados[] = $comentarioFormateado;
@@ -162,14 +159,14 @@ class CommentsController extends Controller
     {
         try {
 
-            //crypttry {
-            //crypt    $id = Crypt::decryptString($id);
-            //crypt} catch (DecryptException $e) {
-            //crypt    return response()->json([
-            //crypt        'status' => false,
-            //crypt        'message' => 'Comentario inexistente',
-            //crypt    ], 500);
-            //crypt}
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Comentario inexistente',
+                ], 500);
+            }
 
             // Buscar el comentario por su ID
             $comentario = Comment::find($id);
@@ -241,14 +238,14 @@ class CommentsController extends Controller
     {
         try {
 
-            //crypttry {
-            //crypt    $id = Crypt::decryptString($id);
-            //crypt} catch (DecryptException $e) {
-            //crypt    return response()->json([
-            //crypt        'status' => false,
-            //crypt        'message' => 'Comentario inexistente',
-            //crypt    ], 500);
-            //crypt}
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Comentario inexistente',
+                ], 500);
+            }
 
             // Buscar el comentario por su ID
             $comentario = Comment::find($id);
@@ -320,14 +317,14 @@ class CommentsController extends Controller
     {
         try {
 
-            //crypttry {
-            //crypt    $id = Crypt::decryptString($id);
-            //crypt} catch (DecryptException $e) {
-            //crypt    return response()->json([
-            //crypt        'status' => false,
-            //crypt        'message' => 'Comentario inexistente',
-            //crypt    ], 500);
-            //crypt}
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Comentario inexistente',
+                ], 500);
+            }
 
             // Obtener comentario padre
             $comentario = Comment::findOrFail($id);
@@ -339,13 +336,12 @@ class CommentsController extends Controller
             $repliesFormatedas = [];
             foreach ($replies as $reply) {
                 $replyFormateada = [
-                    'id' => ($reply->id),
-                    //crypt'id' => Crypt::encryptString($reply->id),
+                    'id' => Crypt::encryptString($reply->id),
                     'username' => $reply->user->username, // Acceder al nombre del usuario a través de la relación
                     'content' => $reply->content,
                     'comment_creation' => $comentario->created_at,
                     'father_id' => ($reply->father_id),
-                    //crypt'father_id' => Crypt::encryptString($reply->father_id),
+                    'father_id' => Crypt::encryptString($reply->father_id),
                     'avatar' => $reply->user->avatar,
                 ];
                 $repliesFormatedas[] = $replyFormateada;

@@ -99,8 +99,8 @@ class ReviewsController extends Controller
                     'commerce_id' => $review->commerce_id,
                     'content' => $review->comment,
                     'note' => $review->note,
-                    'id' => $review->id
-                    //crypt'id' => Crypt::encryptString($review->id),
+                    'id' => $review->id,
+                    'id' => Crypt::encryptString($review->id),
                 ],
             ], 201);
         } catch (\Exception $e) {
@@ -169,7 +169,7 @@ class ReviewsController extends Controller
                 // Obtener los datos necesarios para cada reviews
                 $reviewData = [
                     'id' => Crypt::encryptString($review->id),
-                    //crypt'id' => Crypt::encryptString($review->id),
+                    'id' => Crypt::encryptString($review->id),
                     'username' => $review->user->username,
                     'avatarUsuario' => $review->user->avatar,
                     'commerce_username' => $review->commerce->username, // Obtener el nombre de usuario del comercio
@@ -230,14 +230,14 @@ class ReviewsController extends Controller
     {
         try {
 
-            //crypttry {
-            //crypt    $id = Crypt::decryptString($id);
-            //crypt} catch (DecryptException $e) {
-            //crypt    return response()->json([
-            //crypt        'status' => false,
-            //crypt        'message' => 'Review inexistente',
-            //crypt    ], 500);
-            //crypt}
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Review inexistente',
+                ], 500);
+            }
 
             $user = Auth::user();
             // Buscar la review por su ID
@@ -309,14 +309,14 @@ class ReviewsController extends Controller
     {
         try {
 
-            //crypttry {
-            //crypt    $id = Crypt::decryptString($id);
-            //crypt} catch (DecryptException $e) {
-            //crypt    return response()->json([
-            //crypt        'status' => false,
-            //crypt        'message' => 'Review inexistente',
-            //crypt    ], 500);
-            //crypt}
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Review inexistente',
+                ], 500);
+            }
 
             $user = Auth::user();
             // Buscar la review por su ID
