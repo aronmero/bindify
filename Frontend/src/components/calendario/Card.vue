@@ -9,6 +9,7 @@ import StarSVG from '@public/assets/icons/star.svg';
 import ShareSVG from '@public/assets/icons/share.svg';
 import UserSVG from '@public/assets/icons/user.svg';
 import router from '@/router/index';
+import {share} from '@/components/calendario/helpers/share'
 
 
 const props = defineProps({
@@ -22,11 +23,18 @@ const modal = ref(null);
 const post = props.post;
 //const municipio = obtener_municipio(post.usuario.municipality_id).name;
 
+
+/** 
+ * Redirecciona hasta la url objetivo
+ */
 const redirect = (url) => {
     router.push(url)
 };
 
-/** Abrir modal  */
+/** 
+ * Abrir modal  
+ * */
+
 const abrirModal = () => {
     if (modalHandler.value) {
         modal.value.style.display = "none";
@@ -36,7 +44,6 @@ const abrirModal = () => {
         modalHandler.value = true;
     }
 }
-
 </script>
 <template>
     <div class=" card w-[100%] p-4 rounded-xl relative " :data-start_date="post.start_date" :data-end_date="post.end_date">
@@ -69,12 +76,12 @@ const abrirModal = () => {
           <!-- Modal de Ver Más -->
           <div ref="modal" :id="`modal_${post.post_id}`" :class="`modal absolute  top-[50px] right-[20px]  bg-white min-w-[200px] rounded-lg p-2 flex flex-col items-start justify-center`">
             <!-- Botón ver perfil -->
-            <button :class="`flex items-center font-medium w-[100%] m-2 `">
+            <button @click="redirect(`perfil/${post.username}`)" :class="`flex items-center font-medium w-[100%] m-2 `">
                 <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" />
                 Ver perfil
             </button> 
             <!-- Botón ver reseñas comercio -->
-            <button :class="`flex items-center font-medium w-[100%] m-2 `">
+            <button @click="share(post.title, post.description, `post/${post.post_id}`)" :class="`flex items-center font-medium w-[100%] m-2 `">
                 <img class="w-[30px] h-[30px]  mr-3 " :src="ShareSVG" />
                 Compartir
             </button>

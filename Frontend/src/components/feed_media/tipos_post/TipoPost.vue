@@ -112,8 +112,7 @@
         sessionStorage.setItem("favoritos", JSON.stringify(favoritos.value));
     }
 
-    let tipo_usuario = "comercio";
-
+    let tipo_usuario = ref("comercio");
 
     /** referencia los comentarios */
     let comentarios = ref(null);
@@ -124,7 +123,7 @@
                 if(isIntersecting) {
                     let post_id = post.value.post_id;
                 
-                    comentarios.value = await obtener_comentarios_post(post_id); 
+                    comentarios.value = await obtener_comentarios_post(post_id);
                     console.log(comentarios.value)
                    
                     console.log("showing element ", post.value.post_id)
@@ -328,6 +327,7 @@
                 </button>
             </div>
 
+       
         </article>
 
         <!------------------------------------ Post AYUNTAMIENTO ------------------------------>
@@ -417,7 +417,6 @@
                     Reseñas
                 </button>
             </div>
-
         </article>
 
         <!-- El modal de comentarios -->

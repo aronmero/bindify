@@ -7,6 +7,7 @@ import BackSVG from '@public/assets/icons/forward.svg';
 import EnviarSVG from '@public/assets/icons/forward.svg';
 //import { obtener_comentarios_post, agregar_comentario_post } from '@/Api/home/comentarios'
 import { getCommentsOfPost, storeCommentsOfPost } from "@/Api/publicacion/comentarios.js";
+import { obtener_datos_usuario } from '../../../Api/home/users';
 
 /**
  * Define props
@@ -36,7 +37,13 @@ const modal = ref(null);
  */
 const chat_input = ref(null);
 
-const user = encontrar_usuario_por_id(1);
+
+
+const user_session = JSON.parse(sessionStorage.getItem("usuario"))
+const user_req = await obtener_datos_usuario(user_session.usuario.username);
+
+const user = user_req.data;
+
 
 let comentarios = ref(null);
 const id_post = props.post.post_id;
@@ -73,10 +80,13 @@ const refrescarPosicion = () => {
     comentario_handler.value.scrollTop = comentario_handler.value.scrollHeight;
 }
 
-//Elimina el intervalo antes de cambiar de ruta.
+/**
+ * Elimina el intervalo antes de cambiar de ruta.
+ * */
 onBeforeUnmount(() => {
     clearInterval(interval);
 });
+
 /**
 * Enviar el comentario
 */
@@ -127,7 +137,6 @@ const antiSpamFunction = () => {
 
     interval = setInterval(() => {
         secs++;
-
         chat_input.value.placeholder = `Debes esperar ${60 - secs} segundos para enviar otro comentario.`;
 
         if (secs == 60) {
@@ -147,7 +156,7 @@ document.body.style.overflow = "hidden";
 </script>
 
 <template>
-    <KeepAlive>
+    <Suspense>
         <div ref="modal" :id="`comentarios_${post.post_id}`" class="screen-modal flex flex-col items-center py-[50px]">
             <!-- El wrapper para dar forma al contenedor del centro -->
             <div
@@ -187,7 +196,7 @@ document.body.style.overflow = "hidden";
                 </div>
             </div>
         </div>
-    </KeepAlive>
+    </Suspense>
 </template>
 
 <style scoped lang="scss">
@@ -205,7 +214,6 @@ body {
     overflow: hidden;
     z-index: 50;
     overscroll-behavior: contain;
-
 
     .wrapper {
         scroll-behavior: smooth;
