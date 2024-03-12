@@ -90,8 +90,7 @@ class AuthController extends Controller
         // Validación de la solicitud
         if ($request->empresa == true) {
             $request->validate([
-                'phone' => 'required',
-                'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Establece las reglas para el avatar
+                'phone' => 'required', // Establece las reglas para el avatar
             ]);
         }
 
