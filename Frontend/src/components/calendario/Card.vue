@@ -3,6 +3,7 @@ import {ref} from 'vue';
 import { obtener_municipio } from './mocks/municipios';
 import LocationSVG from '@public/assets/icons/location.svg';
 import EnlaceSVG from '@public/assets/icons/external.svg';
+import DiaSVG from '@public/assets/icons/time.svg';
 import MenuSVG from '@public/assets/icons/ellipsis.svg';
 import StarSVG from '@public/assets/icons/star.svg';
 import HeartSVG from '@public/assets/icons/like.svg';
@@ -39,7 +40,7 @@ const abrirModal = () => {
 
 </script>
 <template>
-    <div class=" card w-[100%] p-4 rounded-xl relative ">
+    <div class=" card w-[100%] p-4 rounded-xl relative " :data-fecha="post.start_date">
         <!-- Imagen del post -->
         <div class=" img-wrapper w-[110px] h-[150px] overflow-hidden rounded-xl mr-2">
             <img class=" img min-w-[100%] cursor-pointer  " :src="post.image" alt="" @click="() => redirect(`evento/${post.post_id}`)">
@@ -55,13 +56,10 @@ const abrirModal = () => {
                 <img :src="LocationSVG" class=" w-[20px] mr-1 " alt="Ubicacion:">
                 {{ post.municipality }}
             </p>
-            <!-- Campo Enlace -->
-            <a href="">
-                <p class=" campo mt-3 h-[20px] flex items-center ">
-                    <img :src="EnlaceSVG" class=" w-[20px] mr-1 " alt="Enlace:">
-                    Enlace
-                </p>
-            </a>
+            <p class=" campo mt-3 h-[20px] flex items-center  " >
+                <img :src="DiaSVG" class=" w-[20px] mr-1 " alt="Fecha de inicio:">
+                {{ post.start_date }}
+            </p>
         </div>
         <div class="">
             <button class="p-2 absolute top-[0px] right-[20px] " @click="() => abrirModal(post.post_id)">

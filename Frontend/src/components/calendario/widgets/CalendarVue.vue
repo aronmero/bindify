@@ -26,31 +26,29 @@
     const days = ref([]);
 
     const manipulate = () => {
-        const lastDate = new Date(year.value, month.value + 1, 0).getDate();
-        const firstDay = new Date(year.value, month.value, 1).getDay();
-        const monthLabel = `${months[month.value]} ${year.value}`;
-        currentMonth.value = monthLabel;
+      const dayOne = new Date(year, month, 1).getDay();
+      
+      const lastDate = new Date(year.value, month.value + 1, 0).getDate();
+      let dayEnd = new Date(year, month, lastDate).getDay();
+      const monthLabel = `${months[month.value]} ${year.value}`;
+      currentMonth.value = monthLabel;
 
-        const newDays = [];
-        const prevMonthLastDate = new Date(year.value, month.value, 0).getDate();
+      const newDays = [];
 
-        // Agregar días inactivos del mes anterior
-        for (let i = firstDay - 1; i >= 0; i--) {
-            newDays.push({ day: prevMonthLastDate - i, month: month.value + 1, year: year.value,   inactive: true });
+      for (let i = dayOne; i > 0; i--) {
+            if (month + 1) newDays.push(i);
+      }
+      for (let i = 1; i <= lastDate; i++) {
+        newDays.push(i);
+      }
+
+      for (let i = dayEnd; i < 6; i++) {
+        newDays.push(i);
+                //cell += `<button class="inactive">${i-dayend+1}</button>`
         }
 
-        // Agregar días activos del mes actual
-        for (let i = 1; i <= lastDate; i++) {
-            newDays.push({ day: i,  month: month.value + 1, year: year.value, inactive: false });
-        }
 
-        // Agregar días inactivos del mes siguiente
-        const daysToAdd = 6 - newDays.length % 7;
-        for (let i = 1; i <= daysToAdd; i++) {
-            newDays.push({ day: i, month: month.value + 1, year: year.value,  inactive: true });
-        }
-
-        days.value = newDays;
+      days.value = newDays;
     };
 
     const cambiarFecha = (test, day) => {
@@ -107,8 +105,8 @@ onMounted(() => {
                 <li>Sab</li>
               </ul>
               <ul id="calendarDates" class="calendar-dates">
-                <li v-for="day in days" :key="day" :class="(day.inactive)?'inactive':'active'">
-                  <button @click="cambiarFecha('test', day)">{{ day.day }}</button>
+                <li v-for="day in days" :key="day" :class="getButtonClasses(day)">
+                  <button @click="cambiarFecha('test', day)">{{ day }}</button>
                 </li>
               </ul>
             </div>
@@ -216,7 +214,7 @@ onMounted(() => {
     }
 
     .calendar-body .inactive {
-        color: #BFC1C5 !important;
+        color: #BFC1C5;
     }
 
     #calendar-prev {
