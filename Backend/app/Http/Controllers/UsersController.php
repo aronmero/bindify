@@ -61,7 +61,6 @@ class UsersController extends Controller
      * }
      */
 
-    //TODO Hacer show de el usuario logueado
     public function show(string $username)
     {
         try {
@@ -169,16 +168,22 @@ class UsersController extends Controller
 
                     $hashtags = Commerce::find($commerceId->user_id)->hashtags->pluck('name')->toArray();
                     $commerce->hashtags = $hashtags;
-                    $user = Auth::user();
 
-                    $follows = $user->follows;
-                    $ids = [];
-        
-                    foreach ($follows as $seguido) {
-                        $ids[] = $seguido->id;
+                    //Seguido
+                    $auth = Auth::user();
+                    $userId = User::where('username', $commerce->username)->firstOrFail()->id;
+
+                    $seguido = $auth->follows()->where('follows_id', '=', $userId)->first();
+
+                    if ($seguido) {
+                        $commerce->followed = true;
+                        if ($auth->follows()->where('follows_id', '=', User::where('username', $commerce->username)->first()->id)->where('favorito', '=', true)->first()) {
+                        $commerce->favorite = true;
+                        }
+                        $commerce->favorite = false;
+                    }else{
+                        $commerce->followed = false;
                     }
-
-                    $user->whereIn('users-posts.user_id', $ids);
 
                 });
 
@@ -409,6 +414,8 @@ class UsersController extends Controller
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
                 $post->post_id = Crypt::encryptString($post->post_id);
+                $user = User::where('username', $post->username)->first();
+                $post->userRol = $user->getRoleNames()[0];
             });
             return response()->json(["status" => true, "data" => $posts], 200);
         } catch (QueryException $e) {
@@ -507,6 +514,8 @@ class UsersController extends Controller
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
                 $post->post_id = Crypt::encryptString($post->post_id);
+                $user = User::where('username', $post->username)->first();
+                $post->userRol = $user->getRoleNames()[0];
             });
 
             return response()->json([
