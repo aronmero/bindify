@@ -6,11 +6,11 @@ use App\Http\Requests\StorePostsRequest;
 use App\Http\Requests\UpdatePostsRequest;
 use App\Models\Post;
 use App\Models\Comment;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
 
 class PostsController extends Controller
 {
@@ -78,7 +78,7 @@ class PostsController extends Controller
                 ->orderBy('posts.created_at', 'desc')
                 ->get();
 
-                
+
 
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
@@ -157,11 +157,11 @@ class PostsController extends Controller
                 ->orderBy('posts.start_date', 'desc')
                 ->get();
 
-                
+
 
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                //crypt$post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Crypt::encryptString($post->post_id);
             });
 
             return response()->json([
@@ -245,7 +245,7 @@ class PostsController extends Controller
 
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                //crypt$post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Crypt::encryptString($post->post_id);
             });
 
             return response()->json([
@@ -261,7 +261,38 @@ class PostsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Crea una nueva publicación en la plataforma.
+     *
+     * Este método permite al usuario autenticado crear una nueva publicación en la plataforma,
+     * con los datos proporcionados en la solicitud.
+     *
+     * @authenticated
+     *
+     * @param  \App\Http\Requests\StorePostsRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "message": "Post creado",
+     *     "data": {
+     *         "post_id": "ID_de_la_publicación",
+     *         "image": "imagen_de_la_publicación",
+     *         "title": "título_de_la_publicación",
+     *         "description": "descripción_de_la_publicación",
+     *         "post_type_name": "nombre_del_tipo_de_publicación",
+     *         "start_date": "fecha_de_inicio_de_la_publicación",
+     *         "end_date": "fecha_de_finalización_de_la_publicación",
+     *         "active": true,
+     *         "ubicacion": "ubicacion_de_la_publicación",
+     *         "fecha_creacion": "fecha_de_creación_de_la_publicación",
+     *         "hashtags": ["hashtag1", "hashtag2", ...]
+     *     }
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
      */
     public function store(StorePostsRequest $request)
     {
@@ -289,8 +320,7 @@ class PostsController extends Controller
 
 
             $postData = [
-                'post_id' => $post->id,
-                //crypt'post_id' => $post->post_id = Crypt::encryptString($post->post_id),
+                'post_id' => $post->id = Crypt::encryptString($post->id),
                 'image' => $post->image,
                 'title' => $post->title,
                 'description' => $post->description,
@@ -302,34 +332,78 @@ class PostsController extends Controller
                 'fecha_creacion' => $post->created_at,
                 'hastags' => $post->hashtags->pluck('name')
             ];
-            return response()->json([
-                'status' => true,
-                'message' => 'Post creado',
-                'data' => $postData
-            ], 200);
+            return response()->json(['status' => true, 'message' => 'Post creado', 'data' => $postData], 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-            ], 404);
+            return response()->json(['status' => false, 'message' => $th->getMessage(),], 404);
         }
     }
 
     /**
-     * Display the specified resource.
+     * Muestra los detalles de una publicación específica junto con los comentarios y usuarios asociados.
+     *
+     * Este método recupera información detallada sobre una publicación específica, incluyendo su imagen,
+     * título, descripción, tipo, fechas, estado, ubicación, fecha de creación y hashtags asociados.
+     * Además, obtiene hasta 5 comentarios asociados con la publicación, junto con los nombres de usuario,
+     * avatares e IDs de los comentaristas. También recupera información sobre los usuarios que son propietarios
+     * de la publicación, incluyendo sus nombres, nombres de usuario, avatares e IDs.
+     *
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @response 200 {
+     * "status": true,
+     * "data": {
+     * "post": {
+     * "image": "imagen_de_la_publicación",
+     * "title": "título_de_la_publicación",
+     * "description": "descripción_de_la_publicación",
+     * "post_type_name": "nombre_del_tipo_de_publicación",
+     * "start_date": "fecha_de_inicio_de_la_publicación",
+     * "end_date": "fecha_de_finalización_de_la_publicación",
+     * "active": true,
+     * "ubicacion": "ubicación_de_la_publicación",
+     * "fecha_creacion": "fecha_de_creación_de_la_publicación",
+     * "hashtags": ["hashtag1", "hashtag2", ...]
+     * },
+     * "users": [
+     * {
+     * "name": "nombre_del_usuario",
+     * "username": "nombre_de_usuario",
+     * "avatar": "avatar_del_usuario",
+     * "id": "ID_del_usuario"
+     * },
+     * ...
+     * ],
+     * "comments": [
+     * {
+     * "username": "nombre_de_usuario",
+     * "content": "contenido_del_comentario",
+     * "comment_id": "ID_del_comentario",
+     * "avatar": "avatar_del_usuario",
+     * "user_id": "ID_del_usuario"
+     * },
+     * ...
+     * ]
+     * }
+     * }
+     *
+     * @response 404 {
+     * "status": false,
+     * "message": "mensaje_de_error"
+     * }
      */
     public function show(string $id)
     {
         try {
 
-            //crypttry {
-            //crypt    $id = Crypt::decryptString($id);
-            //crypt} catch (DecryptException $e) {
-            //crypt    return response()->json([
-            //crypt        'status' => false,
-            //crypt        'message' => 'Post inexistente',
-            //crypt    ], 500);
-            //crypt}
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Post inexistente',
+                ], 500);
+            }
 
             // Obtener el post
             $post = Post::with('users')->findOrFail($id);
@@ -358,8 +432,8 @@ class PostsController extends Controller
                     'username' => $comment->user->username,
                     'content' => $comment->content,
                     'comment_id' => $comment->id,
+                    'comment_id' => Crypt::encryptString($comment->id),
                     'avatar' => $comment->user->avatar,
-                    'user_id' => $comment->user->id
                 ];
                 $formattedComments[] = $formattedComment;
             }
@@ -374,7 +448,6 @@ class PostsController extends Controller
                     'name' => $user->name,
                     'username' => $user->username,
                     'avatar' => $user->avatar,
-                    'id' => $user->id
                 ];
                 $formattedUsers[] = $formattedUser;
             }
@@ -393,20 +466,65 @@ class PostsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualiza la información de una publicación existente.
+     *
+     * Este método permite al usuario autenticado actualizar la información de una publicación existente
+     * proporcionando los datos actualizados en la solicitud.
+     *
+     * @param  \App\Http\Requests\UpdatePostsRequest  $request
+     * @param  string  $id
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "message": "Post actualizado",
+     *     "data": {
+     *         "post": {
+     *             "image": "imagen_de_la_publicación",
+     *             "title": "título_de_la_publicación",
+     *             "description": "descripción_de_la_publicación",
+     *             "post_type_name": "nombre_del_tipo_de_publicación",
+     *             "start_date": "fecha_de_inicio_de_la_publicación",
+     *             "end_date": "fecha_de_finalización_de_la_publicación",
+     *             "active": true,
+     *             "ubicacion": "ubicacion_de_la_publicación",
+     *             "fecha_creacion": "fecha_de_creación_de_la_publicación",
+     *             "hastags": ["hashtag1", "hashtag2", ...]
+     *         },
+     *         "users": [
+     *             {
+     *                 "name": "nombre_del_usuario",
+     *                 "username": "nombre_de_usuario",
+     *                 "avatar": "avatar_del_usuario",
+     *                 "id": "ID_del_usuario"
+     *             },
+     *             ...
+     *         ]
+     *     }
+     * }
+     *
+     * @response 403 {
+     *     "status": false,
+     *     "message": "Post no actualizado. No tienes permisos sobre este post."
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
      */
     public function update(UpdatePostsRequest $request, string $id)
     {
         try {
 
-            //crypttry {
-            //crypt    $id = Crypt::decryptString($id);
-            //crypt} catch (DecryptException $e) {
-            //crypt    return response()->json([
-            //crypt        'status' => false,
-            //crypt        'message' => 'Post inexistente',
-            //crypt    ], 500);
-            //crypt}
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Post inexistente',
+                ], 500);
+            }
 
             $user = Auth::user();
             $post = Post::find($id);
@@ -483,20 +601,41 @@ class PostsController extends Controller
     }
 
     /**
-     * Cambia el estado de la publicación
+     * Elimina una publicación existente de forma lógica.
+     *
+     * Este método permite al usuario autenticado eliminar una publicación existente de forma lógica,
+     * marcándola como inactiva en lugar de eliminarla físicamente de la base de datos.
+     *
+     * @param  string  $id
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "message": "Post eliminado"
+     * }
+     *
+     * @response 403 {
+     *     "status": false,
+     *     "message": "Post no eliminado. No tienes permisos sobre este post."
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
      */
     public function destroy(string $id)
     {
         try {
 
-            //crypttry {
-            //crypt    $id = Crypt::decryptString($id);
-            //crypt} catch (DecryptException $e) {
-            //crypt    return response()->json([
-            //crypt        'status' => false,
-            //crypt        'message' => 'Post inexistente',
-            //crypt    ], 500);
-            //crypt}
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Post inexistente',
+                ], 500);
+            }
 
             $user = Auth::user();
             $post = Post::find($id);

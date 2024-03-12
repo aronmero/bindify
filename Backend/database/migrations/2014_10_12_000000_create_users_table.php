@@ -17,10 +17,10 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->unique();
             $table->unsignedBigInteger('municipality_id');
-            $table->string('avatar')->nullable();
+            $table->string('avatar')->nullable()->default('default');
             $table->string('username')->unique();
             $table->string('name');
-            $table->string('banner')->nullable();
+            $table->string('banner')->nullable()->default('default');
             $table->rememberToken();
             $table->timestamps();
 

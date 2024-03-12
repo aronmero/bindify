@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use Illuminate\Http\Request;
 use App\Models\Commerce;
 use App\Models\Customer;
 use App\Models\User;
@@ -11,10 +12,12 @@ use App\Models\Verification_token;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
+
 
 class AuthController extends Controller
 {
@@ -66,6 +69,34 @@ class AuthController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request - El token del usuario.
+     *
+     * @return \Illuminate\Http\JsonResponse - Un mensaje indicando que se cerro la sesión o un mensaje de error.
+     * 
+     * @response 200 {
+     *   "message": "Sesión Cerrada Correctamente"
+     * }
+     *
+     * @response 401 {
+     *   "error": "Usuario no autenticado"
+     * }
+     */
+    public function logout(request $request)
+    {
+        // Comprueba que el usuario esta autenticado
+        if (Auth::check()) {
+
+            $request->user()->tokens->each(function ($token, $key) {
+                $token->delete();
+            });
+            return response()->json(['status' => true, 'message' => 'Sesión Cerrada Correctamente'], 200);
+        } else {
+            return response()->json(['status' => false, 'error' => 'Usuario no autenticado'], 401);
+        }
+
+    }
+
+    /**
      * Maneja la solicitud de registro de usuarios.
      *
      * Este método crea un nuevo usuario con los datos proporcionados en la solicitud.
@@ -85,18 +116,27 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
+        // Validación de la solicitud
         if ($request->empresa == true) {
             $request->validate([
-                'phone' => 'required',
+                'phone' => 'required', // Establece las reglas para el avatar
             ]);
         }
+
+        // Manejo de la imagen/avatar (Esto supuestamente guarda en la carpeta storage/avatars , la imagen del avatar  )
+        $avatarPath = null;
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public'); // Guarda la imagen en el almacenamiento 'public/avatars'
+        }
+
+        // Creación del usuario
         try {
             $user = User::create([
                 'email' => $request->email,
                 'password' => $request->password,
                 'phone' => $request->phone,
                 'municipality_id' => $request->municipality_id,
-                'avatar' => $request->avatar,
+                'avatar' => $avatarPath, // Guarda la ruta del avatar en la base de datos
                 'username' => $request->username,
                 'name' => $request->name
             ]);
