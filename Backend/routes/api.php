@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('comment', CommentsController::class)->except(['index']);
     Route::apiResource('review', ReviewsController::class)->except(['index']);
     Route::apiResource('hashtag', HashtagsController::class)->except(['show', 'update', 'destroy']);
+    Route::post('hashtag/trending', [HashtagsController::class, 'populares']);
     Route::apiResource('user', UsersController::class)->except(['index', 'store', 'posts']);    
     Route::get('profile', [UsersController::class,'profile']);
     Route::get('user/{username}/posts', [UsersController::class , 'posts']);
