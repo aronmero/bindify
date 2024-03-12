@@ -174,14 +174,14 @@ const tratarDatos = ()=>{
             "password": contraNueva.value,
             "phone": telefono.value,
             "municipality_id": municipio.value,
-            "avatar": imagenPerfil.value, /* No tiene mucho sentido esto mirar esto en clase por que si el usuario no sube foto esto es una mierda */
+            "avatar": imagenPerfil.value,
             "username": usuario.value,
             "name": nombre.value,
             "category_id": categoria.value,
             "empresa": false,
             "schedule": horarioActual.value,
             "address": direccion.value,
-            "gender": optionsSex[sexo.value] == undefined ? null : optionsSex[sexo.value].name, /* REVISAR TRAS CAMBIO ARRAY OBJETOS */
+            "gender": optionsSex[sexo.value] == undefined ? null : optionsSex[sexo.value].name,
             "birth_date": fechaNac.value,
             "password_confirmation": repetirNueva.value,
             }
