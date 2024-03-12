@@ -33,10 +33,10 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('1234'),
             'phone'=> Str::random(10),
             'municipality_id'=> $municipality_id,
-            'avatar'=> Str::random(10),
-            'banner'=> Str::random(10),
+            'avatar'=> $this->faker->imageUrl(),
+            'banner'=> $this->faker->imageUrl(),
             'username'=> fake()->name(),
-            'remember_token' => Str::random(10),
+            'remember_token' => Str::random(15),
         ];
     }
 

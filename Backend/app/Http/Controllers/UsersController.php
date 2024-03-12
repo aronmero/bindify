@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
@@ -56,6 +57,8 @@ class UsersController extends Controller
      *   "error": "Usuario no encontrado"
      * }
      */
+
+    //TODO Hacer show de el usuario logueado
     public function show(string $username)
     {
         try {
@@ -68,8 +71,9 @@ class UsersController extends Controller
             ], 404);
         }
 
+        $userRol = $user->getRoleNames()[0];
 
-        if ($user->getRoleNames() == "customer") {
+        if ($userRol == "customer") {
 
             try {
 
@@ -111,7 +115,8 @@ class UsersController extends Controller
 
             try {
 
-                $commerce = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
+                $commerce = Commerce::leftJoin('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
+                    ->join('users', 'commerces.user_id', '=', 'users.id')
                     ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
                     ->join('categories', 'commerces.category_id', '=', 'categories.id')
                     ->select(
@@ -126,14 +131,34 @@ class UsersController extends Controller
                         'commerces.description',
                         'categories.name AS categories_name',
                         'schedule',
-                        'commerces.active'
+                        'commerces.active',
+                        'commerces.avg',
+                        DB::raw('count(reviews.commerce_id) as review_count')
+
                     )
                     ->where('users.username', '=', $username)
+                    ->groupBy(
+                        'email',
+                        'phone',
+                        'municipalities.name',
+                        'avatar',
+                        'banner',
+                        'username',
+                        'users.name',
+                        'address',
+                        'commerces.description',
+                        'categories.name',
+                        'schedule',
+                        'commerces.active',
+                        'commerces.avg',
+                    )
                     ->get();
 
 
-                $commerce->each(function ($commerce, $user) {
-                    $commerce->tipo = ($user->getRoleNames() == "ayuntamiento")?"ayuntamiento":"commerce";
+                $commerce->each(function ($commerce) {
+                    $user = User::where("username", $commerce->username)->firstOrFail();
+                    $userRol = $user->getRoleNames()[0];
+                    $commerce->tipo = ($userRol == "ayuntamiento")?"ayuntamiento":"commerce";
                     $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
                         ->select('user_id')
                         ->where('users.username', '=', $commerce->username)
@@ -413,8 +438,9 @@ class UsersController extends Controller
             ], 404);
         }
 
+        $userRol = $user->getRoleNames()[0];
 
-        if ($user->getRoleNames() == "customer") {
+        if ($userRol == "customer") {
 
             try {
 
@@ -455,7 +481,8 @@ class UsersController extends Controller
 
             try {
 
-                $commerce = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
+                $commerce = Commerce::leftJoin('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
+                    ->join('users', 'commerces.user_id', '=', 'users.id')
                     ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
                     ->join('categories', 'commerces.category_id', '=', 'categories.id')
                     ->select(
@@ -470,9 +497,27 @@ class UsersController extends Controller
                         'commerces.description',
                         'categories.name AS categories_name',
                         'schedule',
-                        'commerces.active'
+                        'commerces.active',
+                        'commerces.avg',
+                        DB::raw('count(reviews.commerce_id) as review_count')
+
                     )
                     ->where('users.username', '=', $username)
+                    ->groupBy(
+                        'email',
+                        'phone',
+                        'municipalities.name',
+                        'avatar',
+                        'banner',
+                        'username',
+                        'users.name',
+                        'address',
+                        'commerces.description',
+                        'categories.name',
+                        'schedule',
+                        'commerces.active',
+                        'commerces.avg',
+                    )
                     ->get();
 
                 $commerce->each(function ($commerce) {

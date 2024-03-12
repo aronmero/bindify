@@ -34,11 +34,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('post', PostsController::class)->except(['index']);
-    
-    Route::apiResource('comment', CommentsController::class)->except(['index']);
+
+    Route::apiResource('comment', CommentsController::class)->except(['index', 'replies']);
+    Route::get('comment/{id}/replies', [CommentsController::class , 'replies']);
     Route::apiResource('review', ReviewsController::class)->except(['index']);
     Route::apiResource('hashtag', HashtagsController::class)->except(['show', 'update', 'destroy']);
-    Route::apiResource('user', UsersController::class)->except(['index', 'store', 'posts']);    
+    Route::post('hashtag/trending', [HashtagsController::class, 'populares']);
+    Route::apiResource('user', UsersController::class)->except(['index', 'store', 'posts']);
     Route::get('profile', [UsersController::class,'profile']);
     Route::get('user/{username}/posts', [UsersController::class , 'posts']);
     Route::get('user/{username}/events', [UsersController::class, 'events']);
@@ -52,9 +54,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     /** Añadido por David */
     Route::get('home_todos', [PostsController::class, 'home_todos']);
+    Route::get('home_calendario', [PostsController::class, 'home_calendario']);
+    Route::get('comment_detailed/{id}', [CommentsController::class, 'show_home']);
 });
-   
-Route::apiResource('municipality', MunicipalitiesController::class)->only('index');    
+
+Route::apiResource('municipality', MunicipalitiesController::class)->only('index');
 Route::apiResource('category', CategoryController::class)->only('index');
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);

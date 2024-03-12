@@ -85,34 +85,40 @@ class Utils
    */
   public static function AVG_Reviews(int $id)
   {
-    // Obtener todas las reviews por el ID del comercio
-    $reviews = Review::where('commerce_id', $id)->get();
-
-    //Comprueba si existen reviews para ese comercio
-    if ($reviews->isEmpty()) {
-      return response()->json(['status' => false, 'message' => 'No existen reviews para este comercio'], 404);
-    }
-
-    //Suma y almacena en una variable la puntuacion total de todas las reviews 
-    $totalScore = $reviews->sum('note');
-
-    // Calcula la media total de todas las puntuaciones de las reviews de ese comercio
-    $averageScore = $totalScore / $reviews->count();
-
-    // Insertar la puntuación media en la tabla de comercios
-    try {
-      // Encuentra el comercio por su ID
-      $commerce = Commerce::select('avg')->where('user_id', $id)->first();
-
-      // Actualiza el campo avg con la puntuación media
-      $commerce->avg = $averageScore;
-
-      // Guarda los cambios en la base de datos
-      $commerce->save();
-
-      return response()->json(['status' => true, 'message' => 'Media calculada e insertada en el comercio con el id:' . $id . " con una puntuacion media de :" . $averageScore], 200);
-    } catch (\Exception $e) {
-      return response()->json(['status' => false, 'message' => 'Error al insertar la puntuación media en la tabla de comercios'], 500);
-    }
+      // Obtener todas las reviews por el ID del comercio
+      $reviews = Review::where('commerce_id', $id)->get();
+  
+      //Comprueba si existen reviews para ese comercio
+      if ($reviews->isEmpty()) {
+          return response()->json(['status' => false, 'message' => 'No existen reviews para este comercio'], 404);
+      }
+  
+      //Suma y almacena en una variable la puntuacion total de todas las reviews 
+      $totalScore = $reviews->sum('note');
+  
+      // Calcula la media total de todas las puntuaciones de las reviews de ese comercio
+      $averageScore = $totalScore / $reviews->count();
+  
+      // Insertar la puntuación media en la tabla de comercios
+      try {
+          // Encuentra el comercio por su ID
+          $commerce = Commerce::where('user_id', $id)->first();
+  
+          // Verifica si el comercio existe
+          if (!$commerce) {
+              return response()->json(['status' => false, 'message' => 'El comercio no existe'], 404);
+          }
+  
+          // Actualiza el campo avg con la puntuación media
+          $commerce->avg = $averageScore;
+  
+          // Guarda los cambios en la base de datos
+          $commerce->save();
+  
+          return response()->json(['status' => true, 'message' => 'Media calculada e insertada en el comercio con el id:' . $id . " con una puntuacion media de :" . $averageScore], 200);
+      } catch (\Exception $e) {
+          return response()->json(['status' => false, 'message' => 'Error al insertar la puntuación media en la tabla de comercios'], 500);
+      }
   }
+  
 }

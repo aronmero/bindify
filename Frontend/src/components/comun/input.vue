@@ -42,6 +42,9 @@ const emitirDatos = (e)=>{
         emit("datos", e.target.value);
     }
 }
+const borrarImagen = ()=>{
+    imagenSubida.value = null;
+}
 </script>
 <template>
     <div class="flex flex-col gap-y-2 justify-center">
@@ -72,6 +75,7 @@ const emitirDatos = (e)=>{
                 src="/assets/icons/add.svg"
                 class="max-w-[40px] max-h-[40px] lg:block absolute bottom-0 right-0 lg:-translate-x-1 lg:translate-y-0 translate-x-1 translate-y-1 py-1 px-2 pointer-events-none"
             />
+            <!-- Sacar a un boton individual y meter todo en un div?? -->
         </button>
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'banner'" class="flex relative lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] justify-center items-center rounded-xl border-dotted border border-background-900">
             <img v-if="imagenSubida == null && valor != null" :src="valor" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] rounded-xl">
@@ -80,6 +84,12 @@ const emitirDatos = (e)=>{
             <img
                 src="/assets/icons/add.svg"
                 class="max-w-[40px] max-h-[40px] lg:block absolute bottom-0 right-0 lg:translate-x-4 lg:translate-y-2 translate-x-4 translate-y-2 py-1 px-2 pointer-events-none"
+            />
+        </button>
+        <button @click="borrarImagen" v-if="imagenSubida != null" class="relative cursor-pointer">
+            <img 
+                src="/assets/icons/delete.svg"
+                class="max-w-[40px] max-h-[40px] lg:block absolute bottom-1 left-0 bg-primary-500 rounded-lg p-2"
             />
         </button>
         <div v-if="tipo == 'button' && clase == null" class="relative flex flex-row items-center justify-start">

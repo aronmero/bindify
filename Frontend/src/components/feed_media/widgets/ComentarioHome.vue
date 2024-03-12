@@ -36,17 +36,17 @@ const modalHandler = ref(false);
 const opcionesModal = [
     {
         name: "Borrar Comentario",
-        action: `/comentario/${comentario.comment_id}/delete`,
+        action: `comentario/null/delete`,
         icon: DeleteSVG
     },
     {
         name: "Ver perfil",
-        action: `/perfil/${comentario.username}`,
+        action: `perfil/` || null,
         icon: UserSVG
     },
     {
         name: "Reseñas",
-        action: `/perfil/${comentario.username}`,
+        action: `perfil/` || null,
         icon: StarSVG
     }
 ];
@@ -71,22 +71,22 @@ const abrirModal = () => {
         <!-- Header del comentario -->
         <div class=" header-comentario flex ">
             <!-- Avatar del usuario -->
-            <img v-if="comentario.avatar != null" class=" mr-[10px] " :src="comentario.avatar" alt="">
+            <img  v-if="user.avatar" class=" mr-[10px] " :src="user.avatar" alt="">
             <!-- Textos del usuario -->
-            <div class="textos m-l">
-                <b> {{ comentario.username }}</b>
-                <button click="" class=" mt-[-15px] rating flex h-[fit-content] items-center justify-start "
-                    v-if="comentario.rating != null">
-                    <img class="  " :src="StarSVG" v-for="index in Math.floor(user.rating)" alt="star"
-
-                        :title="user.rating" />
+            <div class="textos m-l flex flex-col">
+                <b v-if="user != null"> {{ user }}</b>
+                <small v-if="comentario.comment_creation != null">{{ datetranslatesql(comentario.comment_creation) }}</small>
+                <button class=" mt-[-15px] rating flex h-[fit-content] items-center justify-start "
+                    v-if="user.avg != null">
+                    <img class="  " :src="StarSVG" v-for="index in Math.floor(user.avg)" alt="star"
+                        :title="user.avg" />
                     <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(user.avg))" alt="star"
-                        :title="user.rating" />
+                        :title="user.avg" />
                     <small>({{ user.avg }})</small>
                 </button>
             </div>
             <!-- Botón de Ver Más -->
-            <button v-if="comentario.username != null" @click="() => abrirModal()" class="w-[20px] h-[20px] absolute right-10">
+            <button v-if="user.name != null" @click="() => abrirModal()" class="w-[20px] h-[20px] absolute right-10">
                 <img class="  " :src="MoreSVG" alt="">
             </button>
         </div>

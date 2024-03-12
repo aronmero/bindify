@@ -16,18 +16,18 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('post_id');
             $table->string('content');
-            $table->unsignedBigInteger('comment_id')->nullable();
+            $table->unsignedBigInteger('father_id')->nullable();
             $table->boolean('active');
             $table->timestamps();
 
             //clave foranea para el ID del usuario
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            
+
             //clave foranea para el ID del post
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');;
 
             //clave foranea para el ID del commentario
-            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade');
+            $table->foreign('father_id')->references('id')->on('comments')->onDelete('cascade');
 
         });
     }

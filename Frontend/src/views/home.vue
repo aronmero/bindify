@@ -10,7 +10,6 @@
     import TrendsOfertas from "../components/feed_media/widgets/TrendsOfertas.vue";
     import TrendsComercios from "../components/feed_media/widgets/TrendsComercios.vue";
 
-    
 </script>
 
 <template >
@@ -19,11 +18,16 @@
         <Grid>
             <template v-slot:Left  >
                 <!-- Se listan los trends de la barra de navegación izquierda -->
-                <TrendsOfertas  v-if="true"/>
-                <TrendsComercios  v-if="true"/>
+                <!-- <TrendsOfertas  v-if="true"/> -->
+                
             </template>
-                <FeedPosts  />
-            <template v-slot:Right></template>
+                <Suspense>
+                    <FeedPosts  />
+                </Suspense>
+            <template v-slot:Right>
+                <!-- Se listan los trends de la barra de navegación derecha -->
+                <!-- <TrendsComercios  v-if="true"/> -->
+            </template>
         </Grid>
     </div>
     <Footer />

@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink } from "vue-router";
 import router from '@/router/index.js';
+import  logo  from '@public/img/fondo.png';
 
 /**
  * Cierra la sesion actual y redirige al usuario
@@ -15,19 +16,21 @@ import router from '@/router/index.js';
 </script>
 
 <template>
-  <header class="h-[50px] bg-background-300 flex fixed top-0 justify-between px-[10px] w-full z-50">
-    <nav class="w-[50px] flex justify-center items-center">
-      <RouterLink to="/"> <img src="https://placehold.co/35x35/png" class="max-w-[35px] max-h-[35px] rounded-full" />
+  <header class="h-[80px] bg-[#f3f3f3]  flex fixed top-0 justify-around px-[10px] w-full z-50">
+    <nav class="w-[55px] flex justify-center items-center">
+      <RouterLink to="/" class=" logo flex justify-center items-center "> 
+        <img :src="logo" class="max-w-[55px]  max-h-[40px]  hidden xl:flex sm:flex rounded-full " />
+        <h1 class="flex">Bindify</h1>
       </RouterLink>
     </nav>
-    <div class="flex">
+    <div class="menu-right flex">
       <nav class="w-[50px] flex justify-center items-center">
         <RouterLink to="/busqueda">
           <img title="Busqueda" src="/assets/icons/search.svg" class="max-w-[30px] max-h-[30px] hidden lg:block"
             alt="Busqueda" />
         </RouterLink>
       </nav>
-      <nav class="w-[50px] flex justify-center items-center">
+      <nav class="w-[50px] xl:[20px] flex justify-center items-center">
         <RouterLink to="/calendario">
           <img title="Calendario" src="/assets/icons/schedule.svg" class="max-w-[30px] max-h-[30px] hidden lg:block"
             alt="Calendario" />
@@ -47,7 +50,7 @@ import router from '@/router/index.js';
       </nav>
       <nav class="w-[50px] flex justify-center items-center">
         <button @click="closeSession">
-          <img title="Cerrar sesion" src="/assets/icons/settings.svg" class="max-w-[30px] max-h-[30px]"
+          <img title="Cerrar sesion" src="/assets/icons/logout.svg" class="max-w-[30px] max-h-[30px]"
             alt="Cerrar sesion" />
         </button>
       </nav>
@@ -55,4 +58,42 @@ import router from '@/router/index.js';
   </header>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+  header {
+    border-bottom: 1px solid rgb(206,206,206);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    .logo {
+      //background: red;
+      h1 {
+        font-size:1.6rem;
+        font-weight:bolder;
+        margin-left:20px;
+        background: -webkit-linear-gradient(#EC4A41, #FE822F);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 5px 9px 9px rgba(0,0,0,0.25);
+      }
+      
+    }
+    .menu-right {
+
+      nav {
+        a, button {
+          border-radius:5px;
+          padding:4px;
+          transition:.2s ease-in-out;
+        }
+        
+        a:hover, button:hover {
+          background:#FE822F;
+         
+        }
+      }
+     
+      
+  
+  }
+
+    
+  }
+</style>
