@@ -50,11 +50,11 @@ const controlador_modal = ref(false);
 const solicitarDatosApi = async()=>{
     optionsCategory.value = await solicitarCategorias("GET").then(data => data = data.data);
     options.value = await solicitarMunicipios("GET").then(data => data = data.data);
+    console.log(options.value);
 }
 solicitarDatosApi();
 /* Falta vincular modal de editar horario y hacer las validaciones */
 const tratarDatos = ()=>{
-    /* Mostrar todos los errores a la vez */
     console.log(tipoUsuario.value);
     console.log(usuario.value);
     console.log(nombre.value);
@@ -174,15 +174,16 @@ const tratarDatos = ()=>{
             "password": contraNueva.value,
             "phone": telefono.value,
             "municipality_id": municipio.value,
-            "avatar": URL.createObjectURL(imagenPerfil.value), /* No tiene mucho sentido esto mirar esto en clase por que si el usuario no sube foto esto es una mierda */
+            "avatar": imagenPerfil.value, /* No tiene mucho sentido esto mirar esto en clase por que si el usuario no sube foto esto es una mierda */
             "username": usuario.value,
             "name": nombre.value,
             "category_id": categoria.value,
             "empresa": false,
             "schedule": horarioActual.value,
             "address": direccion.value,
-            "gender": optionsSex[sexo.value],
+            "gender": optionsSex[sexo.value] == undefined ? null : optionsSex[sexo.value].name, /* REVISAR TRAS CAMBIO ARRAY OBJETOS */
             "birth_date": fechaNac.value,
+            "password_confirmation": repetirNueva.value,
             }
             let respuesta = register(datos);
             if(respuesta.status){
@@ -211,7 +212,7 @@ const tratarDatos = ()=>{
                 "password": contraNueva.value,
                 "phone": telefono.value,
                 "municipality_id": municipio.value,
-                "avatar": URL.createObjectURL(imagenPerfil.value), /* No tiene mucho sentido esto */
+                "avatar": imagenPerfil.value, /* No tiene mucho sentido esto */
                 "username": usuario.value,
                 "name": nombre.value,
                 "category_id": categoria.value,
@@ -221,6 +222,7 @@ const tratarDatos = ()=>{
                 "gender": optionsSex[sexo.value],
                 "birth_date": fechaNac.value,
                 "verification_token_id": token.value,
+                "password_confirmation": repetirNueva.value,
             }
             let respuesta = register(datos);
             if(respuesta.status){

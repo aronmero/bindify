@@ -49,9 +49,9 @@ export const genOptionsRegister = (metodo, body = null) => {
   return {
     method: metodo,
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "Multipart/form-data",
       "User-Agent": "insomnia/8.6.0",
-      Accept: "application/json",
+      "Accept": "application/json",
     },
     body: body,
   };
