@@ -1,5 +1,5 @@
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { ref } from 'vue';
 
     import { useIntersectionObserver } from '@vueuse/core'
 
@@ -76,11 +76,11 @@
         router.push(url)
     }
 
-    /** Dependiendo del tipo de ar */
-    const tipo = props.post.post_type_id;
+    /** Dependiendo del tipo de  */
+    const tipo = ref(null);
     let IconoTipo = "";
-    if (tipo == 1) IconoTipo = TipoOferta;
-    if (tipo == 2) IconoTipo = TipoEvento;
+    if (tipo == 1) IconoTipo = TipoOferta; // 1 Post
+    if (tipo == 2) IconoTipo = TipoEvento; // 2 Event
 
     /**
      * Abre el modal de comentarios
@@ -139,7 +139,7 @@
     <Suspense>
         <div>
              <!------------------------------------ Post NORMAL ------------------------------>
-        <article ref="post_reference" v-if="tipo_usuario == 'comercio' && post.avg < 4"
+        <article ref="post_reference" v-if="post.userRol == 'commerce' && post.avg < 3.5"
             :class="` post ${estilos.post} relative `" :data-start_date="post.start_date" :data-end_date="post.end_date"
             :data-favorito="(favoritos.indexOf(post.post_id) == -1) ? 'false' : 'true'">
             <!-- Contenedor del header del post -->
@@ -236,7 +236,8 @@
 
 
         <!------------------------------------ Post DESTACADO ------------------------------>
-        <article v-if="tipo_usuario == 'comercio' && post.avg >= 4" :class="` post ${estilos.post} relative`">
+        <article v-if="post.userRol == 'commerce' && post.avg >= 3.5" :class="` post ${estilos.post} relative`" :data-start_date="post.start_date" :data-end_date="post.end_date"
+            :data-favorito="(favoritos.indexOf(post.post_id) == -1) ? 'false' : 'true'">
 
             <!-- Contenedor del header del post -->
             <div class=" post-header w-[100%] h-[60px] flex items-center ">
@@ -331,7 +332,8 @@
         </article>
 
         <!------------------------------------ Post AYUNTAMIENTO ------------------------------>
-        <article v-if="tipo_usuario == 'ayuntamiento'" :class="` post ${estilos.post} relative`">
+        <article v-if="post.userRol == 'ayuntamiento'" :class="` post ${estilos.post} relative`" :data-start_date="post.start_date" :data-end_date="post.end_date"
+        :data-favorito="(favoritos.indexOf(post.post_id) == -1) ? 'false' : 'true'">
 
             <!-- post header -->
             <div class=" post-header w-[100%] h-[fit-content] flex items-center pt-3 pb-4 ">
