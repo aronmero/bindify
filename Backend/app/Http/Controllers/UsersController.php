@@ -166,6 +166,17 @@ class UsersController extends Controller
 
                     $hashtags = Commerce::find($commerceId->user_id)->hashtags->pluck('name')->toArray();
                     $commerce->hashtags = $hashtags;
+                    $user = Auth::user();
+
+                    $follows = $user->follows;
+                    $ids = [];
+        
+                    foreach ($follows as $seguido) {
+                        $ids[] = $seguido->id;
+                    }
+
+                    $user->whereIn('users-posts.user_id', $ids);
+
                 });
 
                 return response()->json([
@@ -353,6 +364,7 @@ class UsersController extends Controller
 
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+                //crypt $post->post_id => Crypt::encryptString($post->post_id),
             });
 
             return response()->json([
@@ -410,6 +422,7 @@ class UsersController extends Controller
 
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+                //crypt $post->post_id => Crypt::encryptString($post->post_id),
             });
 
             return response()->json([
@@ -522,6 +535,9 @@ class UsersController extends Controller
 
                 $commerce->each(function ($commerce) {
 
+                    $user = User::where("username", $commerce->username)->firstOrFail();
+                    $userRol = $user->getRoleNames()[0];
+                    $commerce->tipo = ($userRol == "ayuntamiento")?"ayuntamiento":"commerce";
                     $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
                         ->select('user_id')
                         ->where('users.username', '=', $commerce->username)
