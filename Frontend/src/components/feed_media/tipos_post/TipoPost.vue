@@ -27,7 +27,7 @@
 
     import { en_favoritos, obtener_favoritos } from '../helpers/favoritos';
 
-    import Comentarios from '../modal/Comentarios.vue';
+    import Comentarios from '../modal/ComentariosHome.vue';
 
     const props = defineProps({
         post: Object

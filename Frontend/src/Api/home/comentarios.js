@@ -13,10 +13,14 @@ export async function obtener_comentarios_post(post_id) {
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     const token = user.usuario.token;
 
+ 
     let data = await fetch(`http://127.0.0.1:8000/api/comment_detailed/${post_id}`, options)
         .then(res => res.json())
         .then(res => res);
+
+   
     return data;
+    
 }
 
 /**
