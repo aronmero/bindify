@@ -120,7 +120,7 @@ class HashtagsController extends Controller
     {
         try {
 
-            if ($request->type == 'Posts') {
+            if ($request->type == 'posts') {
 
             $hashtags = Hashtag::join('posts-hashtags', 'posts-hashtags.hashtag_id', '=', 'hashtags.id')
                 ->select(

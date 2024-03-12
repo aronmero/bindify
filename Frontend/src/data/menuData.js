@@ -1,35 +1,44 @@
 import {getMunicipalities} from "@/Api/municipios/municipios.js";
 import {getPopularHashtags} from "@/Api/popular_hashtags/popular_hashtags.js";
+import {getCategories} from "@/Api/categorias/categorias.js";
+import {ref} from "vue";
 
-export let locationOptions = [];
-export let popularsHastags = [];
+export let locationOptions = ref([]);
+export let popularsHastags = ref([]);
+export let categoriesOptions = ref([]);
+export let tiposPost = ref([]);
 
 export const apiMunicipalitiesRequest = async () => { //fecth para obtener los municipios registrados
     await getMunicipalities("GET").then((response) => {
-        locationOptions = response;
+        locationOptions.value = response;
     }).catch((error) => {
         console.error("Error al obtener los municipios:", error);
     });
 }
 
-export const apiPopularHashtagRequest = async () => { //fecth para obtener los hashtags mas populares
-    await getPopularHashtags("GET").then((response) => {
-        popularsHastags = response;
+export const apiPopularHashtagRequest = async (type) => { //fecth para obtener los hashtags mas populares
+    await getPopularHashtags("POST", type).then((response) => {
+        popularsHastags.value = response;
     }).catch((error) => {
-        console.error("Error al obtener los comercios:", error);
+        console.error("Error al obtener los hashtags:", error);
     });
 }
 
-export const categoriesOptions = [
-    {name : "Restaurante", icon : ".././assets/icons/restaurant.svg"},
-    {name : "Botánica", icon : ".././assets/icons/plant.svg"},
-    {name : "Joyería", icon : ".././assets/icons/jewelry.svg"},
-    {name : "Informática", icon : ".././assets/icons/computer.svg"},
-    {name : "Supermercado", icon : ".././assets/icons/supermarket.svg"},
-    {name : "Deportes", icon : ".././assets/icons/sport.svg"},
-    {name : "Decoración", icon : ".././assets/icons/deco.svg" },
-];
+export const apiCategoriesRequest = async () => { //fecth para obtener las categorias registradas
+    await getCategories("GET").then((response) => {
+        categoriesOptions.value = response;
+    }).catch((error) => {
+        console.error("Error al obtener las categorias:", error);
+    });
+}
 
+export const apiTiposPostRequest = async () => { //fecth para obtener los tipos de post registrados
+    await getCategories("GET").then((response) => {
+        tiposPost.value = response;
+    }).catch((error) => {
+        console.error("Error al obtener los tipos de post:", error);
+    });
+}
 
 
 

@@ -46,7 +46,8 @@
         </div>
     </div>
     -->
-    <h1> {{ commerce.username }}</h1>
+    <p> {{ commerce }}</p>
+ 
 </template>
 
 
