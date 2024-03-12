@@ -49,6 +49,16 @@ class ReviewsController extends Controller
      *   "message": "El usuario $request->commerce_username no es un comercio"
      * }
      *
+     * @response 403 {
+     *   "status": false,
+     *   "message": "Usuario inexistente"
+     * }
+     *
+     * @response 404 {
+     *   "status": false,
+     *   "message": "El usuario $request->commerce_username no es un comercio"
+     * }
+     *
      * @response 500 {
      *   "status": false,
      *   "message": "Error al crear la review: mensaje_de_error"
@@ -57,6 +67,7 @@ class ReviewsController extends Controller
     public function store(StoreReviewsRequest $request)
     {
         try {
+
 
             try {
                 $id = User::where('username', '=', $request->commerce_username)->firstOrFail()->id;
