@@ -3,7 +3,7 @@ import { ref, onBeforeUnmount } from 'vue';
 import { datetranslate } from '@/components/notificaciones/helpers/datetranslate.js'
 import EnviarSVG from '@public/assets/icons/forward.svg';
 import Comentario from '@/components/feed_media/widgets/Comentario.vue';
-import Calendar from "@/components/utils/calendar.vue";
+import Calendar from "@/components/calendario/widgets/Calendar.vue";
 import { getCommentsOfPost, storeCommentsOfPost } from "@/Api/publicacion/comentarios.js";
 import router from '@/router/index.js';
 
