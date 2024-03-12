@@ -31,9 +31,9 @@ class StoreReviewsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'commerce_id'=> [
+            'commerce_username'=> [
                 'required'=> 'Es necesario el id del comercio a valorar',
-                'integer' => 'Tipo de dato incorrecto, integer requerido',
+                'string' => 'Tipo de dato incorrecto, string requerido',
             ],
             'comment' => [
                 'required'=> 'El comentario es un campo obligatorio',

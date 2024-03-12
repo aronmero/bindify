@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreReviewsRequest;
 use App\Http\Requests\UpdateReviewsRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use App\Models\Review;
 use App\Http\Scripts\Utils;
 use App\Models\Commerce;
@@ -13,6 +12,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class ReviewsController extends Controller
 {
@@ -100,6 +101,7 @@ class ReviewsController extends Controller
                     'content' => $review->comment,
                     'note' => $review->note,
                     'id' => $review->id
+                    //crypt'id' => Crypt::encryptString($review->id),
                 ],
             ], 201);
         } catch (\Exception $e) {
@@ -146,16 +148,6 @@ class ReviewsController extends Controller
 
         try {
 
-        try {
-
-            $user = User::where('username', $username)->first();
-
-            if (!$user) {
-                return response()->json(['status' => false, 'message' => "Usuario inexistente."], 403);
-            } elseif (!(Commerce::where('commerces.user_id', '=', $user->id)->first())) {
-                $userRol = $user->getRoleNames()[0];
-                return response()->json(['status' => false, 'message' => "Este usuario no es un comercio.",  'rol' => $userRol], 403);
-            }
             $user = User::where('username', $username)->first();
 
             if (!$user) {
@@ -166,34 +158,19 @@ class ReviewsController extends Controller
             }
 
             $reviews = Review::where('commerce_id', $user->id)->get();
-            $reviews = Review::where('commerce_id', $user->id)->get();
 
-            if ($reviews->isEmpty()) {
-                return response()->json(['status' => false, 'message' => 'No se encontraron reviews para el comercio',], 401);
-            }
             // Crear un array para almacenar los datos de las reviews
             $reviewsArray = [];
             if ($reviews->isEmpty()) {
                 return response()->json(['status' => false, 'message' => 'No se encontraron reviews para el comercio',], 401);
             }
-            // Crear un array para almacenar los datos de las reviews
-            $reviewsArray = [];
 
             // Iterar sobre cada reviews
             foreach ($reviews as $review) {
                 // Obtener los datos necesarios para cada reviews
                 $reviewData = [
-                    'username' => $review->user->username,
-                    'avatarUsuario' => $review->user->avatar,
-                    'commerce_username' => $review->commerce->username, // Obtener el nombre de usuario del comercio
-                    'avatarComercio' => $review->commerce->avatar, // Obtener el avatar del comercio
-                    'comment' => $review->comment,
-                    'note' => $review->note,
-                ];
-            // Iterar sobre cada reviews
-            foreach ($reviews as $review) {
-                // Obtener los datos necesarios para cada reviews
-                $reviewData = [
+                    'id' => Crypt::encryptString($review->id),
+                    //crypt'id' => Crypt::encryptString($review->id),
                     'username' => $review->user->username,
                     'avatarUsuario' => $review->user->avatar,
                     'commerce_username' => $review->commerce->username, // Obtener el nombre de usuario del comercio
@@ -205,26 +182,14 @@ class ReviewsController extends Controller
                 // Agregar los datos de la reviews al array
                 $reviewsArray[] = $reviewData;
             }
-                // Agregar los datos de la reviews al array
-                $reviewsArray[] = $reviewData;
-            }
 
             // Verificar si se encontraron reviews para el comercio
             if (count($reviewsArray) > 0) {
                 // Devolver respuesta con las reviews formateadas
                 return response()->json(['status' => true, 'reviews' => $reviewsArray,], 200);
             }
-            // Verificar si se encontraron reviews para el comercio
-            if (count($reviewsArray) > 0) {
-                // Devolver respuesta con las reviews formateadas
-                return response()->json(['status' => true, 'reviews' => $reviewsArray,], 200);
-            }
 
-            return response()->json(['status' => false, 'message' => 'Reviews no encontradas',], 404);
-        } catch (\Exception $e) {
-            // En caso de excepción, devolver una respuesta de error
-            return response()->json(['status' => false, 'error' => 'Error al mostrar las reviews: ' . $e->getMessage(),], 500);
-        }
+
             return response()->json(['status' => false, 'message' => 'Reviews no encontradas',], 404);
         } catch (\Exception $e) {
             // En caso de excepción, devolver una respuesta de error
@@ -265,6 +230,15 @@ class ReviewsController extends Controller
     public function update(UpdateReviewsRequest $request, string $id)
     {
         try {
+
+            //crypttry {
+            //crypt    $id = Crypt::decryptString($id);
+            //crypt} catch (DecryptException $e) {
+            //crypt    return response()->json([
+            //crypt        'status' => false,
+            //crypt        'message' => 'Review inexistente',
+            //crypt    ], 500);
+            //crypt}
 
             $user = Auth::user();
             // Buscar la review por su ID
@@ -335,6 +309,15 @@ class ReviewsController extends Controller
     public function destroy(string $id)
     {
         try {
+
+            //crypttry {
+            //crypt    $id = Crypt::decryptString($id);
+            //crypt} catch (DecryptException $e) {
+            //crypt    return response()->json([
+            //crypt        'status' => false,
+            //crypt        'message' => 'Review inexistente',
+            //crypt    ], 500);
+            //crypt}
 
             $user = Auth::user();
             // Buscar la review por su ID
