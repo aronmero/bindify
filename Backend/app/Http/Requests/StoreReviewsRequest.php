@@ -22,7 +22,7 @@ class StoreReviewsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'commerce_id' => 'required|integer', //Id del comercio 
+            'commerce_username' => 'required|string', //Username del comercio
             'comment' => 'required|string|max:200', //Contenido del comentario
             'note' => 'required|integer|min:0|max:5', //Nota del comercio
         ];
