@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref,onBeforeUnmount  } from 'vue';
+import { ref, onBeforeUnmount } from 'vue';
 import Comentario from '../widgets/Comentario.vue';
 import { comentarios_por_post } from './../mocks/comentarios';
 import { encontrar_usuario_por_id } from './../mocks/users';
@@ -99,7 +99,7 @@ const enviarComentarioPorSubmit = async (post_id, event) => {
 
                 if (response.status) {
                     refrescarPosicion()
-                } 
+                }
 
             }
 
@@ -128,7 +128,7 @@ const enviarComentarioPorClick = async (post_id, texto) => {
 * Función que se encarga de evitar que el usuario desde el front envíe las peticiones que quiera
 * */
 const antiSpamFunction = () => {
-    chat_input.value.value= ""
+    chat_input.value.value = ""
     chat_input.value.readonly = true;
 
     let secs = 0;
@@ -174,8 +174,8 @@ document.body.style.overflow = "hidden";
                 <div ref="comentario_handler"
                     class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
                     <template v-if="comentarios != null">
-                        <Comentario v-if="comentarios.length >= 1"
-                            v-for="comentario in comentarios" :comentario="comentario" />
+                        <Comentario v-if="comentarios.length >= 1" v-for="comentario in comentarios"
+                            :comentario="comentario" />
                         <Comentario v-else :comentario="{ content: 'No hay comentarios, ¡se el primero!' }" />
                     </template>
                 </div>
