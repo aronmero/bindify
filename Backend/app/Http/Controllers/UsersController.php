@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
@@ -56,6 +57,8 @@ class UsersController extends Controller
      *   "error": "Usuario no encontrado"
      * }
      */
+
+    //TODO Hacer show de el usuario logueado
     public function show(string $username)
     {
         try {
@@ -68,8 +71,9 @@ class UsersController extends Controller
             ], 404);
         }
 
+        $userRol = $user->getRoleNames()[0];
 
-        if ($user->getRoleNames() == "customer") {
+        if ($userRol == "customer") {
 
             try {
 
@@ -88,6 +92,7 @@ class UsersController extends Controller
                     )
                     ->where('users.username', '=', $username)
                     ->firstOrFail();
+                $customer->tipo = 'customer';
 
                 return response()->json([
                     "status" => true,
@@ -110,7 +115,8 @@ class UsersController extends Controller
 
             try {
 
-                $commerce = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
+                $commerce = Commerce::leftJoin('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
+                    ->join('users', 'commerces.user_id', '=', 'users.id')
                     ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
                     ->join('categories', 'commerces.category_id', '=', 'categories.id')
                     ->select(
@@ -125,13 +131,34 @@ class UsersController extends Controller
                         'commerces.description',
                         'categories.name AS categories_name',
                         'schedule',
-                        'commerces.active'
+                        'commerces.active',
+                        'commerces.avg',
+                        DB::raw('count(reviews.commerce_id) as review_count')
+
                     )
                     ->where('users.username', '=', $username)
+                    ->groupBy(
+                        'email',
+                        'phone',
+                        'municipalities.name',
+                        'avatar',
+                        'banner',
+                        'username',
+                        'users.name',
+                        'address',
+                        'commerces.description',
+                        'categories.name',
+                        'schedule',
+                        'commerces.active',
+                        'commerces.avg',
+                    )
                     ->get();
 
-                $commerce->each(function ($commerce) {
 
+                $commerce->each(function ($commerce) {
+                    $user = User::where("username", $commerce->username)->firstOrFail();
+                    $userRol = $user->getRoleNames()[0];
+                    $commerce->tipo = ($userRol == "ayuntamiento")?"ayuntamiento":"commerce";
                     $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
                         ->select('user_id')
                         ->where('users.username', '=', $commerce->username)
@@ -279,7 +306,7 @@ class UsersController extends Controller
             return response()->json(["status" => false, "message" => "Error en la base de datos :", "error" => $e->getMessage()], 500);
         } catch (Exception $e) {
             // Devuelve una respuesta JSON con un mensaje de error en caso de otra excepción
-            return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:",  "error" => $e->getMessage()], 404);
+            return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:", "error" => $e->getMessage()], 404);
         }
     }
 
@@ -298,6 +325,7 @@ class UsersController extends Controller
             $posts = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
                 ->join('users', 'users.id', '=', 'users-posts.user_id')
                 ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                ->join('commerces', 'commerces.user_id', '=', 'users-posts.user_id')
                 ->select(
                     'posts.id AS post_id',
                     'posts.image',
@@ -312,7 +340,8 @@ class UsersController extends Controller
                     'users.id AS user_id',
                     'users.avatar'
                 )
-                ->where('users-posts.user_id', '=', $id->user_id);
+                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.post_type_id', '=', 1)->where('commerces.active', '=', 1);
+
 
 
             if ($user->username != $username) {
@@ -320,7 +349,7 @@ class UsersController extends Controller
             }
 
             $posts = $posts->orderBy('posts.created_at', 'desc')
-            ->get();
+                ->get();
 
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
@@ -336,6 +365,189 @@ class UsersController extends Controller
         } catch (Exception $e) {
             // Devuelve una respuesta JSON con un mensaje de error en caso de otra excepción
             return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:", "error" => $e->getMessage()], 404);
+        }
+    }
+    public function events(string $username)
+    {
+        try {
+
+            $user = Auth::user();
+
+            $id = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
+                ->select('user_id')
+                ->where('users.username', '=', $username)
+                ->firstOrFail();
+
+
+            $posts = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
+                ->join('users', 'users.id', '=', 'users-posts.user_id')
+                ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                ->join('commerces', 'commerces.user_id', '=', 'users-posts.user_id')
+                ->select(
+                    'posts.id AS post_id',
+                    'posts.image',
+                    'posts.title',
+                    'posts.description',
+                    'posts.description',
+                    'post_types.name',
+                    'posts.start_date',
+                    'posts.end_date',
+                    'posts.created_at',
+                    'users.username',
+                    'users.id AS user_id',
+                    'users.avatar'
+                )
+                ->where('users-posts.user_id', '=', $id->user_id)->where('posts.post_type_id', '=', 2)->where('commerces.active', '=', 1);
+
+
+
+            if ($user->username != $username) {
+                $posts = $posts->where('posts.active', '=', true);
+            }
+
+            $posts = $posts->orderBy('posts.created_at', 'desc')
+                ->get();
+
+            $posts->each(function ($post) {
+                $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+            });
+
+            return response()->json([
+                "status" => true,
+                "data" => $posts
+            ], 200);
+        } catch (QueryException $e) {
+            // Devuelve una respuesta JSON con un mensaje de error en caso de error de base de datos
+            return response()->json(["status" => false, "message" => "Error en la base de datos :", "error" => $e->getMessage()], 500);
+        } catch (Exception $e) {
+            // Devuelve una respuesta JSON con un mensaje de error en caso de otra excepción
+            return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:", "error" => $e->getMessage()], 404);
+        }
+    }
+
+    public function profile()
+    {
+        $username = Auth::user()->username;
+        try {
+            $user = User::where("username", $username)->firstOrFail();
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => false,
+                "message" => "Usuario no encontrado",
+                "error" => $th->getMessage(),
+            ], 404);
+        }
+
+        $userRol = $user->getRoleNames()[0];
+
+        if ($userRol == "customer") {
+
+            try {
+
+                $customer = Customer::join('users', 'customers.user_id', '=', 'users.id')
+                    ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
+                    ->select(
+                        'email',
+                        'phone',
+                        'municipalities.name AS municipality_name',
+                        'avatar',
+                        'banner',
+                        'username',
+                        'users.name',
+                        'gender',
+                        'birth_date'
+                    )
+                    ->where('users.username', '=', $username)
+                    ->firstOrFail();
+
+                return response()->json([
+                    "status" => true,
+                    "data" => $customer
+                ], 200);
+            } catch (QueryException $e) {
+
+                return response()->json([
+                    "status" => false,
+                    "error" => $e->getMessage()
+                ], 500);
+            } catch (Exception $e) {
+
+                return response()->json([
+                    "status" => false,
+                    "error" => $e->getMessage()
+                ], 404);
+            }
+        } else {
+
+            try {
+
+                $commerce = Commerce::leftJoin('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
+                    ->join('users', 'commerces.user_id', '=', 'users.id')
+                    ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
+                    ->join('categories', 'commerces.category_id', '=', 'categories.id')
+                    ->select(
+                        'email',
+                        'phone',
+                        'municipalities.name AS municipality_name',
+                        'avatar',
+                        'banner',
+                        'username',
+                        'users.name',
+                        'address',
+                        'commerces.description',
+                        'categories.name AS categories_name',
+                        'schedule',
+                        'commerces.active',
+                        'commerces.avg',
+                        DB::raw('count(reviews.commerce_id) as review_count')
+
+                    )
+                    ->where('users.username', '=', $username)
+                    ->groupBy(
+                        'email',
+                        'phone',
+                        'municipalities.name',
+                        'avatar',
+                        'banner',
+                        'username',
+                        'users.name',
+                        'address',
+                        'commerces.description',
+                        'categories.name',
+                        'schedule',
+                        'commerces.active',
+                        'commerces.avg',
+                    )
+                    ->get();
+
+                $commerce->each(function ($commerce) {
+
+                    $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
+                        ->select('user_id')
+                        ->where('users.username', '=', $commerce->username)
+                        ->firstOrFail();
+
+                    $hashtags = Commerce::find($commerceId->user_id)->hashtags->pluck('name')->toArray();
+                    $commerce->hashtags = $hashtags;
+                });
+
+                return response()->json([
+                    "status" => true,
+                    "data" => $commerce
+                ], 200);
+            } catch (QueryException $e) {
+
+                return response()->json([
+                    "status" => false,
+                    "error" => $e->getMessage()
+                ], 500);
+            } catch (Exception $e) {
+
+                return response()->json([
+                    "status" => false,
+                    "error" => $e->getMessage()
+                ], 404);
+            }
         }
     }
 }

@@ -4,9 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class UpdateCommentsRequest extends FormRequest
 {
-      /**
+    /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
@@ -22,14 +22,15 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password' => ['required'],
-            'email' => ['required', 'unique:users,email'],
-            'phone' => ['unique:users,phone'],
-            'username' => ['required', 'unique:users,username'],
-            'municipality_id' => ['exists:municipalities,id'],
-            'empresa' => ['required', 'boolean'],
-            'name'=> ['required'],
-            'verification_token'=> ['exists:verification_tokens, token'],
+            'content' => 'required|string', // Contenido del comentario
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'content.required' => 'El contenido del comentario es obligatorio',
+            'content.string' => 'El contenido del comentario debe ser una cadena',
         ];
     }
 }

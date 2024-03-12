@@ -9,19 +9,29 @@ import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { RouterLink, RouterView } from "vue-router";
-let clickedLink = null
+import { getUserData } from "@/Api/perfiles/perfil.js";
+import { ref } from "vue";
+let userData = ref(null);
+
+// console.log(getUserData("get"));
+
+async function responseCatcher() {
+  userData.value = await getUserData("get");
+  console.log(userData.value);
+}
+responseCatcher();
+
+let clickedLink = null;
 const estilos = {
-  
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
 
 function pintar(evento) {
-  if(clickedLink!=null){
-    clickedLink.classList.remove("text-accent-400")
+  if (clickedLink != null) {
+    clickedLink.classList.remove("text-accent-400");
   }
-  console.log(evento.target.innerHTML);
   evento.target.classList.add("text-accent-400");
-  clickedLink = evento.target
+  clickedLink = evento.target;
 }
 </script>
 
@@ -30,18 +40,22 @@ function pintar(evento) {
   <Grid
     ><template v-slot:Left></template>
     <btnAtras titulo="Perfil"></btnAtras>
-    <div class="flex flex-col gap-10">
+    <div class="flex flex-col gap-10" v-if="userData != null">
       <div>
         <imgsPerfil
-          rutaBaner="https://placehold.co/600x400"
+          :rutaBaner="userData[0].banner"
           altTextBaner="foto baner"
-          :rutaPerfil="users[0].avatar"
+          :rutaPerfil="userData[0].avatar"
           altTextPerfil="foto perfil"
         ></imgsPerfil>
       </div>
       <div class="flex flex-col gap-6 justify-evenly lg:flex-row">
         <div class="flex flex-col">
-          <textoEnNegrita :texto="users[0].name" class="text-base lg:text-xl" />
+          <textoEnNegrita
+            :texto="userData[0].username"
+            class="text-base lg:text-xl"
+          />
+
           <textoEnNegrita texto="15" class="text-base lg:text-xl" />
           <textoNormal
             texto="Following"

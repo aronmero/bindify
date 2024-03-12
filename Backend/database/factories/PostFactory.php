@@ -17,6 +17,15 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
+
+        $aux = rand(1, 12);
+
+        $active = false;
+
+        if($aux > 1){
+            $active = true;
+        }
+
         return [
             'image' => $this->faker->imageUrl(),
             'title' => $this->faker->sentence(),
@@ -24,7 +33,7 @@ class PostFactory extends Factory
             'post_type_id' => $this->faker->numberBetween(1, Post_type::count()),
             'start_date' => $this->faker->dateTimeBetween('now', '+1 year'),
             'end_date' => $this->faker->dateTimeBetween('now', '+1 year'),
-            'active' => $this->faker->boolean(),
+            'active' => $active,
         ];
     }
 }

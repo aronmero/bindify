@@ -3,14 +3,92 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostsRequest;
+use App\Http\Requests\UpdatePostsRequest;
 use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 class PostsController extends Controller
 {
+
+    /**
+     * Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.
+     *
+     * Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.
+     *
+     * @authenticated
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "data": [
+     *         {
+     *             "post_id": "ID_de_la_publicación",
+     *             "image": "imagen_de_la_publicación",
+     *             "title": "título_de_la_publicación",
+     *             "description": "descripción_de_la_publicación",
+     *             "name": "nombre_del_tipo_de_publicación",
+     *             "start_date": "fecha_de_inicio_de_la_publicación",
+     *             "end_date": "fecha_de_finalización_de_la_publicación",
+     *             "created_at": "fecha_de_creación_de_la_publicación",
+     *             "username": "nombre_de_usuario",
+     *             "user_id": "ID_del_usuario",
+     *             "avatar": "avatar_del_usuario"
+     *         },
+     *         ...
+     *     ]
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
+     */
+
+    public function home_todos()
+    {
+        try {
+            $user = Auth::user();
+
+            $listado = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
+                ->join('users', 'users.id', '=', 'users-posts.user_id')
+                ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                ->select(
+                    'posts.id AS post_id',
+                    'posts.image',
+                    'posts.title',
+                    'posts.description',
+                    'posts.description',
+                    'post_types.name',
+                    'posts.start_date',
+                    'posts.end_date',
+                    'posts.created_at',
+                    'users.username',
+                    'users.id AS user_id',
+                    'users.avatar'
+                )
+                ->where('posts.active', '=', true)
+                ->orderBy('posts.start_date', 'desc')
+                ->get();
+
+            $listado->each(function ($post) {
+                $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+            });
+
+            return response()->json([
+                'status' => true,
+                'data' => $listado,
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ], 404);
+        }
+    }
 
     /**
      * Muestra una lista de publicaciones para el usuario actual.
@@ -76,7 +154,7 @@ class PostsController extends Controller
                 )
                 ->whereIn('users-posts.user_id', $ids)
                 ->where('posts.active', '=', true)
-                ->orderBy('posts.created_at', 'desc')
+                ->orderBy('posts.start_date', 'desc')
                 ->get();
 
             $listado->each(function ($post) {
@@ -177,8 +255,8 @@ class PostsController extends Controller
             // Obtener los propietarios del post
             $formattedUsers = [];
 
-            $usersFromPost=$post ->users;
-           
+            $usersFromPost = $post->users;
+
             foreach ($usersFromPost as $user) {
                 $formattedUser = [
                     'name' => $user->name,
@@ -205,7 +283,7 @@ class PostsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePostsRequest $request, string $id)
     {
         try {
 
@@ -227,15 +305,54 @@ class PostsController extends Controller
                     'post_type_id' => $request->post_type_id,
                     'start_date' => $request->start_date,
                     'end_date' => $request->end_date,
+                    'ubicacion' => $request->ubicacion,
+                    'active' => $request->active
                 ]);
+
+                //Obtener los datos del post
+                $postData = [
+                    'image' => $post->image,
+                    'title' => $post->title,
+                    'description' => $post->description,
+                    'post_type_name' => optional($post->post_type)->name,
+                    'start_date' => $post->start_date,
+                    'end_date' => $post->end_date,
+                    'active' => $post->active,
+                    'ubicacion' => $post->ubicacion,
+                    'fecha_creacion' => $post->created_at,
+                    'hastags' => $post->hashtags->pluck('name')
+                ];
+
+                $formattedUsers = [];
+
+                $usersFromPost = $post->users;
+
+                foreach ($usersFromPost as $user) {
+                    $formattedUser = [
+                        'name' => $user->name,
+                        'username' => $user->username,
+                        'avatar' => $user->avatar,
+                        'id' => $user->id
+                    ];
+                    $formattedUsers[] = $formattedUser;
+                }
+                $data = [
+                    'post' => $postData,
+                    'users' => $formattedUsers,
+                ];
+
+                //TODO Hacer que solo devuelva algunos datos del usuario
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Post actualizado',
+                    'data' => $data
+                ], 200);
             }
 
-            //TODO Hacer que solo devuelva algunos datos del usuario
             return response()->json([
-                'status' => true,
-                'message' => 'Post actualizado',
-                'data' => $post
-            ], 200);
+                'status' => false,
+                'message' => 'Post no actualizado. No tienes permisos sobre este post.',
+            ], 403);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -265,14 +382,39 @@ class PostsController extends Controller
                 $post->update([
                     'active' => false,
                 ]);
+
+                $now = Carbon::now();
+                $nowFormatted = $now->format('Y-m-d H:i:s');
+
+                $postData = [
+                    'id' => $post->id,
+                    'username' => $user->username,
+                    'image' => $post->image,
+                    'title' => $post->title,
+                    'description' => $post->description,
+                    'post_type_id' => $post->post_type->id,
+                    'start_date' => $post->start_date,
+                    'end_date' => $post->end_date,
+                    'ubicacion' => $post->ubicacion,
+                    'hashtags' =>  "#" . implode('#', $post->hashtags->pluck('name')->toArray()),
+                    'deleted_date' => $nowFormatted
+                ];
+
+                DB::table('deleted_posts')->insert($postData);
+
+                $post->delete();
+
+                //TODO Hacer que solo devuelva algunos datos del usuario
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Post eliminado',
+                ], 200);
             }
 
-            //TODO Hacer que solo devuelva algunos datos del usuario
             return response()->json([
-                'status' => true,
-                'message' => 'Post eliminado',
-                'data' => $post
-            ], 200);
+                'status' => false,
+                'message' => 'Post no eliminado. No tienes permisos sobre este post.',
+            ], 403);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,

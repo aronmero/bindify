@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Follower;
+use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -62,9 +64,9 @@ class FollowersController extends Controller
     /**
      * Sigue o deja de seguir a un usuario.
      *
-     * Este método permite al usuario autenticado seguir o dejar de seguir a otro usuario especificado por su ID.
+     * Este método permite al usuario autenticado seguir o dejar de seguir a otro usuario especificado por su username.
      *
-     * @urlParam id string required El ID del usuario a seguir o dejar de seguir.
+     * @urlParam username string required El username del usuario a seguir o dejar de seguir.
      *
      * @authenticated
      *
@@ -79,9 +81,12 @@ class FollowersController extends Controller
      * }
      */
 
-    public function follow(string $id)
+    public function follow(string $username)
     {
         try {
+
+            $usuarioSeguir = User::where('username', $username)->firstOrFail();
+
             $user = Auth::user();
             $mensaje = "";
             $follows = DB::table("followers")
@@ -93,7 +98,7 @@ class FollowersController extends Controller
 
             if ($follows->count() > 0) {
                 foreach ($follows as $seguido) {
-                    if ($seguido->follows_id == $id) {
+                    if ($seguido->follows_id == $usuarioSeguir->id) {
                         $seguir = false;
                     }
                 }
@@ -101,10 +106,10 @@ class FollowersController extends Controller
 
 
             if (!$seguir) {
-                $user->follows()->detach($id);
+                $user->follows()->detach($usuarioSeguir->id);
                 $mensaje = "Usuario dejado de seguir";
             } else {
-                $user->follows()->attach($id);
+                $user->follows()->attach($usuarioSeguir->id);
                 $mensaje = "Usuario seguido";
             }
 
@@ -113,6 +118,12 @@ class FollowersController extends Controller
                 'status' => true,
                 'message' => $mensaje,
             ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Usuario no encontrado'
+            ], 404);
+
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,

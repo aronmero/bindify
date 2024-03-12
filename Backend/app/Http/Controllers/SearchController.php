@@ -14,100 +14,6 @@ use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
-    /**
-     * Muestra una lista de comercios por municipio.
-     *
-     * Este método devuelve una lista de comercios para un municipio dado.
-     *
-     * @urlParam municipality string required El nombre del municipio.
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "data": [
-     *         {
-     *             "email": "correo_electronico",
-     *             "phone": "numero_de_telefono",
-     *             "municipality_name": "nombre_del_municipio",
-     *             "avatar": "avatar",
-     *             "username": "nombre_de_usuario",
-     *             "name": "nombre_del_comercio",
-     *             "address": "disrección_del_comercio",
-     *             "description": "descripción_del_comercio",
-     *             "categories_name": "nombre_de_la_categoría",
-     *             "schedule": "horario_del_comercio",
-     *             "active": "activo_o_inactivo"
-     *         },
-     *         ...
-     *     ]
-     * }
-     *
-     * @response 404 (Dos Catch con el mismo codigo){
-     *     "status": false,
-     *     "error": "mensaje_de_error"
-     * }
-     */
-
-    public function commerces(Request $request)
-    {
-
-        try {
-
-            $commerces = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
-            ->join('categories', 'commerces.category_id', '=', 'categories.id')
-            ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
-            ->leftjoin('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
-            ->select(
-                'commerces.user_id',
-                'email',
-                'phone',
-                'avatar',
-                'users.username',
-                'address',
-                'commerces.description',
-                'categories.name AS categories_name',
-                'schedule',
-                'commerces.avg',
-                DB::raw('count(reviews.commerce_id) as review_count')
-            )
-            ->where('commerces.active','=', '1')
-            ->groupBy('commerces.user_id','email', 'phone', 'avatar', 'users.username', 'address', 'commerces.description', 'categories_name', 'schedule', 'commerces.avg',);
-
-            if($request->municipality) {
-                Municipality::where('name', $request->municipality)->firstOrFail();
-                $commerces = $commerces->where('municipalities.name', '=', $request->municipality);
-            }
-
-            if($request->name) {
-                $commerces = $commerces->where('users.username', 'LIKE', $request->name . '%');
-            }
-
-            if($request->category) {
-                $commerces = $commerces->where('categories.name', '=', $request->category);
-            }
-
-            $commerces = $commerces->get();
-
-            return response()->json([
-                "status" => true,
-                "data" => $commerces
-            ], 200);
-
-        } catch (ModelNotFoundException $e) {
-
-            return response()->json([
-                "status" => false,
-                "error" => "Municipio $request->municipality no encontrado",
-            ], 404);
-
-        } catch (Exception $e) {
-
-            return response()->json([
-                "status" => false,
-                "error" => $e->getMessage()
-            ], 404);
-        }
-
-    }
 
     /**
      * Muestra una lista de publicaciones por municipio.
@@ -139,48 +45,121 @@ class SearchController extends Controller
      * }
      */
 
-    public function posts(Request $request)
+    public function search(Request $request)
     {
 
         try {
 
-            $posts = Post::join('post_types', 'post_types.id', '=', 'posts.post_type_id')
-            ->join('users-posts', 'users-posts.post_id', '=', 'posts.id')
-            ->join('users', 'users.id', '=', 'users-posts.user_id')
-            ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
-            ->select(
-                'users.avatar',
-                'users.username',
-                'users.name',
-                'posts.image',
-                'posts.title',
-                'posts.description',
-                'post_types.name AS post_type',
-            );
+            if ($request->type == 'Posts') {
 
-            if($request->municipality) {
+                $posts = Post::leftJoin('posts-hashtags', 'posts-hashtags.post_id', '=', 'posts.id')
+                    ->leftJoin('hashtags', 'posts-hashtags.hashtag_id', '=', 'hashtags.id')
+                    ->join('users-posts', 'users-posts.post_id', '=', 'posts.id')
+                    ->join('users', 'users.id', '=', 'users-posts.user_id')
+                    ->join('commerces', 'commerces.user_id', '=', 'users.id')
+                    ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
+                    ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                    ->select(
+                        'users.avatar',
+                        'users.username',
+                        'users.name',
+                        'posts.id as post_id',
+                        'posts.image',
+                        'posts.title',
+                        'posts.description',
+                        'post_types.name AS post_type',
+                        'posts.start_date as publicated_date'
+                    )
+                    ->where('commerces.active', '=', true)
+                    ->where('posts.active', '=', true)
+                    ->orderBy('posts.start_date', 'desc')
+                    ->distinct();
+
+                if ($request->municipality) {
+                    Municipality::where('name', $request->municipality)->firstOrFail();
+                    $posts = $posts->where('municipalities.name', '=', $request->municipality);
+                }
+
+                if ($request->post_type) {
+                    $posts = $posts->where('post_types.name', '=', $request->post_type);
+                }
+
+                if ($request->name) {
+                    $posts = $posts->where('posts.title', 'LIKE', $request->name . '%');
+                }
+
+                if ($request->hashtag) {
+                    $posts = $posts->where('hashtags.name', '=', $request->hashtag);
+                }
+
+                $posts = $posts->get();
+
+                $posts->each(function ($post) {
+                    $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+                });
+
+                return response()->json([
+                    "status" => true,
+                    "data" => $posts
+                ], 200);
+            }
+
+            $commerces = Commerce::leftJoin('commerces-hashtags', 'commerces-hashtags.commerce_id', '=', 'commerces.user_id')
+                ->leftJoin('hashtags', 'commerces-hashtags.hashtag_id', '=', 'hashtags.id')
+                ->join('users', 'commerces.user_id', '=', 'users.id')
+                ->join('categories', 'commerces.category_id', '=', 'categories.id')
+                ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
+                ->leftjoin('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
+                ->select(
+                    'commerces.user_id',
+                    'email',
+                    'phone',
+                    'avatar',
+                    'users.username',
+                    'address',
+                    'municipalities.name as municipality_name',
+                    'commerces.description',
+                    'categories.name AS categories_name',
+                    'schedule',
+                    'commerces.avg',
+                    DB::raw('count(reviews.commerce_id) as review_count')
+                )
+                ->where('commerces.active', '=', true)
+                ->groupBy('commerces.user_id', 'email', 'phone', 'avatar', 'users.username', 'address', 'commerces.description', 'categories_name', 'schedule', 'commerces.avg', 'municipality_name');
+
+            if ($request->municipality) {
                 Municipality::where('name', $request->municipality)->firstOrFail();
-                $posts = $posts->where('municipalities.name', '=', $request->municipality);
+                $commerces = $commerces->where('municipalities.name', '=', $request->municipality);
             }
 
-            if($request->post_type) {
-                $posts = $posts->where('post_types.name', '=', $request->post_type);
+            if ($request->name) {
+                $commerces = $commerces->where('users.username', 'LIKE', $request->name . '%');
             }
 
-            $posts = $posts->get();
+            if ($request->category) {
+                $commerces = $commerces->where('categories.name', '=', $request->category);
+            }
+
+            if ($request->hashtag) {
+                $commerces = $commerces->where('hashtags.name', '=', $request->hashtag);
+            }
+
+            $commerces = $commerces->get();
+
+            $commerces->each(function ($commerce) {
+                $commerce->hashtags = Commerce::find($commerce->user_id)->hashtags->pluck('name')->toArray();
+            });
 
             return response()->json([
                 "status" => true,
-                "data" => $posts
+                "data" => $commerces
             ], 200);
-
         } catch (ModelNotFoundException $e) {
 
             return response()->json([
                 "status" => false,
                 "error" => "Municipio $request->municipality no encontrado",
             ], 404);
-
         } catch (Exception $e) {
 
             return response()->json([
@@ -188,7 +167,5 @@ class SearchController extends Controller
                 "error" => $e->getMessage()
             ], 404);
         }
-
     }
-
 }

@@ -30,7 +30,7 @@ class CustomerFactory extends Factory
 
         return [
             'user_id' => $userId,
-            'gender' => $this->faker->randomElement(['Masculino', 'Femenino']),
+            'gender' => $this->faker->randomElement(['M', 'H']),
             'birth_date' => $this->faker->date(),
         ];
     }
