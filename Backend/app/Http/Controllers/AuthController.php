@@ -95,7 +95,7 @@ class AuthController extends Controller
             ]);
         }
 
-        // Manejo de la imagen/avatar
+        // Manejo de la imagen/avatar (Esto supuestamente guarda en la carpeta storage/avatars , la imagen del avatar  )
         $avatarPath = null;
         if ($request->hasFile('avatar')) {
             $avatarPath = $request->file('avatar')->store('avatars', 'public'); // Guarda la imagen en el almacenamiento 'public/avatars'
