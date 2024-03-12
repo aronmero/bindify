@@ -53,9 +53,6 @@ export async function agregar_comentario_post(post_id, comentario) {
         })
     })
         .then(res => res.json())
-        .catch(error => {
-            console.error(error.message)
-        })
         .then(res => res)
         
     return data;
