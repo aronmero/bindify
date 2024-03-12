@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Follower;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -121,7 +122,6 @@ class FollowersController extends Controller
                 'status' => false,
                 'message' => 'Usuario no encontrado'
             ], 404);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -202,53 +202,39 @@ class FollowersController extends Controller
     {
         try {
 
-            $usuarioSeguir = User::where('username', $username)->firstOrFail();
-
-            $user = Auth::user();
-            $mensaje = "";
-            $follows = DB::table("followers")
-                ->join('users', 'followers.follows_id', '=', 'users.id')
-                ->select('followers.follows_id', 'avatar', 'username')
-                ->where('followers.follower_id', '=', $user->id)
-                ->get();
-            $seguir = true;
-
             $auth = Auth::user();
-                    $userId = User::where('username', $commerce->username)->firstOrFail()->id;
+            $userId = User::where('username', $username)->firstOrFail()->id;
 
-                    $seguido = $auth->follows()->where('follows_id', '=', $userId)->first();
-
-                    if ($seguido) {
-                        $commerce->followed = true;
-                        if ($auth->follows()->where('follows_id', '=', User::where('username', $commerce->username)->first()->id)->where('favorito', '=', true)->first()) {
-                        $commerce->favorite = true;
-                        }
-                        $commerce->favorite = false;
-                    }else{
-                        $commerce->followed = false;
-                    }
-
-
-
-            if (!$seguir) {
-                $user->follows()->detach($usuarioSeguir->id);
-                $mensaje = "Usuario dejado de seguir";
-            } else {
-                $user->follows()->attach($usuarioSeguir->id);
-                $mensaje = "Usuario seguido";
+            //Comprobar que sigues al usuario
+            try {
+                $seguido = $auth->follows()->where('follows_id', '=', $userId)->firstOrFail();
+            } catch (ModelNotFoundException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Usuario no seguido'
+                ], 403);
             }
 
+            $favorite = Follower::where('follows_id', $userId)->where('follower_id', $auth->id)->first()->favorito;
 
+            if ($favorite) {
+                Follower::where('follows_id', $userId)->where('follower_id', $auth->id)->update(['favorito' => false]);
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Usuario eliminado de favoritos',
+                ], 200);
+            }
+
+            Follower::where('follows_id', $userId)->where('follower_id', $auth->id)->update(['favorito' => true]);
             return response()->json([
                 'status' => true,
-                'message' => $mensaje,
+                'message' => 'Usuario añadido a favoritos',
             ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'status' => false,
                 'message' => 'Usuario no encontrado'
             ], 404);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -256,6 +242,4 @@ class FollowersController extends Controller
             ], 404);
         }
     }
-
-
 }

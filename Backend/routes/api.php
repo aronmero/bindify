@@ -48,6 +48,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 // Route::apiResource('notification', NotificationsController::class)->except(['index', 'destroy']);
     Route::get('follower', [FollowersController::class , 'showFollowers']);
     Route::post('follow/{id}', [FollowersController::class , 'follow']);
+    Route::post('favorite/{id}', [FollowersController::class , 'favorite']);
     Route::get('follows', [FollowersController::class , 'showFollows']);
     Route::get('home', [PostsController::class , 'home']);
     Route::get('search', [SearchController::class, 'search']);

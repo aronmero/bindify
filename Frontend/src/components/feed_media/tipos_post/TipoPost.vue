@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+    import { ref } from 'vue';
 
 // import { useIntersectionObserver } from "@/vueuse/core";
 
@@ -76,11 +76,11 @@ const redirect = (url) => {
   router.push(url);
 };
 
-/** Dependiendo del tipo de ar */
-const tipo = props.post.post_type_id;
-let IconoTipo = "";
-if (tipo == 1) IconoTipo = TipoOferta;
-if (tipo == 2) IconoTipo = TipoEvento;
+    /** Dependiendo del tipo de ar */
+    const tipo = props.post.post_type_id;
+    let IconoTipo = "";
+    if (tipo == 1) IconoTipo = TipoOferta;
+    if (tipo == 2) IconoTipo = TipoEvento;
 
 /**
  * Abre el modal de comentarios
@@ -136,63 +136,33 @@ const { stop } = useIntersectionObserver(
 </script>
 
 <template>
-  <Suspense>
-    <div>
-      <!------------------------------------ Post NORMAL ------------------------------>
-      <article
-        ref="post_reference"
-        v-if="tipo_usuario == 'comercio' && post.avg < 4"
-        :class="` post ${estilos.post} relative `"
-        :data-start_date="post.start_date"
-        :data-end_date="post.end_date"
-        :data-favorito="
-          favoritos.indexOf(post.post_id) == -1 ? 'false' : 'true'
-        "
-      >
-        <!-- Contenedor del header del post -->
-        <div class="post-header w-[100%] h-[60px] flex items-center">
-          <div
-            class="avatar-wrapper w-[50px] min-w-[50px] min-h-[50px] h-[50px] rounded-full overflow-hidden mr-2"
-          >
-            <img
-              @click="redirect(`comercio/${post.user_id}`)"
-              loading="lazy"
-              class="cursor-pointer w-[100%] h-[100%] object-cover"
-              :src="post.avatar"
-              alt="avatar_usuario"
-            />
-          </div>
-          <div class="flex flex-col items-start w-[100%] h-[100%]">
-            <b>{{ post.username }}</b>
-            <small>{{ datetranslatesql(post.start_date) }}</small>
-            <button
-              click=""
-              class="rating flex h-[fit-content] items-center justify-start"
-              v-if="post.avg != null"
-            >
-              <img
-                class="  "
-                :src="StarSVG"
-                v-for="index in Math.floor(post.avg)"
-                alt="star"
-                :title="post.avg"
-                loading="lazy"
-              />
-              <img
-                class=" "
-                :src="StarEmptySVG"
-                v-for="index in 5 - Math.floor(post.avg)"
-                alt="star"
-                :title="post.avg"
-                loading="lazy"
-              />
-              <small>({{ post.avg.toFixed(2) }})</small>
-            </button>
-          </div>
-          <button @click="() => abrirModal(post.id)" class="mr-4">
-            <img :src="MoreSVG" alt="dots" />
-          </button>
-        </div>
+    <Suspense>
+        <div>
+             <!------------------------------------ Post NORMAL ------------------------------>
+        <article ref="post_reference" v-if="tipo_usuario == 'comercio' && post.avg < 4"
+            :class="` post ${estilos.post} relative `" :data-start_date="post.start_date" :data-end_date="post.end_date"
+            :data-favorito="(favoritos.indexOf(post.post_id) == -1) ? 'false' : 'true'">
+            <!-- Contenedor del header del post -->
+            <div class=" post-header w-[100%] h-[60px] flex items-center ">
+                <div class=" avatar-wrapper w-[50px] min-w-[50px] min-h-[50px] h-[50px] rounded-full overflow-hidden mr-2">
+                    <img @click="redirect(`comercio/${post.user_id}`)" loading="lazy"
+                        class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.avatar" alt="avatar_usuario">
+                </div>
+                <div class=" flex flex-col items-start w-[100%] h-[100%] ">
+                    <b>{{ post.username }}</b>
+                    <small>{{ datetranslatesql(post.start_date) }}</small>
+                    <button click="" class=" rating flex h-[fit-content] items-center justify-start " v-if="post.avg != null">
+                        <img class="  " :src="StarSVG" v-for="index in Math.floor(post.avg)" alt="star" :title="post.avg"
+                            loading="lazy" />
+                        <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(post.avg))" alt="star"
+                            :title="post.avg" loading="lazy" />
+                        <small>({{ post.avg.toFixed(2) }})</small>
+                    </button>
+                </div>
+                <button @click="() => abrirModal(post.id)" class="mr-4">
+                    <img :src="MoreSVG" alt="dots">
+                </button>
+            </div>
 
         <!-- Contenedor de la imagen del post -->
 
@@ -297,58 +267,30 @@ const { stop } = useIntersectionObserver(
         </div>
       </article>
 
-      <!------------------------------------ Post DESTACADO ------------------------------>
-      <article
-        v-if="tipo_usuario == 'comercio' && post.avg >= 4"
-        :class="` post ${estilos.post} relative`"
-      >
-        <!-- Contenedor del header del post -->
-        <div class="post-header w-[100%] h-[60px] flex items-center">
-          <div
-            class="avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden mr-2"
-          >
-            <img
-              @click="redirect(`comercio/${post.user_id}`)"
-              class="cursor-pointer w-[100%] h-[100%] object-cover"
-              :src="post.avatar"
-              alt="avatar_usuario"
-            />
-          </div>
-          <div class="flex flex-col items-start texts w-[100%] h-[100%]">
-            <b
-              @click="redirect(`comercio/${post.id}`)"
-              class="cursor-pointer"
-              >{{ post.username }}</b
-            >
-            <small>{{ datetranslatesql(post.start_date) }}</small>
-            <button
-              click=""
-              class="rating flex h-[fit-content] items-center justify-start"
-              v-if="post.avg != null"
-            >
-              <img
-                class="  "
-                :src="StarSVG"
-                v-for="index in Math.floor(post.avg)"
-                alt="star"
-                loading="lazy"
-                :title="post.avg"
-              />
-              <img
-                class=" "
-                :src="StarEmptySVG"
-                v-for="index in 5 - Math.floor(post.avg)"
-                alt="star"
-                loading="lazy"
-                :title="post.avg"
-              />
-              <small>({{ post.avg.toFixed(2) }})</small>
-            </button>
-          </div>
-          <button @click="() => abrirModal(post.id)" class="mr-4">
-            <img :src="MoreSVG" alt="dots" />
-          </button>
-        </div>
+        <!------------------------------------ Post DESTACADO ------------------------------>
+        <article v-if="tipo_usuario == 'comercio' && post.avg >= 4" :class="` post ${estilos.post} relative`">
+
+            <!-- Contenedor del header del post -->
+            <div class=" post-header w-[100%] h-[60px] flex items-center ">
+                <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden mr-2 ">
+                    <img @click="redirect(`comercio/${post.user_id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover  "
+                        :src="post.avatar" alt="avatar_usuario">
+                </div>
+                <div class=" flex flex-col items-start texts w-[100%]  h-[100%]  ">
+                    <b @click="redirect(`comercio/${post.id}`)" class="cursor-pointer">{{ post.username }}</b>
+                    <small>{{ datetranslatesql(post.start_date) }}</small>
+                    <button click="" class=" rating flex h-[fit-content] items-center justify-start " v-if="post.avg != null">
+                        <img class="  " :src="StarSVG" v-for="index in Math.floor(post.avg)" alt="star" loading="lazy"
+                            :title="post.avg" />
+                        <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(post.avg))" alt="star" loading="lazy"
+                            :title="post.avg" />
+                        <small>({{ post.avg.toFixed(2) }})</small>
+                    </button>
+                </div>
+                <button @click="() => abrirModal(post.id)" class="mr-4">
+                    <img :src="MoreSVG" alt="dots">
+                </button>
+            </div>
 
         <!-- Contenedor de la imagen del post -->
 
@@ -446,37 +388,24 @@ const { stop } = useIntersectionObserver(
         </div>
       </article>
 
-      <!------------------------------------ Post AYUNTAMIENTO ------------------------------>
-      <article
-        v-if="tipo_usuario == 'ayuntamiento'"
-        :class="` post ${estilos.post} relative`"
-      >
-        <!-- post header -->
-        <div
-          class="post-header w-[100%] h-[fit-content] flex items-center pt-3 pb-4"
-        >
-          <div
-            class="avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden mr-2"
-          >
-            <img
-              @click="redirect(`ayuntamiento/${post.user_id}`)"
-              loading="lazy"
-              class="cursor-pointer w-[100%] h-[100%] object-cover"
-              :src="post.avatar"
-              alt="avatar_usuario"
-            />
-          </div>
-          <div
-            @click="redirect(`ayuntamiento/${post.id}`)"
-            class="cursor-pointer flex flex-col items-start texts w-[100%] h-[100%]"
-          >
-            <b>{{ post.usuario.nombre }}</b>
-            <small> Organización </small>
-          </div>
-          <button @click="() => abrirModal(post.id)" class="mr-4">
-            <img :src="MoreSVG" alt="dots" loading="lazy" />
-          </button>
-        </div>
+        <!------------------------------------ Post AYUNTAMIENTO ------------------------------>
+        <article v-if="tipo_usuario == 'ayuntamiento'" :class="` post ${estilos.post} relative`">
+
+            <!-- post header -->
+            <div class=" post-header w-[100%] h-[fit-content] flex items-center pt-3 pb-4 ">
+                <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden  mr-2 ">
+                    <img @click="redirect(`ayuntamiento/${post.user_id}`)" loading="lazy"
+                        class=" cursor-pointer w-[100%] h-[100%] object-cover" :src="post.avatar" alt="avatar_usuario">
+                </div>
+                <div @click="redirect(`ayuntamiento/${post.id}`)"
+                    class=" cursor-pointer flex flex-col items-start texts w-[100%] h-[100%] ">
+                    <b>{{ post.usuario.nombre }}</b>
+                    <small> Organización </small>
+                </div>
+                <button @click="() => abrirModal(post.id)" class="mr-4">
+                    <img :src="MoreSVG" alt="dots" loading="lazy">
+                </button>
+            </div>
 
         <!-- post image -->
 
