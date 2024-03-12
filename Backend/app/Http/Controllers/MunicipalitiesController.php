@@ -46,16 +46,16 @@ class MunicipalitiesController extends Controller
     {
         try {
             // Obtener todos los municipios
-            $municipalities = Municipality::all();
+            $municipalities = Municipality::select('name')->get();
 
             // Devolver una respuesta con los datos de los municipios
             return response()->json(['status' => true, 'data' => $municipalities], 200);
         } catch (ModelNotFoundException $e) {
             // Manejar el caso en el que no se encuentren municipios
-            return response()->json(['status' => false, 'message' => 'No se encontró ninguna categoría'], 404);
+            return response()->json(['status' => false, 'message' => 'No se encontró ningun municipio'], 404);
         } catch (Exception $e) {
             // Manejar cualquier otro error
-            return response()->json(['status' => false, 'message' => 'Hubo un problema al obtener las categorías: ' . $e->getMessage()], 500);
+            return response()->json(['status' => false, 'message' => 'Hubo un problema al obtener los municipios: ' . $e->getMessage()], 500);
         }
     }
 }

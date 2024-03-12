@@ -68,9 +68,8 @@ class PostsController extends Controller
                     'users.id AS user_id',
                     'users.avatar'
                 )
-                //->whereIn('users-posts.user_id', $ids)
                 ->where('posts.active', '=', true)
-                ->orderBy('posts.created_at', 'desc')
+                ->orderBy('posts.start_date', 'desc')
                 ->get();
 
             $listado->each(function ($post) {
@@ -153,7 +152,7 @@ class PostsController extends Controller
                 )
                 ->whereIn('users-posts.user_id', $ids)
                 ->where('posts.active', '=', true)
-                ->orderBy('posts.created_at', 'desc')
+                ->orderBy('posts.start_date', 'desc')
                 ->get();
 
             $listado->each(function ($post) {
