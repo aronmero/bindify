@@ -1,4 +1,4 @@
-import { urlApi } from "@/api/api.js";
+import { urlApi } from "@/Api/api.js";
 export async function login(email,pass) {
   try {
     const options = genOptionsLogin("POST");
