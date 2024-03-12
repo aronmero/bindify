@@ -28,7 +28,7 @@ class CommentFactory extends Factory
             if($auxReply < 5){
                 $father_id = Comment::where('post_id', '=', $post_id)->inRandomOrder()
                 ->first();
-                $father_id = ($father_id == null /*|| $father_id->father != null*/)?$father_id->id:null;
+                $father_id = ($father_id != null /*|| $father_id->father == null*/)?$father_id->id:null;
             }
         }
 
