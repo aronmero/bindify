@@ -11,14 +11,14 @@ import { genOptions, urlApi } from "@/Api/api.js";
  * @param {Number} id de la publicacion
  * @returns {Object}
  */
-export async function getUserData(metodo,body=null) {
+export async function getUserData(metodo,subRuta,body=null) {
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     console.log(user)
     try {
       const options = genOptions(metodo,body);
-      const response = await fetch(`${urlApi}/api/profile`, options);
+      const response = await fetch(`${urlApi}${subRuta}`, options);
       const data = await response.json();
-      //sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
+      sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
       console.log("hola")
       return data.data;
     } catch (error) {
