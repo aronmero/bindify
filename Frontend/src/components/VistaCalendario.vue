@@ -1,24 +1,42 @@
 <script setup>
+    import {ref} from 'vue';
     import Filtros from '@/components/calendario/widgets/Filtros.vue';
     import Calendario from '@/components/calendario/widgets/Calendar.vue';
     import Card from './calendario/Card.vue';
-    import { posts } from '@/components/calendario/mocks/posts';
+    //import { posts } from '@/components/calendario/mocks/posts';
     import { filtros } from './calendario/mocks/filtros';
-    import {exportar_dia} from './calendario/helpers/exportardia'
+    import { exportar_dia } from './calendario/helpers/exportardia';
+    import { obtener_posts_municipios, obtener_municipios } from '@/Api/home/municipios'
     
     const hoy = new Date();
     let dia = exportar_dia(hoy);
 
+    const posts_request = await obtener_posts_municipios();
+    const posts = posts_request.data;
+
+    const municipios_req = await obtener_municipios();
+    const municipios = municipios_req.data;
+    //console.log(posts);
+  
+    const filtrar_por_fecha = (date) => {
+        //console.log(date.getLocalString());
+        let cards = Array.from(document.getElementsByClassName('card'));
+        cards.forEach(card => {
+            card.style.display = "none";
+        });
+    }
+
+    filtrar_por_fecha(hoy);
 </script>
 <template>
     <div class="flexible flex flex-col ">
         <div class="flex justify-center items-center  w-[100%] rounded-xl">
-            <Filtros v-for="filtro in filtros" :text="filtro"></Filtros>
+            <!-- <Filtros v-for="filtro in filtros" :text="filtro"></Filtros> -->
         </div>
-        <Calendario></Calendario>
-        <p id="fecha" class="fecha">{{dia}}</p>
+        <Calendario :posts="posts"></Calendario>
+        <b id="fecha" class="fecha">{{dia}}</b>
         <div class="grid grid-cols-1">
-            <Card v-for="post in posts" :post="post"/>
+            <Card v-for="post in posts" :post="post" :municipios="municipios"/>
         </div>
     </div>
    

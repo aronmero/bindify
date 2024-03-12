@@ -1,4 +1,5 @@
 <script setup>
+
 import { ref,onBeforeUnmount  } from 'vue';
 import Comentario from '../widgets/Comentario.vue';
 import { comentarios_por_post } from './../mocks/comentarios';
@@ -30,9 +31,6 @@ const modal = ref(null);
  * Creo una referencia para el input del chat y poder enviarlo con click
  */
 const chat_input = ref(null);
-
-const user = encontrar_usuario_por_id(1);
-
 
 let comentarios = ref(null);
 const id_post = props.post.id;
@@ -102,6 +100,7 @@ const enviarComentarioPorSubmit = async (post_id, event) => {
                 if (response.status) {
                     refrescarPosicion()
                 } 
+
             }
 
             antiSpamFunction();
