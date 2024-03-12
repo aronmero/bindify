@@ -35,7 +35,7 @@
             <input @change="() => props.cambiar_intervalo(props.index, input_hora_apertura.value, input_hora_cierre.value, input_dia.value)"   :id="`a_${index}`" ref="input_hora_apertura"  v-else type="time" value="00:00">
         </label>
         <label for="">
-            <input @change="() => props.cambiar_intervalo(props.index, input_hora_apertura.value, input_hora_cierre.value, input_dia.value)"  :id="`b_${index}`" ref="input_hora_cierre"  v-if="intervalo.hora_cierre != 'Cerrado'" type="time" :value="props.intervalo.hora_cierre">
+            <input  @change="() => props.cambiar_intervalo(props.index, input_hora_apertura.value, input_hora_cierre.value, input_dia.value)"  :id="`b_${index}`" ref="input_hora_cierre"  v-if="intervalo.hora_cierre != 'Cerrado'" type="time" :value="props.intervalo.hora_cierre">
             <input @change="() => props.cambiar_intervalo(props.index, input_hora_apertura.value, input_hora_cierre.value, input_dia.value)"  :id="`b_${index}`" ref="input_hora_cierre"  v-else type="time" value="00:00">
         </label>
         <label for="">
@@ -56,14 +56,42 @@
 <style scoped lang="scss">
     input {
         border:1px solid rgba(206,206,206);
+        background:#f3f3f3;
         padding:10px 5px;
         border-radius:5px;
         margin-right:10px;
+        color:black;
     }
     select {
         border:1px solid rgba(206,206,206);
+        background:#f3f3f3;
         padding:10px 5px;
         border-radius:5px;
         margin-right:10px;
     }
+
+    input::-webkit-calendar-picker-indicator, select::-webkit-calendar-picker-indicator {
+        color:gray;
+    }
+
+
+    @media (prefers-color-scheme: light) {
+        *::-webkit-calendar-picker-indicator {
+            background-color:#f3f3f3;
+            border-radius:5px;
+            padding:2px 1.5px;
+        }
+    }
+
+    @media (prefers-color-scheme: dark) {
+        *::-webkit-calendar-picker-indicator {
+            background-color:#101010;
+            border-radius:5px;
+            padding:2px 1.5px;
+        }
+    }
+
+
+    
+
 </style>
