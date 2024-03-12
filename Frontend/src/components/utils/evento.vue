@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { ref,onBeforeUnmount  } from 'vue';
+import { ref, onBeforeUnmount } from 'vue';
 import { datetranslate } from '@/components/notificaciones/helpers/datetranslate.js'
 import EnviarSVG from '@public/assets/icons/forward.svg';
 import Comentario from '@/components/feed_media/widgets/Comentario.vue';
 import Calendar from "@/components/utils/calendar.vue";
 import { getCommentsOfPost, storeCommentsOfPost } from "@/Api/publicacion/comentarios.js";
+import router from '@/router/index.js';
 
 //https://vueuse.org/core/useClipboard/
 import { useClipboard } from '@vueuse/core'
 
 const props = defineProps({
-    post_id:String,
+    post_id: String,
     url: { type: String, default: "" },
     banner: { type: String, default: "https://placehold.co/320x230/png" },
     titulo: { type: String, default: "Título evento" },
@@ -25,6 +26,7 @@ const props = defineProps({
     comentarios: Array,
 });
 
+let comentarios = ref(props.comentarios);
 //Abre y cierra el modal
 const openModal = (e) => {
     if (e.target.nextSibling.classList.contains("hidden")) {
@@ -56,6 +58,13 @@ const copyModal = (e) => {
     copy(props.url);
 }
 
+
+const id_post = props.post_id;
+const apiCall = async () => {
+    await getCommentsOfPost(id_post).then(data => comentarios.value = data.comentarios).then(data => console.log(data))
+}
+
+
 const chat_input = ref(null);
 const posteado = ref(false);
 let interval;
@@ -64,21 +73,23 @@ const enviarComentarioPorSubmit = async (post_id, event) => {
         let texto = event.target.value;
         if (!posteado.value) {
             if (texto != "") {
-                const body=JSON.stringify({ "content": `${texto}`, "post_id": post_id })
+                const body = JSON.stringify({ "content": `${texto}`, "post_id": post_id })
                 const response = await storeCommentsOfPost(body)
             }
 
             antiSpamFunction();
+            apiCall();
         }
     }
 };
 
 const enviarComentarioPorClick = async (post_id, texto) => {
     if (!posteado.value && texto != "") {
-        const body=JSON.stringify({ "content": `${texto}`, "post_id": post_id })
+        const body = JSON.stringify({ "content": `${texto}`, "post_id": post_id })
         console.log(body);
         const response = await storeCommentsOfPost(body)
         antiSpamFunction();
+        apiCall();
     }
 };
 
@@ -86,7 +97,7 @@ const enviarComentarioPorClick = async (post_id, texto) => {
 * Función que se encarga de evitar que el usuario desde el front envíe las peticiones que quiera
 * */
 const antiSpamFunction = () => {
-    chat_input.value.value= ""
+    chat_input.value.value = ""
     chat_input.value.readonly = true;
     let secs = 0;
     posteado.value = true;
@@ -145,7 +156,7 @@ const antiSpamFunction = () => {
         </div>
         <div class="text-[24px] font-bold my-[30px]">Comentarios</div>
         <div>
-            <div 
+            <div
                 class=" chat w-[100%] bg-[#e6e5e5] h-[50px] flex items-center  bottom-[50px] sm:bottom-[50px] md:bottom-[50px] lg:bottom-[10px]  xl:bottom-[10px] 2xl:bottom-[10px] p-[30px_20px] rounded-full">
                 <!-- Input de Enviar datos -->
                 <input ref="chat_input" @keydown="(e) => enviarComentarioPorSubmit(props.post_id, e)"
@@ -156,9 +167,8 @@ const antiSpamFunction = () => {
                     <img class="rotate-180" :src="EnviarSVG" alt="submit" />
                 </button>
             </div>
-            <template v-if="props.comentarios != null">
-                <Comentario v-if="props.comentarios.length >= 1" v-for="comentario in props.comentarios"
-                    :comentario="comentario" />
+            <template v-if="comentarios != null">
+                <Comentario v-if="comentarios.length >= 1" v-for="comentario in comentarios" :comentario="comentario" />
                 <Comentario v-else :comentario="{ content: 'No hay comentarios, ¡se el primero!' }" />
             </template>
 
