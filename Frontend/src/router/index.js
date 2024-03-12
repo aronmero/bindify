@@ -76,7 +76,7 @@ const router = createRouter({
  * Guard para las vistas de publicaciones si no es un commercio
  */
 router.beforeEach((to, from, next) => {
-  const publicRoutes = ["/login", "/registro"];
+  const publicRoutes = ["/login", "/registro", "/password-modal"];
   const comercioRoutes = ["/post/nuevo"];
   const userData = JSON.parse(sessionStorage.getItem("usuario"));
 

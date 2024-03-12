@@ -103,7 +103,7 @@ import Intervalo from './widgets/Intervalo.vue';
                 <Intervalo v-for="(intervalo, index) in horario" :intervalo="intervalo" :index="index"
                     :borrar_intervalo="borrar_intervalo" :cambiar_intervalo="cambiar_intervalo" />
                 <b v-if="horario.length == 0" class="p-[20px]">Aún no has añadido ningún horario.</b>
-                <div id="footer" class="w-[100%] flex flex-col items-center justify-start w-[200px] ">
+                <div id="footer" class="w-[100%] flex flex-col items-center justify-start w-[200px]">
                     <button @click="() => crear_intervalo()" class=" bg-[#FE822F] w-[100%]  h-[50px] rounded-xl">Agregar intervalo</button>
                 
                     <button @click="() => props.enviar_cambios(pasar_a_string_horario(horario))" class="mt-[10px] bg-[#404040] text-white w-[100%] h-[50px] rounded-xl">Aplicar y volver</button>

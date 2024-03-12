@@ -72,10 +72,13 @@ function Registro() {
                 <Input @datos="(nuevosDatos) => { password = nuevosDatos }" tipo="password" label="Password"
                     class="-mt-2" :valor="password" :error="errorPass" />
                 <Input tipo="submit" clase="oscuro" valor="Iniciar sesión" />
-                <button @click="OlvidarPassword" class="font-semibold lg:text-base text-sm text-right cursor-pointer -mt-3">
+            </form>
+            <div id="form" class="lg:w-[60%] w-[80%] h-[50%] flex flex-col justify-evenly gap-y-5">
+                <button @click="OlvidarPassword" class="font-semibold lg:text-base text-sm text-right cursor-pointer">
                     ¿Olvidaste tu contraseña?
                 </button>
-            </form>
+            </div>
+            
             <p class="color">{{ errorMsg }}</p>
             <div class="flex flex-col gap-y-5">
                 <p class="text-center">O inicie sesión con:</p>
@@ -97,6 +100,10 @@ function Registro() {
 @media screen and (min-width: 900px) and (max-width: 1700px) {
     #container {
         margin-top: 25px;
+    }
+
+    form, #form {
+        width: 70%;
     }
 
     #imagen-container-fondo img {
