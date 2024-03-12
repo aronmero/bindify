@@ -39,6 +39,16 @@ class ReviewsController extends Controller
      *   }
      * }
      *
+     * @response 403 {
+     *   "status": false,
+     *   "message": "Usuario inexistente"
+     * }
+     *
+     * @response 404 {
+     *   "status": false,
+     *   "message": "El usuario $request->commerce_username no es un comercio"
+     * }
+     *
      * @response 500 {
      *   "status": false,
      *   "message": "Error al crear la review: mensaje_de_error"
@@ -47,13 +57,16 @@ class ReviewsController extends Controller
     public function store(StoreReviewsRequest $request)
     {
         try {
+
             try {
-
                 $id = User::findOrFail($request->commerce_username, 'username')->id;
-
+            } catch (ModelNotFoundException $e) {
+                return response()->json(['status' => false, 'message' => 'Usuario inexistente'], 404);
+            }
+            try {
                 Commerce::findOrFail($id, 'user_id');
             } catch (ModelNotFoundException $e) {
-                return response()->json(['status' => false, 'message' => 'Error al crear la review: No puedes tener dos reviews de un mismo sitio '], 500);
+                return response()->json(['status' => false, 'message' => "El usuario $request->commerce_username no es un comercio"], 404);
             }
 
             try {
