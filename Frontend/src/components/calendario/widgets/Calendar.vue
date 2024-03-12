@@ -1,8 +1,9 @@
 <script setup>
     import {onMounted, ref} from 'vue';
-    import { postsPerDate, postsDates, format_date } from '../mocks/filtros';
     import ForwardSVG from '@public/assets/icons/forward.svg';
+    import {comparar_fechas} from '@/components/calendario/helpers/comparar_fechas.js';
     
+    /* realizado por David */
 
     const props = defineProps({
         title: String, 
@@ -36,7 +37,7 @@
 
         // Agregar días inactivos del mes anterior
         for (let i = firstDay - 1; i >= 0; i--) {
-            newDays.push({ day: prevMonthLastDate - i, month: month.value + 1, year: year.value,   inactive: true });
+            newDays.push({ day: prevMonthLastDate - i, month: month.value + 1, year: year.value, inactive: true });
         }
 
         // Agregar días activos del mes actual
@@ -53,8 +54,24 @@
         days.value = newDays;
     };
 
-    const cambiarFecha = (test, day) => {
-      console.log(test, day);
+    const cambiarFecha = (day) => {
+      // Formatear la fecha con el mismo de sql
+      let fechaElegida = `${day.year}-${day.day}-${day.month}`;
+
+      // Obtiene el id del título y nos muestra la fecha actual
+      document.getElementById("fecha").innerHTML = `Martes, ${day.day} de ${months[day.month]} de ${day.year}`
+
+      let cards = Array.from(document.getElementsByClassName('card'));
+      // Filtra las fechas comparándolas
+      cards.forEach(card => {
+        console.log(`comparando ${fechaElegida} - ${card.dataset.start_date}`)
+        if(comparar_fechas(card.dataset.start_date, fechaElegida, card.dataset.end_date)) card.style.display = "flex";
+        else card.style.display = "none";
+      })
+
+      console.log(day);
+
+      
     };
 
     const getButtonClasses = (day) => {
@@ -107,8 +124,8 @@ onMounted(() => {
                 <li>Sab</li>
               </ul>
               <ul id="calendarDates" class="calendar-dates">
-                <li v-for="day in days" :key="day" :class="(day.inactive)?'inactive':'active'">
-                  <button @click="cambiarFecha('test', day)">{{ day.day }}</button>
+                <li v-for="day in days" :key="day" :class="(day.inactive) ? 'inactive':'active'">
+                  <button @click="cambiarFecha(day)">{{ day.day }}</button>
                 </li>
               </ul>
             </div>
@@ -174,6 +191,7 @@ onMounted(() => {
 
     .calendar-body ul {
         @include row_center();
+        justify-content: flex-start;
         list-style: none;
         flex-wrap: wrap;
         padding: 0;
@@ -206,16 +224,18 @@ onMounted(() => {
         font-size:.9rem;
     }
 
-    .calendar-body .active {
-        color: red;
+    .calendar-body .active button {
+        //color: red !important;
     }
+
+
 
     .calendar-body .with_event {
         background: #f3f3f3;
         cursor: pointer;
     }
 
-    .calendar-body .inactive {
+    .calendar-body .inactive button {
         color: #BFC1C5 !important;
     }
 

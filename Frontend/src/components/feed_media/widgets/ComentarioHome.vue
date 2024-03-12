@@ -71,7 +71,7 @@ console.log(props.comentario)
 </script>
 <template>
     <!-- Contenedor Comentario -->
-    <div class=" comentario flex flex-col w-[100%] p-[10px_30px] rounded-lg relative my-4   ">
+    <div class=" comentario flex flex-col w-[100%] min-h-[180px] p-[10px_30px] rounded-lg relative my-4   ">
         <!-- Header del comentario -->
         <div class=" header-comentario flex ">
             <!-- Avatar del usuario -->

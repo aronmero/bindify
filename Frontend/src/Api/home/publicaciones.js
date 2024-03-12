@@ -13,7 +13,7 @@ export async function obtener_posts() {
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     const token = user.usuario.token;
 
-    let data = await fetch(`http://127.0.0.1:8000/api/home_todos`, {
+    let data = await fetch(`${urlApi}/api/home_todos`, {
         method: 'GET',
         headers: {
           "Content-Type": "application/json",
@@ -27,3 +27,15 @@ export async function obtener_posts() {
     return data;
 }
 
+export async function obtener_tipo_comercio(comercio_username) {
+    const options = genOptionsWithoutBody('GET');
+    const user = JSON.parse(sessionStorage.getItem("usuario"));
+    const token = user.usuario.token;
+
+    let data = await fetch(`${urlApi}/api/user/${comercio_username}`, options)
+    .then(res => res.json())
+    .then(res => res);
+    
+    return data;
+
+}

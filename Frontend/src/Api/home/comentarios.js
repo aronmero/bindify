@@ -13,18 +13,15 @@ export async function obtener_comentarios_post(post_id) {
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     const token = user.usuario.token;
 
- 
-    let data = await fetch(`http://127.0.0.1:8000/api/comment_detailed/${post_id}`, options)
+    let data = await fetch(`${urlApi}/api/comment/${post_id}`, options)
         .then(res => res.json())
         .then(res => res);
-
-   
     return data;
     
 }
 
 /**
- * Description placeholder
+ * Agrega un comentario por post
  * @date 3/11/2024 - 7:03:00 PM
  *
  * @export
@@ -35,21 +32,11 @@ export async function obtener_comentarios_post(post_id) {
  */
 
 export async function agregar_comentario_post(post_id, comentario) {
-    /**
-     * {
-		"username": "usuario_8",
-			"content": "Contenido del comentario 1",
-			"post_id":10,
-			"avatar": "avatar_8.jpg",
-			"user_id": 8
-        }
-     */
 
-        
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     const token = user.usuario.token;
 
-    let data = await fetch(`http://127.0.0.1:8000/api/comment/`, {
+    let data = await fetch(`${urlApi}/api/comment/`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
