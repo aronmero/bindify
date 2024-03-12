@@ -6,6 +6,8 @@ use App\Http\Requests\StorePostsRequest;
 use App\Http\Requests\UpdatePostsRequest;
 use App\Models\Post;
 use App\Models\Comment;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -159,7 +161,7 @@ class PostsController extends Controller
 
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                //crypt$post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Crypt::encryptString($post->post_id);
             });
 
             return response()->json([
@@ -243,7 +245,7 @@ class PostsController extends Controller
 
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                //crypt$post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Crypt::encryptString($post->post_id);
             });
 
             return response()->json([
@@ -318,8 +320,7 @@ class PostsController extends Controller
 
 
             $postData = [
-                'post_id' => $post->id,
-                //crypt'post_id' => $post->post_id = Crypt::encryptString($post->post_id),
+                'post_id' => $post->id = Crypt::encryptString($post->id),
                 'image' => $post->image,
                 'title' => $post->title,
                 'description' => $post->description,
@@ -395,14 +396,14 @@ class PostsController extends Controller
     {
         try {
 
-            //crypttry {
-            //crypt    $id = Crypt::decryptString($id);
-            //crypt} catch (DecryptException $e) {
-            //crypt    return response()->json([
-            //crypt        'status' => false,
-            //crypt        'message' => 'Post inexistente',
-            //crypt    ], 500);
-            //crypt}
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Post inexistente',
+                ], 500);
+            }
 
             // Obtener el post
             $post = Post::with('users')->findOrFail($id);
@@ -431,7 +432,7 @@ class PostsController extends Controller
                     'username' => $comment->user->username,
                     'content' => $comment->content,
                     'comment_id' => $comment->id,
-                    //crypt'comment_id' => Crypt::encryptString($comment->id),
+                    'comment_id' => Crypt::encryptString($comment->id),
                     'avatar' => $comment->user->avatar,
                 ];
                 $formattedComments[] = $formattedComment;
@@ -516,14 +517,14 @@ class PostsController extends Controller
     {
         try {
 
-            //crypttry {
-            //crypt    $id = Crypt::decryptString($id);
-            //crypt} catch (DecryptException $e) {
-            //crypt    return response()->json([
-            //crypt        'status' => false,
-            //crypt        'message' => 'Post inexistente',
-            //crypt    ], 500);
-            //crypt}
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Post inexistente',
+                ], 500);
+            }
 
             $user = Auth::user();
             $post = Post::find($id);
@@ -627,14 +628,14 @@ class PostsController extends Controller
     {
         try {
 
-            //crypttry {
-            //crypt    $id = Crypt::decryptString($id);
-            //crypt} catch (DecryptException $e) {
-            //crypt    return response()->json([
-            //crypt        'status' => false,
-            //crypt        'message' => 'Post inexistente',
-            //crypt    ], 500);
-            //crypt}
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Post inexistente',
+                ], 500);
+            }
 
             $user = Auth::user();
             $post = Post::find($id);
