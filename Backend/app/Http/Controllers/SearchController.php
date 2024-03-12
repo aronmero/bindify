@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commerce;
-use App\Models\Hashtag;
 use App\Models\Municipality;
 use App\Models\Post;
-use App\Models\User;
+use App\Models\Review;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
@@ -94,6 +92,7 @@ class SearchController extends Controller
 
                 $posts->each(function ($post) {
                     $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+                    //crypt$post->post_id = Crypt::encryptString($post->post_id);
                 });
 
                 return response()->json([
@@ -102,12 +101,12 @@ class SearchController extends Controller
                 ], 200);
             }
 
-            $commerces = Commerce::leftJoin('commerces-hashtags', 'commerces-hashtags.commerce_id', '=', 'commerces.user_id')
+            $commerces = Commerce::leftjoin('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
+                ->leftJoin('commerces-hashtags', 'commerces-hashtags.commerce_id', '=', 'commerces.user_id')
                 ->leftJoin('hashtags', 'commerces-hashtags.hashtag_id', '=', 'hashtags.id')
                 ->join('users', 'commerces.user_id', '=', 'users.id')
                 ->join('categories', 'commerces.category_id', '=', 'categories.id')
                 ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
-                ->leftjoin('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
                 ->select(
                     'commerces.user_id',
                     'email',
@@ -120,9 +119,9 @@ class SearchController extends Controller
                     'categories.name AS categories_name',
                     'schedule',
                     'commerces.avg',
-                    DB::raw('count(reviews.commerce_id) as review_count')
                 )
                 ->where('commerces.active', '=', true)
+                ->distinct()
                 ->groupBy('commerces.user_id', 'email', 'phone', 'avatar', 'users.username', 'address', 'commerces.description', 'categories_name', 'schedule', 'commerces.avg', 'municipality_name');
 
             if ($request->municipality) {
@@ -146,7 +145,11 @@ class SearchController extends Controller
 
             $commerces->each(function ($commerce) {
                 $commerce->hashtags = Commerce::find($commerce->user_id)->hashtags->pluck('name')->toArray();
+                $commerce->review_count = Review::where('commerce_id', $commerce->user_id)->count();
+                unset($commerce->user_id);
             });
+
+
 
             return response()->json([
                 "status" => true,

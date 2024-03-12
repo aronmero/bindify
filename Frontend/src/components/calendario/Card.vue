@@ -3,6 +3,7 @@ import {ref} from 'vue';
 import { obtener_municipio } from './mocks/municipios';
 import LocationSVG from '@public/assets/icons/location.svg';
 import EnlaceSVG from '@public/assets/icons/external.svg';
+import DiaSVG from '@public/assets/icons/time.svg';
 import MenuSVG from '@public/assets/icons/ellipsis.svg';
 import StarSVG from '@public/assets/icons/star.svg';
 import HeartSVG from '@public/assets/icons/like.svg';
@@ -12,14 +13,15 @@ import router from '@/router/index';
 
 
 const props = defineProps({
-    post: Object
+    post: Object,
+    municipios: Object
 });
 
 const modalHandler = ref(false);
 const modal = ref(null);
 
 const post = props.post;
-const municipio = obtener_municipio(post.usuario.municipality_id).name;
+//const municipio = obtener_municipio(post.usuario.municipality_id).name;
 
 const redirect = (url) => {
     router.push(url)
@@ -38,10 +40,10 @@ const abrirModal = () => {
 
 </script>
 <template>
-    <div class=" card w-[100%] p-4 rounded-xl relative ">
+    <div class=" card w-[100%] p-4 rounded-xl relative " :data-fecha="post.start_date">
         <!-- Imagen del post -->
         <div class=" img-wrapper w-[110px] h-[150px] overflow-hidden rounded-xl mr-2">
-            <img class=" img cursor-pointer  " :src="post.image" alt="" @click="() => redirect(`evento/${post.id}`)">
+            <img class=" img min-w-[100%] cursor-pointer  " :src="post.image" alt="" @click="() => redirect(`evento/${post.post_id}`)">
         </div>
         <!-- Contenido del Post -->
         <div class=" wrapper ">
@@ -52,24 +54,21 @@ const abrirModal = () => {
             <!-- Campo Municipio -->
             <p class=" campo mt-3 h-[20px] flex items-center  ">
                 <img :src="LocationSVG" class=" w-[20px] mr-1 " alt="Ubicacion:">
-                {{ municipio }}
+                {{ post.municipality }}
             </p>
-            <!-- Campo Enlace -->
-            <a href="">
-                <p class=" campo mt-3 h-[20px] flex items-center ">
-                    <img :src="EnlaceSVG" class=" w-[20px] mr-1 " alt="Enlace:">
-                    Enlace
-                </p>
-            </a>
+            <p class=" campo mt-3 h-[20px] flex items-center  " >
+                <img :src="DiaSVG" class=" w-[20px] mr-1 " alt="Fecha de inicio:">
+                {{ post.start_date }}
+            </p>
         </div>
         <div class="">
-            <button class="p-2 absolute top-[0px] right-[20px] " @click="() => abrirModal(post.id)">
+            <button class="p-2 absolute top-[0px] right-[20px] " @click="() => abrirModal(post.post_id)">
                 <img :src="MenuSVG" alt="">
             </button>
         </div>
 
           <!-- Modal de Ver Más -->
-          <div ref="modal" :id="`modal_${post.id}`" :class="`modal absolute  top-[50px] right-[20px]  bg-white min-w-[200px] rounded-lg p-2 flex flex-col items-start justify-center`">
+          <div ref="modal" :id="`modal_${post.post_id}`" :class="`modal absolute  top-[50px] right-[20px]  bg-white min-w-[200px] rounded-lg p-2 flex flex-col items-start justify-center`">
             <!-- Botón ver perfil -->
             <button :class="`flex items-center font-medium w-[100%] m-2 `">
                 <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" />

@@ -33,8 +33,6 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('1234'),
             'phone'=> Str::random(10),
             'municipality_id'=> $municipality_id,
-            'avatar'=> $this->faker->imageUrl(),
-            'banner'=> $this->faker->imageUrl(),
             'username'=> fake()->name(),
             'remember_token' => Str::random(15),
         ];

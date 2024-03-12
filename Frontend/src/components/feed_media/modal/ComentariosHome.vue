@@ -1,12 +1,16 @@
 <script setup>
-
 import { ref, onBeforeUnmount } from 'vue';
-import Comentario from '../widgets/Comentario.vue';
-import { comentarios_por_post } from './../mocks/comentarios';
+import Comentario from '../widgets/ComentarioHome.vue';
+//import { comentarios_por_post } from './../mocks/comentarios';
 import { encontrar_usuario_por_id } from './../mocks/users';
 import BackSVG from '@public/assets/icons/forward.svg';
 import EnviarSVG from '@public/assets/icons/forward.svg';
+//import { obtener_comentarios_post, agregar_comentario_post } from '@/Api/home/comentarios'
 import { getCommentsOfPost, storeCommentsOfPost } from "@/Api/publicacion/comentarios.js";
+
+/**
+ * Define props
+ */
 
 const props = defineProps({
     post: Object,
@@ -32,23 +36,18 @@ const modal = ref(null);
  */
 const chat_input = ref(null);
 
+const user = encontrar_usuario_por_id(1);
+
 let comentarios = ref(null);
-const id_post = props.post.id;
+const id_post = props.post.post_id;
 /**
- * Obtiene los comentarios de la api
+ * Obtiene el comentario por la id del post
  */
 const apiCall = async () => {
     await getCommentsOfPost(id_post).then(data => comentarios.value = data.comentarios)
     console.log(comentarios.value);
 }
 apiCall();
-
-
-/**
- * Obtiene el comentario por la id del post
- */
-
-let en_comentarios = ref(comentarios_por_post(post.id));
 
 let interval;
 
@@ -58,34 +57,26 @@ let interval;
  * Limpia el intervalo para evitar bugs
  * Cambia el estilo de overflow para volver a permitir el scroll en background
  */
+
 const cerrarModal = () => {
     props.handler();
     clearInterval(interval);
     document.body.style.overflow = "scroll"
 };
 
+
+/**
+ * Refresca la posición del modal de comentarios
+ */
+
+const refrescarPosicion = () => {
+    comentario_handler.value.scrollTop = comentario_handler.value.scrollHeight;
+}
+
 //Elimina el intervalo antes de cambiar de ruta.
 onBeforeUnmount(() => {
     clearInterval(interval);
 });
-
-const refrescarPosicion = () => {
-    // console.log(comentario_handler.value.getBoundingClientRect());
-    // console.log(comentario_handler.value.scrollHeight);
-    comentario_handler.value.scrollTop = comentario_handler.value.scrollHeight;
-}
-
-/*
-const agregar_comentario = async (post_id, user_id, texto) => {
-    en_comentarios.value.push({
-        id: en_comentarios.length + 1,
-        user_id: user_id,
-        post_id: post_id,
-        content: texto,
-        active: true
-    });
-}*/
-
 /**
 * Enviar el comentario
 */
@@ -147,17 +138,17 @@ const antiSpamFunction = () => {
         };
     }, 1000);
 }
-
 /**
  * Bloqueamos overflow en background
  * */
+
 document.body.style.overflow = "hidden";
 
 </script>
 
 <template>
     <KeepAlive>
-        <div ref="modal" :id="`comentarios_${post.id}`" class="screen-modal flex flex-col items-center py-[50px]">
+        <div ref="modal" :id="`comentarios_${post.post_id}`" class="screen-modal flex flex-col items-center py-[50px]">
             <!-- El wrapper para dar forma al contenedor del centro -->
             <div
                 class="wrapper h-[90%] sm:h-[80%] md:h-[90%] xl:h-[85%] 2xl:w-[40%] xl:w-[60%] lg:w-[60%] md:w-[100%] sm:w-[100%] w-[100%] mt-5relative ">
@@ -186,11 +177,11 @@ document.body.style.overflow = "hidden";
                     <!-- Avatar del usuario -->
                     <img class=" w-[50px] h-[50px] bg-[#f3f3f3] rounded-full " :src="user.avatar" alt="">
                     <!-- Input de Enviar datos -->
-                    <input ref="chat_input" @keydown="(e) => enviarComentarioPorSubmit(post.id, e)"
+                    <input ref="chat_input" @keydown="(e) => enviarComentarioPorSubmit(post.post_id, e)"
                         class=" outline-none  w-[100%] h-[100%] p-[30px_20px] " type="text"
                         placeholder="Agregar comentario">
                     <!-- Botón de Enviar  -->
-                    <button class="p-[20px]" @click="(e) => enviarComentarioPorClick(post.id, chat_input.value)">
+                    <button class="p-[20px]" @click="(e) => enviarComentarioPorClick(post.post_id, chat_input.value)">
                         <img class="rotate-180" :src="EnviarSVG" alt="submit" />
                     </button>
                 </div>

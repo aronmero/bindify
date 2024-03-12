@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\Commerce;
 use App\Models\Customer;
 use App\Models\Post;
@@ -158,7 +159,7 @@ class UsersController extends Controller
                 $commerce->each(function ($commerce) {
                     $user = User::where("username", $commerce->username)->firstOrFail();
                     $userRol = $user->getRoleNames()[0];
-                    $commerce->tipo = ($userRol == "ayuntamiento")?"ayuntamiento":"commerce";
+                    $commerce->tipo = ($userRol == "ayuntamiento") ? "ayuntamiento" : "commerce";
                     $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
                         ->select('user_id')
                         ->where('users.username', '=', $commerce->username)
@@ -166,6 +167,17 @@ class UsersController extends Controller
 
                     $hashtags = Commerce::find($commerceId->user_id)->hashtags->pluck('name')->toArray();
                     $commerce->hashtags = $hashtags;
+                    $user = Auth::user();
+
+                    $follows = $user->follows;
+                    $ids = [];
+        
+                    foreach ($follows as $seguido) {
+                        $ids[] = $seguido->id;
+                    }
+
+                    $user->whereIn('users-posts.user_id', $ids);
+
                 });
 
                 return response()->json([
@@ -215,7 +227,7 @@ class UsersController extends Controller
      */
 
 
-    public function update(Request $request, string $username)
+    public function update(UpdateUserRequest $request, string $username)
     {
         try {
             // Elimina campos que no queremos actualizar
@@ -310,6 +322,47 @@ class UsersController extends Controller
         }
     }
 
+    /**
+     * Retorna las publicaciones de un usuario específico.
+     *
+     * Este método recupera las publicaciones de un usuario específico, identificado por su nombre de usuario.
+     * Las publicaciones incluyen información como la imagen, título, descripción, tipo, fechas de inicio y fin,
+     * fecha de creación, nombre de usuario y avatar. Además, se obtienen los hashtags asociados a cada publicación.
+     *----------------------------------------------------------------------
+     * @param string $username
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @response 200 {
+     * "status": true,
+     * "data": [
+     * {
+     * "post_id": "ID_de_la_publicación",
+     * "image": "imagen_de_la_publicación",
+     * "title": "título_de_la_publicación",
+     * "description": "descripción_de_la_publicación",
+     * "name": "nombre_del_tipo_de_publicación",
+     * "start_date": "fecha_de_inicio_de_la_publicación",
+     * "end_date": "fecha_de_finalización_de_la_publicación",
+     * "created_at": "fecha_de_creación_de_la_publicación",
+     * "username": "nombre_de_usuario",
+     * "user_id": "ID_del_usuario",
+     * "avatar": "avatar_del_usuario",
+     * "hashtags": ["hashtag1", "hashtag2", ...]
+     * },
+     * ...
+     * ]
+     * }
+     *
+     * @response 404 {
+     * "status": false,
+     * "message": "Usuario no encontrado en la base de datos: mensaje_de_error"
+     * }
+     *
+     * @response 500 {
+     * "status": false,
+     * "message": "Error en la base de datos : mensaje_de_error"
+     * }
+     */
     public function posts(string $username)
     {
         try {
@@ -353,12 +406,9 @@ class UsersController extends Controller
 
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+                //crypt $post->post_id => Crypt::encryptString($post->post_id),
             });
-
-            return response()->json([
-                "status" => true,
-                "data" => $posts
-            ], 200);
+            return response()->json(["status" => true, "data" => $posts], 200);
         } catch (QueryException $e) {
             // Devuelve una respuesta JSON con un mensaje de error en caso de error de base de datos
             return response()->json(["status" => false, "message" => "Error en la base de datos :", "error" => $e->getMessage()], 500);
@@ -367,6 +417,50 @@ class UsersController extends Controller
             return response()->json(["status" => false, "message" => "Usuario no encontrado en la base de datos:", "error" => $e->getMessage()], 404);
         }
     }
+
+
+    /**
+     * Retorna los eventos asociados a un usuario específico.
+     *
+     * Este método recupera los eventos asociados a un usuario específico, identificado por su nombre de usuario.
+     * Los eventos incluyen información como la imagen, título, descripción, tipo, fechas de inicio y fin,
+     * fecha de creación, nombre de usuario y avatar. Además, se obtienen los hashtags asociados a cada evento.
+     *
+     * @param string $username
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @response 200 {
+     * "status": true,
+     * "data": [
+     * {
+     * "post_id": "ID_del_evento",
+     * "image": "imagen_del_evento",
+     * "title": "título_del_evento",
+     * "description": "descripción_del_evento",
+     * "name": "nombre_del_tipo_de_evento",
+     * "start_date": "fecha_de_inicio_del_evento",
+     * "end_date": "fecha_de_finalización_del_evento",
+     * "created_at": "fecha_de_creación_del_evento",
+     * "username": "nombre_de_usuario",
+     * "user_id": "ID_del_usuario",
+     * "avatar": "avatar_del_usuario",
+     * "hashtags": ["hashtag1", "hashtag2", ...]
+     * },
+     * ...
+     * ]
+     * }
+     *
+     * @response 404 {
+     * "status": false,
+     * "message": "Usuario no encontrado en la base de datos: mensaje_de_error"
+     * }
+     *
+     * @response 500 {
+     * "status": false,
+     * "message": "Error en la base de datos : mensaje_de_error"
+     * }
+     */
+
     public function events(string $username)
     {
         try {
@@ -410,6 +504,7 @@ class UsersController extends Controller
 
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+                //crypt $post->post_id => Crypt::encryptString($post->post_id),
             });
 
             return response()->json([
@@ -425,17 +520,60 @@ class UsersController extends Controller
         }
     }
 
+    /**
+     * Retorna el perfil del usuario autenticado.
+     *
+     * Este método recupera y devuelve el perfil del usuario autenticado.
+     * Si el usuario es un cliente, se devuelve la información relacionada con el cliente,
+     * incluyendo correo electrónico, teléfono, municipio, avatar, banner, nombre de usuario,
+     * nombre, género y fecha de nacimiento.
+     * Si el usuario es un comercio, se devuelve la información relacionada con el comercio,
+     * incluyendo correo electrónico, teléfono, municipio, avatar, banner, nombre de usuario,
+     * nombre, dirección, descripción del comercio, categoría, horario, estado activo, promedio de calificación
+     * y recuento de reseñas.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @response 200 {
+     * "status": true,
+     * "data": {
+     * "email": "correo_electrónico",
+     * "phone": "número_de_teléfono",
+     * "municipality_name": "nombre_del_municipio",
+     * "avatar": "avatar_del_usuario",
+     * "banner": "banner_del_usuario",
+     * "username": "nombre_de_usuario",
+     * "name": "nombre_del_usuario",
+     * "gender": "género_del_usuario",
+     * "birth_date": "fecha_de_nacimiento_del_usuario",
+     * "address": "dirección_del_comercio",
+     * "description": "descripción_del_comercio",
+     * "categories_name": "nombre_de_la_categoría",
+     * "schedule": "horario_del_comercio",
+     * "active": true,
+     * "avg": "promedio_de_calificación_del_comercio",
+     * "review_count": "recuento_de_reseñas_del_comercio",
+     * "hashtags": ["hashtag1", "hashtag2", ...]
+     * }
+     * }
+     *
+     * @response 404 {
+     * "status": false,
+     * "message": "Usuario no encontrado: mensaje_de_error"
+     * }
+     *
+     * @response 500 {
+     * "status": false,
+     * "message": "Error en la base de datos: mensaje_de_error"
+     * }
+     */
     public function profile()
     {
         $username = Auth::user()->username;
         try {
             $user = User::where("username", $username)->firstOrFail();
         } catch (\Throwable $th) {
-            return response()->json([
-                "status" => false,
-                "message" => "Usuario no encontrado",
-                "error" => $th->getMessage(),
-            ], 404);
+            return response()->json(["status" => false, "message" => "Usuario no encontrado", "error" => $th->getMessage(),], 404);
         }
 
         $userRol = $user->getRoleNames()[0];
@@ -460,22 +598,13 @@ class UsersController extends Controller
                     ->where('users.username', '=', $username)
                     ->firstOrFail();
 
-                return response()->json([
-                    "status" => true,
-                    "data" => $customer
-                ], 200);
+                return response()->json(["status" => true, "data" => $customer], 200);
             } catch (QueryException $e) {
 
-                return response()->json([
-                    "status" => false,
-                    "error" => $e->getMessage()
-                ], 500);
+                return response()->json(["status" => false, "error" => $e->getMessage()], 500);
             } catch (Exception $e) {
 
-                return response()->json([
-                    "status" => false,
-                    "error" => $e->getMessage()
-                ], 404);
+                return response()->json(["status" => false, "error" => $e->getMessage()], 404);
             }
         } else {
 
@@ -522,6 +651,9 @@ class UsersController extends Controller
 
                 $commerce->each(function ($commerce) {
 
+                    $user = User::where("username", $commerce->username)->firstOrFail();
+                    $userRol = $user->getRoleNames()[0];
+                    $commerce->tipo = ($userRol == "ayuntamiento")?"ayuntamiento":"commerce";
                     $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
                         ->select('user_id')
                         ->where('users.username', '=', $commerce->username)
@@ -530,23 +662,13 @@ class UsersController extends Controller
                     $hashtags = Commerce::find($commerceId->user_id)->hashtags->pluck('name')->toArray();
                     $commerce->hashtags = $hashtags;
                 });
-
                 return response()->json([
-                    "status" => true,
-                    "data" => $commerce
+                    "status" => true, "data" => $commerce
                 ], 200);
             } catch (QueryException $e) {
-
-                return response()->json([
-                    "status" => false,
-                    "error" => $e->getMessage()
-                ], 500);
+                return response()->json(["status" => false, "error" => $e->getMessage()], 500);
             } catch (Exception $e) {
-
-                return response()->json([
-                    "status" => false,
-                    "error" => $e->getMessage()
-                ], 404);
+                return response()->json(["status" => false, "error" => $e->getMessage()], 404);
             }
         }
     }

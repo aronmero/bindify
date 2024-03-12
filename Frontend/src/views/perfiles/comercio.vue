@@ -11,16 +11,22 @@ import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
 import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPuntuacion.vue";
 import contenedorFollower from "@/components/perfiles/containers/contenedorFollower.vue";
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
-import { users } from "@/components/perfiles/helpers/users.js";
+import router from "@/router/index.js";
 import { RouterLink, RouterView } from "vue-router";
 import { getUserData } from "@/Api/perfiles/perfil.js";
 import { ref } from "vue";
 let clickedLink = null;
 let userData = ref(null);
 let userExterno = ref(false);
+let linkUsername = ref(router.currentRoute.value.params.username);
+if(linkUsername.value==undefined){
+  router.push(`/perfil`);
+}
+const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
 const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
+
 // Al recargar la pagina se quita la marca arregla a futuro con variables de estado
 // a lo mejor
 function pintar(evento) {
@@ -32,13 +38,20 @@ function pintar(evento) {
   clickedLink = evento.target;
 }
 
-async function responseCatcher() {
-  userData.value = await getUserData("get");
+async function responseCatcher(metodo, subRuta) {
+  userData.value = await getUserData(metodo, subRuta);
   console.log(userData.value);
-  // const user = JSON.parse(sessionStorage.getItem("userData"));
-  //   console.log(user)
 }
-responseCatcher();
+
+if (linkUsername.value == userLogeado.usuario.username) {
+  responseCatcher("get", "/api/profile");
+} else {
+  console.log(linkUsername.value);
+  responseCatcher("get", `/api/user/${linkUsername.value}`);
+  userExterno.value = true;
+}
+
+console.log(userData.value)
 </script>
 
 <template>
@@ -81,7 +94,10 @@ responseCatcher();
                 class="text-sm lg:text-base"
               />
             </div>
-            <contenedorPuntuacion puntuacion="4.1" cantidadResenias="312" />
+            <contenedorPuntuacion
+              :puntuacion="userData[0].avg"
+              :cantidadResenias="userData[0].review_count"
+            />
           </div>
           <div class="flex flex-row gap-4 justify-center lg:flex-col lg:gap-0">
             <textoEnNegrita texto="Horario:" class="text-sm lg:text-base" />
@@ -120,7 +136,7 @@ responseCatcher();
 
         <!-- <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser> -->
         <div class="flex justify-center">
-          <RouterLink to="/perfil/edit">
+          <RouterLink to="/perfil/edit" v-if="!userExterno">
             <btnConText
               texto="EDIT PROFILE"
               class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
@@ -136,7 +152,7 @@ responseCatcher();
       </div>
 
       <div class="flex w-full justify-center gap-6">
-        <RouterLink to="/perfil/comercio/posts">
+        <RouterLink :to="`/perfil/${linkUsername}/comercio/posts`">
           <textoEnNegrita
             @click="pintar"
             texto="Posts"
@@ -144,7 +160,7 @@ responseCatcher();
             :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
           />
         </RouterLink>
-        <RouterLink to="/perfil/comercio/eventos">
+        <RouterLink :to="`/perfil/${linkUsername}/comercio/eventos`">
           <textoEnNegrita
             @click="pintar"
             texto="Eventos"
@@ -152,7 +168,7 @@ responseCatcher();
             :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
           />
         </RouterLink>
-        <RouterLink to="/perfil/comercio/resenias">
+        <RouterLink :to="`/perfil/${linkUsername}/comercio/resenias`">
           <textoEnNegrita
             @click="pintar"
             texto="Reseñas"
