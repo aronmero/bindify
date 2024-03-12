@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -86,6 +87,24 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            Storage::disk('avatars')->putFileAs($request->username , $avatar, 'imagenPerfil.webp');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Avatar received successfully',
+                'avatar_name' => $avatar->getClientOriginalName(),
+                'avatar_size' => $avatar->getSize(),
+                'existe_archivo' => Storage::disk('avatars')->exists($request->username),
+                'avatar_url' => asset('storage/avatars/'.$request->username.'/imagenPerfil.webp'),
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'No avatar file attached'
+            ], 400);
+        }
         if ($request->empresa == true) {
             $request->validate([
                 'phone' => 'required',
