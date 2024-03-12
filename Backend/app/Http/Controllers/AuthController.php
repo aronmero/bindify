@@ -106,7 +106,6 @@ class AuthController extends Controller
         }
 
 
-
         $credentials = $request->only('email', 'password');
         try {
             Auth::attempt($credentials);
@@ -115,6 +114,9 @@ class AuthController extends Controller
         }
         if ($request->empresa) {
             try {
+
+                $verification_token_id = null;
+
                 if ($request->verification_token != null) {
                     $verification_token_id = Verification_token::select('id')->where('token', '=', $request->verification_token)->firstOrFail();
                     $user->assignRole('ayuntamiento');
