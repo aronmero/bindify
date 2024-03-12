@@ -6,6 +6,7 @@ use App\Http\Requests\StorePostsRequest;
 use App\Http\Requests\UpdatePostsRequest;
 use App\Models\Post;
 use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
@@ -82,6 +83,8 @@ class PostsController extends Controller
 
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+                $user = User::where('username', $post->username)->first();
+                $post->userRol = $user->getRoleNames()[0];
             });
 
             return response()->json([
@@ -157,11 +160,13 @@ class PostsController extends Controller
                 ->orderBy('posts.start_date', 'desc')
                 ->get();
 
-
+            
 
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
                 $post->post_id = Crypt::encryptString($post->post_id);
+                $user = User::where('username', $post->username)->first();
+                $post->userRol = $user->getRoleNames()[0];
             });
 
             return response()->json([
@@ -246,6 +251,8 @@ class PostsController extends Controller
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
                 $post->post_id = Crypt::encryptString($post->post_id);
+                $user = User::where('username', $post->username)->first();
+                $post->userRol = $user->getRoleNames()[0];
             });
 
             return response()->json([
@@ -396,17 +403,22 @@ class PostsController extends Controller
     {
         try {
 
-            try {
-                $id = Crypt::decryptString($id);
-            } catch (DecryptException $e) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Post inexistente',
-                ], 500);
-            }
+            // try {
+            //     $id = Crypt::decryptString($id);
+            // } catch (DecryptException $e) {
+            //     return response()->json([
+            //         'status' => false,
+            //         'message' => 'Post inexistente',
+            //     ], 500);
+            // }
 
             // Obtener el post
             $post = Post::with('users')->findOrFail($id);
+
+            foreach ($post->users as $key) {
+                $user = User::where('username', $key->username)->first();
+                $post->userRol = $user->getRoleNames()[0];
+            }
 
             // Obtener datos del post
             $postData = [
@@ -419,8 +431,11 @@ class PostsController extends Controller
                 'active' => $post->active,
                 'ubicacion' => $post->ubicacion,
                 'fecha_creacion' => $post->created_at,
-                'hastags' => $post->hashtags->pluck('name')
+                'hastags' => $post->hashtags->pluck('name'),
+                'userRol' => $post->userRol 
             ];
+            
+            
 
             // Obtener los 5 primeros comentarios del post
             $comments = Comment::where('post_id', $id)->with('user')->take(5)->get();
