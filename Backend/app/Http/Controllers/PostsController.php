@@ -6,11 +6,11 @@ use App\Http\Requests\StorePostsRequest;
 use App\Http\Requests\UpdatePostsRequest;
 use App\Models\Post;
 use App\Models\Comment;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class PostsController extends Controller
 {
@@ -76,6 +76,7 @@ class PostsController extends Controller
 
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+                //crypt$post->post_id = Crypt::encryptString($post->post_id);
             });
 
             return response()->json([
@@ -159,6 +160,7 @@ class PostsController extends Controller
 
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+                //crypt$post->post_id = Crypt::encryptString($post->post_id);
             });
 
             return response()->json([
@@ -200,10 +202,25 @@ class PostsController extends Controller
                 ], 404);
             }
 
+
+            $postData = [
+                'post_id' => $post->id,
+                //crypt'post_id' => $post->post_id = Crypt::encryptString($post->post_id),
+                'image' => $post->image,
+                'title' => $post->title,
+                'description' => $post->description,
+                'post_type_name' => optional($post->post_type)->name,
+                'start_date' => $post->start_date,
+                'end_date' => $post->end_date,
+                'active' => $post->active,
+                'ubicacion' => $post->ubicacion,
+                'fecha_creacion' => $post->created_at,
+                'hastags' => $post->hashtags->pluck('name')
+            ];
             return response()->json([
                 'status' => true,
                 'message' => 'Post creado',
-                'data' => $post
+                'data' => $postData
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
@@ -219,6 +236,16 @@ class PostsController extends Controller
     public function show(string $id)
     {
         try {
+
+            //crypttry {
+            //crypt    $id = Crypt::decryptString($id);
+            //crypt} catch (DecryptException $e) {
+            //crypt    return response()->json([
+            //crypt        'status' => false,
+            //crypt        'message' => 'Post inexistente',
+            //crypt    ], 500);
+            //crypt}
+
             // Obtener el post
             $post = Post::with('users')->findOrFail($id);
 
@@ -286,6 +313,15 @@ class PostsController extends Controller
     public function update(UpdatePostsRequest $request, string $id)
     {
         try {
+
+            //crypttry {
+            //crypt    $id = Crypt::decryptString($id);
+            //crypt} catch (DecryptException $e) {
+            //crypt    return response()->json([
+            //crypt        'status' => false,
+            //crypt        'message' => 'Post inexistente',
+            //crypt    ], 500);
+            //crypt}
 
             $user = Auth::user();
             $post = Post::find($id);
@@ -367,6 +403,15 @@ class PostsController extends Controller
     public function destroy(string $id)
     {
         try {
+
+            //crypttry {
+            //crypt    $id = Crypt::decryptString($id);
+            //crypt} catch (DecryptException $e) {
+            //crypt    return response()->json([
+            //crypt        'status' => false,
+            //crypt        'message' => 'Post inexistente',
+            //crypt    ], 500);
+            //crypt}
 
             $user = Auth::user();
             $post = Post::find($id);

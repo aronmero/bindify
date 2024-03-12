@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commerce;
-use App\Models\Hashtag;
 use App\Models\Municipality;
 use App\Models\Post;
 use App\Models\Review;
-use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class SearchController extends Controller
 {
@@ -97,6 +95,7 @@ class SearchController extends Controller
 
                 $posts->each(function ($post) {
                     $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+                    //crypt$post->post_id = Crypt::encryptString($post->post_id);
                 });
 
                 return response()->json([
