@@ -438,8 +438,9 @@ class UsersController extends Controller
             ], 404);
         }
 
+        $userRol = $user->getRoleNames()[0];
 
-        if ($user->getRoleNames() == "customer") {
+        if ($userRol == "customer") {
 
             try {
 
