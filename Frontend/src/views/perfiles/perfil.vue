@@ -26,24 +26,13 @@ switch (tipoUsuario.value) {
     router.push(`/perfil/${username}/comercio`);
     break;
   case "customer":
-    router.push(`/perfil/particular/${username}`);
+    router.push(`/perfil/${username}/particular`);
     break;
-  case "ayuntamiento":
-    router.push(`/perfil/ayuntamiento/${username}`);
-    break;
-}
+  }
+  // case "ayuntamiento":
+  //   router.push(`/perfil/${username}/ayuntamiento`);
+  //   break;
 
-// switch(tipoUsuario.value){
-//     case "commerce":
-//         router.push(`/perfil/comercio`)
-//       break;
-//     case "customer":
-//       router.push(`/perfil/customer`)
-//       break;
-//     case "ayuntamiento":
-//       router.push(`/perfil/ayuntamiento`)
-//       break;
-//   }
 </script>
 
 <template></template>
