@@ -21,6 +21,7 @@ const comentario = props.comentario;
 
 const user = comentario.username;
 
+
 /**
  * Obtenemos el usuario para poder mostrar el avatar 
  * */
@@ -34,11 +35,11 @@ const modalHandler = ref(false);
  * Instauro las opciones que le voy a pasar al componente del modal reutilizable
  * */
 const opcionesModal = [
-    {
-        name: "Borrar Comentario",
-        action: `comentario/null/delete`,
-        icon: DeleteSVG
-    },
+    // {
+    //     name: "Borrar Comentario",
+    //     action: `comentario/null/delete`,
+    //     icon: DeleteSVG
+    // },
     {
         name: "Ver perfil",
         action: `perfil/` || null,
@@ -64,6 +65,9 @@ const abrirModal = () => {
     }
 }
 
+
+
+console.log(props.comentario)
 </script>
 <template>
     <!-- Contenedor Comentario -->
@@ -71,22 +75,22 @@ const abrirModal = () => {
         <!-- Header del comentario -->
         <div class=" header-comentario flex ">
             <!-- Avatar del usuario -->
-            <img  v-if="user.avatar" class=" mr-[10px] " :src="user.avatar" alt="">
+            <img  v-if="comentario.avatar" class=" mr-[10px] " :src="comentario.avatar" alt="">
             <!-- Textos del usuario -->
             <div class="textos m-l flex flex-col">
                 <b v-if="user != null"> {{ user }}</b>
                 <small v-if="comentario.comment_creation != null">{{ datetranslatesql(comentario.comment_creation) }}</small>
                 <button class=" mt-[-15px] rating flex h-[fit-content] items-center justify-start "
-                    v-if="user.avg != null">
+                    v-if="comentario.avg != null">
                     <img class="  " :src="StarSVG" v-for="index in Math.floor(user.avg)" alt="star"
-                        :title="user.avg" />
+                        :title="comentario.avg" />
                     <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(user.avg))" alt="star"
-                        :title="user.avg" />
+                        :title="comentario.avg" />
                     <small>({{ user.avg }})</small>
                 </button>
             </div>
             <!-- Botón de Ver Más -->
-            <button v-if="user.name != null" @click="() => abrirModal()" class="w-[20px] h-[20px] absolute right-10">
+            <button v-if="comentario.id != null" @click="() => abrirModal()" class="w-[20px] h-[20px] absolute right-10">
                 <img class="  " :src="MoreSVG" alt="">
             </button>
         </div>
@@ -95,10 +99,11 @@ const abrirModal = () => {
             {{ comentario.content }}
         </span>
         <!-- Modal de Ver Más -->
-        <ModalReutilizable v-if="modalHandler" :options="opcionesModal" :status="modal_status" :handler="abrirModal" />
+        <ModalReutilizable v-if="modalHandler" :options="opcionesModal" :status="modal_status" :info="comentario" :handler="abrirModal" />
     </div>
 </template>
 <style scoped lang="scss">
+
 .header-comentario {
     img {
         width: 50px;
