@@ -33,6 +33,7 @@ switch (tipoUsuario.value) {
   //   router.push(`/perfil/${username}/ayuntamiento`);
   //   break;
 
+
 </script>
 
 <template></template>

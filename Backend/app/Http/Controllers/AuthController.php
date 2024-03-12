@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use Illuminate\Http\Request;
 use App\Models\Commerce;
 use App\Models\Customer;
 use App\Models\User;
@@ -65,6 +66,34 @@ class AuthController extends Controller
         }
 
         return response()->json(['status' => false, 'error' => 'Usuario no encontrado'], 404);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request - El token del usuario.
+     *
+     * @return \Illuminate\Http\JsonResponse - Un mensaje indicando que se cerro la sesión o un mensaje de error.
+     * 
+     * @response 200 {
+     *   "message": "Sesión Cerrada Correctamente"
+     * }
+     *
+     * @response 401 {
+     *   "error": "Usuario no autenticado"
+     * }
+     */
+    public function logout(request $request)
+    {
+        // Comprueba que el usuario esta autenticado
+        if (Auth::check()) {
+
+            $request->user()->tokens->each(function ($token, $key) {
+                $token->delete();
+            });
+            return response()->json(['status' => true, 'message' => 'Sesión Cerrada Correctamente'], 200);
+        } else {
+            return response()->json(['status' => false, 'error' => 'Usuario no autenticado'], 401);
+        }
+
     }
 
     /**
