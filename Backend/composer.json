@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "league/flysystem-path-prefixing": "^3.23",
+        "league/flysystem-read-only": "^3.23",
         "spatie/laravel-permission": "^6.3"
     },
     "require-dev": {
