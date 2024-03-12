@@ -34,11 +34,11 @@ const modalHandler = ref(false);
  * Instauro las opciones que le voy a pasar al componente del modal reutilizable
  * */
 const opcionesModal = [
-    {
-        name: "Borrar Comentario",
-        action: `/comentario/${comentario.comment_id}/delete`,
-        icon: DeleteSVG
-    },
+    // {
+    //     name: "Borrar Comentario",
+    //     action: `/comentario/${comentario.comment_id}/delete`,
+    //     icon: DeleteSVG
+    // },
     {
         name: "Ver perfil",
         action: `/perfil/${comentario.username}`,
