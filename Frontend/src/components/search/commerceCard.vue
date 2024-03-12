@@ -15,38 +15,33 @@
 
 
 <template>
-    <!--
+
     <div class="flex items-center gap-x-2 p-2 transition-colors duration-300 ease-in hover:bg-[#eeeeee] cursor-pointer">
-        <img :src="commerce.image" alt="profile-image" class="size-20 rounded-full" />
-        <div class="flex flex-col flex-1 m-1">
+        <img :src="commerce.avatar" alt="profile-image" class="size-20 rounded-full" />
+        <div class="flex flex-col flex-1 m-1 gap-y-4">
             <div class="flex items-center gap-x-2">
-                <h1 class="font-bold text-[1.6em] md:text-[1.8em]">{{ commerce.name }}</h1>
+                <h1 class="font-medium text-[1.3em] md:text-[1.7em]">{{ commerce.username }}</h1>
                 <div class="flex items-center mt-1">
-                    <img :src="starSVG" alt="star" class="size-5 md:size-7" />
-                    <p class="font-bold text-[1em] md:text-[1.4em]">{{ commerce.qualification.note }}</p>
+                    <img :src="starSVG" alt="star" class="size-5 md:size-7" v-if="commerce.avg >0" />
+                    <p class="font-bold text-[0.8em] md:text-[1.4em]" v-if="commerce.avg >0">{{ commerce.avg }}</p>
                 </div>
-                <small class="text-xs mt-2">{{ commerce.qualification.reviews }} votos</small>
+                <div v-if="commerce.review_count === 0">
+                    Sin calificar
+                </div>
+                <div v-else>
+                    <small class="text-[0.7em] md:text-[0.8em]">({{ commerce.review_count }} votos)</small>
+                </div>
+              
             </div>
-            <div class="flex items-center justify-between m-1">
-                <div>
-                    <h2 class="text-[#818181] font-semibold  text-[1.2em] md:text-[1.5em] mt-[-0.4em] md:mt-[-1.2rem]">{{ commerce.category }}</h2>
-                    <div class="flex flex-wrap items-center gap-x-2 text-xs">
-                        <ul v-for="(hastag, index) in commerce.hastags" :key="index" >
-                            <li :style="{ background: setRandomGradient() }" class="p-1 font-bold text-white rounded-full transition duration-100 ease-in hover:scale-105">{{ hastag }}</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="flex-col text-xs items-end hidden md:flex">
-                    <p class="font-semibold">Contacto </p>
-                    <p>{{ commerce.phone }}</p>
-                    <p>{{ commerce.email }}</p>
-                    <p>{{ commerce.address }}</p>
-                </div>
-            </div>
+                <div class="flex flex-wrap items-center gap-x-2 gap-y-2 text-xs">
+                   <p v-if="commerce.hashtags.length === 0">Sin hashtags</p> 
+                     <ul v-for="(hastag, index) in commerce.hashtags" :key="index" >
+                        <li :style="{ background: setRandomGradient() }" class="p-1 text-[10px] font-bold text-white rounded-md">#{{ hastag }}</li>
+                    </ul>
+                </div>    
         </div>
     </div>
-    -->
-    <p> {{ commerce }}</p>
+    
  
 </template>
 

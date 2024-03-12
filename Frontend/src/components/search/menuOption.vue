@@ -1,5 +1,4 @@
 <script setup>
-    import { onMounted } from 'vue';
     import useSearchLogic from '@/utils/searchLogic.js';
     defineProps({
       name: String,

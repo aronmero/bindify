@@ -18,7 +18,7 @@
 </script>
 
 <template>
-    <button class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-30 bg-[#eb5959] font-bold text-white p-3 rounded-full m-4 transition-all duration-300 ease-in hover:scale-105 " @click="toggleSection">
+    <button class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-30 bg-[#eb5959] font-bold text-white p-2 md:p-3 rounded-full mb-16 md:mb-4 md:m-4 transition-all duration-300 ease-in hover:scale-105 " @click="toggleSection">
     buscar  {{ showSection }}
 </button>
 

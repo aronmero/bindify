@@ -6,7 +6,10 @@ import {ref} from "vue";
 export let locationOptions = ref([]);
 export let popularsHastags = ref([]);
 export let categoriesOptions = ref([]);
-export let tiposPost = ref([]);
+export const tiposPost = [
+    {name : "Post"},
+    {name : "Evento"}
+]
 
 export const apiMunicipalitiesRequest = async () => { //fecth para obtener los municipios registrados
     await getMunicipalities("GET").then((response) => {
@@ -32,13 +35,6 @@ export const apiCategoriesRequest = async () => { //fecth para obtener las categ
     });
 }
 
-export const apiTiposPostRequest = async () => { //fecth para obtener los tipos de post registrados
-    await getCategories("GET").then((response) => {
-        tiposPost.value = response;
-    }).catch((error) => {
-        console.error("Error al obtener los tipos de post:", error);
-    });
-}
 
 
 

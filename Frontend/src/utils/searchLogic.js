@@ -11,6 +11,7 @@ export default function useSearchLogic() {
     let location = ref(optionSelected().getOptionSelectedLocation()); //creamos una referencia reactiva para la localización
     let hashtag = ref(optionSelected().getOptionSelectedHashtag()); //creamos una referencia reactiva para el hashtag
     let searchValue = ref(inputSearch().getInputSearch()); //creamos una referencia reactiva para la búsqueda (input de búsqueda
+    let post = ref(optionSelected().getOptionSelectedPost());
 
     watch(() => optionSelected().getOptionSelected(), (newValue) => { //observamos el cambio de la categoría
         category.value = newValue; //actualizamos la categoría
@@ -23,19 +24,23 @@ export default function useSearchLogic() {
     watch(() => inputSearch().getInputSearch(), (newValue) => { //observamos el cambio de la búsqueda
         searchValue.value = newValue; //actualizamos la búsqueda
     });
-
+    
     watch(() => optionSelected().getOptionSelectedHashtag(), (newValue) => { //observamos el cambio del hashtag
         hashtag.value = newValue; //actualizamos el hashtag
+    });
+
+    watch(() => optionSelected().getOptionSelectedPost(), (newValue) => { //observamos el cambio del post
+        
+        post.value = newValue; //actualizamos el post
     });
 
     const filteredResults = computed(() => {
         if (searchValue.value !== "") {
             return results.value.filter(result => {
-                if (actualSection().getActualSection() === "posts") {
-                    return (category.value === "" || result.categories_name === category.value) &&
-                        (location.value === "" || result.municipality_name === location.value) &&
-                        (hashtag.value === "" || result.hashtags.includes(hashtag.value)) &&
-                        result.name.toLowerCase().includes(searchValue.value.toLowerCase());
+                if (actualSection().getActualSection() === "posts" ) {
+                    return (hashtag.value === "" || result.hashtags.includes(hashtag.value)) &&
+                        (post.value === "" || result.post_type === post.value) &&
+                        result.name.toLowerCase().includes(searchValue.value.toLowerCase())
                 } else {
                     return (category.value === "" || result.categories_name === category.value) &&
                         (location.value === "" || result.municipality_name === location.value) &&
@@ -45,9 +50,14 @@ export default function useSearchLogic() {
             });
         } else {
             return results.value.filter(result => {
-                return (category.value === "" || result.categories_name === category.value) &&
-                    (location.value === "" || result.municipality_name === location.value) &&
-                    (hashtag.value === "" || result.hashtags.includes(hashtag.value));
+                if (actualSection().getActualSection() === "posts") {
+                    return (hashtag.value === "" || result.hashtags.includes(hashtag.value)) &&
+                        (post.value === "" || result.post_type === post.value)
+                }else{
+                    return (category.value === "" || result.categories_name === category.value) &&
+                        (location.value === "" || result.municipality_name === location.value) &&
+                        (hashtag.value === "" || result.hashtags.includes(hashtag.value));
+                }
             });
         }
     });
@@ -65,7 +75,7 @@ export default function useSearchLogic() {
 
     let option = optionSelected();
 
-    const selectedOption = (name, type) => {
+    const selectedOption = (name, type) => {    
         if (type === 'categorias') { // Si es una categoria
             if (option.getOptionSelected() === name) { // si ya esta selecccionada
                 option.setOptionSelected(''); // Se deselecciona
@@ -84,6 +94,12 @@ export default function useSearchLogic() {
                 return;
             }
             option.setOptionSelectedHashtag(name); // Se selecciona el hashtag
+        } else if (type ===  "posts"){
+            if(option.getOptionSelectedPost() === name){
+                option.setOptionSelectedPost('');
+                return;
+            }
+            option.setOptionSelectedPost(name);
         }
     }
     const apiRequest = async (type) => {
@@ -100,6 +116,7 @@ export default function useSearchLogic() {
         option.setOptionSelected('');
         option.setOptionSelectedLocation('');
         option.setOptionSelectedHashtag('');
+        option.setOptionSelectedPost('');
         const selected = document.querySelectorAll('.selected');
         console.log(selected);
         selected.forEach(element => {

@@ -6,7 +6,7 @@
     import SearchBar from "@/components/search/searchBar.vue";
     import commercesResults from "@/components/search/commercesResults.vue";
     import useSearchLogic from "@/utils/searchLogic";
-    import {categoriesOptions, locationOptions, popularsHastags, tiposPost, apiMunicipalitiesRequest, apiPopularHashtagRequest, apiCategoriesRequest, apiTiposPostRequest} from "@/data/menuData.js";
+    import {categoriesOptions, locationOptions, popularsHastags, tiposPost, apiMunicipalitiesRequest, apiPopularHashtagRequest, apiCategoriesRequest} from "@/data/menuData.js";
     import hashtagSection from "@/components/search/hashtagSection.vue";
     import scrollUpButton from "@/components/comun/scrollUpButton.vue";
     import changeSearchButton from "@/components/search/changeSearchButton.vue";
@@ -17,8 +17,8 @@
     
     const { filteredResults, apiRequest, resetFilters } = useSearchLogic();
     let section = ref("comercios");
-    let actualSectionAux = actualSection();
     let loading = ref(true);
+    let actualSectionAux = actualSection();
     
     onMounted(async () => {
         await fetchData(section.value);
@@ -62,13 +62,13 @@
                 <hashtagSection :popularsHastags="popularsHastags" v-show="section === 'posts'"/>
                 <Menu title="categorias" :menuOptions="categoriesOptions" v-show="section === 'comercios'" />
                 <Menu title="localizaciones" :menuOptions="locationOptions" v-show="section === 'comercios'" />
+                <Menu title="posts" :menuOptions="tiposPost" v-show="section === 'posts'" />
                 <button @click="resetFilters" class="text-right font-semibold rounded-full text-sm flex-none">resetear filtros</button>
                 <p class="text-[#c6c6c6] mb-[-10px] text-md " id="results">{{ filteredResults.length > 1 ? filteredResults.length + " " +  section + " encontrados" : filteredResults.length === 0 ? "Sin resultados" :  filteredResults.length +  " comercio encontrado" }}</p>
                 <commercesResults :comercios="filteredResults"/>
             </div>
             <scrollUpButton />
             <changeSearchButton @changeSection="changeSection"/>
-            
         </div>
         <template v-slot:Right>  </template>
     </Grid>

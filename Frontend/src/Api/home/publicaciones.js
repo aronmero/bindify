@@ -1,4 +1,4 @@
-import { urlApi, genOptions, genOptionsWithoutBody } from "../api";
+import { urlApiHome, genOptions, genOptionsWithoutBody } from "../api";
 
 export async function obtener_posts_seguidos() {
     const options = genOptionsWithoutBody('GET');
