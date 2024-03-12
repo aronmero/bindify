@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommentsRequest;
 use App\Http\Requests\UpdateCommentsRequest;
-use Illuminate\Http\Request;
 use App\Models\Comment;
-use App\Models\Post;
-use App\Models\User;
 use Exception;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class CommentsController extends Controller
 {
@@ -92,6 +91,16 @@ class CommentsController extends Controller
 
     public function show(string $id)
     {
+
+        // try {
+        //     $id = Crypt::decryptString($id);
+        // } catch (DecryptException $e) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Error de Decrypt.',
+        //     ], 500);
+        // }
+
         // Obtener todos los comentarios relacionados con la publicación
         $comentarios = Comment::where('post_id', $id)->with('user')->get();
 
@@ -104,10 +113,12 @@ class CommentsController extends Controller
         $comentariosFormateados = [];
         foreach ($comentarios as $comentario) {
             $comentarioFormateado = [
-                'id' => $comentario->id,
+                'id' => ($comentario->id),
+                //crypt 'id' => Crypt::encryptString($comentario->id),
                 'username' => $comentario->user->username, // Acceder al nombre del usuario a través de la relación
                 'content' => $comentario->content,
-                'father_id' => $comentario->father_id,
+                'father_id' => ($comentario->father_id),
+                //crypt 'father_id' => Crypt::encryptString($comentario->father_id),
                 'avatar' => $comentario->user->avatar,
             ];
             $comentariosFormateados[] = $comentarioFormateado;
@@ -151,6 +162,16 @@ class CommentsController extends Controller
     public function update(UpdateCommentsRequest $request, int $id)
     {
         try {
+
+            // try {
+            //     $id = Crypt::decryptString($id);
+            // } catch (DecryptException $e) {
+            //     return response()->json([
+            //         'status' => false,
+            //         'message' => 'Error de Decrypt.',
+            //     ], 500);
+            // }
+
             // Buscar el comentario por su ID
             $comentario = Comment::find($id);
 
@@ -221,6 +242,14 @@ class CommentsController extends Controller
     {
         try {
 
+            // try {
+            //     $id = Crypt::decryptString($id);
+            // } catch (DecryptException $e) {
+            //     return response()->json([
+            //         'status' => false,
+            //         'message' => 'Error de Decrypt.',
+            //     ], 500);
+            // }
 
             // Buscar el comentario por su ID
             $comentario = Comment::find($id);
@@ -302,10 +331,12 @@ class CommentsController extends Controller
             $repliesFormatedas = [];
             foreach ($replies as $reply) {
                 $replyFormateada = [
-                    'id' => $reply->id,
+                    'id' => ($reply->id),
+                    //crypt 'id' => Crypt::encryptString($reply->id),
                     'username' => $reply->user->username, // Acceder al nombre del usuario a través de la relación
                     'content' => $reply->content,
-                    'father_id' => $reply->father_id,
+                    'father_id' => ($reply->father_id),
+                    //crypt 'father_id' => Crypt::encryptString($reply->father_id),
                     'avatar' => $reply->user->avatar,
                 ];
                 $repliesFormatedas[] = $replyFormateada;
