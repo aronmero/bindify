@@ -32,13 +32,13 @@ class AuthController extends Controller
      * Ejemplo de la solicitud
      *
      * @response 201 {
-     *   "user_id": 1,
+     *   "username": nombre_usuario,
      *   "token": "access_token",
      *   "tipo": ["rol_1", "rol_2", ...]
      * }
      *
      * @response 404 {
-     *   "error": "Ususario no encontrado"
+     *   "error": "Usuario no encontrado"
      * }
      */
     public function login(LoginRequest $datos)
@@ -53,7 +53,6 @@ class AuthController extends Controller
             $response = [
                 'status' => true,
                 'message' => [
-                    'user_id' => $user->id,
                     'username' => $user->username,
                     'token' => $token,
                     'tipo' => $tipo[0]
@@ -63,7 +62,7 @@ class AuthController extends Controller
             return response()->json($response, 201);
         }
 
-        return response()->json(['status' => false, 'error' => 'Ususario no encontrado'], 404);
+        return response()->json(['status' => false, 'error' => 'Usuario no encontrado'], 404);
     }
 
     /**
@@ -106,7 +105,6 @@ class AuthController extends Controller
         }
 
 
-
         $credentials = $request->only('email', 'password');
         try {
             Auth::attempt($credentials);
@@ -115,6 +113,9 @@ class AuthController extends Controller
         }
         if ($request->empresa) {
             try {
+
+                $verification_token_id = null;
+
                 if ($request->verification_token != null) {
                     $verification_token_id = Verification_token::select('id')->where('token', '=', $request->verification_token)->firstOrFail();
                     $user->assignRole('ayuntamiento');

@@ -33,7 +33,7 @@ class HashtagsController extends Controller
     {
         try {
 
-            $data = Hashtag::all();
+            $data = Hashtag::select('name')->get();
 
             return response()->json([
                 'status' => true,

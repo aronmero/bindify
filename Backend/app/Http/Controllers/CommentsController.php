@@ -7,7 +7,10 @@ use App\Http\Requests\UpdateCommentsRequest;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 
 class CommentsController extends Controller
 {
@@ -47,7 +50,7 @@ class CommentsController extends Controller
             $comment->user_id = $user->id; // Asignar el ID de usuario
             $comment->post_id = $request->post_id;
             $comment->content = $request->content;
-            $comment->comment_id = $request->comment_id;  // Asignar el comentario padre
+            $comment->father_id = $request->father_id;  // Asignar el comentario padre
             $comment->active = true; //comentario activo cuando se crea
             $comment->save();
 
@@ -101,12 +104,11 @@ class CommentsController extends Controller
         $comentariosFormateados = [];
         foreach ($comentarios as $comentario) {
             $comentarioFormateado = [
+                'id' => $comentario->id,
                 'username' => $comentario->user->username, // Acceder al nombre del usuario a través de la relación
                 'content' => $comentario->content,
-                'comment_id' => $comentario->id,
+                'father_id' => $comentario->father_id,
                 'avatar' => $comentario->user->avatar,
-                'user_id' => $comentario->user->id
-
             ];
             $comentariosFormateados[] = $comentarioFormateado;
         }
@@ -136,6 +138,11 @@ class CommentsController extends Controller
      *   "message": "Error al editar el comentario (Algún dato de la solicitud no es válido)"
      * }
      *
+     * @response 403 {
+     *   "status": false,
+     *   "message": "Comentario no actualizado. No tienes permisos sobre este comentario"
+     * }
+     *
      * @response 404 {
      *   "status": false,
      *   "message": "Comentario no encontrado"
@@ -146,6 +153,15 @@ class CommentsController extends Controller
         try {
             // Buscar el comentario por su ID
             $comentario = Comment::find($id);
+
+            $user = Auth::user();
+
+            if ($comentario->user->id != $user->id) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Comentario no actualizado. No tienes permisos sobre este comentario.',
+                ], 403);
+            }
 
             if (!$comentario) {
                 // Si no se encuentra el comentario, devolver una respuesta con código de estado 404
@@ -185,6 +201,11 @@ class CommentsController extends Controller
      *   "message": "Comentario eliminado exitosamente"
      * }
      *
+     * @response 403 {
+     *   "status": false,
+     *   "message": "Comentario no eliminado. No tienes permisos sobre este comentario"
+     * }
+     *
      * @response 404 {
      *   "status": false,
      *   "message": "Comentario no encontrado"
@@ -195,11 +216,23 @@ class CommentsController extends Controller
      *   "message": "Error al eliminar el comentario"
      * }
      */
+
     public function destroy(string $id)
     {
         try {
+
+
             // Buscar el comentario por su ID
             $comentario = Comment::find($id);
+
+            $user = Auth::user();
+
+            if ($comentario->user->id != $user->id) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Comentario no eliminado. No tienes permisos sobre este comentario.',
+                ], 403);
+            }
 
             if (!$comentario) {
                 // Si no se encuentra el comentario, devolver una respuesta con código de estado 404
@@ -217,6 +250,78 @@ class CommentsController extends Controller
         }
     }
 
-     //TODO respuestas a cometario
+    /**
+     * Muestra los comentarios que son respuestas a otros comentarios.
+     *
+     * Esta función obtiene y formatea los comentarios asociados con un comentario específico.
+     * Si no se encuentran comentarios, devuelve un mensaje de error.
+     *
+     * @param string $id - El ID del comentario para la que se desean obtener las respuestas.
+     *
+     * @return \Illuminate\Http\JsonResponse - Respuesta JSON que contiene los comentarios formateados.
+     *
+     * @response 200 {
+     *   "status": true,
+     *   "comentarios": [
+     *     {
+     *       "username": "nombre_de_usuario",
+     *       "content": "contenido_del_comentario",
+     *       "comment_id": "identificador_del_comentario"
+     *     },
+     *     ...
+     *   ]
+     * }
+     *
+     * @response 404 {
+     *   "status": false,
+     *   "message": "No se encontraron respuestas para esta comentario"
+     * }
+     *
+     * @response 404 {
+     *   "status": false,
+     *   "message": "Comentario padre inexistente"
+     * }
+     *
+     * @response 400 {
+     *   "status": false,
+     *   "message": "Error al mostrar los comentarios"
+     * }
+     */
 
+    public function replies(string $id)
+    {
+        try {
+
+            // Obtener comentario padre
+            $comentario = Comment::findOrFail($id);
+
+            // Obtener todos las respuestas
+            $replies = $comentario->replies;
+
+            // Formatear los datos de los comentarios
+            $repliesFormatedas = [];
+            foreach ($replies as $reply) {
+                $replyFormateada = [
+                    'id' => $reply->id,
+                    'username' => $reply->user->username, // Acceder al nombre del usuario a través de la relación
+                    'content' => $reply->content,
+                    'father_id' => $reply->father_id,
+                    'avatar' => $reply->user->avatar,
+                ];
+                $repliesFormatedas[] = $replyFormateada;
+            }
+
+            // Verificar si se encontraron respuestas
+            if ($replies->isEmpty()) {
+                return response()->json(['status' => false, 'message' => 'No se encontraron respuestas para esta comentario'], 404);
+            }
+
+            return response()->json(['status' => true, 'comentarios' => $repliesFormatedas], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['status' => false, 'message' => 'Comentario padre inexistente'], 404);
+        } catch (Exception $e) {
+            // Manejar errores y devolver una respuesta de error
+            return response()->json(['status' => false, 'message' => 'Error al mostrar los comentarios'], 400);
+        }
+    }
 }

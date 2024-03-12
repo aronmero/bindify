@@ -52,12 +52,13 @@ class SearchController extends Controller
 
             if ($request->type == 'Posts') {
 
-                $posts = Post::join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                $posts = Post::leftJoin('posts-hashtags', 'posts-hashtags.post_id', '=', 'posts.id')
+                    ->leftJoin('hashtags', 'posts-hashtags.hashtag_id', '=', 'hashtags.id')
                     ->join('users-posts', 'users-posts.post_id', '=', 'posts.id')
                     ->join('users', 'users.id', '=', 'users-posts.user_id')
+                    ->join('commerces', 'commerces.user_id', '=', 'users.id')
                     ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
-                    ->join('posts-hashtags','posts-hashtags.post_id','=','posts.id')
-                    ->join('hashtags','posts-hashtags.hashtag_id','=','hashtags.id')
+                    ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
                     ->select(
                         'users.avatar',
                         'users.username',
@@ -67,7 +68,12 @@ class SearchController extends Controller
                         'posts.title',
                         'posts.description',
                         'post_types.name AS post_type',
-                    );
+                        'posts.start_date as publicated_date'
+                    )
+                    ->where('commerces.active', '=', true)
+                    ->where('posts.active', '=', true)
+                    ->orderBy('posts.start_date', 'desc')
+                    ->distinct();
 
                 if ($request->municipality) {
                     Municipality::where('name', $request->municipality)->firstOrFail();
@@ -98,12 +104,12 @@ class SearchController extends Controller
                 ], 200);
             }
 
-            $commerces = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
+            $commerces = Commerce::leftJoin('commerces-hashtags', 'commerces-hashtags.commerce_id', '=', 'commerces.user_id')
+                ->leftJoin('hashtags', 'commerces-hashtags.hashtag_id', '=', 'hashtags.id')
+                ->join('users', 'commerces.user_id', '=', 'users.id')
                 ->join('categories', 'commerces.category_id', '=', 'categories.id')
                 ->join('municipalities', 'users.municipality_id', '=', 'municipalities.id')
                 ->leftjoin('reviews', 'commerces.user_id', '=', 'reviews.commerce_id')
-                ->join('commerces-hashtags','commerces-hashtags.commerce_id','=','commerces.user_id')
-                ->join('hashtags','commerces-hashtags.hashtag_id','=','hashtags.id')
                 ->select(
                     'commerces.user_id',
                     'email',
@@ -118,7 +124,7 @@ class SearchController extends Controller
                     'commerces.avg',
                     DB::raw('count(reviews.commerce_id) as review_count')
                 )
-                ->where('commerces.active', '=', '1')
+                ->where('commerces.active', '=', true)
                 ->groupBy('commerces.user_id', 'email', 'phone', 'avatar', 'users.username', 'address', 'commerces.description', 'categories_name', 'schedule', 'commerces.avg', 'municipality_name');
 
             if ($request->municipality) {
@@ -148,15 +154,12 @@ class SearchController extends Controller
                 "status" => true,
                 "data" => $commerces
             ], 200);
-
-
         } catch (ModelNotFoundException $e) {
 
             return response()->json([
                 "status" => false,
                 "error" => "Municipio $request->municipality no encontrado",
             ], 404);
-
         } catch (Exception $e) {
 
             return response()->json([
@@ -164,7 +167,5 @@ class SearchController extends Controller
                 "error" => $e->getMessage()
             ], 404);
         }
-
     }
-
 }

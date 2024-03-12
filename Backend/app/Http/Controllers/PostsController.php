@@ -9,6 +9,8 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 class PostsController extends Controller
 {
@@ -68,9 +70,8 @@ class PostsController extends Controller
                     'users.id AS user_id',
                     'users.avatar'
                 )
-                //->whereIn('users-posts.user_id', $ids)
                 ->where('posts.active', '=', true)
-                ->orderBy('posts.created_at', 'desc')
+                ->orderBy('posts.start_date', 'desc')
                 ->get();
 
             $listado->each(function ($post) {
@@ -153,7 +154,7 @@ class PostsController extends Controller
                 )
                 ->whereIn('users-posts.user_id', $ids)
                 ->where('posts.active', '=', true)
-                ->orderBy('posts.created_at', 'desc')
+                ->orderBy('posts.start_date', 'desc')
                 ->get();
 
             $listado->each(function ($post) {
@@ -305,6 +306,7 @@ class PostsController extends Controller
                     'start_date' => $request->start_date,
                     'end_date' => $request->end_date,
                     'ubicacion' => $request->ubicacion,
+                    'active' => $request->active
                 ]);
 
                 //Obtener los datos del post
@@ -338,14 +340,19 @@ class PostsController extends Controller
                     'post' => $postData,
                     'users' => $formattedUsers,
                 ];
+
+                //TODO Hacer que solo devuelva algunos datos del usuario
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Post actualizado',
+                    'data' => $data
+                ], 200);
             }
 
-            //TODO Hacer que solo devuelva algunos datos del usuario
             return response()->json([
-                'status' => true,
-                'message' => 'Post actualizado',
-                'data' => $data
-            ], 200);
+                'status' => false,
+                'message' => 'Post no actualizado. No tienes permisos sobre este post.',
+            ], 403);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -376,26 +383,38 @@ class PostsController extends Controller
                     'active' => false,
                 ]);
 
+                $now = Carbon::now();
+                $nowFormatted = $now->format('Y-m-d H:i:s');
+
                 $postData = [
+                    'id' => $post->id,
+                    'username' => $user->username,
                     'image' => $post->image,
                     'title' => $post->title,
                     'description' => $post->description,
-                    'post_type_name' => optional($post->post_type)->name,
+                    'post_type_id' => $post->post_type->id,
                     'start_date' => $post->start_date,
                     'end_date' => $post->end_date,
-                    'active' => $post->active,
                     'ubicacion' => $post->ubicacion,
-                    'fecha_creacion' => $post->created_at,
-                    'hastags' => $post->hashtags->pluck('name')
+                    'hashtags' =>  "#" . implode('#', $post->hashtags->pluck('name')->toArray()),
+                    'deleted_date' => $nowFormatted
                 ];
+
+                DB::table('deleted_posts')->insert($postData);
+
+                $post->delete();
+
+                //TODO Hacer que solo devuelva algunos datos del usuario
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Post eliminado',
+                ], 200);
             }
 
-            //TODO Hacer que solo devuelva algunos datos del usuario
             return response()->json([
-                'status' => true,
-                'message' => 'Post eliminado',
-                'data' => $postData
-            ], 200);
+                'status' => false,
+                'message' => 'Post no eliminado. No tienes permisos sobre este post.',
+            ], 403);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
