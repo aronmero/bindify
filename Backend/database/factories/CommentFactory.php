@@ -22,10 +22,13 @@ class CommentFactory extends Factory
 
         $auxReply = rand(1, 10);
         $father_id = null;
+        $post_id = $this->faker->numberBetween(1, Post::count());
 
         if (Comment::count()>1) {
-            if($auxReply < 4){
-                $father_id = $this->faker->numberBetween(1, Comment::count());
+            if($auxReply < 5){
+                $father_id = Comment::where('post_id', '=', $post_id)->inRandomOrder()
+                ->first();
+                $father_id = ($father_id == null /*|| $father_id->father != null*/)?$father_id->id:null;
             }
         }
 
@@ -38,7 +41,7 @@ class CommentFactory extends Factory
 
         return [
             'user_id' => $this->faker->numberBetween(1, User::count()),
-            'post_id' => $this->faker->numberBetween(1, Post::count()),
+            'post_id' => $post_id,
             'content' => $this->faker->text(),
             'father_id' => $father_id,
             'active' => $active,
