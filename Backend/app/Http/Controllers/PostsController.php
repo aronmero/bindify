@@ -54,6 +54,7 @@ class PostsController extends Controller
             $listado = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
                 ->join('users', 'users.id', '=', 'users-posts.user_id')
                 ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                ->join('commerces', 'users.id', 'commerces.user_id')
                 ->select(
                     'posts.id AS post_id',
                     'posts.image',
@@ -66,12 +67,14 @@ class PostsController extends Controller
                     'posts.created_at',
                     'users.username',
                     'users.id AS user_id',
-                    'users.avatar'
+                    'users.avatar',
+                    'commerces.avg as avg'
                 )
-                //->whereIn('users-posts.user_id', $ids)
                 ->where('posts.active', '=', true)
                 ->orderBy('posts.created_at', 'desc')
                 ->get();
+
+                
 
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();

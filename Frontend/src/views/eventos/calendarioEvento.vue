@@ -14,7 +14,10 @@
         <template v-slot:Left  >
    
         </template>
-           <VistaCalendario />
+        <Suspense>
+            <VistaCalendario />
+        </Suspense>
+           
         <template v-slot:Right >
 
         </template>

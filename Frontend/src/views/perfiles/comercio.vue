@@ -13,7 +13,7 @@ import contenedorFollower from "@/components/perfiles/containers/contenedorFollo
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
 import { RouterLink, RouterView } from "vue-router";
-import { getUserData } from "@/Api/perfiles/perfil.js";
+import { getUserData } from "@/api/perfiles/perfil.js";
 import { ref } from "vue";
 let clickedLink = null;
 let userData = ref(null);

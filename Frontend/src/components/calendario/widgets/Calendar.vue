@@ -2,6 +2,7 @@
     import {onMounted} from 'vue';
     import { postsPerDate, postsDates, format_date } from '../mocks/filtros';
     import ForwardSVG from '@public/assets/icons/forward.svg';
+    
 
     const props = defineProps({
         title: String, 
@@ -40,7 +41,7 @@
         ];
 
         const manipulate = () => {
-            const daysWithEvents = postsDates();
+            const postsEvents = props.posts;
             let dayone = new Date(year, month, 1).getDay();
             let lastdate = new Date(year, month + 1, 0).getDate();
             let dayend = new Date(year, month, lastdate).getDay();
@@ -49,7 +50,7 @@
             let cell = "";
             for (let i = dayone; i > 0; i--) {
                 if (month + 1)
-                    cell += `<a class="inactive">${monthlastdate-i+1}</a>`;
+                    cell += `<button class="inactive">${monthlastdate-i+1}</button>`;
             }
 
             for (let i = 1; i <= lastdate; i++) {
@@ -60,7 +61,14 @@
                 }
 
                 //console.log(postsDates())
-                let hasEvent = daysWithEvents.includes(`${month+1}/${i}/${year}`);
+                let hasEvent = "" 
+                postsEvents.forEach(post => {
+                    if(post.star_date == `${year}-${month+1}-${i}`) {
+                        hasEvent = true;
+                        console.log("tiene evento")
+                    }
+                })
+                //daysWithEvents.includes(`${year}-${month+1}-${i}`);
                 let event = ""
                 if(hasEvent) {
                     event = 'with_event';
@@ -68,14 +76,14 @@
 
                 let posts_found = ""
                 if (hasEvent) {
-                    posts_found = postsPerDate(`${month+1}/${i}/${year}`);
+                    posts_found = postsPerDate(`${year}-${month+1}-${i}`);
                 }
 
-                cell += `<a class="${event} ${today}" title="${(posts_found != "") ? posts_found[0].title : "No hay eventos en esta fecha"}" href="${(posts_found != "") ? '/post/' + posts_found[0].id : ""}" >${i}</a>`;
+                cell += `<button class="${event} ${today}" title="${(posts_found != "") ? posts_found[0].title : "No hay eventos en esta fecha"}" href="${(posts_found != "") ? '/post/' + posts_found[0].id : ""}" >${i}</button>`;
             }
 
             for (let i = dayend; i < 6; i++) {
-                cell += `<a class="inactive">${i-dayend+1}</a>`
+                cell += `<button class="inactive">${i-dayend+1}</button>`
             }
 
             currdate.innerText = `${months[month]} ${year}`;
@@ -201,7 +209,7 @@
         margin-bottom: 20px;
     }
 
-    .calendar-body a {
+    .calendar-body button {
         text-decoration: none;
         width: calc(100% / 7);
         font-size: 1.07rem;

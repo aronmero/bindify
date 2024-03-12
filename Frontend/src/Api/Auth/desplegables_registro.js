@@ -1,5 +1,5 @@
 //Pillar de sesion storage o store de pinia cuando se realice
-import { genOptionsWithoutAuth,urlApi } from "@/Api/api.js";
+import { genOptionsWithoutAuth,urlApi } from "@/api/api.js";
 /**
  * Devuelve el listado de categorías
  * @date 3/11/2024 - 16:36:35 PM

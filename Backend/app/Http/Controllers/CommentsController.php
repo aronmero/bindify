@@ -51,6 +51,7 @@ class CommentsController extends Controller
             $comment->active = true; //comentario activo cuando se crea
             $comment->save();
 
+
             return response()->json(['status' => true, 'message' => 'Comentario almacenado exitosamente'], 201);
         } catch (\Exception $e) {
             return response()->json(['status' => false, 'message' => 'Error al almacenar el comentario'], 400);
@@ -107,6 +108,62 @@ class CommentsController extends Controller
                 'avatar' => $comentario->user->avatar,
                 'user_id' => $comentario->user->id
 
+            ];
+            $comentariosFormateados[] = $comentarioFormateado;
+        }
+
+        return response()->json(['status' => true, 'comentarios' => $comentariosFormateados], 200);
+    }
+
+
+    
+    /**
+     * Muestra los comentarios relacionados con una publicación.
+     *
+     * Esta función obtiene y formatea los comentarios asociados con una publicación específica.
+     * Si no se encuentran comentarios para la publicación, devuelve un mensaje de error.
+     *
+     * @param string $id - El ID de la publicación para la que se desean obtener los comentarios.
+     *
+     * @return \Illuminate\Http\JsonResponse - Respuesta JSON que contiene los comentarios formateados.
+     *
+     * @response 200 {
+     *   "status": true,
+     *   "comentarios": [
+     *     {
+     *       "username": "nombre_de_usuario",
+     *       "content": "contenido_del_comentario",
+     *       "comment_id": "identificador_del_comentario"
+     *     },
+     *     ...
+     *   ]
+     * }
+     *
+     * @response 404 {
+     *   "status": false,
+     *   "message": "No se encontraron comentarios para esta publicación"
+     * }
+     */
+    public function show_home(string $id)
+    {
+        // Obtener todos los comentarios relacionados con la publicación
+        $comentarios = Comment::where('post_id', $id)->with('user')->get();
+
+        // Verificar si se encontraron comentarios
+        if ($comentarios->isEmpty()) {
+            return response()->json(['status' => false, 'message' => 'No se encontraron comentarios para esta publicación'], 404);
+        }
+
+        // Formatear los datos de los comentarios
+        $comentariosFormateados = [];
+        foreach ($comentarios as $comentario) {
+            $comentarioFormateado = [
+                'username' => $comentario->user->username, // Acceder al nombre del usuario a través de la relación
+                'content' => $comentario->content,
+                'comment_id' => $comentario->id,
+                'comment_creation' => $comentario->created_at,
+                'avatar' => $comentario->user->avatar,
+                'user_id' => $comentario->user->id
             ];
             $comentariosFormateados[] = $comentarioFormateado;
         }

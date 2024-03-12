@@ -5,7 +5,11 @@
     import {encontrar_usuario_por_id} from './../mocks/users';
     import BackSVG from '@public/assets/icons/forward.svg';
     import EnviarSVG from '@public/assets/icons/forward.svg';
+    import { obtener_comentarios_post, agregar_comentario_post } from '@/Api/home/comentarios'
 
+    /**
+     * Define props
+     */
 
     const props = defineProps({
         post: Object,
@@ -37,7 +41,8 @@
      * Obtiene el comentario por la id del post
      */
 
-    let en_comentarios = ref(comentarios_por_post(post.id));
+    let data =  ref(await obtener_comentarios_post(post.post_id));
+    let en_comentarios = data.value.comentarios;
 
     let interval;
 
@@ -47,26 +52,20 @@
      * Limpia el intervalo para evitar bugs
      * Cambia el estilo de overflow para volver a permitir el scroll en background
      */
+
     const cerrarModal = () => {
         props.handler();
         clearInterval(interval);
         document.body.style.overflow= "scroll"
     };
 
-    const refrescarPosicion = () => {
-        console.log(comentario_handler.value.getBoundingClientRect());
-        console.log(comentario_handler.value.scrollHeight);
-        comentario_handler.value.scrollTop = comentario_handler.value.scrollHeight;
-    }
 
-    const agregar_comentario = async (post_id, user_id, texto) => {
-        en_comentarios.value.push({
-            id: en_comentarios.length + 1,
-            user_id: user_id,
-            post_id: post_id,
-            content: texto,
-            active: true
-        });
+    /**
+     * Refresca la posición del modal de comentarios
+     */
+    
+    const refrescarPosicion = () => {
+        comentario_handler.value.scrollTop = comentario_handler.value.scrollHeight;
     }
 
     /**
@@ -80,8 +79,7 @@
                     /**
                     *  Cambiar por la función de lógica backend de enviar comentario
                     * */
-
-                    agregar_comentario(user_id, post_id, texto)
+                    agregar_comentario_post(post_id, texto)
                         .then(() => refrescarPosicion() );
                     
                 }
@@ -99,7 +97,7 @@
          * */
          
         if(!posteado.value && texto != "") {
-            agregar_comentario(user_id, post_id, texto)
+            agregar_comentario_post(post_id, texto)
                 .then(() => refrescarPosicion());
         }
         chat_input.value = "";
