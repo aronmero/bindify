@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Commerce;
 use App\Models\Customer;
+use App\Models\Follower;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -177,10 +178,11 @@ class UsersController extends Controller
 
                     if ($seguido) {
                         $commerce->followed = true;
-                        if ($auth->follows()->where('follows_id', '=', User::where('username', $commerce->username)->first()->id)->where('favorito', '=', true)->first()) {
+                        if (Follower::where('follows_id', $userId)->where('follower_id', $auth->id)->first()->favorito) {
                         $commerce->favorite = true;
+                        }else{
+                            $commerce->favorite = false;
                         }
-                        $commerce->favorite = false;
                     }else{
                         $commerce->followed = false;
                     }
