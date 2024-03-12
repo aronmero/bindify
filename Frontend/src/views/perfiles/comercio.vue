@@ -33,25 +33,25 @@ function pintar(evento) {
   if (clickedLink != null) {
     clickedLink.classList.remove("text-accent-400");
   }
-  console.log(evento.target.innerHTML);
+  //console.log(evento.target.innerHTML);
   evento.target.classList.add("text-accent-400");
   clickedLink = evento.target;
 }
 
 async function responseCatcher(metodo, subRuta) {
   userData.value = await getUserData(metodo, subRuta);
-  console.log(userData.value);
+  //console.log(userData.value);
 }
 
 if (linkUsername.value == userLogeado.usuario.username) {
   responseCatcher("get", "/api/profile");
 } else {
-  console.log(linkUsername.value);
+  //console.log(linkUsername.value);
   responseCatcher("get", `/api/user/${linkUsername.value}`);
   userExterno.value = true;
 }
 
-console.log(userData.value)
+//console.log(userData.value)
 </script>
 
 <template>
