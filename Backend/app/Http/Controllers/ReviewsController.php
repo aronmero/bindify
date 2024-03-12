@@ -56,9 +56,19 @@ class ReviewsController extends Controller
                 return response()->json(['status' => false, 'message' => 'Error al crear la review: No puedes tener dos reviews de un mismo sitio '], 500);
             }
 
+            try {
+
+                $id = User::findOrFail($request->commerce_username, 'username')->id;
+
+                Commerce::findOrFail($id, 'user_id');
+            } catch (ModelNotFoundException $e) {
+                return response()->json(['status' => false, 'message' => 'Error al crear la review: No puedes tener dos reviews de un mismo sitio '], 500);
+            }
+
             // Crear una nueva Review
             $review = new Review([
                 'user_id' => auth()->user()->id,
+                'commerce_id' => $id,
                 'commerce_id' => $id,
                 'comment' => $request->comment,
                 'note' => $request->note,
@@ -66,6 +76,7 @@ class ReviewsController extends Controller
 
 
             $review->save();
+
 
             Utils::AVG_Reviews($request->commerce_id);
 
@@ -88,6 +99,7 @@ class ReviewsController extends Controller
      * Muestra las reviews relacionadas con un comercio.
      *
      * Esta función obtiene y formatea las reviews asociadas con un comercio específico.
+     * Si no se encuentran reviews para el comercio, el usuario no existe o no es un comercio devuelve un mensaje de error.
      * Si no se encuentran reviews para el comercio, el usuario no existe o no es un comercio devuelve un mensaje de error.
      *
      * @param string $username - El username del comercio para el que se desean obtener las reviews.
@@ -122,6 +134,16 @@ class ReviewsController extends Controller
 
         try {
 
+        try {
+
+            $user = User::where('username', $username)->first();
+
+            if (!$user) {
+                return response()->json(['status' => false, 'message' => "Usuario inexistente."], 403);
+            } elseif (!(Commerce::where('commerces.user_id', '=', $user->id)->first())) {
+                $userRol = $user->getRoleNames()[0];
+                return response()->json(['status' => false, 'message' => "Este usuario no es un comercio.",  'rol' => $userRol], 403);
+            }
             $user = User::where('username', $username)->first();
 
             if (!$user) {
@@ -132,7 +154,13 @@ class ReviewsController extends Controller
             }
 
             $reviews = Review::where('commerce_id', $user->id)->get();
+            $reviews = Review::where('commerce_id', $user->id)->get();
 
+            if ($reviews->isEmpty()) {
+                return response()->json(['status' => false, 'message' => 'No se encontraron reviews para el comercio',], 401);
+            }
+            // Crear un array para almacenar los datos de las reviews
+            $reviewsArray = [];
             if ($reviews->isEmpty()) {
                 return response()->json(['status' => false, 'message' => 'No se encontraron reviews para el comercio',], 401);
             }
@@ -150,7 +178,21 @@ class ReviewsController extends Controller
                     'comment' => $review->comment,
                     'note' => $review->note,
                 ];
+            // Iterar sobre cada reviews
+            foreach ($reviews as $review) {
+                // Obtener los datos necesarios para cada reviews
+                $reviewData = [
+                    'username' => $review->user->username,
+                    'avatarUsuario' => $review->user->avatar,
+                    'commerce_username' => $review->commerce->username, // Obtener el nombre de usuario del comercio
+                    'avatarComercio' => $review->commerce->avatar, // Obtener el avatar del comercio
+                    'comment' => $review->comment,
+                    'note' => $review->note,
+                ];
 
+                // Agregar los datos de la reviews al array
+                $reviewsArray[] = $reviewData;
+            }
                 // Agregar los datos de la reviews al array
                 $reviewsArray[] = $reviewData;
             }
@@ -160,7 +202,17 @@ class ReviewsController extends Controller
                 // Devolver respuesta con las reviews formateadas
                 return response()->json(['status' => true, 'reviews' => $reviewsArray,], 200);
             }
+            // Verificar si se encontraron reviews para el comercio
+            if (count($reviewsArray) > 0) {
+                // Devolver respuesta con las reviews formateadas
+                return response()->json(['status' => true, 'reviews' => $reviewsArray,], 200);
+            }
 
+            return response()->json(['status' => false, 'message' => 'Reviews no encontradas',], 404);
+        } catch (\Exception $e) {
+            // En caso de excepción, devolver una respuesta de error
+            return response()->json(['status' => false, 'error' => 'Error al mostrar las reviews: ' . $e->getMessage(),], 500);
+        }
             return response()->json(['status' => false, 'message' => 'Reviews no encontradas',], 404);
         } catch (\Exception $e) {
             // En caso de excepción, devolver una respuesta de error
