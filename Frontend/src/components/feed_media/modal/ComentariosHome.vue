@@ -134,7 +134,7 @@
 
 <template>
     <KeepAlive>
-    <div ref="modal" :id="`comentarios_${post.id}`" class="screen-modal flex flex-col items-center py-[50px]">
+    <div ref="modal" :id="`comentarios_${post.post_id}`" class="screen-modal flex flex-col items-center py-[50px]">
         <!-- El wrapper para dar forma al contenedor del centro -->
         <div class="wrapper h-[90%] sm:h-[80%] md:h-[90%] xl:h-[85%] 2xl:w-[40%] xl:w-[60%] lg:w-[60%] md:w-[100%] sm:w-[100%] w-[100%] mt-5relative ">
             <!-- Header superior -->
@@ -157,9 +157,9 @@
                 <!-- Avatar del usuario -->
                 <img class=" w-[50px] h-[50px] bg-[#f3f3f3] rounded-full " :src="user.avatar" alt="">
                 <!-- Input de Enviar datos -->
-                <input ref="chat_input" @keydown="(e) => enviarComentarioPorSubmit(post.id, 1, e)" class=" outline-none  w-[100%] h-[100%] p-[30px_20px] " type="text" placeholder="Agregar comentario">
+                <input ref="chat_input" @keydown="(e) => enviarComentarioPorSubmit(post.post_id, 1, e)" class=" outline-none  w-[100%] h-[100%] p-[30px_20px] " type="text" placeholder="Agregar comentario">
                 <!-- Botón de Enviar  -->
-                <button class="p-[20px]" @click="(e) => enviarComentarioPorClick(post.id, 1, chat_input.value)">
+                <button class="p-[20px]" @click="(e) => enviarComentarioPorClick(post.post_id, 1, chat_input.value)">
                     <img class="rotate-180" :src="EnviarSVG" alt="submit"/>
                 </button>
             </div>
