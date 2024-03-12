@@ -6,7 +6,6 @@ import EnlaceSVG from '@public/assets/icons/external.svg';
 import DiaSVG from '@public/assets/icons/time.svg';
 import MenuSVG from '@public/assets/icons/ellipsis.svg';
 import StarSVG from '@public/assets/icons/star.svg';
-import HeartSVG from '@public/assets/icons/like.svg';
 import ShareSVG from '@public/assets/icons/share.svg';
 import UserSVG from '@public/assets/icons/user.svg';
 import router from '@/router/index';
@@ -27,7 +26,7 @@ const redirect = (url) => {
     router.push(url)
 };
 
-
+/** Abrir modal  */
 const abrirModal = () => {
     if (modalHandler.value) {
         modal.value.style.display = "none";
@@ -40,7 +39,7 @@ const abrirModal = () => {
 
 </script>
 <template>
-    <div class=" card w-[100%] p-4 rounded-xl relative " :data-fecha="post.start_date">
+    <div class=" card w-[100%] p-4 rounded-xl relative " :data-start_date="post.start_date" :data-end_date="post.end_date">
         <!-- Imagen del post -->
         <div class=" img-wrapper w-[110px] h-[150px] overflow-hidden rounded-xl mr-2">
             <img class=" img min-w-[100%] cursor-pointer  " :src="post.image" alt="" @click="() => redirect(`evento/${post.post_id}`)">
@@ -57,8 +56,8 @@ const abrirModal = () => {
                 {{ post.municipality }}
             </p>
             <p class=" campo mt-3 h-[20px] flex items-center  " >
-                <img :src="DiaSVG" class=" w-[20px] mr-1 " alt="Fecha de inicio:">
-                {{ post.start_date }}
+                <img :src="DiaSVG" class=" w-[20px] mr-1 " alt="Fecha de inicio:"> <b>Inicio: {{ post.start_date }}  </b>
+                <img :src="DiaSVG" class=" ml-2 w-[20px] mr-1 " alt="Fecha de fin:"> <b>Fin: {{ post.end_date }}</b>
             </p>
         </div>
         <div class="">
@@ -84,139 +83,137 @@ const abrirModal = () => {
 </template>
 
 <style scoped lang="scss">
-@import './styles/sass/variables';
+    @import './styles/sass/variables';
 
-.card {
-    margin: 10px 0px;
-    display: flex;
-    width: clamp(20px, 620px, 900px);
-
-    //background:red;
-    .img-wrapper {
-        img {
-            width: 400px;
-            height: 400px;
-            object-position: center;
-            object-fit: cover;
-            background: #f3f3f3;
-        }
-    }
-
-    h2 {
-        font-size: 1.3rem;
-        max-width:500px;
-        overflow:hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        color: $primario;
-        font-weight: bold;
-    }
-
-    .wrapper {
-        margin-left: 10px;
-
-        .description {
-            height: calc(100px - 60px) !important;
-            //background:red;
-            overflow: hidden;
-            max-width: 400px;
-            font-size:.9rem;
-            text-overflow: ellipsis;
-            white-space:unset;
-
-        }
-
-        .campo {
-            font-size:.85rem;
-            font-weight:500;
-        }
-
-    }
-};
-
-.modal {
-    width: fit-content;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-    display: none;
-}
-
-@media screen and (max-width: 650px) {
     .card {
-        width: clamp(300px, 450px, 550px);
         margin: 10px 0px;
+        display: flex;
+        width: clamp(20px, 620px, 900px);
 
+        //background:red;
         .img-wrapper {
-            max-width: 120px;
+            img {
+                width: 400px;
+                height: 400px;
+                object-position: center;
+                object-fit: cover;
+                background: #f3f3f3;
+            }
         }
-    }
-}
 
-@media screen and (max-width: 450px) {
-    .card {
         h2 {
-            font-size: 1.1rem;
-        }
-
-        width:clamp(300px, 350px, 430px);
-        margin:10px 0px;
-
-        .img-wrapper {
-            max-width: 100px;
+            font-size: 1.3rem;
+            max-width:500px;
+            overflow:hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: $primario;
+            font-weight: bold;
         }
 
         .wrapper {
-            .campo {
-                font-size: .9rem;
+            margin-left: 10px;
 
-                img {
-                    width: 18px;
+            .description {
+                height: calc(100px - 60px) !important;
+                //background:red;
+                overflow: hidden;
+                max-width: 400px;
+                font-size:.9rem;
+                text-overflow: ellipsis;
+                white-space:unset;
+
+            }
+
+            .campo {
+                font-size:.85rem;
+                font-weight:500;
+            }
+
+        }
+    };
+
+    .modal {
+        width: fit-content;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+        display: none;
+    }
+
+    @media screen and (max-width: 650px) {
+        .card {
+            width: clamp(300px, 450px, 550px);
+            margin: 10px 0px;
+
+            .img-wrapper {
+                max-width: 120px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 450px) {
+        .card {
+            h2 {
+                font-size: 1.1rem;
+            }
+
+            width:clamp(300px, 350px, 430px);
+            margin:10px 0px;
+
+            .img-wrapper {
+                max-width: 100px;
+            }
+
+            .wrapper {
+                .campo {
+                    font-size: .9rem;
+
+                    img {
+                        width: 18px;
+                    }
                 }
             }
         }
     }
-}
 
-@media screen and (max-width: 345px) {
-    .card {
-        h2 {
-            font-size: 1.1rem;
+    @media screen and (max-width: 345px) {
+        .card {
+            h2 {
+                font-size: 1.1rem;
+            }
+
+            width:clamp(250px, 340px, 300px);
+            margin:10px 0px;
+
+            .img-wrapper {
+                max-width: 100px;
+                max-height:70px;
+                img{
+                    object-fit:cover;
+                }
+                
+            }
+
+            .wrapper {
+                .campo {
+                    font-size: .9rem;
+
+                    img {
+                        width: 18px;
+                    }
+                }
+            }
         }
+    }
 
-        width:clamp(250px, 340px, 300px);
-        margin:10px 0px;
-
+    @media screen and (max-width: 320px) {
         .img-wrapper {
-            max-width: 100px;
+            max-width: 50px;
             max-height:70px;
             img{
                 object-fit:cover;
             }
             
         }
-
-        .wrapper {
-            .campo {
-                font-size: .9rem;
-
-                img {
-                    width: 18px;
-                }
-            }
-        }
-    }
-}
-
-@media screen and (max-width: 320px) {
-    .img-wrapper {
-        max-width: 50px;
-        max-height:70px;
-        img{
-            object-fit:cover;
-        }
         
     }
-    
-}
-
-
 </style>

@@ -172,8 +172,8 @@ document.body.style.overflow = "hidden";
                 </div>
 
                 <!-- Formulario para enviar comentario -->
-                <div style="z-index: 99 !important;"
-                    class=" chat w-[100%] bg-[#fff] h-[50px] flex items-center fixed bottom-[50px] sm:bottom-[50px] md:bottom-[50px] lg:bottom-[10px]  xl:bottom-[10px] 2xl:bottom-[10px] p-[30px_20px]">
+                <div style="z-index: 99 !important;  max-width: 700px;"
+                    class=" chat w-[100%] bg-[#fff] h-[50px] flex items-center absolute bottom-[50px] sm:bottom-[50px] md:bottom-[50px] lg:bottom-[10px] xl:bottom-[10px] 2xl:bottom-[10px] p-[20px_20px]">
                     <!-- Avatar del usuario -->
                     <img class=" w-[50px] h-[50px] bg-[#f3f3f3] rounded-full " :src="user.avatar" alt="">
                     <!-- Input de Enviar datos -->
@@ -206,6 +206,7 @@ body {
     z-index: 50;
     overscroll-behavior: contain;
 
+
     .wrapper {
         scroll-behavior: smooth;
 
@@ -216,8 +217,17 @@ body {
         }
     }
 
+    *::-webkit-scrollbar {
+        display:none;
+    }
+
     .chat {
         z-index: 99 !important;
+        input {
+            background:#fff;
+            width:100%;
+        }
+       
     }
 }
 </style>

@@ -27,3 +27,15 @@ export async function obtener_posts() {
     return data;
 }
 
+export async function obtener_tipo_comercio(comercio_username) {
+    const options = genOptionsWithoutBody('GET');
+    const user = JSON.parse(sessionStorage.getItem("usuario"));
+    const token = user.usuario.token;
+
+    let data = await fetch(`http://127.0.0.1:8000/api/user/${comercio_username}`, options)
+    .then(res => res.json())
+    .then(res => res);
+    
+    return data;
+
+}

@@ -4,7 +4,7 @@
     import { filtros } from './mocks/filtros';
     import Filtros from './widgets/Filtros.vue'
     
-    import {obtener_posts, obtener_posts_seguidos} from '@/Api/home/publicaciones';
+    import {obtener_posts, obtener_posts_seguidos, obtener_tipo_comercio} from '@/Api/home/publicaciones';
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     console.log(user);
 
