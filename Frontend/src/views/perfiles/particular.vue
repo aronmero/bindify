@@ -11,6 +11,8 @@ import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { RouterLink, RouterView } from "vue-router";
 import { getUserData } from "@/Api/perfiles/perfil.js";
 import { ref } from "vue";
+import router from "@/router/index.js";
+let linkUsername = ref(router.currentRoute.value.params.username);
 let userData = ref(null);
 
 // console.log(getUserData("get"));
@@ -43,16 +45,16 @@ function pintar(evento) {
     <div class="flex flex-col gap-10" v-if="userData != null">
       <div>
         <imgsPerfil
-          :rutaBaner="userData[0].banner"
+          :rutaBaner="userData.banner"
           altTextBaner="foto baner"
-          :rutaPerfil="userData[0].avatar"
+          :rutaPerfil="userData.avatar"
           altTextPerfil="foto perfil"
         ></imgsPerfil>
       </div>
       <div class="flex flex-col gap-6 justify-evenly lg:flex-row">
         <div class="flex flex-col">
           <textoEnNegrita
-            :texto="userData[0].username"
+            :texto="userData.username"
             class="text-base lg:text-xl"
           />
 
@@ -66,21 +68,21 @@ function pintar(evento) {
         <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser>
       </div>
       <div class="flex w-full justify-center gap-6">
-        <RouterLink to="/perfil/particular/fidelidad">
+        <RouterLink :to="`/perfil/${linkUsername}/particular/fidelidad`">
           <textoEnNegrita
             @click="pintar"
             texto="Fidelidad"
             :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
           />
         </RouterLink>
-        <RouterLink to="/perfil/particular/favoritos">
+        <RouterLink :to="`/perfil/${linkUsername}/particular/favoritos`">
           <textoEnNegrita
             @click="pintar"
             texto="Favoritos"
             :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
           />
         </RouterLink>
-        <RouterLink to="/perfil/particular/favoritos">
+        <RouterLink :to="`/perfil/${linkUsername}/particular/seguidos`">
           <textoEnNegrita
             @click="pintar"
             texto="Seguidos"

@@ -50,6 +50,8 @@ if (linkUsername.value == userLogeado.usuario.username) {
   responseCatcher("get", `/api/user/${linkUsername.value}`);
   userExterno.value = true;
 }
+
+console.log(userData.value)
 </script>
 
 <template>

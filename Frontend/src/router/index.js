@@ -41,7 +41,7 @@ const routes = [
   //Estas tres se deberian reducir a una vista con 3 modos segun el tipo de usuario
   { path: "/perfil/:username", component: () => import("@/views/perfiles/perfil.vue") },
   { path: "/perfil", component: () => import("@/views/perfiles/perfil.vue") },
-  { path: "/perfil/ayuntamiento/:username", component: () => import("@/views/perfiles/ayuntamiento.vue"),
+  { path: "/perfil/:username/ayuntamiento", component: () => import("@/views/perfiles/ayuntamiento.vue"),
     children:[
       {path:"posts", component:() => import("@/components/perfiles/containers/contenedorVistaPosts.vue")},
       {path:"eventos", component:() => import("@/components/perfiles/containers/contenedorVistaEventos.vue")}
@@ -53,10 +53,11 @@ const routes = [
     {path:"resenias", component:() => import("@/components/perfiles/containers/contenedorVistaResenias.vue")}
   ]},
 
-  { path: "/perfil/particular/:username", component: () => import("@/views/perfiles/particular.vue"), 
+  { path: "/perfil/:username/particular", component: () => import("@/views/perfiles/particular.vue"), 
   children:[
     {path:"fidelidad", component:() => import("@/components/perfiles/containers/contenedorVistaFidelidad.vue")},
-    {path:"favoritos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")}
+    {path:"favoritos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")},
+    {path:"seguidos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")}
   ]},
   { path: "/tarjeta-fidelidad", component: () => import("@/views/perfiles/tarjetaFidelidad.vue")},
   { path: "/perfil/edit", component: () => import("@/views/perfiles/editarPerfil.vue") },
