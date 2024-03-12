@@ -65,7 +65,7 @@ const borrarImagen = ()=>{
         <input @change="emitirDatos" v-if="tipo == 'fechaLibre'" type="date" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <select @change="emitirDatos" v-if="tipo == 'selection'" class="bg-background-100 text-text-950 py-3 px-1 text-center rounded-xl cursor-pointer">
             <option value="" disabled selected>{{ placeholder }}</option>
-            <option v-for="(value, clave) in opciones" :value="clave" :selected="value == valor" :id="value.id">{{ value.name }}</option>
+            <option v-for="(value, clave) in opciones" :value="clave" :selected="value.name == valor" :id="value.id">{{ value.name }}</option>
         </select>
         <textarea @change="emitirDatos" v-if="tipo == 'texto'" class="ps-10 bg-background-100 text-text-950 py-3 px-1 rounded-xl resize-none h-[15rem]" :placeholder="placeholder" :value="valor"></textarea>
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'perfil'" class="flex relative lg:size-40 size-28 justify-center items-center rounded-full border-dotted border border-background-900">

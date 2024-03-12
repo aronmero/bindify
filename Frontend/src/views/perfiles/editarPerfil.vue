@@ -7,13 +7,20 @@ import Footer from "@/components/comun/footer.vue";
 
 import Input from "@/components/comun/input.vue";
 
-import Horarios from '@/components/intervalos_horarios/Horarios.vue'
+import Horarios from '@/components/intervalos_horarios/Horarios.vue';
+import { solicitarCategorias, solicitarMunicipios } from '@/Api/Auth/desplegables_registro.js';
 
 /* Genera la referencia para controlar el estado de mostrado u oculto */
 const controlador_modal = ref(false);
 
-let options = ["Los Llanos de Aridane", "Santa Cruz de la Palma", "Tijarafe", "El Paso", "Puntagorda", "Villa de Mazo"]; /* Cambiar por info del back */
-let optionsSex = ["M", "H"]; /* Cambiar por info del back */
+let options = ref(null);
+let optionsCategory = ref(null);
+let optionsSex = ["M", "H"];
+const solicitarDatosApi = async()=>{
+    optionsCategory.value = await solicitarCategorias("GET").then(data => data = data.data);
+    options.value = await solicitarMunicipios("GET").then(data => data = data.data);
+}
+solicitarDatosApi();
 let errorIMG = ref(null);
 let errorMunic = ref(null);
 let errorDate = ref(null);
@@ -22,22 +29,24 @@ let errorNombre = ref(null);
 let errorMail = ref(null);
 let errorDirec = ref(null);
 let errorPhone = ref(null);
-const horarioActual = ref(" 08:00 a 15:00 - Lunes \n 08:00 a 15:00 - Lunes(T) \n 08:00 a 15:00 - Martes \n 08:00 a 15:00 - Miércoles \n 08:00 a 15:00 - Jueves \n 08:00 a 15:00 - Viernes \n Cerrado a Cerrado - Sabado \n  Cerrado a Cerrado - Domingo ");
+const user = ref(JSON.parse(sessionStorage.getItem("userData")));
+user.value = user.value.userData[0];
+console.log(user.value);
+const horarioActual = ref(user.value.schedule);
 const tipoUsuario = ref("comercio");
-const nombre = ref(null);
-const imagenPerfil = ref(null);
-const imagenBanner = ref(null);
-const telefono = ref(null);
-const email = ref(null);
-const municipio = ref(null);
-const fechaNac = ref(null);
-const sexo = ref(null);
-const direccion = ref(null);
-const categoria = ref(null);
+const nombre = ref(user.value.name);
+const imagenPerfil = ref(user.value.avatar);
+const imagenBanner = ref(user.value.banner);
+const telefono = ref(user.value.phone);
+const email = ref(user.value.email);
+const municipio = ref(user.value.municipality_name);
+const fechaNac = ref(user.value.birth_date);
+const sexo = ref(user.value.gender);
+const direccion = ref(user.value.address);
+const categoria = ref(user.value.categories_name);
 const contraActual = ref(null);
 const contraNueva = ref(null);
 const repetirNueva = ref(null);
-
 const mostrarInformacion = (e)=>{
     let opciones = [...e.target.children];
     let opcionSeleccionada = opciones.filter(opcion => opcion.selected == true);
@@ -45,8 +54,8 @@ const mostrarInformacion = (e)=>{
         tipo.value = opcionSeleccionada[0].textContent;
     }
 }
-/* Falta vincular modal de editar horario y hacer las validaciones */
 const tratarDatos = ()=>{
+    /* Revisar validaciones para editar el perfil y listo */
     console.log(tipoUsuario.value);
     console.log(nombre.value);
     console.log(imagenPerfil.value);
