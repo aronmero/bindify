@@ -64,6 +64,7 @@ class Utils
 
   /**
    * Funcion que busca por parametro el id del comercio y devuelve la media de la puntuacion de sus reviews
+   * EN DES-USO , NO ESTA INTEGRADO
    *
    * Esta función busca por el id del comercio  las reviews y calcula
    * la media de todas las puntuaciones que tenga en la tabla reviews con el id de ese comercio

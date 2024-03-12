@@ -12,6 +12,10 @@ use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+
 
 class AuthController extends Controller
 {
@@ -82,18 +86,27 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
+        // Validación de la solicitud
         if ($request->empresa == true) {
             $request->validate([
-                'phone' => 'required',
+                'phone' => 'required', // Establece las reglas para el avatar
             ]);
         }
+
+        // Manejo de la imagen/avatar (Esto supuestamente guarda en la carpeta storage/avatars , la imagen del avatar  )
+        $avatarPath = null;
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public'); // Guarda la imagen en el almacenamiento 'public/avatars'
+        }
+
+        // Creación del usuario
         try {
             $user = User::create([
                 'email' => $request->email,
                 'password' => $request->password,
                 'phone' => $request->phone,
                 'municipality_id' => $request->municipality_id,
-                'avatar' => $request->avatar,
+                'avatar' => $avatarPath, // Guarda la ruta del avatar en la base de datos
                 'username' => $request->username,
                 'name' => $request->name
             ]);
