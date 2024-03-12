@@ -12,43 +12,40 @@ const user = JSON.parse(sessionStorage.getItem("usuario"));
 console.log(user.usuario.tipo);
 let tipoUsuario = ref(user.usuario.tipo);
 
-// let username=router.currentRoute.value.params.username
+let username = router.currentRoute.value.params.username;
 
-// console.log(username)
-// username = "hola"
-// if(user.usuario.username == undefined){
-//   username = user.usuario.username
-// }
+console.log(username);
 
-//   switch(tipoUsuario.value){
+if (username == undefined) {
+  username = user.usuario.username;
+  console.log(username);
+}
+
+switch (tipoUsuario.value) {
+  case "commerce":
+    router.push(`/perfil/comercio/${username}`);
+    break;
+  case "customer":
+    router.push(`/perfil/customer/${username}`);
+    break;
+  case "ayuntamiento":
+    router.push(`/perfil/ayuntamiento/${username}`);
+    break;
+}
+
+// switch(tipoUsuario.value){
 //     case "commerce":
-//         router.push(`/perfil/comercio/:${username}`)
+//         router.push(`/perfil/comercio`)
 //       break;
 //     case "customer":
-//       router.push(`/perfil/customer/:${username}`)
+//       router.push(`/perfil/customer`)
 //       break;
 //     case "ayuntamiento":
-//       router.push(`/perfil/ayuntamiento/:${username}`)
+//       router.push(`/perfil/ayuntamiento`)
 //       break;
 //   }
-  switch(tipoUsuario.value){
-    case "commerce":
-        router.push(`/perfil/comercio`)
-      break;
-    case "customer":
-      router.push(`/perfil/customer`)
-      break;
-    case "ayuntamiento":
-      router.push(`/perfil/ayuntamiento`)
-      break;
-  }
-
-
-
 </script>
 
-<template>
-
-</template>
+<template></template>
 
 <style scoped></style>

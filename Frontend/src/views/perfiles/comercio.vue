@@ -11,16 +11,21 @@ import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
 import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPuntuacion.vue";
 import contenedorFollower from "@/components/perfiles/containers/contenedorFollower.vue";
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
-import { users } from "@/components/perfiles/helpers/users.js";
+import router from "@/router/index.js";
 import { RouterLink, RouterView } from "vue-router";
 import { getUserData } from "@/Api/perfiles/perfil.js";
 import { ref } from "vue";
 let clickedLink = null;
 let userData = ref(null);
 let userExterno = ref(false);
+let linkUsername = router.currentRoute.value.params.username;
+const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
 const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
+
+
+
 // Al recargar la pagina se quita la marca arregla a futuro con variables de estado
 // a lo mejor
 function pintar(evento) {
@@ -32,13 +37,19 @@ function pintar(evento) {
   clickedLink = evento.target;
 }
 
-async function responseCatcher() {
-  userData.value = await getUserData("get");
+async function responseCatcher(metodo, subRuta) {
+  userData.value = await getUserData(metodo, subRuta);
   console.log(userData.value);
-  // const user = JSON.parse(sessionStorage.getItem("userData"));
-  //   console.log(user)
 }
-responseCatcher();
+
+if (linkUsername == userLogeado.usuario.username) {
+  responseCatcher("get", "/api/profile");
+} else {
+  console.log(linkUsername);
+  responseCatcher("get", `/api/user/Brisa Metz`);
+  userExterno.value = true;
+}
+
 </script>
 
 <template>
@@ -120,7 +131,7 @@ responseCatcher();
 
         <!-- <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser> -->
         <div class="flex justify-center">
-          <RouterLink to="/perfil/edit">
+          <RouterLink to="/perfil/edit" v-if="!userExterno">
             <btnConText
               texto="EDIT PROFILE"
               class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
