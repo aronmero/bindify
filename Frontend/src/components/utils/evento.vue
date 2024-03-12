@@ -61,7 +61,7 @@ const copyModal = (e) => {
 
 const id_post = props.post_id;
 const apiCall = async () => {
-    await getCommentsOfPost(id_post).then(data => comentarios.value = data.comentarios).then(data => console.log(data))
+    await getCommentsOfPost(id_post).then(data => comentarios.value = data.comentarios)
 }
 
 
@@ -86,7 +86,6 @@ const enviarComentarioPorSubmit = async (post_id, event) => {
 const enviarComentarioPorClick = async (post_id, texto) => {
     if (!posteado.value && texto != "") {
         const body = JSON.stringify({ "content": `${texto}`, "post_id": post_id })
-        console.log(body);
         const response = await storeCommentsOfPost(body)
         antiSpamFunction();
         apiCall();
