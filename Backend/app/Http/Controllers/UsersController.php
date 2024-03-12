@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\Commerce;
 use App\Models\Customer;
 use App\Models\Post;
@@ -215,7 +216,7 @@ class UsersController extends Controller
      */
 
 
-    public function update(Request $request, string $username)
+    public function update(UpdateUserRequest $request, string $username)
     {
         try {
             // Elimina campos que no queremos actualizar
