@@ -33,14 +33,18 @@ const chat_input = ref(null);
 
 const user = encontrar_usuario_por_id(1);
 
+
+let comentarios = ref(null);
+const id_post = props.post.id;
 /**
  * Obtiene los comentarios de la api
  */
-let comentarios = ref(null);
 const apiCall = async () => {
-    await getCommentsOfPost(3).then(data => comentarios.value = data)
+    await getCommentsOfPost(id_post).then(data => comentarios.value = data.comentarios)
+    console.log(comentarios.value);
 }
 apiCall();
+
 
 /**
  * Obtiene el comentario por la id del post
@@ -101,6 +105,7 @@ const enviarComentarioPorSubmit = async (post_id, event) => {
             }
 
             antiSpamFunction();
+            apiCall();
         }
     }
 };
@@ -117,6 +122,7 @@ const enviarComentarioPorClick = async (post_id, texto) => {
     }
 
     antiSpamFunction();
+    apiCall();
 };
 
 /**
@@ -169,8 +175,8 @@ document.body.style.overflow = "hidden";
                 <div ref="comentario_handler"
                     class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
                     <template v-if="comentarios != null">
-                        <Comentario v-if="comentarios.comentarios.length >= 1"
-                            v-for="comentario in comentarios.comentarios" :comentario="comentario" />
+                        <Comentario v-if="comentarios.length >= 1"
+                            v-for="comentario in comentarios" :comentario="comentario" />
                         <Comentario v-else :comentario="{ content: 'No hay comentarios, ¡se el primero!' }" />
                     </template>
                 </div>
