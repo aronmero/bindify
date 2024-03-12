@@ -4,7 +4,7 @@ import { onMounted, ref } from "vue";
 import StarSVG from "@public/assets/icons/star.svg";
 import HeartSVG from "@public/assets/icons/like.svg";
 import ShareSVG from "@public/assets/icons/share.svg";
-import BookmarkSVG from "@public/assets/icons/bookmark.svg";
+import BookmarkSVG from "@public/assets/icons/bookmark.png";
 import MoreSVG from "@public/assets/icons/ellipsis.svg";
 import UserSVG from "@public/assets/icons/user.svg";
 
