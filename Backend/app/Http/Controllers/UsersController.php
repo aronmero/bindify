@@ -71,8 +71,9 @@ class UsersController extends Controller
             ], 404);
         }
 
+        $userRol = $user->getRoleNames()[0];
 
-        if ($user->getRoleNames() == "customer") {
+        if ($userRol == "customer") {
 
             try {
 
@@ -156,7 +157,8 @@ class UsersController extends Controller
 
                 $commerce->each(function ($commerce) {
                     $user = User::where("username", $commerce->username)->firstOrFail();
-                    $commerce->tipo = ($user->getRoleNames() == "ayuntamiento")?"ayuntamiento":"commerce";
+                    $userRol = $user->getRoleNames()[0];
+                    $commerce->tipo = ($userRol == "ayuntamiento")?"ayuntamiento":"commerce";
                     $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
                         ->select('user_id')
                         ->where('users.username', '=', $commerce->username)
