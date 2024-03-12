@@ -15,11 +15,15 @@ import router from "@/router/index.js";
 import { RouterLink, RouterView } from "vue-router";
 import { getUserData } from "@/Api/perfiles/perfil.js";
 import { ref } from "vue";
+import eventos from "@/components/perfiles/containers/contenedorVistaEventos.vue";
+import posts from "@/components/perfiles/containers/contenedorVistaPosts.vue";
+import resenias from "@/components/perfiles/containers/contenedorVistaResenias.vue";
+
 let clickedLink = null;
 let userData = ref(null);
 let userExterno = ref(false);
 let linkUsername = ref(router.currentRoute.value.params.username);
-if(linkUsername.value==undefined){
+if (linkUsername.value == undefined) {
   router.push(`/perfil`);
 }
 const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
@@ -51,81 +55,86 @@ if (linkUsername.value == userLogeado.usuario.username) {
   userExterno.value = true;
 }
 
+const isEventos = ref(false)
+const isPosts = ref(false)
+const isResenias = ref(false)
+
+/**
+ * Oculta todos los componentes
+ */
+function ocultar() {
+  isEventos.value = false
+  isPosts.value = false
+  isResenias.value = false
+}
+
+/**
+ * Ejecuta una serie de funciones que requieren de un evento.
+ * Cambia un estilo, oculta todos los contenedores, y muestra uno en concreto
+ * @param {*} evento 
+ */
+function manipulacion(evento) {
+  pintar(evento)
+
+  ocultar();
+  switch (evento.target.value) {
+    case "1":
+    console.log(evento.target.value)
+    isEventos.value = true
+      break;
+    case "2":
+    console.log(evento.target.value)
+    isPosts.value = true
+      break;
+    case "3":
+    console.log(evento.target.value)
+    isResenias.value = true
+      break;
+
+    default:
+      break;
+  }
+}
 //console.log(userData.value)
 </script>
 
 <template>
   <Header />
-  <Grid
-    ><template v-slot:Left></template>
+  <Grid><template v-slot:Left></template>
     <btnAtras titulo="Perfil"></btnAtras>
     <div class="flex flex-col gap-6" v-if="userData != null">
       <div>
-        <imgsPerfil
-          :rutaBaner="userData[0].banner"
-          altTextBaner="foto baner"
-          :rutaPerfil="userData[0].avatar"
-          altTextPerfil="foto perfil"
-        ></imgsPerfil>
+        <imgsPerfil :rutaBaner="userData[0].banner" altTextBaner="foto baner" :rutaPerfil="userData[0].avatar"
+          altTextPerfil="foto perfil"></imgsPerfil>
       </div>
 
       <div class="flex flex-col gap-10 justify-evenly">
         <div class="flex flex-col">
-          <textoEnNegrita
-            :texto="userData[0].username"
-            class="text-base lg:text-xl"
-          />
+          <textoEnNegrita :texto="userData[0].username" class="text-base lg:text-xl" />
         </div>
-        <div
-          class="flex flex-col justify-center lg:items-start gap-10 lg:gap-20 lg:flex-row"
-        >
+        <div class="flex flex-col justify-center lg:items-start gap-10 lg:gap-20 lg:flex-row">
           <div class="flex justify-center lg:items-start gap-28 lg:gap-20">
             <div class="flex flex-col">
-              <textoNormal
-                :texto="userData[0].addess"
-                class="text-sm lg:text-base"
-              />
-              <textoNormal
-                :texto="userData[0].phone"
-                class="text-sm lg:text-base"
-              />
-              <textoNormal
-                :texto="userData[0].email"
-                class="text-sm lg:text-base"
-              />
+              <textoNormal :texto="userData[0].addess" class="text-sm lg:text-base" />
+              <textoNormal :texto="userData[0].phone" class="text-sm lg:text-base" />
+              <textoNormal :texto="userData[0].email" class="text-sm lg:text-base" />
             </div>
-            <contenedorPuntuacion
-              :puntuacion="userData[0].avg"
-              :cantidadResenias="userData[0].review_count"
-            />
+            <contenedorPuntuacion :puntuacion="userData[0].avg" :cantidadResenias="userData[0].review_count" />
           </div>
           <div class="flex flex-row gap-4 justify-center lg:flex-col lg:gap-0">
             <textoEnNegrita texto="Horario:" class="text-sm lg:text-base" />
             <div class="flex flex-col">
-              <textoNormal
-                texto="Lun-Vier: 8:00-15:00"
-                class="text-sm lg:text-base"
-              />
-              <textoNormal
-                texto="Sabado: 8:00-12:00"
-                class="text-sm lg:text-base"
-              />
+              <textoNormal texto="Lun-Vier: 8:00-15:00" class="text-sm lg:text-base" />
+              <textoNormal texto="Sabado: 8:00-12:00" class="text-sm lg:text-base" />
             </div>
           </div>
         </div>
         <div class="flex justify-center items-center gap-40 lg:gap-20">
           <div class="flex flex-col">
-            <textoNormal
-              :texto="userData[0].categories_name"
-              class="text-sm lg:text-base"
-            />
+            <textoNormal :texto="userData[0].categories_name" class="text-sm lg:text-base" />
           </div>
           <div class="flex flex-col">
-            <textoNormal
-              v-for="hashtag in userData[0].hashtags"
-              :texto="hashtag"
-              class="text-sm lg:text-base"
-            />
+            <textoNormal v-for="hashtag in userData[0].hashtags" :texto="hashtag" class="text-sm lg:text-base" />
           </div>
         </div>
         <div class="flex gap-6 justify-center hidden">
@@ -137,47 +146,29 @@ if (linkUsername.value == userLogeado.usuario.username) {
         <!-- <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser> -->
         <div class="flex justify-center">
           <RouterLink to="/perfil/edit" v-if="!userExterno">
-            <btnConText
-              texto="EDIT PROFILE"
-              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
-            ></btnConText>
+            <btnConText texto="EDIT PROFILE" class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48">
+            </btnConText>
           </RouterLink>
           <RouterLink to="" v-if="userExterno">
-            <btnConText
-              texto="Segir"
-              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
-            ></btnConText>
+            <btnConText texto="Segir" class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48">
+            </btnConText>
           </RouterLink>
         </div>
       </div>
 
       <div class="flex w-full justify-center gap-6">
-        <RouterLink :to="`/perfil/${linkUsername}/comercio/posts`">
-          <textoEnNegrita
-            @click="pintar"
-            texto="Posts"
-            class="text-sm lg:text-base"
-            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
-          />
-        </RouterLink>
-        <RouterLink :to="`/perfil/${linkUsername}/comercio/eventos`">
-          <textoEnNegrita
-            @click="pintar"
-            texto="Eventos"
-            class="text-sm lg:text-base"
-            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
-          />
-        </RouterLink>
-        <RouterLink :to="`/perfil/${linkUsername}/comercio/resenias`">
-          <textoEnNegrita
-            @click="pintar"
-            texto="Reseñas"
-            class="text-sm lg:text-base"
-            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
-          />
-        </RouterLink>
+        <textoEnNegrita @click="manipulacion" texto="Posts" class="text-sm lg:text-base"
+          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`" value="1" />
+        <textoEnNegrita @click="manipulacion" texto="Eventos" class="text-sm lg:text-base"
+          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`" value="2" />
+        <textoEnNegrita @click="manipulacion" texto="Reseñas" class="text-sm lg:text-base"
+          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`" value="3" />
+
       </div>
-      <RouterView></RouterView>
+      <!--<RouterView></RouterView>-->
+      <posts v-if="isPosts"></posts>
+      <eventos v-if="isEventos"></eventos>
+      <resenias v-if="isResenias"></resenias>
     </div>
 
     <template v-slot:Right></template>
