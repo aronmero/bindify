@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Follower;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -121,7 +122,6 @@ class FollowersController extends Controller
                 'status' => false,
                 'message' => 'Usuario no encontrado'
             ], 404);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -179,4 +179,67 @@ class FollowersController extends Controller
         }
     }
 
+    /**
+     * Añade como favorito a un usuario seguido.
+     *
+     * Este método permite al usuario autenticado seguir o dejar de seguir a otro usuario especificado por su username.
+     *
+     * @urlParam username string required El username del usuario a seguir o dejar de seguir.
+     *
+     * @authenticated
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "message": "mensaje_de_confirmación"
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
+     */
+    public function favorite(string $username)
+    {
+        try {
+
+            $auth = Auth::user();
+            $userId = User::where('username', $username)->firstOrFail()->id;
+
+            //Comprobar que sigues al usuario
+            try {
+                $seguido = $auth->follows()->where('follows_id', '=', $userId)->firstOrFail();
+            } catch (ModelNotFoundException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Usuario no seguido'
+                ], 403);
+            }
+
+            $favorite = Follower::where('follows_id', $userId)->where('follower_id', $auth->id)->first()->favorito;
+
+            if ($favorite) {
+                Follower::where('follows_id', $userId)->where('follower_id', $auth->id)->update(['favorito' => false]);
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Usuario eliminado de favoritos',
+                ], 200);
+            }
+
+            Follower::where('follows_id', $userId)->where('follower_id', $auth->id)->update(['favorito' => true]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Usuario añadido a favoritos',
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Usuario no encontrado'
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => throw $th
+            ], 404);
+        }
+    }
 }
