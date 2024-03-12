@@ -15,11 +15,11 @@ let userData = ref(null);
 
 // console.log(getUserData("get"));
 
-async function responseCatcher() {
-  userData.value = await getUserData("get");
+async function responseCatcher(metodo,subRuta) {
+  userData.value = await getUserData(metodo, subRuta);
   console.log(userData.value);
 }
-responseCatcher();
+responseCatcher("get","/api/profile");
 
 let clickedLink = null;
 const estilos = {

@@ -18,13 +18,14 @@ import { ref } from "vue";
 let clickedLink = null;
 let userData = ref(null);
 let userExterno = ref(false);
-let linkUsername = router.currentRoute.value.params.username;
+let linkUsername = ref(router.currentRoute.value.params.username);
+if(linkUsername.value==undefined){
+  router.push(`/perfil`);
+}
 const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
 const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
-
-
 
 // Al recargar la pagina se quita la marca arregla a futuro con variables de estado
 // a lo mejor
@@ -42,14 +43,13 @@ async function responseCatcher(metodo, subRuta) {
   console.log(userData.value);
 }
 
-if (linkUsername == userLogeado.usuario.username) {
+if (linkUsername.value == userLogeado.usuario.username) {
   responseCatcher("get", "/api/profile");
 } else {
-  console.log(linkUsername);
-  responseCatcher("get", `/api/user/Brisa Metz`);
+  console.log(linkUsername.value);
+  responseCatcher("get", `/api/user/${linkUsername.value}`);
   userExterno.value = true;
 }
-
 </script>
 
 <template>
@@ -92,7 +92,10 @@ if (linkUsername == userLogeado.usuario.username) {
                 class="text-sm lg:text-base"
               />
             </div>
-            <contenedorPuntuacion puntuacion="4.1" cantidadResenias="312" />
+            <contenedorPuntuacion
+              :puntuacion="userData[0].avg"
+              :cantidadResenias="userData[0].review_count"
+            />
           </div>
           <div class="flex flex-row gap-4 justify-center lg:flex-col lg:gap-0">
             <textoEnNegrita texto="Horario:" class="text-sm lg:text-base" />
@@ -147,7 +150,7 @@ if (linkUsername == userLogeado.usuario.username) {
       </div>
 
       <div class="flex w-full justify-center gap-6">
-        <RouterLink to="/perfil/comercio/posts">
+        <RouterLink :to="`/perfil/${linkUsername}/comercio/posts`">
           <textoEnNegrita
             @click="pintar"
             texto="Posts"
@@ -155,7 +158,7 @@ if (linkUsername == userLogeado.usuario.username) {
             :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
           />
         </RouterLink>
-        <RouterLink to="/perfil/comercio/eventos">
+        <RouterLink :to="`/perfil/${linkUsername}/comercio/eventos`">
           <textoEnNegrita
             @click="pintar"
             texto="Eventos"
@@ -163,7 +166,7 @@ if (linkUsername == userLogeado.usuario.username) {
             :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
           />
         </RouterLink>
-        <RouterLink to="/perfil/comercio/resenias">
+        <RouterLink :to="`/perfil/${linkUsername}/comercio/resenias`">
           <textoEnNegrita
             @click="pintar"
             texto="Reseñas"

@@ -46,14 +46,14 @@ const routes = [
       {path:"posts", component:() => import("@/components/perfiles/containers/contenedorVistaPosts.vue")},
       {path:"eventos", component:() => import("@/components/perfiles/containers/contenedorVistaEventos.vue")}
     ]},
-  { path: "/perfil/comercio/:username", name:"perfilComercio",component: () => import("@/views/perfiles/comercio.vue"),
+  { path: "/perfil/:username/comercio", name:"perfilComercio",component: () => import("@/views/perfiles/comercio.vue"),
    children:[
     {path:"posts", component:() => import("@/components/perfiles/containers/contenedorVistaPosts.vue")},
     {path:"eventos", component:() => import("@/components/perfiles/containers/contenedorVistaEventos.vue")},
     {path:"resenias", component:() => import("@/components/perfiles/containers/contenedorVistaResenias.vue")}
   ]},
 
-  { path: "/perfil/particular", component: () => import("@/views/perfiles/particular.vue"), 
+  { path: "/perfil/particular/:username", component: () => import("@/views/perfiles/particular.vue"), 
   children:[
     {path:"fidelidad", component:() => import("@/components/perfiles/containers/contenedorVistaFidelidad.vue")},
     {path:"favoritos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")}

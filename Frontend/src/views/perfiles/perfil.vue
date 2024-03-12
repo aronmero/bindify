@@ -23,10 +23,10 @@ if (username == undefined) {
 
 switch (tipoUsuario.value) {
   case "commerce":
-    router.push(`/perfil/comercio/${username}`);
+    router.push(`/perfil/${username}/comercio`);
     break;
   case "customer":
-    router.push(`/perfil/customer/${username}`);
+    router.push(`/perfil/particular/${username}`);
     break;
   case "ayuntamiento":
     router.push(`/perfil/ayuntamiento/${username}`);
