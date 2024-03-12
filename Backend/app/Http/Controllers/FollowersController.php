@@ -179,4 +179,83 @@ class FollowersController extends Controller
         }
     }
 
+    /**
+     * Añade como favorito a un usuario seguido.
+     *
+     * Este método permite al usuario autenticado seguir o dejar de seguir a otro usuario especificado por su username.
+     *
+     * @urlParam username string required El username del usuario a seguir o dejar de seguir.
+     *
+     * @authenticated
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "message": "mensaje_de_confirmación"
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
+     */
+    public function favorite(string $username)
+    {
+        try {
+
+            $usuarioSeguir = User::where('username', $username)->firstOrFail();
+
+            $user = Auth::user();
+            $mensaje = "";
+            $follows = DB::table("followers")
+                ->join('users', 'followers.follows_id', '=', 'users.id')
+                ->select('followers.follows_id', 'avatar', 'username')
+                ->where('followers.follower_id', '=', $user->id)
+                ->get();
+            $seguir = true;
+
+            $auth = Auth::user();
+                    $userId = User::where('username', $commerce->username)->firstOrFail()->id;
+
+                    $seguido = $auth->follows()->where('follows_id', '=', $userId)->first();
+
+                    if ($seguido) {
+                        $commerce->followed = true;
+                        if ($auth->follows()->where('follows_id', '=', User::where('username', $commerce->username)->first()->id)->where('favorito', '=', true)->first()) {
+                        $commerce->favorite = true;
+                        }
+                        $commerce->favorite = false;
+                    }else{
+                        $commerce->followed = false;
+                    }
+
+
+
+            if (!$seguir) {
+                $user->follows()->detach($usuarioSeguir->id);
+                $mensaje = "Usuario dejado de seguir";
+            } else {
+                $user->follows()->attach($usuarioSeguir->id);
+                $mensaje = "Usuario seguido";
+            }
+
+
+            return response()->json([
+                'status' => true,
+                'message' => $mensaje,
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Usuario no encontrado'
+            ], 404);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => throw $th
+            ], 404);
+        }
+    }
+
+
 }
