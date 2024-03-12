@@ -59,12 +59,12 @@ const abrirModal = () => {
             <p class=" description  sm:block md:block hidden xl:block" :title="post.description">{{ post.description }}</p>
             <!-- Campo Municipio -->
             <p class=" campo mt-3 h-[20px] flex items-center  ">
-                <img :src="LocationSVG" class=" w-[20px] mr-1 " alt="Ubicacion:" title="Ubicacion del evento">
+                <img :src="LocationSVG" class=" w-[20px] mr-1 " alt="Ubicacion:">
                 {{ post.municipality }}
             </p>
             <p class=" campo mt-3 h-[20px] flex items-center  " >
-                <img :src="DiaSVG" class=" w-[20px] mr-1 " alt="Fecha de inicio:" title="Fecha de Inicio"> <b> {{ post.start_date }}  </b>
-                <img :src="DiaSVG" class=" ml-2 w-[20px] mr-1 " alt="Fecha de fin:" title="Fecha de fin"> <b>{{ post.end_date }}</b>
+                <img :src="DiaSVG" class=" w-[20px] mr-1 " alt="Fecha de inicio:"> <b>Inicio: {{ post.start_date }}  </b>
+                <img :src="DiaSVG" class=" ml-2 w-[20px] mr-1 " alt="Fecha de fin:"> <b>Fin: {{ post.end_date }}</b>
             </p>
         </div>
         <div class="">
