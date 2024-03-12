@@ -431,8 +431,8 @@ class PostsController extends Controller
                     'username' => $comment->user->username,
                     'content' => $comment->content,
                     'comment_id' => $comment->id,
+                    //crypt'comment_id' => Crypt::encryptString($comment->id),
                     'avatar' => $comment->user->avatar,
-                    'user_id' => $comment->user->id
                 ];
                 $formattedComments[] = $formattedComment;
             }
@@ -447,7 +447,6 @@ class PostsController extends Controller
                     'name' => $user->name,
                     'username' => $user->username,
                     'avatar' => $user->avatar,
-                    'id' => $user->id
                 ];
                 $formattedUsers[] = $formattedUser;
             }

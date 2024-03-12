@@ -55,7 +55,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     /** Añadido por David */
     Route::get('home_todos', [PostsController::class, 'home_todos']);
     Route::get('home_calendario', [PostsController::class, 'home_calendario']);
-    Route::get('comment_detailed/{id}', [CommentsController::class, 'show_home']);
 });
 
 Route::apiResource('municipality', MunicipalitiesController::class)->only('index');

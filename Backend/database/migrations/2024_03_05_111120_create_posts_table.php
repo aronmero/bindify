@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('image')->nullable();
+            $table->string('image')->nullable()->default('default');
             $table->string('title');
             $table->string('description', 300)->default("");
             $table->foreignId('post_type_id')->constrained()->nullable();
