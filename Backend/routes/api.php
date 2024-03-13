@@ -45,7 +45,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('profile', [UsersController::class,'profile']);
     Route::get('user/{username}/posts', [UsersController::class , 'posts']);
     Route::get('user/{username}/events', [UsersController::class, 'events']);
-// Route::apiResource('post_type', Post_typesController::class)->except(['show', 'update', 'destroy', 'store']);
+    //Route::apiResource('post_type', Post_typesController::class)->except(['show', 'update', 'destroy', 'store']);
 // Route::apiResource('notification', NotificationsController::class)->except(['index', 'destroy']);
     Route::get('follower', [FollowersController::class , 'showFollowers']);
     Route::post('follow/{id}', [FollowersController::class , 'follow']);

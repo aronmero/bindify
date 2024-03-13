@@ -1,4 +1,4 @@
-import { urlApiHome as urlApi, genOptions, genOptionsWithoutBody } from "../api";
+import { urlApi as urlApi, genOptions, genOptionsWithoutBody } from "../api";
 
 
 /**

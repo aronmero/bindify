@@ -1,6 +1,6 @@
 //http://127.0.0.1:8000/api/review/Ayden%20Labadie
 
-import { urlApiHome as urlApi, genOptions, genOptionsWithoutBody } from "../api";
+import { urlAp as urlApi, genOptions, genOptionsWithoutBody } from "../api";
 
 export async function obtener_comentarios_post(username) {
     const options = genOptionsWithoutBody('GET');

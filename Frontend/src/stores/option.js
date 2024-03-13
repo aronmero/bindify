@@ -4,7 +4,9 @@ export const optionSelected = defineStore({
     id : "idOptionSelected",
     state: () =>({
         optionSelected : (""),
-        optionSelectedLocation : ("")
+        optionSelectedLocation : (""),
+        optionSelectedHashtag : (""),
+        optionSelectedPost : (""),
 
     }),
     actions : {
@@ -19,6 +21,19 @@ export const optionSelected = defineStore({
         },
         setOptionSelectedLocation(option){
             this.optionSelectedLocation = option; 
+        },
+        getOptionSelectedHashtag(){
+            return this.optionSelectedHashtag;
+        },
+        setOptionSelectedHashtag(option){
+            this.optionSelectedHashtag = option; 
+        },
+        getOptionSelectedPost(){
+            return this.optionSelectedPost;
+        },
+        setOptionSelectedPost(option){
+            console.log(option);
+            this.optionSelectedPost = option; 
         }
 
     }
