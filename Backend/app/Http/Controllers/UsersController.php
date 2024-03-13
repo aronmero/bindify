@@ -15,6 +15,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
 {
@@ -179,11 +180,11 @@ class UsersController extends Controller
                     if ($seguido) {
                         $commerce->followed = true;
                         if (Follower::where('follows_id', $userId)->where('follower_id', $auth->id)->first()->favorito) {
-                        $commerce->favorite = true;
-                        }else{
+                            $commerce->favorite = true;
+                        } else {
                             $commerce->favorite = false;
                         }
-                    }else{
+                    } else {
                         $commerce->followed = false;
                     }
 
@@ -243,23 +244,54 @@ class UsersController extends Controller
             $request->request->remove("username");
             $request->request->remove("phone");
             $request->request->remove("email");
+
             // Busca al usuario por su nombre de usuario
             $user = User::where("username", $username)->firstOrFail();
             // Revisa si el usuario es él mismo el que se va a cambiar
             if (Auth::user()->id != $user->id) {
                 return response()->json(["status" => false, "message" => "No autorizado"], 401);
             }
+
             // Determina el rol del usuario
             if ($user->getRoleNames() == "customer") {
+
                 // Si el usuario es un cliente, actualiza los detalles como cliente
                 $customer = Customer::where('user_id', $user->id)->first();
-                $customer->fill($request->all());
+                $customer->fill($request->except('avatar', 'banner'));
+
+                if ($request->hasFile('avatar')) {
+                    $avatar = $request->file('avatar');
+                    Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
+                    $customer->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
+                }
+                
+                if ($request->hasFile('banner')) {
+                    $banner = $request->file('banner');
+                    Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
+                    $customer->banner = asset('storage/avatars/' . $request->username . '/banner.webp');
+                }
+
                 $customer->save();
                 $updatedUser = $customer->user;
+
             } else {
                 // Si el usuario es un comercio, actualiza los detalles como comercio
                 $commerce = Commerce::where('user_id', $user->id)->first();
-                $commerce->fill($request->all());
+
+                $commerce->fill($request->except('avatar', 'banner'));
+
+                if ($request->hasFile('avatar')) {
+                    $avatar = $request->file('avatar');
+                    Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
+                    $commerce->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
+                }
+                
+                if ($request->hasFile('banner')) {
+                    $banner = $request->file('banner');
+                    Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
+                    $commerce->banner = asset('storage/avatars/' . $request->username . '/banner.webp');
+                }
+
                 $commerce->save();
                 $updatedUser = $commerce->user;
             }
@@ -666,7 +698,7 @@ class UsersController extends Controller
 
                     $user = User::where("username", $commerce->username)->firstOrFail();
                     $userRol = $user->getRoleNames()[0];
-                    $commerce->tipo = ($userRol == "ayuntamiento")?"ayuntamiento":"commerce";
+                    $commerce->tipo = ($userRol == "ayuntamiento") ? "ayuntamiento" : "commerce";
                     $commerceId = Commerce::join('users', 'commerces.user_id', '=', 'users.id')
                         ->select('user_id')
                         ->where('users.username', '=', $commerce->username)
@@ -676,7 +708,8 @@ class UsersController extends Controller
                     $commerce->hashtags = $hashtags;
                 });
                 return response()->json([
-                    "status" => true, "data" => $commerce
+                    "status" => true,
+                    "data" => $commerce
                 ], 200);
             } catch (QueryException $e) {
                 return response()->json(["status" => false, "error" => $e->getMessage()], 500);
