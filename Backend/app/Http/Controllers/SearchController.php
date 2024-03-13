@@ -66,7 +66,8 @@ class SearchController extends Controller
                         'posts.title',
                         'posts.description',
                         'post_types.name AS post_type',
-                        'posts.start_date as publicated_date'
+                        'posts.start_date as publicated_date',
+                        'commerces.avg'
                     )
                     ->where('commerces.active', '=', true)
                     ->where('posts.active', '=', true)
@@ -95,6 +96,7 @@ class SearchController extends Controller
                 $posts->each(function ($post) {
                     $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
                     $post->post_id = Crypt::encryptString($post->post_id);
+
                 });
 
                 return response()->json([
