@@ -6,8 +6,7 @@ import Header from "@/components/comun/header.vue";
 import Footer from "@/components/comun/footer.vue";
 
 import Input from "@/components/comun/input.vue";
-import { crearPublicacion } from "../../Api/publicacion/publicacion";
-let options = [{id: 1, name: "Publicación"}, {id: 2, name: "Evento"}];
+let options = ["Publicación", "Evento"]; /* Cambiar por info del back */
 let tipo = ref(null);
 let errorDesc = ref(null);
 let errorType = ref(null);
@@ -27,7 +26,7 @@ const mostrarInformacion = (e)=>{
         tipo.value = opcionSeleccionada[0].textContent;
     }
 }
-const tratarDatos = async()=>{
+const tratarDatos = ()=>{
     console.log(titulo.value);
     console.log(descripcion.value);
     console.log(imagen.value);
@@ -53,27 +52,6 @@ const tratarDatos = async()=>{
             errorDesc.value = null;
             errorType.value = null;
             errorDate.value = null;
-            if(publiTipo.value == 1){
-                let datos = {
-                    "title": titulo.value, 
-                    "imagen": imagen.value, 
-                    "description": descripcion.value,
-                    "post_type_id": publiTipo.value,
-                };
-                let respuesta = await crearPublicacion("POST", datos);
-                console.log(respuesta);
-            }else{
-                let datos = {
-                    "title": titulo.value, 
-                    "imagen": imagen.value,
-                    "description": descripcion.value,
-                    "post_type_id": publiTipo.value,
-                    "start_date": fechaInicio.value, 
-                    "end_date": fechaFin.value
-                };
-                let respuesta = await crearPublicacion("POST", datos);
-                console.log(respuesta);
-            }
         }
     }else{
         errorTitle.value = "Es necesario indicar el título de la publicación";
@@ -85,7 +63,7 @@ const tratarDatos = async()=>{
     <Header />
     <Grid>
         <template v-slot:Left></template>
-        <template class="flex flex-col items-center justify-center lg:mt-10">
+        <tempalte class="flex flex-col items-center justify-center">
             <header class="flex items-center relative w-[90vw] justify-center">
                 <button class="lg:hidden absolute left-0">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
@@ -114,7 +92,7 @@ const tratarDatos = async()=>{
                     </div>
                 </form>
             </section>
-        </template>
+        </tempalte>
         <template v-slot:Right></template>
     </Grid>
     <Footer />
