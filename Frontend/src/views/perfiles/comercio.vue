@@ -13,7 +13,11 @@ import contenedorFollower from "@/components/perfiles/containers/contenedorFollo
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import router from "@/router/index.js";
 import { RouterLink, RouterView } from "vue-router";
-import { getUserData, followUser, aniadirFavorito } from "@/Api/perfiles/perfil.js";
+import {
+  getUserData,
+  followUser,
+  aniadirFavorito,
+} from "@/Api/perfiles/perfil.js";
 import { ref } from "vue";
 
 import eventos from "@/components/perfiles/containers/contenedorVistaEventos.vue";
@@ -257,6 +261,13 @@ function manipulacion(evento) {
             >
             </btnConText>
           </RouterLink>
+          <RouterLink to="/tarjeta-fidelidad" v-if="!userExterno && isCustomer" >
+            <btnConImg
+              ruta="/assets/icons/qrCode.svg"
+              altText="icono codigo qr"
+              :borde="true"
+            ></btnConImg>
+          </RouterLink>
 
           <btnConText
             @click="responseCatcherFollow"
@@ -275,14 +286,18 @@ function manipulacion(evento) {
           </btnConText>
           <btnConText
             @click="responseCatcherFavoritos"
-            v-if="userExterno && !isCustomer && !cambioAFavorito && cambioAFollowed"
+            v-if="
+              userExterno && !isCustomer && !cambioAFavorito && cambioAFollowed
+            "
             texto="Añadir a Favoritos"
             class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
           >
           </btnConText>
           <btnConText
             @click="responseCatcherFavoritos"
-            v-if="userExterno && !isCustomer && cambioAFavorito && cambioAFollowed"
+            v-if="
+              userExterno && !isCustomer && cambioAFavorito && cambioAFollowed
+            "
             texto="Quitar de Favoritos"
             class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
           >
