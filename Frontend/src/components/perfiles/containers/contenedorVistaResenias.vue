@@ -6,6 +6,7 @@ import { getUserReviews } from "@/Api/perfiles/perfil.js";
 import router from "@/router/index.js";
 import { ref } from "vue";
 let userReviews = ref(null);
+const show = ref(false);
 let linkUsername = ref(router.currentRoute.value.params.username);
 console.log(linkUsername.value);
 async function responseCatcher() {
@@ -13,17 +14,17 @@ async function responseCatcher() {
     "get",
     `/api/review/${linkUsername.value}`
   );
+  show.value = true;
   console.log(userReviews.value);
 }
 responseCatcher();
 </script>
 <template>
-  <contenedorResenia
-    v-for="review in userReviews"
-    :rutaPerfil="review.avatarUsuario"
-    :nombre="review.username"
-    :texto="review.comment"
-  ></contenedorResenia>
+  <template v-if="show">
+    <contenedorResenia v-if="userReviews != null && userReviews.length > 0" v-for="review in userReviews"
+      :rutaPerfil="review.avatarUsuario" :nombre="review.username" :texto="review.comment"></contenedorResenia>
+    <div v-else class="flex justify-center">No hay reseñas</div>
+  </template>
 </template>
 <style scoped></style>
 
