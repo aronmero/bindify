@@ -16,6 +16,7 @@
         const posts_request = await obtener_posts();
         console.log("obtenido feed por defecto");
         const posts = posts_request.data;
+        console.log(posts_request.data);
     //}
     
 </script>
