@@ -14,6 +14,7 @@
     import { onMounted, ref, watch } from 'vue';
     import { actualSection } from "@/stores/actualSection";
     import postsResults from "@/components/search/postsResults.vue";
+    import infoSVG from "/assets/icons/infoSVG.svg";
     
    
     
@@ -57,7 +58,9 @@
                 <Filter />
            </div>
            <div v-if="loading">
-                <h3 class="text-center text-xl text-[#b2b2b2] animate-bounce">cargando {{ actualSectionAux.getActualSection().toLowerCase() }}...</h3>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <h3 class="font-bold text-4xl text-[#fe822f] animate-bounce">Bindify</h3>
+            </div>
             </div>
             <div v-else class="flex flex-col justify-center gap-y-8">
                 <hashtagSection :popularsHastags="popularsHastags" v-show="section === 'comercios'"/>
@@ -66,7 +69,10 @@
                 <Menu title="localizaciones" :menuOptions="locationOptions" v-show="section === 'comercios'" />
                 <Menu title="posts" :menuOptions="tiposPost" v-show="section === 'Posts'" />
                 <button @click="resetFilters" class="text-right font-semibold rounded-full text-sm flex-none" id="results">resetear filtros</button>
-                <p class="text-[#c6c6c6] mb-[-10px] text-md " >{{ filteredResults.length > 1 ? filteredResults.length + " " +  section + " encontrados" : filteredResults.length === 0 ? "Sin resultados" :  filteredResults.length +  " comercio encontrado" }}</p>
+                <div class="flex items-center gap-x-1">
+                    <img :src="infoSVG" alt="info" class="size-4 mt-[11.2px]" />
+                    <p class="text-[#c6c6c6] mb-[-10px] text-md " >{{ filteredResults.length > 1 ? filteredResults.length + " " +  section + " encontrados" : filteredResults.length === 0 ? "Sin resultados" :  filteredResults.length +  " comercio encontrado" }}</p>
+                </div>
                 <commercesResults :comercios="filteredResults" v-show="section === 'comercios'"/>
                 
             </div>
