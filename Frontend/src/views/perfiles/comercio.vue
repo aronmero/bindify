@@ -275,6 +275,13 @@ function manipulacion(evento) {
             >
             </btnConText>
           </RouterLink>
+          <RouterLink to="/resenia" v-if="userExterno && !isCustomer && userData.tipo != 'ayuntamiento'">
+            <btnConImg
+              ruta="/assets/icons/christmasStar.svg"
+              altText="icono codigo qr"
+              :borde="true"
+            ></btnConImg>
+          </RouterLink>
           <RouterLink to="/tarjeta-fidelidad" v-if="!userExterno && isCustomer">
             <btnConImg
               ruta="/assets/icons/qrCode.svg"

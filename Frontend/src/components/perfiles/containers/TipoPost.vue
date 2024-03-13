@@ -14,6 +14,7 @@ const userData = JSON.parse(sessionStorage.getItem("userData"));
 console.log(userData.userData[0]);
 import { datetranslate } from "@/components/feed_media/helpers/datetranslate.js";
 import router from "@/router/index.js";
+import { RouterLink } from "vue-router";
 const props = defineProps({
   post: Object,
 });
@@ -93,7 +94,7 @@ if (tipo == 'Evento') IconoTipo = TipoEvento;
     </div>
 
     <!-- Contenedor de botones del post -->
-    <div class="post-footer w-[100%] h-[50px] flex pt-5 pb-5">
+    <div class="post-footer w-[100%] h-[50px] flex pt-5 pb-5 hidden">
       <!-- Rating -->
       <button class="flex flex-row items-center mr-3 hidden">
         <img @click="redirect(`evento/${post.post_id}`)" :src="StarSVG" />
@@ -101,12 +102,12 @@ if (tipo == 'Evento') IconoTipo = TipoEvento;
       </button>
 
       <!-- Guardar -->
-      <button class="flex flex-row items-center mr-3">
+      <button class="flex flex-row items-center mr-3 " >
         <img :src="BookmarkSVG" />
       </button>
 
       <!-- Compartir -->
-      <button class="flex flex-row items-center mr-3">
+      <button class="flex flex-row items-center mr-3 ">
         <img :src="ShareSVG" />
       </button>
     </div>
@@ -126,17 +127,19 @@ if (tipo == 'Evento') IconoTipo = TipoEvento;
       :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`"
     >
       <!-- Botón ver perfil -->
-      <button
-        @click="redirect(`comercio/${userData.userData[0].username}`)"
-        :class="`${estilos.modal_button} m-2 `"
-      >
-        <img class="w-[30px] h-[30px] mr-3" :src="UserSVG" />
-        Ver perfil
-      </button>
+      <RouterLink :to="`/post/${post.post_id}`">
+        <button
+          :class="`${estilos.modal_button} m-2 `"
+        >
+          <img class="w-[30px] h-[30px] mr-3" :src="UserSVG" />
+          Detalles
+        </button>
+
+      </RouterLink>
       <!-- Botón ver reseñas comercio -->
       <button :class="`${estilos.modal_button} m-2 `">
         <img class="w-[30px] h-[30px] mr-3" :src="StarSVG" />
-        Reseñas
+        Editar
       </button>
     </div>
   </article>
