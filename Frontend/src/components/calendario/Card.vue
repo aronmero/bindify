@@ -48,13 +48,13 @@ const abrirModal = () => {
 <template>
     <div class=" card w-[100%] p-4 rounded-xl relative " :data-start_date="post.start_date" :data-end_date="post.end_date">
         <!-- Imagen del post -->
-        <div class=" img-wrapper w-[110px] h-[150px] overflow-hidden rounded-xl mr-2">
-            <img class=" img min-w-[100%] cursor-pointer  " :src="post.image" alt="" @click="() => redirect(`evento/${post.post_id}`)">
+        <div class=" img-wrapper min-w-[110px] w-[110px] h-[200px] overflow-hidden rounded-xl mr-2">
+            <img class=" img min-w-[100%] cursor-pointer object-cover object-center  " :src="post.image" alt="" @click="() => redirect(`evento/${post.post_id}`)">
         </div>
         <!-- Contenido del Post -->
         <div class=" wrapper ">
             <!-- Título -->
-            <h2 class=" primary ">{{ post.title }}</h2>
+            <h2 class=" primary max-w-[100px] overflow-hidden">{{ post.title }}</h2>
             <!-- Descripcion -->
             <p class=" description  sm:block md:block hidden xl:block" :title="post.description">{{ post.description }}</p>
             <!-- Campo Municipio -->
@@ -65,6 +65,10 @@ const abrirModal = () => {
             <p class=" campo mt-3 h-[20px] flex items-center  " >
                 <img :src="DiaSVG" class=" w-[20px] mr-1 " alt="Fecha de inicio:"> <b>Inicio: {{ post.start_date }}  </b>
                 <img :src="DiaSVG" class=" ml-2 w-[20px] mr-1 " alt="Fecha de fin:"> <b>Fin: {{ post.end_date }}</b>
+            </p>
+            <p class=" campo mt-3 h-[20px] flex items-center  " >
+                <img :src="UserSVG" class=" w-[20px] mr-1 " alt="Fecha de inicio:"> <b>{{ post.username }}  </b>
+            
             </p>
         </div>
         <div class="">
@@ -81,10 +85,10 @@ const abrirModal = () => {
                 Ver perfil
             </button> 
             <!-- Botón ver reseñas comercio -->
-            <button @click="share(post.title, post.description, `post/${post.post_id}`)" :class="`flex items-center font-medium w-[100%] m-2 `">
+            <!-- <button @click="share(post.title, post.description, `post/${post.post_id}`)" :class="`flex items-center font-medium w-[100%] m-2 `">
                 <img class="w-[30px] h-[30px]  mr-3 " :src="ShareSVG" />
                 Compartir
-            </button>
+            </button> -->
         </div>
     </div>
 </template>
