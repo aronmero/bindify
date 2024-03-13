@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,onBeforeUnmount } from 'vue';
 // import Comentario from '../widgets/Comentario.vue';
 import router from '@/router/index.js'
 import BackSVG from '@public/assets/icons/forward.svg';
@@ -13,17 +13,12 @@ const comentario_handler = ref(null);
  */
 const modal = ref(null);
 const user = JSON.parse(sessionStorage.getItem("usuario"));
-/**
- * Bloqueamos overflow en background
- * */
 
-document.body.style.overflow = "hidden";
 /**
  * Redirecciona a Home
  * */
 const back = () => {
     router.push('/');
-    document.body.style.overflow = "scroll";
 }
 
 let data = ref({status:false});
@@ -39,7 +34,7 @@ callApi();
 <template>
     <KeepAlive>
 
-        <div ref="modal" class="screen-modal flex flex-col items-center py-[50px]">
+        <div ref="modal" class="screen-modal flex flex-col items-center py-[50px] ">
             <!-- El wrapper para dar forma al contenedor del centro -->
             <div
                 class="wrapper h-[90%] sm:h-[80%] md:h-[90%] xl:h-[85%] 2xl:w-[40%] xl:w-[60%] lg:w-[60%] md:w-[100%] sm:w-[100%] w-[100%] mt-5relative ">
@@ -54,10 +49,11 @@ callApi();
                 </nav>
                 <!-- El listado de comentarios -->
                 <div v-if="data.status" ref="comentario_handler"
-                    class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
+                    class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%] flex gap-[25px] flex-col pr-[15px] pl-[15px]">
                     <notificacion v-for="not in data.data" :notificacion="not"></notificacion>
+                    
                 </div>
-
+                    <div v-if=" data.data !=undefined && data.data.length==0" class="flex justify-center">No hay notificaciones en este momento</div>
 
             </div>
         </div>
@@ -65,24 +61,16 @@ callApi();
 </template>
 
 <style scoped lang="scss">
-body {
-    overflow: hidden;
-}
+
 
 .screen-modal {
-    background: rgba(255, 255, 255, 1);
-    position: fixed;
     width: 100%;
     height: 100%;
     left: 0px;
     top: 0;
-    overflow: hidden;
     z-index: 50;
-    overscroll-behavior: contain;
 
     .wrapper {
-        scroll-behavior: smooth;
-
         nav {
             h2 {
                 font-weight: bold;
