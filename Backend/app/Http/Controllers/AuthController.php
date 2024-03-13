@@ -116,7 +116,28 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-        // Validación de la solicitud
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $banner = $request->file('banner');
+            Storage::disk('avatars')->putFileAs($request->username , $avatar, 'imagenPerfil.webp');
+            Storage::disk('avatars')->putFileAs($request->username , $banner, 'banner.webp');
+
+
+        /*     return response()->json([
+                'success' => true,
+                'empresa' => $request->empresa,
+                'message' => 'Avatar received successfully',
+                'avatar_name' => $avatar->getClientOriginalName(),
+                'avatar_size' => $avatar->getSize(),
+                'existe_archivo' => Storage::disk('avatars')->exists($request->username),
+                'avatar_url' => asset('storage/avatars/'.$request->username.'/imagenPerfil.webp'),
+            ]); */
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'No avatar file attached'
+            ], 400);
+        }
         if ($request->empresa == true) {
             $request->validate([
                 'phone' => 'required', // Establece las reglas para el avatar
@@ -136,7 +157,7 @@ class AuthController extends Controller
                 'password' => $request->password,
                 'phone' => $request->phone,
                 'municipality_id' => $request->municipality_id,
-                'avatar' => $avatarPath, // Guarda la ruta del avatar en la base de datos
+                'avatar' => asset('storage/avatars/'.$request->username.'/imagenPerfil.webp'),
                 'username' => $request->username,
                 'name' => $request->name
             ]);
@@ -207,6 +228,7 @@ class AuthController extends Controller
         $tipo = $user->getRoleNames();
 
         $response = [
+            'status' => true,
             'message' => 'Usuario creado correctamente',
             'user' => $user,
             'token' => $token,

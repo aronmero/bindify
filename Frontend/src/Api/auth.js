@@ -12,11 +12,18 @@ export async function login(email,pass) {
     console.error(error);
   }
 }
-export async function register(data) {
-  let datosRecibidos = data;
+export async function register(datos) {
   try {
-    const datos = JSON.stringify(datosRecibidos);
-    const options = genOptionsRegister("POST", datos);
+    let formData = new FormData();
+    for(let clave in datos){
+        if(clave == 'avatar'){
+            formData.append(clave, datos[clave], 'avatar');
+        }else{
+            formData.append(clave, datos[clave]);
+        }
+    }
+    /* const datos = JSON.stringify(datosRecibidos); */
+    const options = genOptionsRegister("POST", formData);
     const response = await fetch(
       `${urlApi}/api/register`,
       options
@@ -49,9 +56,8 @@ export const genOptionsRegister = (metodo, body = null) => {
   return {
     method: metodo,
     headers: {
-      "Content-Type": "application/json",
       "User-Agent": "insomnia/8.6.0",
-      Accept: "application/json",
+      "Accept": "application/json",
     },
     body: body,
   };

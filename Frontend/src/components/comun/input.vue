@@ -42,7 +42,8 @@ const emitirDatos = (e)=>{
         emit("datos", e.target.value);
     }
 }
-const borrarImagen = ()=>{
+const borrarImagen = (e)=>{
+    e.target.parentNode.parentNode.children[1].value = null;
     imagenSubida.value = null;
 }
 </script>
@@ -58,14 +59,15 @@ const borrarImagen = ()=>{
         <input @change="emitirDatos" v-if="tipo == 'button' && clase == null" :type="tipo" class="ps-12 bg-background-100 text-text-950 py-3 rounded-xl w-fit px-4 cursor-pointer" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'button' && clase == 'social'" :type="tipo" class="ps-12 bg-background-100 text-text-950 py-5 rounded-xl w-fit px-6 cursor-pointer" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'submit' && clase == 'claro'" :type="tipo" :value="valor" class="bg-secondary-400 text-text-950 py-3 px-1 rounded-xl cursor-pointer">
-        <input @change="emitirDatos" v-if="tipo == 'submit' && clase == 'oscuro'" :type="tipo" :value="valor" class="bg-background-800 text-text-50 py-3 px-1 rounded-xl cursor-pointer">
+        <input @change="emitirDatos" v-if="tipo == 'submit' && clase == 'oscuro'" :type="tipo" :value="valor" class="bg-background-800 hover:bg-background-700 text-text-50 py-3 px-1 rounded-xl cursor-pointer">
         <input @change="emitirDatos" v-if="tipo == 'file'" accept="image/*" :type="tipo" hidden>
         <input @change="emitirDatos" v-if="tipo == 'hora'" type="time" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'fecha'" type="date" :min="diaActual" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'fechaLibre'" type="date" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <select @change="emitirDatos" v-if="tipo == 'selection'" class="bg-background-100 text-text-950 py-3 px-1 text-center rounded-xl cursor-pointer">
             <option value="" disabled selected>{{ placeholder }}</option>
-            <option v-for="(value, clave) in opciones" :value="clave" :selected="value == valor" :id="value.id">{{ value.name }}</option>
+            <option v-if="valor != null" v-for="(value, clave) in opciones" :value="clave" :selected="value.name == valor" :id="value.id">{{ value.name }}</option>
+            <option v-else v-for="(value, clave) in opciones" :value="clave" :id="value.id">{{ value.name }}</option>
         </select>
         <textarea @change="emitirDatos" v-if="tipo == 'texto'" class="ps-10 bg-background-100 text-text-950 py-3 px-1 rounded-xl resize-none h-[15rem]" :placeholder="placeholder" :value="valor"></textarea>
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'perfil'" class="flex relative lg:size-40 size-28 justify-center items-center rounded-full border-dotted border border-background-900">
@@ -89,7 +91,7 @@ const borrarImagen = ()=>{
         <button @click="borrarImagen" v-if="imagenSubida != null" class="relative cursor-pointer">
             <img 
                 src="/assets/icons/delete.svg"
-                class="max-w-[40px] max-h-[40px] lg:block absolute bottom-1 left-0 bg-primary-500 rounded-lg p-2"
+                class="max-w-[40px] max-h-[40px] lg:block absolute bottom-1 left-0 hover:bg-primary-500 bg-primary-400 rounded-[0.625rem] p-2"
             />
         </button>
         <div v-if="tipo == 'button' && clase == null" class="relative flex flex-row items-center justify-start">
