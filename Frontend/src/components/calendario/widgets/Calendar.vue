@@ -66,7 +66,6 @@
         let start_date = new Date(date_start_sql).getTime();
         let end_date = new Date(date_end_sql).getTime();
         return start_date <= isChosen && end_date >= isChosen || date_start_sql == "" && date_end_sql == "";
-
     }
 
     const cambiarFecha = (day) => {

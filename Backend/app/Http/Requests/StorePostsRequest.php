@@ -22,12 +22,12 @@ class StorePostsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'string', // Imagen del post
+            'image' => 'nullable|file', // Imagen del post
             'title' => 'required|string|max:255', // Titulo del post
             'description' => 'string|max:300', // Descripción del post
             'post_type_id' => 'required|integer', // Id de tipo de publicación
-            'start_date' => 'date|after_or_equal:today', // Fecha en la que inicia el evento
-            'end_date' => 'date|after:start_date', // Fecha en la que termina el evento
+            'start_date' => 'nullable|date|after_or_equal:today', // Fecha en la que inicia el evento
+            'end_date' => 'nullable|date|after_or_equal:start_date', // Fecha en la que termina el evento
         ];
     }
 

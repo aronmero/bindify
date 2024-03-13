@@ -7,6 +7,7 @@ import Footer from "@/components/comun/footer.vue";
 
 import Input from "@/components/comun/input.vue";
 import { useRouter } from "vue-router";
+import { postUserReview } from "@/Api/perfiles/perfil.js";
 let options = ["Publicación", "Evento"]; /* Cambiar por info del back */
 let tipo = ref(null);
 let errorTitle = ref(null);
@@ -32,14 +33,13 @@ const valoraciones = {
     "estrella5": "Muy buena"
 }
 
-const tratarDatos = ()=>{ /* Revisar */
+const tratarDatos = async()=>{ 
     console.log(titulo.value);
     console.log(descripcion.value);
     console.log(imagen.value);
     console.log(fecha.value);
     console.log(puntuacion.value);
     if(titulo.value != null){
-        /* Revisar error en el que cuando pones una descripcion y luego la quitas te deja de aparecer el error, comprobar el length del value */
         if(descripcion.value == null){
             errorTitle.value = null;
             errorDesc.value = "Es necesario explicar un poco tu experiecia.";
@@ -51,13 +51,21 @@ const tratarDatos = ()=>{ /* Revisar */
             }else{
                 errorButtons.value = "Es obligatorio puntuar tu experiencia con el comercio.";
             }
-
         }else{
             errorTitle.value = null;
             errorDesc.value = null;
             errorButtons.value = null;
+            let datos = {
+                "title": titulo.value,
+                "description": descripcion.value,
+                "image": imagen.value,
+                "date": fecha.value,
+                "nota": puntuacion.value
+            }
+            let respuesta = await postUserReview("POST", datos);
         }
     }else{
+        window.scroll({top:50, right:0, behavior: 'smooth'});
         errorTitle.value = "Es necesario indicar un breve título para la reseña";
     }
 }

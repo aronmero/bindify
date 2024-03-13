@@ -21,16 +21,21 @@ import btnConImg from "@/components/perfiles/widgets/btnConImg.vue";
         class="text-sm lg:text-base"
       />
       <contenedorPuntosFidelidad
-        comercio="José Informática"
-        puntos="500"
-        class="text-sm lg:text-base"
-      />
-      <contenedorPuntosFidelidad
-        comercio="José Informática"
-        puntos="500"
+        comercio="LocoToco"
+        puntos="330"
         class="text-sm lg:text-base"
       />
     </div>
+    <contenedorPuntosFidelidad
+      comercio="Flores María"
+      puntos="300"
+      class="text-sm lg:text-base"
+    />
+    <contenedorPuntosFidelidad
+      comercio="ComeCome"
+      puntos="200"
+      class="text-sm lg:text-base"
+    />
   </div>
 </template>
 <style scoped></style>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ModelCreated;
 use App\Http\Requests\StoreCommentsRequest;
 use App\Http\Requests\UpdateCommentsRequest;
 use App\Models\Comment;
@@ -53,6 +54,8 @@ class CommentsController extends Controller
             $comment->content = $request->content;
             $comment->active = true; //comentario activo cuando se crea
             $comment->save();
+
+            event(new ModelCreated($comment));
 
 
             return response()->json(['status' => true, 'message' => 'Comentario almacenado exitosamente'], 201);
@@ -344,7 +347,6 @@ class CommentsController extends Controller
                     'username' => $reply->user->username, // Acceder al nombre del usuario a través de la relación
                     'content' => $reply->content,
                     'comment_creation' => $comentario->created_at,
-                    'father_id' => ($reply->father_id),
                     'father_id' => Crypt::encryptString($reply->father_id),
                     'avatar' => $reply->user->avatar,
                 ];
