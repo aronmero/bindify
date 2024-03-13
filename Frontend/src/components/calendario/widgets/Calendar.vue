@@ -17,6 +17,10 @@
     const year = ref(new Date().getFullYear());
     const month = ref(new Date().getMonth());
 
+    const dias = [
+        'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
+    ];
+
     const months = [
       "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -54,30 +58,39 @@
         days.value = newDays;
     };
 
+    /**
+     * Comprueba que la fecha elegida, se encuentre dentro del rango de ambas fechas
+     * */
+    const estaEnFecha = (date_start_sql, date_choosen, date_end_sql) => {
+        const isChosen = new Date(date_choosen).getTime(); 
+        let start_date = new Date(date_start_sql).getTime();
+        let end_date = new Date(date_end_sql).getTime();
+        return start_date <= isChosen && end_date >= isChosen || date_start_sql == "" && date_end_sql == "";
+
+    }
+
     const cambiarFecha = (day) => {
       // Formatear la fecha con el mismo de sql
-      let fechaElegida = `${day.year}-${day.day}-${day.month}`;
+      let fechaElegida = `${day.year}-${day.month}-${day.day}`;
+      let elegidaDate = new Date(day.year, day.month - 1, day.day)
+
+      let diaString = (elegidaDate.getDay() - 1 >= 0)? dias[elegidaDate.getDay() - 1] :  dias[6] ;
 
       // Obtiene el id del título y nos muestra la fecha actual
-      document.getElementById("fecha").innerHTML = `Martes, ${day.day} de ${months[day.month]} de ${day.year}`
+      document.getElementById("fecha").innerHTML = `${diaString}, ${day.day} de ${months[day.month - 1] } de ${day.year}`
 
       let cards = Array.from(document.getElementsByClassName('card'));
       // Filtra las fechas comparándolas
       cards.forEach(card => {
-        console.log(`comparando ${fechaElegida} - ${card.dataset.start_date}`)
-        if(comparar_fechas(card.dataset.start_date, fechaElegida, card.dataset.end_date)) card.style.display = "flex";
-        else card.style.display = "none";
-      })
-
-      console.log(day);
-
-      
-    };
-
-    const getButtonClasses = (day) => {
-      const isToday = day === new Date().getDate() && month.value === new Date().getMonth() && year.value === new Date().getFullYear();
-      // Add your logic for getting classes based on events
-      return [isToday ? 'active' : ''].join(' ');
+            if(estaEnFecha(card.dataset.start_date, fechaElegida, card.dataset.end_date)) {
+                card.style.display = "flex";
+                card.dataset.listando = "true";
+            } else {
+                card.style.display = "none";
+                card.dataset.listando = "false";
+            }
+        });
+               
     };
 
     const changeMonth = (diff) => {
@@ -125,7 +138,8 @@ onMounted(() => {
               </ul>
               <ul id="calendarDates" class="calendar-dates">
                 <li v-for="day in days" :key="day" :class="(day.inactive) ? 'inactive':'active'">
-                  <button @click="cambiarFecha(day)">{{ day.day }}</button>
+                  <button v-if="!day.inactive" @click="cambiarFecha(day)">{{ day.day }}</button>
+                  <button v-else>{{ day.day }}</button>
                 </li>
               </ul>
             </div>
@@ -243,6 +257,10 @@ onMounted(() => {
         // transform: rotate(180deg);
     }
 
+    .selected {
+        background:#414141;
+    }
+
     #calendar-next {
         transform: rotate(180deg);
     }
@@ -274,4 +292,6 @@ onMounted(() => {
         }
        
     }
+
+
 </style>

@@ -18,7 +18,7 @@
      */
 
     window.addEventListener('scroll', () => { //evento que controla si se muestra el boton de scroll up
-        if (window.scrollY > 200) { //si el scroll es mayor a 200px
+        if (window.scrollY > 100) { //si el scroll es mayor a 200px
             scrollUp.value = true; //muestra el boton
         } else {
             scrollUp.value = false; //oculta el boton

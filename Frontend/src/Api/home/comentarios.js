@@ -1,4 +1,4 @@
-import { urlApiHome as urlApi, genOptions, genOptionsWithoutBody } from "../api";
+import { urlApi as urlApi, genOptions, genOptionsWithoutBody } from "../api";
 
 export async function obtener_posts_seguidos() {
     const options = genOptionsWithoutBody('GET');
@@ -31,7 +31,7 @@ export async function obtener_comentarios_post(post_id) {
  * @returns {unknown}
  */
 
-export async function agregar_comentario_post(post_id, comentario) {
+export async function agregar_comentario_post(post_id, comentario, id_padre = null) {
 
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     const token = user.usuario.token;
@@ -45,11 +45,9 @@ export async function agregar_comentario_post(post_id, comentario) {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-            username: user.usuario.username,
+            comment_id: comment_id,
             content: comentario,
-            post_id: post_id,
-            avatar: 'example.png',
-            user_id: user.usuario.user_id
+            post_id: post_id
         })
     })
         .then(res => res.json())

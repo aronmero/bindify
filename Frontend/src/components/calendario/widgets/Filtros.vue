@@ -1,49 +1,51 @@
 <script setup>
+
+
     let props = defineProps({
-        filtrado: Array, 
-        text: String
+        filtros: Array, 
     });
 
-    let currentTags = props.filtrado;
-    const filterPost = (e, tag) => {
-        let posts = document.getElementsByClassName("evento");
-        Array.from(posts).forEach(post => {
-            if(post.dataset.category.includes(tag) || tag == "Todos") {
-                post.style.display = "flex";
-            } else {
-                post.style.display = "none";
-            };
+    //purgarFavoritos();
 
-        })
 
-        let filters = document.getElementsByClassName("filter");
-        Array.from(filters).forEach(boton => {
-            if(boton == e.target) {
-                boton.classList.add("selected")
-            } else {
-                boton.classList.remove("selected")
-            }
-        })
+    /**
+     * Realiza el filtrado, obtiene los favoritos del script de favoritos
+     * @author David 
+     * */
+    let action = (filtro) => {
+        let posts = Array.from(document.getElementsByClassName("card"))
+        console.log(posts);
+        if(filtro == 'Todos') {
+            console.log("cercanos");
+            posts.forEach(post => {
+                if(post.dataset.favorito == "true") {
+                    post.style.display = "flex";
+                } else {
+                    post.style.display = "none";
+                }
+                
+            });
+        }
+            
     };
+
 </script> 
 <template>
-    <h6 class="title">{{props.text}}</h6>
-    <div class="filters">
-        <button :class="(tag == 'Home')?'selected filter':'filter'" @click="(e) => filterPost(e, tag)" v-for="tag in currentTags"> {{ tag }} </button>
-    </div>
+    <button class="p-[6px_20px_6px_0px]" v-for="filtro in filtros" @click="() => action(filtro)" :value="filtro">
+        <h6 class="title">{{filtro}}</h6>
+    </button>
 </template>
 <style scoped lang="scss">
     .title {
         padding-left:10px;
         font-weight:bold;
-        margin:20px 0px;
-        font-size:.9rem;
+        font-size:1rem;
     }
     .filters {
         border-radius:10px;
         display:flex;
         flex-wrap:wrap;
-        margin:0px 5px 5px 5px;
+        margin:0px 5px 5px 0px;
     }
     .filters:last-of-type {
         margin-bottom:20px;

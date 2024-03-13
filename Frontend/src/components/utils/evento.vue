@@ -111,16 +111,17 @@ const antiSpamFunction = () => {
         };
     }, 1000);
 }
+console.log(props.user);
 </script>
 
 <template>
     <div class=" post-header w-[100%] h-[60px] flex items-center ">
         <div class=" w-[50px] h-[50px] rounded-full overflow-hidden mr-2">
-            <img v-for="user in props.user" @click="$router.push(`/usuario/${user.id}`)"
+            <img v-for="user in props.user" @click="$router.push(`/usuario/${user.username}`)"
                 class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="user.avatar" alt="avatar_usuario">
         </div>
         <div class=" flex flex-col items-start w-[100%] h-[100%] ">
-            <b v-for="user in props.user">{{ user.name }}</b>
+            <b v-for="user in props.user">{{ user.username }}</b>
             <small>{{ datetranslate(props.fecha_publicacion) }}</small>
         </div>
     </div>

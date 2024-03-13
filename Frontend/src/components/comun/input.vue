@@ -3,7 +3,7 @@ import { ref } from 'vue';
 const props = defineProps({
     clase: String,
     tipo: String,
-    requerido: Boolean,
+    requerido: String,
     label: String,
     valor: String,
     img: String,
@@ -46,6 +46,7 @@ const emitirDatos = (e)=>{
     }
 }
 const borrarImagen = (e)=>{
+    props.valor = null;
     e.target.parentNode.parentNode.children[1].value = null;
     imagenSubida.value = null;
 }
@@ -82,8 +83,7 @@ const borrarImagen = (e)=>{
             />
         </button>
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'banner'" class="flex relative lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] justify-center items-center rounded-xl border-dotted border border-background-900">
-            <img v-if="imagenSubida == null && valor != null" :src="valor" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] rounded-xl">
-            <p v-if="imagenSubida == null && valor == null" class="text-[1em] pointer-events-none">Añadir Imagen</p>
+            <p v-if="imagenSubida == null" class="text-[1em] pointer-events-none">Añadir Imagen</p>
             <img v-else :src="imagenSubida" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] rounded-xl">
             <img
                 src="/assets/icons/add.svg"

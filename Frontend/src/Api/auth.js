@@ -16,11 +16,7 @@ export async function register(datos) {
   try {
     let formData = new FormData();
     for(let clave in datos){
-        if(clave == 'avatar'){
-            formData.append(clave, datos[clave], 'avatar');
-        }else{
-            formData.append(clave, datos[clave]);
-        }
+      formData.append(clave, datos[clave]);
     }
     /* const datos = JSON.stringify(datosRecibidos); */
     const options = genOptionsRegister("POST", formData);

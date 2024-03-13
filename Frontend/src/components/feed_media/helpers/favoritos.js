@@ -1,12 +1,16 @@
-
+/**
+ * Guarda los favoritos en variable localStorage
+ * @author David
+ * @returns 
+ */
 export const obtener_favoritos = () => {
-    let favoritos = sessionStorage.getItem("favoritos");
+    let favoritos = localStorage.getItem("favoritos");
 
     if(favoritos != null) {
         return favoritos
     } else {
-        sessionStorage.setItem('favoritos', '[]');
-        favoritos = JSON.parse(sessionStorage.getItem("favoritos"));
+        localStorage.setItem('favoritos', '[]');
+        favoritos = JSON.parse(localStorage.getItem("favoritos"));
     }
     return favoritos
 }
@@ -20,7 +24,7 @@ export const aniadir_favorito = (item) => {
         favoritos.splice(favoritos.indexOf(item), 1);
     }
      // guardamos los cambios
-    sessionStorage.setItem("favoritos", JSON.stringify(favoritos));
+     localStorage.setItem("favoritos", JSON.stringify(favoritos));
 }
 
 export const borrar_favorito = (item) => {
@@ -28,7 +32,7 @@ export const borrar_favorito = (item) => {
     // borramos el favorito
     favoritos.splice(favoritos.indexOf(item), 1);
     // guardamos los cambios
-    sessionStorage.setItem("favoritos", favoritos);
+    localStorage.setItem("favoritos", favoritos);
 
 }
 
@@ -38,9 +42,9 @@ export const en_favoritos = (item) => {
 }
 
 export const guardar_en_session = (array) => {
-    sessionStorage.setItem('favoritos', array);
+    localStorage.setItem('favoritos', array);
 }
 
 export const purgarFavoritos = () => {
-    sessionStorage.setItem('favoritos', '[]');
+    localStorage.setItem('favoritos', '[]');
 }
