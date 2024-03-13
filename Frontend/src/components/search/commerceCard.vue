@@ -10,7 +10,7 @@
     import { setRandomGradient } from '@/utils/randomGradient.js';
 
     const redirect = (username) => {
-        router.push(`perfil/${username}/comercio`);
+        router.push(`perfil/${username}`);
     }
  
 </script>
