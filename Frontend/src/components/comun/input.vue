@@ -26,6 +26,9 @@ const cambiarVision = (e)=>{
     }
 }
 let imagenSubida = ref(null);
+if(props.tipo == 'file'){
+    imagenSubida.value = props.valor;
+}
 const seleccionarImagen = (e)=>{
     e.target.parentNode.children[1].addEventListener("change", ()=>{
         if(e.target.parentNode.children[1].files.length == 1){
@@ -77,7 +80,6 @@ const borrarImagen = (e)=>{
                 src="/assets/icons/add.svg"
                 class="max-w-[40px] max-h-[40px] lg:block absolute bottom-0 right-0 lg:-translate-x-1 lg:translate-y-0 translate-x-1 translate-y-1 py-1 px-2 pointer-events-none"
             />
-            <!-- Sacar a un boton individual y meter todo en un div?? -->
         </button>
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'banner'" class="flex relative lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] justify-center items-center rounded-xl border-dotted border border-background-900">
             <img v-if="imagenSubida == null && valor != null" :src="valor" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] rounded-xl">
