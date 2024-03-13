@@ -80,11 +80,11 @@ function manipulacion(evento) {
   switch (evento.target.value) {
     case "1":
     console.log(evento.target.value)
-    isEventos.value = true
+    isPosts.value = true
       break;
     case "2":
     console.log(evento.target.value)
-    isPosts.value = true
+    isEventos.value = true
       break;
     case "3":
     console.log(evento.target.value)
