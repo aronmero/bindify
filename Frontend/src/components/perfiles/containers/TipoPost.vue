@@ -57,6 +57,13 @@ const tipo = props.post.name;
 let IconoTipo = "";
 if (tipo == 'Post') IconoTipo = TipoOferta;
 if (tipo == 'Evento') IconoTipo = TipoEvento;
+
+
+function editarPost(evento){
+  console.log(props.post)
+  sessionStorage.setItem("postData",JSON.stringify({ postData: props.post }))
+  console.log(JSON.parse(sessionStorage.getItem("postData")))
+}
 </script>
 
 <template>
@@ -86,7 +93,7 @@ if (tipo == 'Evento') IconoTipo = TipoEvento;
       class="post-content w-[100%] h-[400px] rounded-2xl bg-slate-400 overflow-hidden mt-5"
     >
       <img
-        @click="redirect(`evento/${post.id}`)"
+        @click="redirect(`/post/${post.post_id}`)"
         class="cursor-pointer w-[100%] h-[100%] object-cover"
         :src="post.avatar"
         :alt="post.title"
@@ -126,7 +133,7 @@ if (tipo == 'Evento') IconoTipo = TipoEvento;
       :id="`modal_${post.id}`"
       :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`"
     >
-      <!-- Botón ver perfil -->
+      <!-- Botón ver post -->
       <RouterLink :to="`/post/${post.post_id}`">
         <button
           :class="`${estilos.modal_button} m-2 `"
@@ -136,8 +143,9 @@ if (tipo == 'Evento') IconoTipo = TipoEvento;
         </button>
 
       </RouterLink>
-      <!-- Botón ver reseñas comercio -->
-      <button :class="`${estilos.modal_button} m-2 `">
+      <!-- Botón editar post -->
+      
+      <button :class="`${estilos.modal_button} m-2 `" @click="editarPost" :id="post.post_id">
         <img class="w-[30px] h-[30px] mr-3" :src="StarSVG" />
         Editar
       </button>

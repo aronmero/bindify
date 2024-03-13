@@ -24,7 +24,7 @@ responseCatcher();
 <template>
   <template v-if="show">
     <contenedorResenia v-if="userReviews != null && userReviews.length > 0" v-for="review in userReviews"
-      :rutaPerfil="review.avatarUsuario" :nombre="review.username" :texto="review.comment"></contenedorResenia>
+      :rutaPerfil="review.avatarUsuario" :nombre="review.username" :texto="review.comment" :puntuacion="review.note"></contenedorResenia>
     <div v-else class="flex justify-center">No hay reseñas</div>
   </template>
 </template>

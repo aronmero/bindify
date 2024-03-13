@@ -177,7 +177,10 @@ function manipulacion(evento) {
       break;
   }
 }
-//console.log(userData.value)
+let bloquearVerParticular = ref(false)
+if(!isCustomer && userExterno.value){
+  bloquearVerParticular.value = true
+}
 </script>
 
 <template>
@@ -185,8 +188,8 @@ function manipulacion(evento) {
   <Grid
     ><template v-slot:Left></template>
     <btnAtras titulo="Perfil"></btnAtras>
-
-    <div class="flex flex-col gap-6" v-if="userData != null">
+    <h3 v-if="bloquearVerParticular">Nos puedes ver el perfil de este usuario</h3>
+    <div class="flex flex-col gap-6" v-if="userData != null && !bloquearVerParticular" >
       <div>
         <imgsPerfil
           :rutaBaner="userData.banner"
