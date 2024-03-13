@@ -7,7 +7,7 @@ export const obtener_favoritos = () => {
     let favoritos = localStorage.getItem("favoritos");
 
     if(favoritos != null) {
-        return favoritos
+        return JSON.parse(favoritos)
     } else {
         localStorage.setItem('favoritos', '[]');
         favoritos = JSON.parse(localStorage.getItem("favoritos"));
