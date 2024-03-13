@@ -1,5 +1,5 @@
 //Pillar de sesion storage o store de pinia cuando se realice
-import { genOptions,urlApi } from "@/Api/api.js";
+import { genOptionsWithoutBody,urlApi } from "@/Api/api.js";
 
 /**
  * Devuelve la notificación por consola del estado actual de la petición
@@ -13,11 +13,11 @@ import { genOptions,urlApi } from "@/Api/api.js";
  * @returns {Object}
  */
 
-export async function postId(metodo, id,body=null) {
+export async function getNotificacion() {
   try {
-    const options = genOptions(metodo,body);
+    const options = genOptionsWithoutBody("GET");
     const response = await fetch(
-      `${urlApi}/api/notificaciones/${id}`,
+      `${urlApi}/api/notifications/`,
       options
     );
     const data = await response.json();
