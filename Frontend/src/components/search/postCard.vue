@@ -29,11 +29,11 @@ import { setRandomGradient } from '@/utils/randomGradient.js';
    
     <div class=" post-header w-[100%] h-[60px] flex items-center">
         <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden mr-2 ">
-            <img @click="redirect(`perfil/${post.username}/comercio`)" class=" cursor-pointer w-[100%] h-[100%] object-cover  "
+            <img @click="redirect(`perfil/${post.username}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover  "
                 :src="post.avatar" alt="avatar_usuario">
         </div>
         <div class=" flex flex-col items-start texts w-[100%]  h-[100%]  ">
-            <b @click="redirect(`perfil/${post.username}/comercio`)" class="cursor-pointer">{{ post.username }}</b>
+            <b @click="redirect(`perfil/${post.username}`)" class="cursor-pointer">{{ post.username }}</b>
             <small>{{ datetranslatesql(post.start_date) }}</small>
             <button click="" class=" rating flex h-[fit-content] items-center justify-start " v-if="post.avg != null">
                 <img class="" :src="StarSVG" v-for="index in Math.floor(post.avg)" alt="star" loading="lazy"
