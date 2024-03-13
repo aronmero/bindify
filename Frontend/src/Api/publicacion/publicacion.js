@@ -23,3 +23,30 @@ export async function postId(metodo, id,body=null) {
     console.error(error);
   }
 }
+
+/**
+ * Devuelve un objeto publicacion con sus datos
+ * @date 3/13/2024 - 15:10:35 PM
+ * @author Antonio José Peñuela López
+ *
+ * @export
+ * @async
+ * @returns {Object}
+ */
+export async function crearPublicacion(metodo, body=null) {
+  try {
+    let formData = new FormData();
+    for(let clave in body){
+      formData.append(clave, body[clave]);
+    }
+    const options = genOptions(metodo, formData);
+    const response = await fetch(
+      `${urlApi}/api/post`,
+      options
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
