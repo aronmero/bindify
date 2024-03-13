@@ -1088,28 +1088,74 @@ class PostsController extends Controller
     }
 
     /**
-     * Elimina una publicación existente de forma lógica.
-     *
-     * Este método permite al usuario autenticado eliminar una publicación existente de forma lógica,
-     * marcándola como inactiva en lugar de eliminarla físicamente de la base de datos.
-     *
-     * @param  string  $id
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "message": "Post eliminado"
-     * }
-     *
-     * @response 403 {
-     *     "status": false,
-     *     "message": "Post no eliminado. No tienes permisos sobre este post."
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "mensaje_de_error"
-     * }
+     * @OA\Delete(
+     *     path="/posts/{id}",
+     *     summary="Elimina una publicación existente de forma lógica.",
+     *     description="Este método permite al usuario autenticado eliminar una publicación existente de forma lógica, marcándola como inactiva en lugar de eliminarla físicamente de la base de datos.",
+     *     operationId="deletePost",
+     *     tags={"Publicaciones"},
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID de la publicación a eliminar",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Publicación eliminada exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post eliminado"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No tienes permisos sobre este post",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post no eliminado. No tienes permisos sobre este post."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Mensaje de error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post no eliminado. No tienes permisos sobre este post."
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function destroy(string $id)
     {
