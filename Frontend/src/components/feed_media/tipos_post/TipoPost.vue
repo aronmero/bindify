@@ -248,7 +248,6 @@ const { stop } = useIntersectionObserver(post_reference,
             <article v-if="post.userRol == 'commerce' && post.avg >= 3.5" :class="` post ${estilos.post} relative`"
                 :data-start_date="post.start_date" :data-end_date="post.end_date"
                 :data-favorito="(favoritos.indexOf(post.post_id) == -1) ? 'false' : 'true'">
-
                 <!-- Contenedor del header del post -->
                 <div class=" post-header w-[100%] h-[60px] flex items-center ">
                     <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden mr-2 ">
