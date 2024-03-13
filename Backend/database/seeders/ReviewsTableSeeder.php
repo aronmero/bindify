@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Events\ModelCreated;
 use App\Models\Commerce;
 use App\Models\Review;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,6 +20,7 @@ class ReviewsTableSeeder extends Seeder
         for ($i = 0; $i < $cantidad; $i++) {
             $review = Review::factory()->create();
 
+            event(new ModelCreated($review));
 
             $commerceId = $review->commerce_id;
             $commerce = Commerce::find($commerceId);
