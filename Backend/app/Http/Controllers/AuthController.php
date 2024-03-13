@@ -116,34 +116,30 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
+
+
+        $rutaAvatar = 'default';
+        $rutaBanner = 'default';
+
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $banner = $request->file('banner');
             Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
-            Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
-
-
-            /*     return response()->json([
-                    'success' => true,
-                    'empresa' => $request->empresa,
-                    'message' => 'Avatar received successfully',
-                    'avatar_name' => $avatar->getClientOriginalName(),
-                    'avatar_size' => $avatar->getSize(),
-                    'existe_archivo' => Storage::disk('avatars')->exists($request->username),
-                    'avatar_url' => asset('storage/avatars/'.$request->username.'/imagenPerfil.webp'),
-                ]); */
+            $rutaAvatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
         }
+        
+        if ($request->hasFile('banner')) {
+            $banner = $request->file('banner');
+            Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
+            $rutaBanner = asset('storage/avatars/' . $request->username . '/banner.webp');
+        }
+
+
         if ($request->empresa == true) {
             $request->validate([
                 'phone' => 'required', // Establece las reglas para el avatar
             ]);
         }
 
-        // Manejo de la imagen/avatar (Esto supuestamente guarda en la carpeta storage/avatars , la imagen del avatar  )
-        $avatarPath = null;
-        if ($request->hasFile('avatar')) {
-            $avatarPath = $request->file('avatar')->store('avatars', 'public'); // Guarda la imagen en el almacenamiento 'public/avatars'
-        }
 
         // Creación del usuario
         try {
@@ -152,7 +148,8 @@ class AuthController extends Controller
                 'password' => $request->password,
                 'phone' => $request->phone,
                 'municipality_id' => $request->municipality_id,
-                'avatar' => asset('storage/avatars/' . $request->username . '/imagenPerfil.webp'),
+                'avatar' => $rutaAvatar,
+                'banner' => $rutaBanner,
                 'username' => $request->username,
                 'name' => $request->name
             ]);
