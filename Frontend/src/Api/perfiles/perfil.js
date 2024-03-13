@@ -83,3 +83,19 @@ export async function followUser(metodo,subRuta,body=null) {
       console.error(error);
     }
   }
+export async function aniadirFavorito(metodo,subRuta,body=null) {
+    try {
+      const options = genOptions(metodo,body);
+      const response = await fetch(`${urlApi}${subRuta}`, options);
+      const data = await response.json();
+      console.log(data)
+      if(data.message =="Usuario añadido a favoritos"){
+        return true
+      }else{
+        return false
+      }
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+  }

@@ -13,7 +13,7 @@ import contenedorFollower from "@/components/perfiles/containers/contenedorFollo
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import router from "@/router/index.js";
 import { RouterLink, RouterView } from "vue-router";
-import { getUserData, followUser } from "@/Api/perfiles/perfil.js";
+import { getUserData, followUser, aniadirFavorito } from "@/Api/perfiles/perfil.js";
 import { ref } from "vue";
 
 import eventos from "@/components/perfiles/containers/contenedorVistaEventos.vue";
@@ -23,6 +23,7 @@ import fidelidad from "@/components/perfiles/containers/contenedorVistaFidelidad
 import favoritos from "@/components/perfiles/containers/contenedorVistaFavoritos.vue";
 import seguidos from "@/components/perfiles/containers/contenedorVistaSeguidos.vue";
 let cambioAFollowed = ref(false);
+let cambioAFavorito = ref(false);
 let clickedLink = null;
 let userData = ref(null);
 let userExterno = ref(false);
@@ -66,6 +67,7 @@ async function responseCatcher(metodo, subRuta) {
   }
   if (!isCustomer) {
     cambioAFollowed.value = userData.value[0].followed;
+    cambioAFavorito.value = userData.value[0].favorite;
     userData.value = userData.value[0];
   }
   console.log(userData.value);
@@ -86,6 +88,15 @@ async function responseCatcherFollow() {
     `/api/follow/${userData.value.username}`
   );
   console.log(cambioAFollowed.value);
+}
+
+async function responseCatcherFavoritos() {
+  console.log(userData.value.username);
+  cambioAFavorito.value = await aniadirFavorito(
+    "post",
+    `/api/favorite/${userData.value.username}`
+  );
+  console.log(cambioAFavorito.value);
 }
 
 const isEventos = ref(false);
@@ -259,6 +270,20 @@ function manipulacion(evento) {
             @click="responseCatcherFollow"
             v-if="userExterno && !isCustomer && cambioAFollowed"
             texto="Dejar de Seguir"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+          >
+          </btnConText>
+          <btnConText
+            @click="responseCatcherFavoritos"
+            v-if="userExterno && !isCustomer && !cambioAFavorito && cambioAFollowed"
+            texto="Añadir a Favoritos"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+          >
+          </btnConText>
+          <btnConText
+            @click="responseCatcherFavoritos"
+            v-if="userExterno && !isCustomer && cambioAFavorito && cambioAFollowed"
+            texto="Quitar de Favoritos"
             class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
           >
           </btnConText>

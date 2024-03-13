@@ -3,6 +3,7 @@ import textoEnNegrita from "@/components/perfiles/widgets/textoEnNegrita.vue";
 import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
 import imgRedonda from "@/components/perfiles/widgets/imgRedonda.vue";
 import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPuntuacion.vue";
+import { RouterLink } from "vue-router";
 defineProps({
   rutaPerfil: String,
   nombre: String,
@@ -18,8 +19,10 @@ defineProps({
     <div class="flex justify-start">
       <imgRedonda :ruta="rutaPerfil"></imgRedonda>
       <div class="flex flex-col">
-        
-        <textoEnNegrita :texto="nombre" class="text-base lg:text-xl" />
+        <RouterLink :to="`/perfil/${nombre}`">
+
+          <textoEnNegrita :texto="nombre" class="text-base lg:text-xl" />
+        </RouterLink>
 
         <textoNormal :texto="fecha" class="text-sm lg:text-base"></textoNormal>
       </div>
