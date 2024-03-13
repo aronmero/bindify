@@ -25,8 +25,6 @@ if (!storePost.isActivo) {
 }
 console.log("obtenido feed por defecto");
 const posts = post_data;
-//console.log(posts_request.data);
-//}
 
 </script>
 

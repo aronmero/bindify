@@ -1,55 +1,57 @@
 <script setup>
-import {ref} from 'vue';
-import { obtener_municipio } from './mocks/municipios';
-import LocationSVG from '@public/assets/icons/location.svg';
-import EnlaceSVG from '@public/assets/icons/external.svg';
-import DiaSVG from '@public/assets/icons/time.svg';
-import MenuSVG from '@public/assets/icons/ellipsis.svg';
-import StarSVG from '@public/assets/icons/star.svg';
-import ShareSVG from '@public/assets/icons/share.svg';
-import UserSVG from '@public/assets/icons/user.svg';
-import router from '@/router/index';
-import {share} from '@/components/calendario/helpers/share'
+
+    import {ref} from 'vue';
+    import { obtener_municipio } from './mocks/municipios';
+    import LocationSVG from '@public/assets/icons/location.svg';
+    import EnlaceSVG from '@public/assets/icons/external.svg';
+    import DiaSVG from '@public/assets/icons/time.svg';
+    import MenuSVG from '@public/assets/icons/ellipsis.svg';
+    import StarSVG from '@public/assets/icons/star.svg';
+    import ShareSVG from '@public/assets/icons/share.svg';
+    import UserSVG from '@public/assets/icons/user.svg';
+    import router from '@/router/index';
+    import {share} from '@/components/calendario/helpers/share'
 
 
-const props = defineProps({
-    post: Object,
-    municipios: Object
-});
+    const props = defineProps({
+        post: Object,
+        municipios: Object
+    });
 
-const modalHandler = ref(false);
-const modal = ref(null);
+    const modalHandler = ref(false);
+    const modal = ref(null);
 
-const post = props.post;
-//const municipio = obtener_municipio(post.usuario.municipality_id).name;
+    const post = props.post;
+    //const municipio = obtener_municipio(post.usuario.municipality_id).name;
 
 
-/** 
- * Redirecciona hasta la url objetivo
- */
-const redirect = (url) => {
-    router.push(url)
-};
+    /** 
+     * Redirecciona hasta la url objetivo
+     */
+    const redirect = (url) => {
+        router.push(url)
+    };
 
-/** 
- * Abrir modal  
- * */
+    /** 
+     * Abrir modal  
+     * */
 
-const abrirModal = () => {
-    if (modalHandler.value) {
-        modal.value.style.display = "none";
-        modalHandler.value = false;
-    } else {
-        modal.value.style.display = "flex";
-        modalHandler.value = true;
+    const abrirModal = () => {
+        if (modalHandler.value) {
+            modal.value.style.display = "none";
+            modalHandler.value = false;
+        } else {
+            modal.value.style.display = "flex";
+            modalHandler.value = true;
+        }
     }
-}
+
 </script>
 <template>
     <div class=" card w-[100%] p-4 rounded-xl relative " :data-start_date="post.start_date" :data-end_date="post.end_date">
         <!-- Imagen del post -->
         <div class=" img-wrapper min-w-[110px] w-[110px] h-[200px] overflow-hidden rounded-xl mr-2">
-            <img class=" img min-w-[100%] cursor-pointer object-cover object-center  " :src="post.image" alt="" @click="() => redirect(`evento/${post.post_id}`)">
+            <img class=" img min-w-[100%] cursor-pointer object-cover object-center  " :src="post.image" alt="" @click="() => redirect(`post/${post.post_id}`)">
         </div>
         <!-- Contenido del Post -->
         <div class=" wrapper ">

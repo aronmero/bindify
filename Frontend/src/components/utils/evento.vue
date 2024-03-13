@@ -151,7 +151,7 @@ const antiSpamFunction = () => {
         <div> {{ props.descripcion }}</div>
         <div class="text-[24px] font-bold my-[30px]" v-if="tipo == 'Evento'">Periodo del evento</div>
         <div v-if="tipo == 'Evento'">
-            <Calendar />
+            <Calendar :post="props" />
         </div>
         <div class="text-[24px] font-bold my-[30px]">Comentarios</div>
         <div>
