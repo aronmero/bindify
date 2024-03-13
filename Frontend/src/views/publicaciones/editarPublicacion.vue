@@ -70,11 +70,11 @@ const tratarDatos = ()=>{
     <Grid>
         <template v-slot:Left></template>
         <tempalte class="flex flex-col items-center justify-center">
-            <header class="flex items-center relative w-[90vw] justify-center">
-                <button class="lg:hidden absolute left-0">
+            <header class="flex items-center relative w-[90vw] justify-center mt-[1rem] mb-[0.5rem]">
+                <button @click="router.back()" class="absolute lg:-translate-x-[21rem]">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
                 </button>
-                <h3 class="lg:text-xl">Editar Publicación</h3>
+                <h3 class="lg:text-xl">Editar publicación</h3>
             </header>
             <section class="w-full mt-5 mb-5">
                 <form action="javascript:void(0);" class="flex flex-col gap-y-5">
