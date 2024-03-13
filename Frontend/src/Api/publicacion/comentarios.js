@@ -1,4 +1,4 @@
-import { genOptions, urlApi } from "@/Api/api.js";
+import { genOptions, urlApi,genOptionsWithoutBody } from "@/Api/api.js";
 
 /**
  * Devuelve los comentarios de una publicacion
@@ -35,6 +35,28 @@ export async function storeCommentsOfPost(body) {
   try {
     const options = genOptions("POST", body);
     const response = await fetch(`${urlApi}/api/comment`, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+/**
+ * Almacena un comentario en una publicacion
+ *@date 3/13/2024 - 11:04:45 AM
+ * @author Aaron Medina Rodriguez
+ *
+ * @export
+ * @async
+ * @param {number} id de la publicacion
+ * @returns {Object}
+ */
+export async function deleteCommentsOfPost(id) {
+  try {
+    const options = genOptionsWithoutBody("DELETE");
+    const response = await fetch(`${urlApi}/api/comment/${id}`, options);
     const data = await response.json();
     return data;
   } catch (error) {

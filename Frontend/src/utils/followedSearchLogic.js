@@ -18,5 +18,3 @@
     export const searchByFilter = (filter) =>{ //función para buscar usuarios por nombre
       usersAux.value = users.value.filter(user => user.name.first.toUpperCase().includes(filter.toUpperCase())); //filtramos los usuarios por nombre
     }
-
-
