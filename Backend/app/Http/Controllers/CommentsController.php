@@ -47,7 +47,7 @@ class CommentsController extends Controller
             // Crear un nuevo comentario
             $comment = new Comment();
             $comment->user_id = $user->id; // Asignar el ID de usuario
-            $comment->post_id = $request->post_id;
+            $comment->post_id = Crypt::decryptString($request->post_id);
             $comment->content = $request->content;
             $comment->active = true; //comentario activo cuando se crea
             $comment->save();
@@ -266,6 +266,7 @@ class CommentsController extends Controller
             }
 
             // Eliminar el comentario de la base de datos
+            $comentario->notifications()->delete();
             $comentario->delete();
 
             // Devolver una respuesta de éxito

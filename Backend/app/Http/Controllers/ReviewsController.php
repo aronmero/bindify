@@ -354,6 +354,8 @@ class ReviewsController extends Controller
 
             DB::table('deleted_reviews')->insert($reviewData);
 
+            $review->notifications()->delete();
+
             // Eliminar la review
             $review->delete();
 
