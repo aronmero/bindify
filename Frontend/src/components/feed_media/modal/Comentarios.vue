@@ -67,6 +67,7 @@ const cerrarModal = () => {
 //Elimina el intervalo antes de cambiar de ruta.
 onBeforeUnmount(() => {
     clearInterval(interval);
+    document.body.style.overflow = "auto";
 });
 
 const refrescarPosicion = () => {
