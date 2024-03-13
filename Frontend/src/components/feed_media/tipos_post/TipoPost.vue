@@ -32,10 +32,6 @@ const props = defineProps({
     tipo: String
 });
 
-const post = ref(props.post);
-const post_reference = ref(null);
-const modalHandler = ref(false);
-const modal = ref(null);
 
 const post = ref(props.post);
 const post_reference = ref({dataset: {favorito:false}});
@@ -583,7 +579,6 @@ button {
     filter: drop-shadow(8px 2px 10px rgba(0, 0, 0, 0.5));
   }
 }
-</style>
 
 .rating {
     img {
