@@ -31,10 +31,10 @@
 <template>
     <div class="flexible flex flex-col ">
         <div class="flex justify-center items-center  w-[100%] rounded-xl">
-            <!-- <Filtros v-for="filtro in filtros" :text="filtro"></Filtros> -->
+            <Filtros v-for="filtro in filtros" :text="filtro"></Filtros> 
         </div>
         <Calendario :posts="posts"></Calendario>
-        <b id="fecha" class="fecha">{{dia}}</b>
+        <b id="fecha" class="fecha">Todos los eventos </b>
         <div class="grid grid-cols-1">
             <Card v-for="post in posts" :post="post" :municipios="municipios"/>
         </div>

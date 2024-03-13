@@ -42,8 +42,11 @@ const chat_input = ref(null);
 const user_session = JSON.parse(sessionStorage.getItem("usuario"))
 const user_req = await obtener_datos_usuario(user_session.usuario.username);
 
-const user = user_req.data;
+/** 
+ * Corrección del 13/03 por David, por cambiar el tipo de respuesta del Backend, devuelve ahora un array en vez de un dato concreto
+ * */
 
+const user = user_req.data[0];
 
 let comentarios = ref(null);
 const id_post = props.post.post_id;

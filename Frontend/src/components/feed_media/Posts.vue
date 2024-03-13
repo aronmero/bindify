@@ -28,7 +28,6 @@ const posts = post_data;
 //console.log(posts_request.data);
 //}
 
-elop
 </script>
 
 <template>

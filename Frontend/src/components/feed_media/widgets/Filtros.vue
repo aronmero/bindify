@@ -9,21 +9,21 @@
 
     //purgarFavoritos();
 
-    let favoritos = obtener_favoritos();
 
-    let currentTags = props.filtrado;
-
-
+    /**
+     * Realiza el filtrado, obtiene los favoritos del script de favoritos
+     * @author David 
+     * */
     let action = (filtro) => {
         let posts = Array.from(document.getElementsByClassName("post"))
-        console.log(posts);
+        //console.log(posts);
         if(filtro == 'Cercanos') {
             console.log("cercanos");
         }
 
-        if(filtro == "Activos") {
+        if(filtro == "Activos hoy") {
             const today = new Date().toLocaleDateString();
-            console.log(today);
+            //console.log(today);
             posts.forEach(post => {
                 if(date_is_active(post.dataset.start_date, post.dataset.end_date)) {
                     post.style.display = "flex";

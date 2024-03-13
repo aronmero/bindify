@@ -6,9 +6,6 @@ import { onMounted, ref } from 'vue';
 import StarSVG from '@public/assets/icons/star.svg';
 import StarEmptySVG from '@public/assets/icons/starEmpty.svg';
 
-import { obtener_comentarios_post } from '@/Api/home/comentarios';
-
-import HeartSVG from '@public/assets/icons/like.svg';
 import ShareSVG from '@public/assets/icons/share.svg';
 import ChatSVG from '@public/assets/icons/chat.svg';
 import BookmarkEmptySVG from '@public/assets/icons/bookmark_empty.png'
@@ -25,10 +22,10 @@ import { share } from '@/components/feed_media/helpers/share.js';
 import { datetranslatesql } from './../helpers/datetranslate.js'
 import router from '../../../router';
 
-import { en_favoritos, obtener_favoritos } from '../helpers/favoritos';
+import { en_favoritos } from '../helpers/favoritos';
 
 import Comentarios from '../modal/ComentariosHome.vue';
-import { obtener_tipo_comercio } from '@/Api/home/publicaciones';
+
 
 const props = defineProps({
     post: Object,
@@ -46,7 +43,7 @@ const modal_comentarios = ref(null);
 const comentariosVisibles = ref(false);
 
 /** Genero la referencia para obtener los favoritos del usuario, hecho en frontend por no poderse poner en back */
-const favoritos = ref(JSON.parse(sessionStorage.getItem("favoritos")));
+const favoritos = ref(JSON.parse(localStorage.getItem("favoritos")));
 
 /** Abre el modal del perfil */
 const abrirModal = () => {
@@ -76,8 +73,9 @@ const redirect = (url) => {
     router.push(url)
 }
 
-    /** Dependiendo del tipo de  */
-    const tipo = post.name;
+    /** Dependiendo del tipo de post, carga un icono  */
+    const tipo = post.value.name;
+    // console.log(post);
     let IconoTipo = "";
     if (tipo == 'Post') IconoTipo = TipoOferta; // 1 Post
     if (tipo == 'Evento') IconoTipo = TipoEvento; // 2 Event
@@ -109,7 +107,7 @@ const redirect = (url) => {
             console.log("borrado");
         }
         // guardamos los cambios
-        sessionStorage.setItem("favoritos", JSON.stringify(favoritos.value));
+        localStorage.setItem("favoritos", JSON.stringify(favoritos.value));
 
 }
 
