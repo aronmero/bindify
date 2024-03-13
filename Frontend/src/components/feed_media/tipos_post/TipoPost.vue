@@ -34,7 +34,7 @@ const props = defineProps({
 
 
 const post = ref(props.post);
-const post_reference = ref(null);
+const post_reference = ref({dataset: {favorito:false}});
 const modalHandler = ref(false);
 const modal = ref(null);
 
@@ -99,6 +99,7 @@ const redirect = (url) => {
     const aniadir_favorito = (item) => {
         if (favoritos.value.indexOf(item) == -1) {
             favoritos.value.push(item);
+            console.log(post_reference.value)
             post_reference.value.dataset.favorito = "true";
             console.log("agregado")
         } else {

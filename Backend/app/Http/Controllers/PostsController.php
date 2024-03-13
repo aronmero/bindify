@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ModelCreated;
 use App\Http\Requests\StorePostsRequest;
 use App\Http\Requests\UpdatePostsRequest;
 use App\Models\Post;
@@ -321,6 +322,7 @@ class PostsController extends Controller
                 'active' => true,
             ]);
 
+
             try {
                 $post->users()->attach($user->id);
             } catch (\Throwable $th) {
@@ -330,6 +332,7 @@ class PostsController extends Controller
                 ], 404);
             }
 
+            event(new ModelCreated($post));
 
             $postData = [
                 'post_id' => $post->id = Crypt::encryptString($post->id),
@@ -443,7 +446,7 @@ class PostsController extends Controller
 
 
             // Obtener los 5 primeros comentarios del post
-            $comments = Comment::where('post_id', $id)->with('user')->take(5)->get();
+            $comments = Comment::where('post_id', $id)->with('user')->take(10)->orderBy('created_at', 'desc')->get();
 
             // Formatear los datos de los comentarios
             $formattedComments = [];
@@ -451,7 +454,6 @@ class PostsController extends Controller
                 $formattedComment = [
                     'username' => $comment->user->username,
                     'content' => $comment->content,
-                    //'comment_id' => $comment->id,
                     'comment_id' => Crypt::encryptString($comment->id),
                     'avatar' => $comment->user->avatar,
                 ];

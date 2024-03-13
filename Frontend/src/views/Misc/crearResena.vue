@@ -51,13 +51,14 @@ const tratarDatos = ()=>{ /* Revisar */
             }else{
                 errorButtons.value = "Es obligatorio puntuar tu experiencia con el comercio.";
             }
-
         }else{
             errorTitle.value = null;
             errorDesc.value = null;
             errorButtons.value = null;
+            
         }
     }else{
+        window.scroll({top:50, right:0, behavior: 'smooth'});
         errorTitle.value = "Es necesario indicar un breve título para la reseña";
     }
 }
