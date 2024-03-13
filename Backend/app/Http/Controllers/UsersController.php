@@ -262,16 +262,21 @@ class UsersController extends Controller
                 if ($request->hasFile('avatar')) {
                     $avatar = $request->file('avatar');
                     Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
-                    $customer->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
+                    $user->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
+                } else {
+                    $user->avatar = $request->avatar; // En caso de que manden la ruta de la imagen en formato string
                 }
                 
                 if ($request->hasFile('banner')) {
                     $banner = $request->file('banner');
                     Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
-                    $customer->banner = asset('storage/avatars/' . $request->username . '/banner.webp');
+                    $user->banner = asset('storage/avatars/' . $request->username . '/banner.webp');
+                }else {
+                    $user->banner = $request->banner; // En caso de que manden la ruta de la imagen en formato string
                 }
 
                 $customer->save();
+                $user->save();
                 $updatedUser = $customer->user;
 
             } else {
@@ -283,16 +288,21 @@ class UsersController extends Controller
                 if ($request->hasFile('avatar')) {
                     $avatar = $request->file('avatar');
                     Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
-                    $commerce->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
+                    $user->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
+                } else {
+                    $user->avatar = $request->avatar; // En caso de que manden la ruta de la imagen en formato string
                 }
                 
                 if ($request->hasFile('banner')) {
                     $banner = $request->file('banner');
                     Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
-                    $commerce->banner = asset('storage/avatars/' . $request->username . '/banner.webp');
+                    $user->banner = asset('storage/avatars/' . $request->username . '/banner.webp');
+                } else {
+                    $user->banner = $request->banner; // En caso de que manden la ruta de la imagen en formato string
                 }
 
                 $commerce->save();
+                $user->save();
                 $updatedUser = $commerce->user;
             }
 
