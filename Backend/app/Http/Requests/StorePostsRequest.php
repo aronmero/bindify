@@ -34,7 +34,7 @@ class StorePostsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'image' => 'El dato no es el adecuado, string requerido',
+            'image' => 'El dato no es el adecuado, imagen requerida',
             'title' => [
                 'required' => 'El titulo de la publicación es obligatorio',
                 'max' => 'El titulo es demasiado largo',
