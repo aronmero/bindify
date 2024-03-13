@@ -81,6 +81,7 @@ export async function updateUserData(metodo,datos,userName) {
       for(let clave in body){
         formData.append(clave, body[clave]);
       }
+      console.log(formData.get("title"));
       const options = genOptions(metodo,formData);
       const response = await fetch(`${urlApi}/api/review`, options);
       const data = await response.json();

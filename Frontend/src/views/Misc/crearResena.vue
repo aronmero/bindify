@@ -39,34 +39,34 @@ const tratarDatos = async()=>{
     console.log(imagen.value);
     console.log(fecha.value);
     console.log(puntuacion.value);
-    if(titulo.value != null){
-        if(descripcion.value == null){
-            errorTitle.value = null;
-            errorDesc.value = "Es necesario explicar un poco tu experiecia.";
-        }else if(fecha.value == null || puntuacion.value == null){
-            errorTitle.value = null;
-            errorDesc.value = null;
-            if(fecha.value == null){
-                errorButtons.value = "Es necesario indicar la fecha en la que visitaste el comercio.";
-            }else{
-                errorButtons.value = "Es obligatorio puntuar tu experiencia con el comercio.";
-            }
-        }else{
-            errorTitle.value = null;
-            errorDesc.value = null;
-            errorButtons.value = null;
-            let datos = {
-                "title": titulo.value,
-                "description": descripcion.value,
-                "image": imagen.value,
-                "date": fecha.value,
-                "nota": puntuacion.value
-            }
-            let respuesta = await postUserReview("POST", datos);
-        }
-    }else{
+    console.log(titulo.value == null || titulo.value.length == 0);
+    if(titulo.value == null || titulo.value.length == 0){
         window.scroll({top:50, right:0, behavior: 'smooth'});
         errorTitle.value = "Es necesario indicar un breve título para la reseña";
+    }else{
+        errorTitle.value = null;
+    }
+    if(descripcion.value == null || descripcion.value.length == 0){
+        errorDesc.value = "Es necesario explicar un poco tu experiecia.";
+    }else{
+        errorDesc.value = null;
+    }
+    if(fecha.value == null){
+        errorButtons.value = "Es necesario indicar la fecha en la que visitaste el comercio.";
+    }else if(puntuacion.value == null){
+        errorButtons.value = "Es obligatorio puntuar tu experiencia con el comercio.";
+    }else{
+        errorButtons.value = null;
+    }
+    if(errorButtons.value == null && errorDesc.value == null && errorTitle.value == null){
+        let datos = {
+            "title": titulo.value,
+            "description": descripcion.value,
+            "image": imagen.value,
+            "date": fecha.value,
+            "note": puntuacion.value
+        }
+        let respuesta = await postUserReview("POST", datos);
     }
 }
 /* Poner el apratado de puntuar (Modal) visible por defecto ya que es obligatorio */
@@ -149,8 +149,8 @@ const setearPuntuacion = (e)=>{
     <Grid>
         <template v-slot:Left></template>
         <tempalte class="flex flex-col items-center justify-center">
-            <header class="flex items-center relative w-[90vw] justify-center">
-                <button @click="router.go(-1)" class="lg:hidden absolute left-0">
+            <header class="flex items-center relative w-[90vw] justify-center mt-[1rem] mb-[0.5rem]">
+                <button @click="router.back()" class="absolute lg:-translate-x-[21rem]">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
                 </button>
                 <h3 class="lg:text-xl">Crear una reseña</h3>
