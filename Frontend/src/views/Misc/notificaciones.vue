@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,onBeforeUnmount } from 'vue';
 // import Comentario from '../widgets/Comentario.vue';
 import router from '@/router/index.js'
 import BackSVG from '@public/assets/icons/forward.svg';
@@ -18,6 +18,10 @@ const user = JSON.parse(sessionStorage.getItem("usuario"));
  * */
 
 document.body.style.overflow = "hidden";
+onBeforeUnmount(() => {
+    document.body.style.overflow = "auto";
+});
+
 /**
  * Redirecciona a Home
  * */
@@ -56,8 +60,9 @@ callApi();
                 <div v-if="data.status" ref="comentario_handler"
                     class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
                     <notificacion v-for="not in data.data" :notificacion="not"></notificacion>
+                    
                 </div>
-
+                    <div v-if=" data.data !=undefined && data.data.length==0" class="flex justify-center">No hay notificaciones en este momento</div>
 
             </div>
         </div>

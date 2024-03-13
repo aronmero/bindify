@@ -12,12 +12,34 @@ import { genOptionsWithoutBody,urlApi } from "@/Api/api.js";
  * @param {Number} id de la publicacion
  * @returns {Object}
  */
-
 export async function getNotificacion() {
   try {
     const options = genOptionsWithoutBody("GET");
     const response = await fetch(
       `${urlApi}/api/notifications/`,
+      options
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
+ * Devuelve la notificación por consola del estado actual de la petición
+ * @date 3/13/2024 - 10:42:21 PM
+ * @author Aarón Medina Rodríguez 
+ * @export
+ * @async
+ * @param {Number} id de la publicacion
+ * @returns {Object}
+ */
+export async function vistoNotificacion(id) {
+  try {
+    const options = genOptionsWithoutBody("POST");
+    const response = await fetch(
+      `${urlApi}/api/notifications/${id}`,
       options
     );
     const data = await response.json();
