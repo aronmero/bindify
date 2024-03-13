@@ -160,7 +160,7 @@ class PostsController extends Controller
                 ->orderBy('posts.start_date', 'desc')
                 ->get();
 
-            
+
 
             $listado->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
@@ -432,10 +432,10 @@ class PostsController extends Controller
                 'ubicacion' => $post->ubicacion,
                 'fecha_creacion' => $post->created_at,
                 'hastags' => $post->hashtags->pluck('name'),
-                'userRol' => $post->userRol 
+                'userRol' => $post->userRol
             ];
-            
-            
+
+
 
             // Obtener los 5 primeros comentarios del post
             $comments = Comment::where('post_id', $id)->with('user')->take(5)->get();
@@ -685,6 +685,8 @@ class PostsController extends Controller
                 ];
 
                 DB::table('deleted_posts')->insert($postData);
+
+                $post->notifications()->delete();
 
                 $post->delete();
 

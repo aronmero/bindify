@@ -40,4 +40,9 @@ class Post extends Model
 
     }
 
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'element');
+    }
+
 }

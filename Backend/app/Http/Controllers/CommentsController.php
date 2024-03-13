@@ -44,13 +44,12 @@ class CommentsController extends Controller
             // Obtener el usuario autenticado
             $user = auth()->user();
 
-            $request->post_id = Crypt::decryptString($request->post_id);
+            $post_id = intval(Crypt::decryptString($request->post_id));
 
             // Crear un nuevo comentario
             $comment = new Comment();
             $comment->user_id = $user->id; // Asignar el ID de usuario
-            $comment->post_id = $request->post_id;
-            
+            $comment->post_id = $post_id;
             $comment->content = $request->content;
             $comment->active = true; //comentario activo cuando se crea
             $comment->save();
@@ -58,7 +57,7 @@ class CommentsController extends Controller
 
             return response()->json(['status' => true, 'message' => 'Comentario almacenado exitosamente'], 201);
         } catch (Exception $e) {
-            return response()->json(['status' => false, 'message' => 'Error al almacenar el comentario'], 400);
+            return response()->json(['status' => false, 'message' => "Error al almacenar el comentario: $e"], 400);
         }
     }
 
@@ -159,7 +158,7 @@ class CommentsController extends Controller
      *   "message": "Comentario no encontrado"
      * }
      */
-    public function update(UpdateCommentsRequest $request, int $id)
+    public function update(UpdateCommentsRequest $request, string $id)
     {
         try {
 
@@ -269,6 +268,7 @@ class CommentsController extends Controller
             }
 
             // Eliminar el comentario de la base de datos
+            $comentario->notifications()->delete();
             $comentario->delete();
 
             // Devolver una respuesta de éxito
