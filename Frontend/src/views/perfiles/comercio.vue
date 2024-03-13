@@ -13,15 +13,16 @@ import contenedorFollower from "@/components/perfiles/containers/contenedorFollo
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import router from "@/router/index.js";
 import { RouterLink, RouterView } from "vue-router";
-import { getUserData } from "@/Api/perfiles/perfil.js";
+import { getUserData, followUser } from "@/Api/perfiles/perfil.js";
 import { ref } from "vue";
+
 import eventos from "@/components/perfiles/containers/contenedorVistaEventos.vue";
 import posts from "@/components/perfiles/containers/contenedorVistaPosts.vue";
 import resenias from "@/components/perfiles/containers/contenedorVistaResenias.vue";
 import fidelidad from "@/components/perfiles/containers/contenedorVistaFidelidad.vue";
 import favoritos from "@/components/perfiles/containers/contenedorVistaFavoritos.vue";
-import seguidos from "@/components/perfiles/containers/contenedorVistaFavoritos.vue";
-
+import seguidos from "@/components/perfiles/containers/contenedorVistaSeguidos.vue";
+let cambioAFollowed = ref(false);
 let clickedLink = null;
 let userData = ref(null);
 let userExterno = ref(false);
@@ -52,7 +53,9 @@ function pintar(evento) {
 
 async function responseCatcher(metodo, subRuta) {
   userData.value = await getUserData(metodo, subRuta);
+
   console.log(userData.value[0]);
+
   console.log(userLogeado.usuario.tipo);
   if (
     userLogeado.usuario.tipo == "customer" &&
@@ -62,6 +65,7 @@ async function responseCatcher(metodo, subRuta) {
     isCustomer = true;
   }
   if (!isCustomer) {
+    cambioAFollowed.value = userData.value[0].followed;
     userData.value = userData.value[0];
   }
   console.log(userData.value);
@@ -73,6 +77,15 @@ if (linkUsername.value == userLogeado.usuario.username) {
   //console.log(linkUsername.value);
   responseCatcher("get", `/api/user/${linkUsername.value}`);
   userExterno.value = true;
+}
+
+async function responseCatcherFollow() {
+  console.log(userData.value.username);
+  cambioAFollowed.value = await followUser(
+    "post",
+    `/api/follow/${userData.value.username}`
+  );
+  console.log(cambioAFollowed.value);
 }
 
 const isEventos = ref(false);
@@ -233,13 +246,22 @@ function manipulacion(evento) {
             >
             </btnConText>
           </RouterLink>
-          <RouterLink to="" v-if="userExterno && !isCustomer">
-            <btnConText
-              texto="Segir"
-              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
-            >
-            </btnConText>
-          </RouterLink>
+
+          <btnConText
+            @click="responseCatcherFollow"
+            v-if="userExterno && !isCustomer && !cambioAFollowed"
+            texto="Segir"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+          >
+          </btnConText>
+
+          <btnConText
+            @click="responseCatcherFollow"
+            v-if="userExterno && !isCustomer && cambioAFollowed"
+            texto="Dejar de Seguir"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+          >
+          </btnConText>
         </div>
       </div>
 

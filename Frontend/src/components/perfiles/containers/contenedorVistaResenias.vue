@@ -23,6 +23,7 @@ responseCatcher();
     :rutaPerfil="review.avatarUsuario"
     :nombre="review.username"
     :texto="review.comment"
+    :puntuacion="review.note"
   ></contenedorResenia>
 </template>
 <style scoped></style>

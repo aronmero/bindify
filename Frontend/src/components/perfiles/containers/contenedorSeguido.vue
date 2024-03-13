@@ -7,7 +7,6 @@ defineProps({
   rutaPerfil: String,
   nombre: String,
   texto: String,
-  puntuacion:String,
   fecha: String,
   titulo: String,
   imagen: String,
@@ -19,12 +18,13 @@ defineProps({
     <div class="flex justify-start">
       <imgRedonda :ruta="rutaPerfil"></imgRedonda>
       <div class="flex flex-col">
+        
         <textoEnNegrita :texto="nombre" class="text-base lg:text-xl" />
 
         <textoNormal :texto="fecha" class="text-sm lg:text-base"></textoNormal>
       </div>
-      <div class="flex justify-end w-full ">
-        <contenedorPuntuacion :puntuacion="puntuacion"></contenedorPuntuacion>
+      <div class="flex justify-end w-full hidden">
+        <contenedorPuntuacion puntuacion="4"></contenedorPuntuacion>
       </div>
     </div>
     <div class="flex flex-col">
