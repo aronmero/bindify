@@ -122,9 +122,8 @@ const controlarModal = () => {
                 <Input @datos="(nuevosDatos)=>{tipoUsuario = arrayTipos[nuevosDatos].toLowerCase()}" class="w-[40%]" tipo="selection" requerido="true" :opciones=arrayTipos placeholder="Tipos" v-model='tipoUsuario' label="Tipo de usuario" :valor="tipoUsuario"/>
                 <Input @datos="(nuevosDatos)=>{usuario = nuevosDatos}" tipo="text" requerido="true" label="Usuario" :valor="usuario" :error="errorUsuario"/>
                 <Input @datos="(nuevosDatos)=>{nombre = nuevosDatos}" tipo="text" requerido="true" label="Nombre" :valor="nombre" :error="errorNombre"/>
-                
                 <div class="imagenes flex gap-x-10 lg:gap-x-20">
-                    <p v-if="errorIMG != null" class="text-primary-700 text-xs lg:text-sm ms-3">{{ errorIMG }}</p>  <!-- Mensaje de error en la imagen -->
+                    <p v-if="errorIMG != null" class="text-primary-700 text-xs lg:text-sm ms-3">{{ errorIMG }}</p>
                     <Input @datos="(nuevosDatos)=>{imagenPerfil = nuevosDatos}" tipo="file" label="Imagen de perfil" requerido="true" clase="perfil" :error="errorIMG" :valor="imagenPerfil"/>
                     <Input @datos="(nuevosDatos)=>{imagenBanner = nuevosDatos}" tipo="file" label="Imagen de fondo" clase="banner" :valor="imagenBanner"/>
                 </div>
