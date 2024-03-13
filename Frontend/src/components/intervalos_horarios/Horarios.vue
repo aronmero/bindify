@@ -1,9 +1,8 @@
 <script setup>
     import BackSVG from '@public/assets/icons/forward.svg';
-import { ref } from 'vue';
-
     import { comercios, filtrar_rango_horarios, pasar_a_string_horario } from '../feed_media/mocks/comercios';
-import Intervalo from './widgets/Intervalo.vue';
+    import Intervalo from './widgets/Intervalo.vue';
+    import { ref } from 'vue';
 
     const props = defineProps({
         referencia_padre: String,
@@ -21,16 +20,16 @@ import Intervalo from './widgets/Intervalo.vue';
 
     /**
      * Obtengo el rango de horarios de ese comercio
-     * */
-
+     */
     //let horario =   ref(obtener_rango_horarios(1));
     let horario = ref(filtrar_rango_horarios(datos_padre.value));
-
     console.log(horario);
-    /* *
+
+    /**
     * Borrar el intervalo
     * @param index - index del elemento a borrar
-    * */
+    *
+    */
     const borrar_intervalo = (index) => {
         console.log(`borrando ${index}`);
         horario.value.splice(index, 1);
@@ -39,7 +38,8 @@ import Intervalo from './widgets/Intervalo.vue';
 
     /**
      * Crear intervalo nuevo
-     * */
+     *
+     */
     const crear_intervalo = () => {
         horario.value.push({
             hora_apertura: '00:00',
@@ -47,13 +47,13 @@ import Intervalo from './widgets/Intervalo.vue';
             dia: 'Lunes'
         })
     }
+
     /**
      * Cambiar el intervalo ya existente
      * @param index - index del elemento a cambiar
      * @param campo - campo a cambiar
      * @param valor - valor del campo a cambiar
-     * */
-
+     */
     const cambiar_intervalo = (index, hora_apertura, hora_cierre, dia) => {
         horario.value[index].hora_apertura = hora_apertura;
         horario.value[index].hora_cierre = hora_cierre;
@@ -63,17 +63,15 @@ import Intervalo from './widgets/Intervalo.vue';
 
     /**
      * Cierra el modal
-     * */
+     */
     const cerrarModal = () => {
         document.body.style.overflow = "scroll";
         props.controlar_modal();
     };
 
     /**
-     *
      * Enviar cambios
-     *
-     * */
+     */
      //const enviar_cambios = () => {
      //   datos_padre.value = horario.value;
      //   cerrarModal()
@@ -103,7 +101,7 @@ import Intervalo from './widgets/Intervalo.vue';
                 <Intervalo v-for="(intervalo, index) in horario" :intervalo="intervalo" :index="index"
                     :borrar_intervalo="borrar_intervalo" :cambiar_intervalo="cambiar_intervalo" />
                 <b v-if="horario.length == 0" class="p-[20px]">Aún no has añadido ningún horario.</b>
-                <div id="footer" class="w-[100%] flex flex-col items-center justify-start w-[200px] ">
+                <div id="footer" class="w-[100%] flex flex-col items-center justify-start w-[200px]">
                     <button @click="() => crear_intervalo()" class=" bg-[#FE822F] w-[100%]  h-[50px] rounded-xl">Agregar intervalo</button>
                 
                     <button @click="() => props.enviar_cambios(pasar_a_string_horario(horario))" class="mt-[10px] bg-[#404040] text-white w-[100%] h-[50px] rounded-xl">Aplicar y volver</button>
@@ -113,6 +111,7 @@ import Intervalo from './widgets/Intervalo.vue';
     </div>
 </template>
 
+<!-- Estilos para la página -->
 <style scoped lang="scss">
     body {
         overflow: hidden;
