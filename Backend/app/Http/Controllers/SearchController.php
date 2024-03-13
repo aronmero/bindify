@@ -66,7 +66,8 @@ class SearchController extends Controller
                         'posts.title',
                         'posts.description',
                         'post_types.name AS post_type',
-                        'posts.start_date as publicated_date'
+                        'posts.start_date as publicated_date',
+                        'commerces.avg'
                     )
                     ->where('commerces.active', '=', true)
                     ->where('posts.active', '=', true)
