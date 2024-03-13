@@ -177,7 +177,7 @@ class AuthController extends Controller
                 }
             } catch (ModelNotFoundException $e) {
                 $user->delete();
-                return response()->json(["status" => false, 'error' => 'Token de verificación incorrecto'], 404);
+                return response()->json(["status" => false, 'error' => 'Token de verificación no encontrado'], 404);
             } catch (Exception $th) {
                 $user->delete();
                 return response()->json(["status" => false, 'error' => $th->getMessage()], 500);
@@ -212,7 +212,7 @@ class AuthController extends Controller
                 ]);
             } catch (Exception $th) {
                 $user->delete();
-                return response()->json(['status' => false, 'message' => 'Datos de creacion de comercio erroneos', 'error' => $th->getMessage()], 500);
+                return response()->json(['status' => false, 'message' => 'Datos de creacion de cliente erroneos', 'error' => $th->getMessage()], 500);
             }
         }
 
