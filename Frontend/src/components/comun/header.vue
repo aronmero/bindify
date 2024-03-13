@@ -37,7 +37,7 @@ import  logo  from '@public/img/fondo.png';
         </RouterLink>
       </nav>
       <nav class="w-[50px] flex justify-center items-center">
-        <RouterLink to="/">
+        <RouterLink to="/perfil">
           <img title="Perfil" src="/assets/icons/user.svg" class="max-w-[30px] max-h-[30px] hidden lg:block"
             alt="Perfil" />
         </RouterLink>
