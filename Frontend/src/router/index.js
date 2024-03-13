@@ -39,26 +39,26 @@ const routes = [
   { path: "/notificaciones", component: () => import("@/views/Misc/notificaciones.vue") },
 
   //Estas tres se deberian reducir a una vista con 3 modos segun el tipo de usuario
-  { path: "/perfil/:username", component: () => import("@/views/perfiles/perfil.vue") },
+  { path: "/perfil/:username/", component: () => import("@/views/perfiles/perfil.vue") },
   { path: "/perfil", component: () => import("@/views/perfiles/perfil.vue") },
-  { path: "/perfil/:username/ayuntamiento", component: () => import("@/views/perfiles/ayuntamiento.vue"),
-    children:[
-      {path:"posts", component:() => import("@/components/perfiles/containers/contenedorVistaPosts.vue")},
-      {path:"eventos", component:() => import("@/components/perfiles/containers/contenedorVistaEventos.vue")}
-    ]},
-  { path: "/perfil/:username/comercio", name:"perfilComercio",component: () => import("@/views/perfiles/comercio.vue"),
-   children:[
-    {path:"posts", component:() => import("@/components/perfiles/containers/contenedorVistaPosts.vue")},
-    {path:"eventos", component:() => import("@/components/perfiles/containers/contenedorVistaEventos.vue")},
-    {path:"resenias", component:() => import("@/components/perfiles/containers/contenedorVistaResenias.vue")}
-  ]},
+  // { path: "/perfil/:username/ayuntamiento", component: () => import("@/views/perfiles/ayuntamiento.vue"),
+  //   children:[
+  //     {path:"posts", component:() => import("@/components/perfiles/containers/contenedorVistaPosts.vue")},
+  //     {path:"eventos", component:() => import("@/components/perfiles/containers/contenedorVistaEventos.vue")}
+  //   ]},
+  // { path: "/perfil/:username/comercio", name:"perfilComercio",component: () => import("@/views/perfiles/comercio.vue"),
+  //  children:[
+  //   {path:"posts", component:() => import("@/components/perfiles/containers/contenedorVistaPosts.vue")},
+  //   {path:"eventos", component:() => import("@/components/perfiles/containers/contenedorVistaEventos.vue")},
+  //   {path:"resenias", component:() => import("@/components/perfiles/containers/contenedorVistaResenias.vue")}
+  // ]},
 
-  { path: "/perfil/:username/particular", component: () => import("@/views/perfiles/particular.vue"), 
-  children:[
-    {path:"fidelidad", component:() => import("@/components/perfiles/containers/contenedorVistaFidelidad.vue")},
-    {path:"favoritos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")},
-    {path:"seguidos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")}
-  ]},
+  // { path: "/perfil/:username/particular", component: () => import("@/views/perfiles/particular.vue"), 
+  // children:[
+  //   {path:"fidelidad", component:() => import("@/components/perfiles/containers/contenedorVistaFidelidad.vue")},
+  //   {path:"favoritos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")},
+  //   {path:"seguidos", component:() => import("@/components/perfiles/containers/contenedorVistaFavoritos.vue")}
+  // ]},
   { path: "/tarjeta-fidelidad", component: () => import("@/views/perfiles/tarjetaFidelidad.vue")},
   { path: "/perfil/edit", component: () => import("@/views/perfiles/editarPerfil.vue") },
 

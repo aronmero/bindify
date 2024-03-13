@@ -20,7 +20,7 @@ import {
   aniadirFavorito,
 } from "@/Api/perfiles/perfil.js";
 import { ref } from "vue";
-
+console.log("REDIRIGE")
 import eventos from "@/components/perfiles/containers/contenedorVistaEventos.vue";
 import posts from "@/components/perfiles/containers/contenedorVistaPosts.vue";
 import resenias from "@/components/perfiles/containers/contenedorVistaResenias.vue";
@@ -33,6 +33,7 @@ let clickedLink = null;
 let userData = ref(null);
 let userExterno = ref(false);
 let linkUsername = ref(router.currentRoute.value.params.username);
+console.log(linkUsername.value)
 if (linkUsername.value == undefined) {
   router.push(`/perfil`);
 }

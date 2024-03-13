@@ -6,6 +6,7 @@ import { getUserFollows } from "@/Api/perfiles/perfil.js";
 import { setDefaultImgs } from "@/components/perfiles/helpers/defaultImgs";
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
+
 let followsList = ref(null);
 
 async function responseCatcher(metodo, subRuta) {
