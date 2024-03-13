@@ -119,24 +119,19 @@ class AuthController extends Controller
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $banner = $request->file('banner');
-            Storage::disk('avatars')->putFileAs($request->username , $avatar, 'imagenPerfil.webp');
-            Storage::disk('avatars')->putFileAs($request->username , $banner, 'banner.webp');
+            Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
+            Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
 
 
-        /*     return response()->json([
-                'success' => true,
-                'empresa' => $request->empresa,
-                'message' => 'Avatar received successfully',
-                'avatar_name' => $avatar->getClientOriginalName(),
-                'avatar_size' => $avatar->getSize(),
-                'existe_archivo' => Storage::disk('avatars')->exists($request->username),
-                'avatar_url' => asset('storage/avatars/'.$request->username.'/imagenPerfil.webp'),
-            ]); */
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'No avatar file attached'
-            ], 400);
+            /*     return response()->json([
+                    'success' => true,
+                    'empresa' => $request->empresa,
+                    'message' => 'Avatar received successfully',
+                    'avatar_name' => $avatar->getClientOriginalName(),
+                    'avatar_size' => $avatar->getSize(),
+                    'existe_archivo' => Storage::disk('avatars')->exists($request->username),
+                    'avatar_url' => asset('storage/avatars/'.$request->username.'/imagenPerfil.webp'),
+                ]); */
         }
         if ($request->empresa == true) {
             $request->validate([
@@ -157,7 +152,7 @@ class AuthController extends Controller
                 'password' => $request->password,
                 'phone' => $request->phone,
                 'municipality_id' => $request->municipality_id,
-                'avatar' => asset('storage/avatars/'.$request->username.'/imagenPerfil.webp'),
+                'avatar' => asset('storage/avatars/' . $request->username . '/imagenPerfil.webp'),
                 'username' => $request->username,
                 'name' => $request->name
             ]);
