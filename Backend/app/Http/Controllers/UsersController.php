@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Scripts\Utils;
 use App\Models\Commerce;
 use App\Models\Customer;
 use App\Models\Follower;
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
 use Exception;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -264,7 +262,7 @@ class UsersController extends Controller
                     Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
                     $customer->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
                 }
-                
+
                 if ($request->hasFile('banner')) {
                     $banner = $request->file('banner');
                     Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
@@ -285,7 +283,7 @@ class UsersController extends Controller
                     Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
                     $commerce->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
                 }
-                
+
                 if ($request->hasFile('banner')) {
                     $banner = $request->file('banner');
                     Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
@@ -447,7 +445,7 @@ class UsersController extends Controller
 
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                $post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Utils::Crypt($post->post_id);
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
             });
@@ -547,7 +545,7 @@ class UsersController extends Controller
 
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                $post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Utils::Crypt($post->post_id);
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
             });
