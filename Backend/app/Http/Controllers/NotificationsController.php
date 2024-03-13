@@ -53,67 +53,67 @@ class NotificationsController extends Controller
 
                 switch ($notificacion->element_type) {
 
-                        // Verificar si la notificación es un comentario
-                        case 'App\\Models\\Comment':
+                    // Verificar si la notificación es un comentario
+                    case 'App\\Models\\Comment':
 
-                            $comment = Comment::where('id', '=', $notificacion->element_id)->first();
-                            $post = $comment->post;
-    
-                            $encrypted_id = Crypt::encryptString(strval($notificacion->id));
-                            $notificacion->id_noti = $encrypted_id;
-    
-                            $notificacion->username = $comment->user->username;
-                            $notificacion->avatar = $comment->user->avatar;
-                            $notificacion->id_link = Crypt::encryptString($post->id);
-                            $notificacion->type = 'Comment';
-    
-                            break;
-    
-                        // Verificar si la notificación es una review
-                        case 'App\\Models\\Review':
-    
-                            $review = Review::where('id', '=', $notificacion->element_id)->first();
-    
-                            $encrypted_id = Crypt::encryptString(strval($notificacion->id));
-                            $notificacion->id_noti = $encrypted_id;
-    
-                            $notificacion->username = $review->user->username;
-                            $notificacion->avatar = $review->user->avatar;
-                            $notificacion->id_link = Crypt::encryptString($review->id);
-                            $notificacion->type = 'Review';
-    
-                            break;
-    
-                        // Verificar si la notificación es un follower
-                        case 'App\\Models\\Follower':
-    
-                            $user = User::where('id', '=', $notificacion->element_id)->first();
-    
-                            $encrypted_id = Crypt::encryptString(strval($notificacion->id));
-                            $notificacion->id_noti = $encrypted_id;
-    
-                            $notificacion->username = $user->username;
-                            $notificacion->avatar = $user->avatar;
-                            $notificacion->type = 'Follower';
-    
-                            break;
-    
-                        // Verificar si la notificación es sobre un post
-                        case 'App\\Models\\Post':
-    
-                            $post = Post::where('id', '=', $notificacion->element_id)->first();
-    
-                            $encrypted_id = Crypt::encryptString(strval($notificacion->id));
-                            $notificacion->id_noti = $encrypted_id;
-    
-                            $notificacion->username = $post->users->first()->username;
-                            $notificacion->avatar = $post->users->first()->avatar;
-                            $notificacion->id_link = Crypt::encryptString($post->id);
-                            $notificacion->type = 'Post';
-                            // dump($notificacion->id);
-    
-    
-                            break;
+                        $comment = Comment::where('id', '=', $notificacion->element_id)->first();
+                        $post = $comment->post;
+
+                        $encrypted_id = Crypt::encryptString(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
+
+                        $notificacion->username = $comment->user->username;
+                        $notificacion->avatar = $comment->user->avatar;
+                        $notificacion->id_link = Crypt::encryptString($post->id);
+                        $notificacion->type = 'Comment';
+
+                        break;
+
+                    // Verificar si la notificación es una review
+                    case 'App\\Models\\Review':
+
+                        $review = Review::where('id', '=', $notificacion->element_id)->first();
+
+                        $encrypted_id = Crypt::encryptString(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
+
+                        $notificacion->username = $review->user->username;
+                        $notificacion->avatar = $review->user->avatar;
+                        $notificacion->id_link = Crypt::encryptString($review->id);
+                        $notificacion->type = 'Review';
+
+                        break;
+
+                    // Verificar si la notificación es un follower
+                    case 'App\\Models\\Follower':
+
+                        $user = User::where('id', '=', $notificacion->element_id)->first();
+
+                        $encrypted_id = Crypt::encryptString(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
+
+                        $notificacion->username = $user->username;
+                        $notificacion->avatar = $user->avatar;
+                        $notificacion->type = 'Follower';
+
+                        break;
+
+                    // Verificar si la notificación es sobre un post
+                    case 'App\\Models\\Post':
+
+                        $post = Post::where('id', '=', $notificacion->element_id)->first();
+
+                        $encrypted_id = Crypt::encryptString(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
+
+                        $notificacion->username = $post->users->first()->username;
+                        $notificacion->avatar = $post->users->first()->avatar;
+                        $notificacion->id_link = Crypt::encryptString($post->id);
+                        $notificacion->type = 'Post';
+                        // dump($notificacion->id);
+
+
+                        break;
                 }
 
                 unset($notificacion->updated_at);
@@ -164,7 +164,37 @@ class NotificationsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Error de Decrypt',
+                ], 500);
+            }
+
+            $notificacion = Notification::where('id', $id)->firstOrFail();
+            $notificacion->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Notificación eliminada',
+            ], 200);
+
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => "Notificación no encontrada",
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => "Error: " . $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -210,7 +240,7 @@ class NotificationsController extends Controller
                 ], 500);
             }
 
-            $notificacion = Notification::where('id', $id)->firstOrFail()->favorito;
+            $notificacion = Notification::where('id', $id)->firstOrFail();
 
             if ($notificacion->seen) {
                 return response()->json([
@@ -218,6 +248,10 @@ class NotificationsController extends Controller
                     'message' => 'Notificación ya revisada',
                 ], 403);
             }
+
+            $notificacion->seen = true;
+            $notificacion->save();
+
             return response()->json([
                 'status' => true,
                 'message' => 'Notificación revisada',
