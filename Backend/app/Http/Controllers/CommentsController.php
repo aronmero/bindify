@@ -44,10 +44,13 @@ class CommentsController extends Controller
             // Obtener el usuario autenticado
             $user = auth()->user();
 
+            $request->post_id = Crypt::decryptString($request->post_id);
+
             // Crear un nuevo comentario
             $comment = new Comment();
             $comment->user_id = $user->id; // Asignar el ID de usuario
             $comment->post_id = $request->post_id;
+            
             $comment->content = $request->content;
             $comment->active = true; //comentario activo cuando se crea
             $comment->save();

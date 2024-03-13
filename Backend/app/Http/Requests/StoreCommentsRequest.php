@@ -22,7 +22,7 @@ class StoreCommentsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'post_id' => 'required|integer', // ID de la publicación a la que pertenece el comentario
+           'post_id' => 'required|string', // ID de la publicación a la que pertenece el comentario
             'content' => 'required|string', // Contenido del comentario
             'comment_id' => 'nullable|integer', // ID del comentario padre en caso de que exista
         ];
