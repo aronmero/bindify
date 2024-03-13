@@ -9,26 +9,32 @@ use Illuminate\Support\Facades\DB;
 
 class HashtagsController extends Controller
 {
-    /**
-     * Muestra todos los hashtags disponibles.
-     *
-     * Este método devuelve una lista de todos los hashtags disponibles en el sistema.
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "data": [
-     *         {
-     *             // Datos del hashtag
-     *         },
-     *         ...
-     *     ]
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "mensaje_de_error"
-     * }
-     */
+   /**
+ * @swagger
+ * /api/hashtags:
+ *   get:
+ *     summary: Muestra todos los hashtags disponibles.
+ *     description: >
+ *       Este método devuelve una lista de todos los hashtags disponibles en el sistema.
+ *     responses:
+ *       200:
+ *         description: Lista de hashtags obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: true
+ *               data:
+ *                 - name: NombreHashtag1
+ *                 - name: NombreHashtag2
+ *                 # ...
+ *       404:
+ *         description: Error al obtener la lista de hashtags.
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: false
+ *               message: mensaje_de_error
+ */
     public function index()
     {
         try {
@@ -48,27 +54,46 @@ class HashtagsController extends Controller
         }
     }
 
-    /**
-     * Almacena un nuevo hashtag.
-     *
-     * Este método almacena un nuevo hashtag con la información proporcionada.
-     *
-     * @bodyParam name string required El nombre del hashtag.
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "data": id_del_hashtag_creado
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "mensaje_de_error"
-     * }
-     * @response 400 {
-     *      "status": false,
-     *     "message": "el hashtag ya existe"
-     * }
-     */
+    
+/**
+ * @swagger
+ * /api/hashtags:
+ *   post:
+ *     summary: Almacena un nuevo hashtag.
+ *     description: >
+ *       Este método almacena un nuevo hashtag con la información proporcionada.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Hashtag creado exitosamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: true
+ *               message: Hashtag creado exitosamente.
+ *       400:
+ *         description: Error al crear el hashtag debido a que ya existe.
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: false
+ *               message: el hashtag ya existe
+ *       404:
+ *         description: Error al crear el hashtag.
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: false
+ *               message: mensaje_de_error
+ */
 
     public function store(StoreHashtagRequest $request)
     {
@@ -96,26 +121,40 @@ class HashtagsController extends Controller
     }
 
     /**
-     * Almacena un nuevo hashtag.
-     *
-     * Este método busca los 8 posts mas usados por los commerces y los posts.
-     *
-     * @bodyParam name string required El nombre del hashtag.
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "data": id_del_hashtag_creado
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "mensaje_de_error"
-     * }
-     * @response 400 {
-     *      "status": false,
-     *     "message": "el hashtag ya existe"
-     * }
-     */
+ * @swagger
+ * /api/hashtags/populares:
+ *   get:
+ *     summary: Obtiene los 8 hashtags más populares.
+ *     description: >
+ *       Este método busca los 8 hashtags más usados por los commerces y los posts.
+ *     parameters:
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Tipo de publicación (Posts o Commerces).
+ *     responses:
+ *       200:
+ *         description: Lista de hashtags populares obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: true
+ *               data:
+ *                 - name: NombreHashtag1
+ *                   hashtag_count: 10
+ *                 - name: NombreHashtag2
+ *                   hashtag_count: 8
+ *                 # ...
+ *       404:
+ *         description: Error al obtener la lista de hashtags populares.
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: false
+ *               message: mensaje_de_error
+ */
     public function populares(Request $request)
     {
         try {
