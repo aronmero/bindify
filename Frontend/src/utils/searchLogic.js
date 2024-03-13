@@ -40,7 +40,7 @@ export default function useSearchLogic() {
                 if (actualSection().getActualSection() === "Posts" ) {
                     return (hashtag.value === "" || result.hashtags.includes(hashtag.value)) &&
                         (post.value === "" || result.post_type === post.value) &&
-                        result.name.toLowerCase().includes(searchValue.value.toLowerCase())
+                        result.title.toLowerCase().includes(searchValue.value.toLowerCase())
                 } else {
                     return (category.value === "" || result.categories_name === category.value) &&
                         (location.value === "" || result.municipality_name === location.value) &&
