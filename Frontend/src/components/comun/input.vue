@@ -35,7 +35,7 @@ const seleccionarImagen = (e)=>{
             imagenSubida.value = e.target.parentNode.children[1].files[0];
             imagenSubida.value = URL.createObjectURL(imagenSubida.value);
         }
-    }
+    });
 }
 const borrarImagen = (e)=>{
     props.valor = null;
