@@ -55,16 +55,16 @@
                 <Filter />
            </div>
            <div v-if="loading">
-                <h3 class="text-center text-2xl">Cargando...</h3>
+                <h3 class="text-center text-xl text-[#b2b2b2] animate-bounce">cargando {{ actualSectionAux.getActualSection().toLowerCase() }}...</h3>
             </div>
             <div v-else class="flex flex-col justify-center gap-y-8">
                 <hashtagSection :popularsHastags="popularsHastags" v-show="section === 'comercios'"/>
-                <hashtagSection :popularsHastags="popularsHastags" v-show="section === 'posts'"/>
+                <hashtagSection :popularsHastags="popularsHastags" v-show="section === 'Posts'"/>
                 <Menu title="categorias" :menuOptions="categoriesOptions" v-show="section === 'comercios'" />
                 <Menu title="localizaciones" :menuOptions="locationOptions" v-show="section === 'comercios'" />
-                <Menu title="posts" :menuOptions="tiposPost" v-show="section === 'posts'" />
-                <button @click="resetFilters" class="text-right font-semibold rounded-full text-sm flex-none">resetear filtros</button>
-                <p class="text-[#c6c6c6] mb-[-10px] text-md " id="results">{{ filteredResults.length > 1 ? filteredResults.length + " " +  section + " encontrados" : filteredResults.length === 0 ? "Sin resultados" :  filteredResults.length +  " comercio encontrado" }}</p>
+                <Menu title="posts" :menuOptions="tiposPost" v-show="section === 'Posts'" />
+                <button @click="resetFilters" class="text-right font-semibold rounded-full text-sm flex-none" id="results">resetear filtros</button>
+                <p class="text-[#c6c6c6] mb-[-10px] text-md " >{{ filteredResults.length > 1 ? filteredResults.length + " " +  section + " encontrados" : filteredResults.length === 0 ? "Sin resultados" :  filteredResults.length +  " comercio encontrado" }}</p>
                 <commercesResults :comercios="filteredResults"/>
             </div>
             <scrollUpButton />

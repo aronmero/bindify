@@ -7,6 +7,7 @@ export async function getPopularHashtags(metodo, type,body=null) {
       const url = new URL(`${urlApiHome}/api/hashtag/trending`);
 
       url.searchParams.append('type', type);
+      console.log(url);
       const response = await fetch(
         url,
         options

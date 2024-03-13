@@ -28,7 +28,7 @@
   
   <style scoped>
     .selected {
-      background-color: #eb5959 !important;
+      background-color: #fe822f !important;
       color: white !important;
       font-weight: bold !important;
     }

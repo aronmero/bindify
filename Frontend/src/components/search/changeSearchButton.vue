@@ -2,7 +2,7 @@
     import {ref} from 'vue';
 
     let actualSection = ref("comercios");
-    let showSection = ref("posts");
+    let showSection = ref("Posts");
 
     const emit = defineEmits([
         "changeSection"
@@ -10,8 +10,8 @@
 
     const toggleSection = () =>{
         scrollTo(0,0);
-        actualSection.value === "comercios" ? actualSection.value = "posts" : actualSection.value = "comercios";
-        showSection.value === "comercios" ? showSection.value = "posts" : showSection.value = "comercios";
+        actualSection.value === "comercios" ? actualSection.value = "Posts" : actualSection.value = "comercios";
+        showSection.value === "comercios" ? showSection.value = "Posts" : showSection.value = "comercios";
         emit("changeSection", actualSection.value);
     }
 

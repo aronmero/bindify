@@ -3,7 +3,8 @@ import { genOptions, urlApiHome } from "@/Api/api.js";
 export async function getCommerces(metodo, type, body = null) {
   try {
     const options = genOptions(metodo, body);
-    const url = new URL(`${urlApiHome}/api/search`);    
+    const url = new URL(`${urlApiHome}/api/search`); 
+    console.log(url);   
     url.searchParams.append('type', type);
     const response = await fetch(url, options);
     const data = await response.json();
