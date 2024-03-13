@@ -17,6 +17,7 @@ const props = defineProps({
     comentario: Object,
 });
 
+
 const comentario = props.comentario;
 
 const user = comentario.username;
@@ -95,7 +96,7 @@ const abrirModal = () => {
             {{ comentario.content }}
         </span>
         <!-- Modal de Ver Más -->
-        <ModalReutilizable v-if="modalHandler" :options="opcionesModal" :status="modal_status" :handler="abrirModal" />
+        <ModalReutilizable v-if="modalHandler" :options="opcionesModal" :status="modal_status" :info="comentario"  :handler="abrirModal" />
     </div>
 </template>
 <style scoped lang="scss">
