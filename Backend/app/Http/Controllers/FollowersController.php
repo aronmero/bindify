@@ -163,9 +163,13 @@ class FollowersController extends Controller
 
             $follows = DB::table("followers")
                 ->join('users', 'followers.follows_id', '=', 'users.id')
-                ->select('followers.follows_id', 'avatar', 'username')
+                ->select('followers.follows_id', 'followers.favorito', 'avatar', 'username')
                 ->where('followers.follower_id', '=', $user->id)
                 ->get();
+
+            $follows->each(function ($follow) {
+                $follow->favorito = ($follow->favorito == 1)?true:false;
+            });
 
             return response()->json([
                 'status' => true,
