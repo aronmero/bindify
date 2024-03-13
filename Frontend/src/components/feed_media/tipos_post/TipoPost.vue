@@ -22,7 +22,7 @@ import { share } from '@/components/feed_media/helpers/share.js';
 import { datetranslatesql } from './../helpers/datetranslate.js'
 import router from '../../../router';
 
-import { en_favoritos } from '../helpers/favoritos';
+import { en_favoritos, obtener_favoritos } from '../helpers/favoritos';
 
 import Comentarios from '../modal/ComentariosHome.vue';
 
@@ -43,7 +43,7 @@ const modal_comentarios = ref(null);
 const comentariosVisibles = ref(false);
 
 /** Genero la referencia para obtener los favoritos del usuario, hecho en frontend por no poderse poner en back */
-const favoritos = ref(JSON.parse(localStorage.getItem("favoritos")));
+const favoritos = ref(obtener_favoritos());
 
 /** Abre el modal del perfil */
 const abrirModal = () => {

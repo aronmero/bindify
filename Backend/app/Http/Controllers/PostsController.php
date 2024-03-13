@@ -85,6 +85,7 @@ class PostsController extends Controller
                 $commentsCount = Comment::where('post_id', $post->post_id)->count();
                 $post->comment_count = $commentsCount;
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
+                $post->post_id = Crypt::encryptString($post->post_id);
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
             });
