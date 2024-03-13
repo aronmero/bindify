@@ -51,15 +51,21 @@ class NotificationsController extends Controller
                 $user = User::find($notificacion->user_id);
                 $notificacion->seen = ($notificacion->seen == 1) ? true : false;
 
+                // dump($notificacion);
+                // dump($notificacion->id);
+                // dump(strVal($notificacion->id));
+                // dump($id);
+
                 switch ($notificacion->element_type) {
 
-                        // Verificar si la notificación es un comentario
+                    // Verificar si la notificación es un comentario
                     case 'App\\Models\\Comment':
 
                         $comment = Comment::where('id', '=', $notificacion->element_id)->first();
                         $post = $comment->post;
 
-                        $notificacion->id = Crypt::encryptString($notificacion->id);
+                        $encrypted_id = Crypt::encryptString(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
 
                         $notificacion->username = $comment->user->username;
                         $notificacion->avatar = $comment->user->avatar;
@@ -68,12 +74,13 @@ class NotificationsController extends Controller
 
                         break;
 
-                        // Verificar si la notificación es una review
+                    // Verificar si la notificación es una review
                     case 'App\\Models\\Review':
 
                         $review = Review::where('id', '=', $notificacion->element_id)->first();
 
-                        $notificacion->id = Crypt::encryptString($notificacion->id);
+                        $encrypted_id = Crypt::encryptString(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
 
                         $notificacion->username = $review->user->username;
                         $notificacion->avatar = $review->user->avatar;
@@ -82,12 +89,13 @@ class NotificationsController extends Controller
 
                         break;
 
-                        // Verificar si la notificación es un follower
+                    // Verificar si la notificación es un follower
                     case 'App\\Models\\Follower':
 
                         $user = User::where('id', '=', $notificacion->element_id)->first();
 
-                        $notificacion->id = Crypt::encryptString($notificacion->id);
+                        $encrypted_id = Crypt::encryptString(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
 
                         $notificacion->username = $user->username;
                         $notificacion->avatar = $user->avatar;
@@ -95,24 +103,27 @@ class NotificationsController extends Controller
 
                         break;
 
-                        // Verificar si la notificación es sobre un post
+                    // Verificar si la notificación es sobre un post
                     case 'App\\Models\\Post':
 
                         $post = Post::where('id', '=', $notificacion->element_id)->first();
 
-                        $notificacion->id = Crypt::encryptString($notificacion->id);
+                        $encrypted_id = Crypt::encryptString(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
 
                         $notificacion->username = $post->users->first()->username;
                         $notificacion->avatar = $post->users->first()->avatar;
                         $notificacion->id_link = Crypt::encryptString($post->id);
                         $notificacion->type = 'Post';
+                        // dump($notificacion->id);
+
 
                         break;
                 }
 
                 unset($notificacion->updated_at);
-                unset($notificacion->id);
                 unset($notificacion->user_id);
+                unset($notificacion->id);
                 unset($notificacion->element_id);
                 unset($notificacion->element_type);
             }
