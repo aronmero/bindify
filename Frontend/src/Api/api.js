@@ -1,5 +1,6 @@
 
-export const urlApi = "http://apiproyecto.ajdevprojects.com";
+//export const urlApi = "http://apiproyecto.ajdevprojects.com";
+export const urlApi = "http://localhost:8000";
 export const urlApiHome = urlApi;
 
 /**

@@ -17,13 +17,14 @@ const storePost = useHomeStore();
 // sino se obtienen los posts por defecto
 let post_data;
 if (!storePost.isActivo) {
-    const posts_request = await obtener_posts();
+    let  posts_request = await obtener_posts_seguidos();
+    if(posts_request.data.length == 0) posts_request = await obtener_posts();
     post_data=posts_request.data
     storePost.add(post_data);
 }else{
     post_data=storePost.data;
 }
-console.log("obtenido feed por defecto");
+
 const posts = post_data;
 
 </script>

@@ -22,6 +22,13 @@ import { RouterLink } from "vue-router";
           alt="Busqueda" /></RouterLink>
     </nav>
     <nav class="w-[50px] flex justify-center items-center">
+      <RouterLink to="/post/nuevo">
+        <img  title="Nuevo Post" alt="Nuevo Post"
+          src="/assets/icons/add_rounded.svg"
+          class="max-w-[20px] max-h-[20px] "
+      /></RouterLink>
+    </nav>
+    <nav class="w-[50px] flex justify-center items-center">
       <RouterLink to="/calendario">
         <img title="Calendario"  alt="Calendario"
           src="/assets/icons/schedule.svg"
@@ -35,6 +42,7 @@ import { RouterLink } from "vue-router";
           class="max-w-[20px] max-h-[20px] "
       /></RouterLink>
     </nav>
+   
 
   </footer>
 </template>

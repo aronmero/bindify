@@ -73,12 +73,12 @@ const redirect = (url) => {
     router.push(url)
 }
 
-    /** Dependiendo del tipo de post, carga un icono  */
-    const tipo = post.value.name;
-    // console.log(post);
-    let IconoTipo = "";
-    if (tipo == 'Post') IconoTipo = TipoOferta; // 1 Post
-    if (tipo == 'Evento') IconoTipo = TipoEvento; // 2 Event
+/** Dependiendo del tipo de post, carga un icono  */
+const tipo = post.value.name;
+// console.log(post);
+let IconoTipo = "";
+if (tipo == 'Post') IconoTipo = TipoOferta; // 1 Post
+if (tipo == 'Evento') IconoTipo = TipoEvento; // 2 Event
 
 /**
  * Abre el modal de comentarios
@@ -110,12 +110,14 @@ const abrirComentarios = () => {
         // guardamos los cambios
         localStorage.setItem("favoritos", JSON.stringify(favoritos.value));
 
-}
 
+}
+/**Obtenemos el tipo de usuario para decidir que tipo de post se muestra */
 let tipo_usuario = ref(post.userRol);
 
 /** referencia los comentarios */
 let comentarios = ref(null);
+// console.log(post.value);
 
 //Esto es buena idea en Post.vue para cada 50 publicaciones pedir otras 50 o asi, aqui realiza peticiones continuas a la base de datos.
 /*
@@ -141,16 +143,15 @@ const { stop } = useIntersectionObserver(post_reference,
         <div>
             <!------------------------------------ Post NORMAL ------------------------------>
             <article ref="post_reference" v-if="post.userRol == 'commerce' && post.avg < 3.5"
-                :class="` post ${estilos.post} relative `" :data-start_date="post.start_date"
-                :data-end_date="post.end_date"
+                :class="` post ${estilos.post} relative `" :data-start_date="post.start_date" :data-end_date="post.end_date"
                 :data-favorito="(favoritos.indexOf(post.post_id) == -1) ? 'false' : 'true'">
+
                 <!-- Contenedor del header del post -->
                 <div class=" post-header w-[100%] h-[60px] flex items-center ">
                     <div
                         class=" avatar-wrapper w-[50px] min-w-[50px] min-h-[50px] h-[50px] rounded-full overflow-hidden mr-2">
                         <img @click="redirect(`perfil/${post.username}`)" loading="lazy"
-                            class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.avatar"
-                            alt="avatar_usuario">
+                            class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.avatar" alt="avatar_usuario">
                     </div>
                     <div class=" flex flex-col items-start w-[100%] h-[100%] ">
                         <b>{{ post.username }}</b>
@@ -170,17 +171,14 @@ const { stop } = useIntersectionObserver(post_reference,
                 </div>
 
                 <!-- Contenedor de la imagen del post -->
-
                 <div
                     class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl  overflow-hidden mt-5 ">
-                    <img @click="redirect(`post/${post.post_id}`)"
-                        class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
+                    <img @click="redirect(`post/${post.post_id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover "
+                        :src="post.image" :alt="post.titulo">
                 </div>
 
                 <!-- Contenedor de botones del post -->
                 <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
-
-
                     <!-- Comentarios -->
 
                     <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
@@ -190,20 +188,20 @@ const { stop } = useIntersectionObserver(post_reference,
 
                     <!-- Compartir -->
                     <button @click="share({
-                title: post.title,
-                text: post.description,
-                url: `post/${post.post_id}`
-            })" class=" flex flex-row items-center mr-3 ">
+                        title: post.title,
+                        text: post.description,
+                        url: `post/${post.post_id}`
+                    })" class=" flex flex-row items-center mr-2 ">
                         <img :src="ShareSVG" loading="lazy" />
                     </button>
 
                     <!-- Quitar y aniadir de guardados -->
                     <button @click="() => aniadir_favorito(post.post_id)" v-if="favoritos.indexOf(post.post_id) != -1"
-                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
+                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-0 ">
                         <img class="object-scale-down" :src="BookmarkSVG" loading="lazy" />
                     </button>
                     <button @click="() => aniadir_favorito(post.post_id)" v-else
-                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
+                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-0 ">
                         <img class="object-scale-down mt-0 " :src="BookmarkEmptySVG" loading="lazy" />
                     </button>
 
@@ -223,7 +221,7 @@ const { stop } = useIntersectionObserver(post_reference,
                     <div class=" hashtags flex">
                         <a class=" hashtag mr-[10px] font-bold " :href="`busqueda/${hashtag}`"
                             v-for="hashtag in post.hashtags"> #{{
-                hashtag }}</a>
+                                hashtag }}</a>
                     </div>
 
                 </div>
@@ -246,7 +244,7 @@ const { stop } = useIntersectionObserver(post_reference,
 
 
             <!------------------------------------ Post DESTACADO ------------------------------>
-            <article v-if="post.userRol == 'commerce' && post.avg >= 3.5" :class="` post ${estilos.post} relative`"
+            <article v-if="post.userRol == 'commerce' && post.avg >= 3.5" :class="` post ${estilos.post} relative`" ref="post_reference"
                 :data-start_date="post.start_date" :data-end_date="post.end_date"
                 :data-favorito="(favoritos.indexOf(post.post_id) == -1) ? 'false' : 'true'">
 
@@ -262,8 +260,8 @@ const { stop } = useIntersectionObserver(post_reference,
                         <small>{{ datetranslatesql(post.start_date) }}</small>
                         <button click="" class=" rating flex h-[fit-content] items-center justify-start "
                             v-if="post.avg != null">
-                            <img class="  " :src="StarSVG" v-for="index in Math.floor(post.avg)" alt="star"
-                                loading="lazy" :title="post.avg" />
+                            <img class="  " :src="StarSVG" v-for="index in Math.floor(post.avg)" alt="star" loading="lazy"
+                                :title="post.avg" />
                             <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(post.avg))" alt="star"
                                 loading="lazy" :title="post.avg" />
                             <small>({{ post.avg.toFixed(2) }})</small>
@@ -291,23 +289,23 @@ const { stop } = useIntersectionObserver(post_reference,
                         {{ post.comment_count }}
                     </button>
 
-                    <!-- Quitar y aniadir de guardados -->
-                    <button @click="() => aniadir_favorito(post.post_id)" v-if="favoritos.indexOf(post.post_id) != -1"
-                        class=" flex flex-row items-center mr-3 ">
-                        <img :src="BookmarkSVG" loading="lazy" />
-                    </button>
-                    <button @click="() => aniadir_favorito(post.post_id)" v-else
-                        class=" flex flex-row items-center mr-3 ">
-                        <img :src="BookmarkEmptySVG" loading="lazy" />
-                    </button>
-
                     <!-- Compartir -->
                     <button @click="share({
-                title: post.title,
-                text: post.description,
-                url: `post/${post.post_id}`
-            })" class=" flex flex-row items-center mr-3 ">
+                        title: post.title,
+                        text: post.description,
+                        url: `post/${post.post_id}`
+                    })" class=" flex flex-row items-center mr-2 ">
                         <img :src="ShareSVG" loading="lazy" />
+                    </button>
+
+                    <!-- Quitar y aniadir de guardados -->
+                    <button @click="() => aniadir_favorito(post.post_id)" v-if="favoritos.indexOf(post.post_id) != -1"
+                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-0 ">
+                        <img class="object-scale-down" :src="BookmarkSVG" loading="lazy" />
+                    </button>
+                    <button @click="() => aniadir_favorito(post.post_id)" v-else
+                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-0 ">
+                        <img class="object-scale-down mt-0 " :src="BookmarkEmptySVG" loading="lazy" />
                     </button>
 
                 </div>
@@ -346,16 +344,15 @@ const { stop } = useIntersectionObserver(post_reference,
             </article>
 
             <!------------------------------------ Post AYUNTAMIENTO ------------------------------>
-            <article v-if="post.userRol == 'ayuntamiento'" :class="` post ${estilos.post} relative`"
+            <article v-if="post.userRol == 'ayuntamiento'" :class="` post ${estilos.post} relative`" ref="post_reference"
                 :data-start_date="post.start_date" :data-end_date="post.end_date"
-                :data-favorito="(favoritos.indexOf(post.username) == -1) ? 'false' : 'true'">
+                :data-favorito="(favoritos.indexOf(post.post_id) == -1) ? 'false' : 'true'">
 
                 <!-- post header -->
                 <div class=" post-header w-[100%] h-[fit-content] flex items-center pt-3 pb-4 ">
                     <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden  mr-2 ">
                         <img @click="redirect(`ayuntamiento/${post.user_id}`)" loading="lazy"
-                            class=" cursor-pointer w-[100%] h-[100%] object-cover" :src="post.avatar"
-                            alt="avatar_usuario">
+                            class=" cursor-pointer w-[100%] h-[100%] object-cover" :src="post.avatar" alt="avatar_usuario">
                     </div>
                     <div @click="redirect(`ayuntamiento/${post.post_id}`)"
                         class=" cursor-pointer flex flex-col items-start texts w-[100%] h-[100%] ">
@@ -379,15 +376,17 @@ const { stop } = useIntersectionObserver(post_reference,
                 <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
                     <!-- Los destacados de ayuntamiento no tienen botones de feedback salvo el de guardar -->
 
-                    <!-- Quitar y aniadir de guardados -->
-                    <button @click="() => aniadir_favorito(post.post_id)" v-if="en_favoritos(post.post_id)"
-                        class=" flex flex-row items-center mr-3 ">
-                        <img :src="BookmarkSVG" loading="lazy" />
+
+                        <!-- Quitar y aniadir de guardados -->
+                    <button @click="() => aniadir_favorito(post.post_id)" v-if="favoritos.indexOf(post.post_id) != -1"
+                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
+                        <img class="object-scale-down" :src="BookmarkSVG" loading="lazy" />
                     </button>
                     <button @click="() => aniadir_favorito(post.post_id)" v-else
-                        class=" flex flex-row items-center mr-3 ">
-                        <img :src="BookmarkEmptySVG" loading="lazy" />
+                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
+                        <img class="object-scale-down mt-0 " :src="BookmarkEmptySVG" loading="lazy" />
                     </button>
+
 
                     <!-- Comentarios -->
                     <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
@@ -397,10 +396,10 @@ const { stop } = useIntersectionObserver(post_reference,
 
                     <!-- Compartir -->
                     <button @click="share({
-                title: post.title,
-                text: post.description,
-                url: `post/${post.post_id}`
-            })" class=" flex flex-row items-center mr-3 ">
+                        title: post.title,
+                        text: post.description,
+                        url: `post/${post.post_id}`
+                    })" class=" flex flex-row items-center mr-3 ">
                         <img :src="ShareSVG" loading="lazy" />
                     </button>
 

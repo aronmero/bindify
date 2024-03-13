@@ -3,6 +3,7 @@ import router from '@/router/index.js';
 import { ref } from 'vue';
 import Input from '@/components/comun/input.vue';
 import { login } from "@/Api/auth.js";
+import { google_login } from '../../Api/google';
 
 const email = ref("");
 const password = ref("");
@@ -84,7 +85,7 @@ function Registro() {
             <div class="flex flex-col gap-y-5">
                 <p class="text-center">O inicie sesión con:</p>
                 <div class="social-media-buttons flex w-full justify-evenly gap-x-5">
-                    <Input tipo="button" clase="social" img="/img/google-logo.png" />
+                    <Input tipo="button" @click="google_login" clase="social" img="/img/google-logo.png" />
                     <Input tipo="button" clase="social" img="/img/facebook-logo.png" />
                     <Input tipo="button" clase="social" img="/img/instagram-logo.png" />
                 </div>
