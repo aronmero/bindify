@@ -22,7 +22,7 @@ class StorePostsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'image', // Imagen del post
+            'image' => 'string', // Imagen del post
             'title' => 'required|string|max:255', // Titulo del post
             'description' => 'string|max:300', // Descripción del post
             'post_type_id' => 'required|integer', // Id de tipo de publicación

@@ -38,12 +38,8 @@ class PostsHashtagsTableSeeder extends Seeder
             ->inRandomOrder()
             ->first();
 
-            DB::table('posts-hashtags')->insert([
-                'post_id' => $postId->postId,
-                'hashtag_id' => $hashtagId->hashtag_id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            Post::where('id', '=', $postId->postId)->first()->hashtags()->attach($hashtagId->hashtag_id);
+
         }
     }
 }

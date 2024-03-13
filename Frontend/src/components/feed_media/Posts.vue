@@ -6,21 +6,24 @@
     
     import {obtener_posts, obtener_posts_seguidos} from '@/Api/home/publicaciones';
     const user = JSON.parse(sessionStorage.getItem("usuario"));
-    console.log(user);
 
-    // const posts_feed = await obtener_posts_seguidos();
+    // primero se lee los usuarios de su feed
+    //const posts_feed = await obtener_posts_seguidos();
     //let posts = posts_feed.data;
-
-    const posts_request = await obtener_posts();
-    let posts = posts_request.data;
-
+    //console.log(posts);
+    //if(posts_feed.data.length == 0) {
+        // sino se obtienen los posts por defecto
+        const posts_request = await obtener_posts();
+        console.log("obtenido feed por defecto");
+        const posts = posts_request.data;
+    //}
+    
 </script>
 
 <template>
     <div class="flex filters">
         <Filtros :filtros="filtros"></Filtros>
     </div>
-    
     <Suspense>
         <Feed 
             v-for="post in posts" 

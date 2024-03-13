@@ -1,4 +1,4 @@
-export const urlApiHome = "http://127.0.0.1:8000";
+export const urlApi = "http://apiproyecto.ajdevprojects.com";
 /**
  * Genera unas opciones para hacer una peticion a una api. Obtiene un token del SessionStorage
  * @date 3/10/2024 - 5:32:17 PM
@@ -17,8 +17,8 @@ export const genOptions = (metodo, body = null) => {
     headers: {
       "Content-Type": "application/json",
       "User-Agent": "insomnia/8.6.0",
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
+      "Accept": "application/json",
+      "Authorization": `Bearer ${token}`,
     },
     body: body,
   };

@@ -118,6 +118,7 @@
      * */
     const back = () => {
         router.push('/');
+        document.body.style.overflow= "scroll";
     }
 
 </script>

@@ -11,6 +11,7 @@ use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\MunicipalitiesController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\UsersController;
 use App\Models\Follower;
 use Illuminate\Http\Request;
@@ -48,9 +49,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 // Route::apiResource('notification', NotificationsController::class)->except(['index', 'destroy']);
     Route::get('follower', [FollowersController::class , 'showFollowers']);
     Route::post('follow/{id}', [FollowersController::class , 'follow']);
+    Route::post('favorite/{id}', [FollowersController::class , 'favorite']);
     Route::get('follows', [FollowersController::class , 'showFollows']);
     Route::get('home', [PostsController::class , 'home']);
     Route::get('search', [SearchController::class, 'search']);
+    Route::apiResource('notifications', NotificationsController::class)->only('index');
 
     Route::post('logout', [AuthController::class, 'logout']);
 

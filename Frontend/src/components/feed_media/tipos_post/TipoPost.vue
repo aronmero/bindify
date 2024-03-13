@@ -1,5 +1,5 @@
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { ref } from 'vue';
 
     import { useIntersectionObserver } from '@vueuse/core'
 
@@ -28,9 +28,11 @@
     import { en_favoritos, obtener_favoritos } from '../helpers/favoritos';
 
     import Comentarios from '../modal/ComentariosHome.vue';
+    import { obtener_tipo_comercio } from '@/Api/home/publicaciones';
 
     const props = defineProps({
-        post: Object
+        post: Object,
+        tipo: String
     });
 
 
@@ -46,6 +48,7 @@
      /** Genero la referencia para obtener los favoritos del usuario, hecho en frontend por no poderse poner en back */
     const favoritos = ref(JSON.parse(sessionStorage.getItem("favoritos")));
 
+    /** Abre el modal del perfil */
     const abrirModal = () => {
         if (modalHandler.value) {
             modal.value.style.display = "none";
@@ -73,11 +76,11 @@
         router.push(url)
     }
 
-    /** Dependiendo del tipo de ar */
-    const tipo = props.post.post_type_id;
+    /** Dependiendo del tipo de  */
+    const tipo = ref(null);
     let IconoTipo = "";
-    if (tipo == 1) IconoTipo = TipoOferta;
-    if (tipo == 2) IconoTipo = TipoEvento;
+    if (tipo == 1) IconoTipo = TipoOferta; // 1 Post
+    if (tipo == 2) IconoTipo = TipoEvento; // 2 Event
 
     /**
      * Abre el modal de comentarios
@@ -94,6 +97,7 @@
      * para aprovechar la variable de referencia y
      * aplicar los cambiso en el Front del usuario
      * */
+
     const aniadir_favorito = (item) => {
         if (favoritos.value.indexOf(item) == -1) {
             favoritos.value.push(item);
@@ -108,17 +112,22 @@
         sessionStorage.setItem("favoritos", JSON.stringify(favoritos.value));
     }
 
-    let tipo_usuario = "comercio";
+    let tipo_usuario = ref("comercio");
 
     /** referencia los comentarios */
-    let comentarios = ref([]);
-
+    let comentarios = ref(null);
+ 
+    //console.log(tipo_usuario);
     const { stop } = useIntersectionObserver(post_reference,
-        ([{ isIntersecting }], observerElement) => {
+        async ([{ isIntersecting }], observerElement) => {
                 if(isIntersecting) {
                     let post_id = post.value.post_id;
-                    comentarios.value = obtener_comentarios_post(post_id); 
+                
+                    comentarios.value = await obtener_comentarios_post(post_id);
+                    console.log(comentarios.value)
+                   
                     console.log("showing element ", post.value.post_id)
+                    console.log(post.value);
                     stop();
                 }
             },
@@ -127,287 +136,296 @@
 </script>
 
 <template>
-    <!------------------------------------ Post NORMAL ------------------------------>
-    <article ref="post_reference" v-if="tipo_usuario == 'comercio' && post.avg < 4"
-        :class="` post ${estilos.post} relative `" :data-start_date="post.start_date" :data-end_date="post.end_date"
+    <Suspense>
+        <div>
+             <!------------------------------------ Post NORMAL ------------------------------>
+        <article ref="post_reference" v-if="post.userRol == 'commerce' && post.avg < 3.5"
+            :class="` post ${estilos.post} relative `" :data-start_date="post.start_date" :data-end_date="post.end_date"
+            :data-favorito="(favoritos.indexOf(post.post_id) == -1) ? 'false' : 'true'">
+            <!-- Contenedor del header del post -->
+            <div class=" post-header w-[100%] h-[60px] flex items-center ">
+                <div class=" avatar-wrapper w-[50px] min-w-[50px] min-h-[50px] h-[50px] rounded-full overflow-hidden mr-2">
+                    <img @click="redirect(`comercio/${post.user_id}`)" loading="lazy"
+                        class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.avatar" alt="avatar_usuario">
+                </div>
+                <div class=" flex flex-col items-start w-[100%] h-[100%] ">
+                    <b>{{ post.username }}</b>
+                    <small>{{ datetranslatesql(post.start_date) }}</small>
+                    <button click="" class=" rating flex h-[fit-content] items-center justify-start " v-if="post.avg != null">
+                        <img class="  " :src="StarSVG" v-for="index in Math.floor(post.avg)" alt="star" :title="post.avg"
+                            loading="lazy" />
+                        <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(post.avg))" alt="star"
+                            :title="post.avg" loading="lazy" />
+                        <small>({{ post.avg.toFixed(2) }})</small>
+                    </button>
+                </div>
+                <button @click="() => abrirModal(post.id)" class="mr-4">
+                    <img :src="MoreSVG" alt="dots">
+                </button>
+            </div>
+
+            <!-- Contenedor de la imagen del post -->
+
+            <div
+                class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl  overflow-hidden mt-5 ">
+                <img @click="redirect(`post/${post.post_id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover "
+                    :src="post.image" :alt="post.titulo">
+            </div>
+
+            <!-- Contenedor de botones del post -->
+            <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
+
+                <!-- Comentarios -->
+                
+                <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
+                    <img :src="ChatSVG" loading="lazy" />
+                    <template v-if="comentarios != null"> {{ comentarios.comentarios.length }}</template>
+                </button>
+
+                <!-- Compartir -->
+                <button @click="share({
+                    title: post.title,
+                    text: post.description,
+                    url: `post/${post.post_id}`
+                })" class=" flex flex-row items-center mr-3 ">
+                    <img :src="ShareSVG" loading="lazy" />
+                </button>
+
+                <!-- Quitar y aniadir de guardados -->
+                <button @click="() => aniadir_favorito(post.post_id)" v-if="favoritos.indexOf(post.post_id) != -1"
+                    class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
+                    <img class="object-scale-down" :src="BookmarkSVG" loading="lazy" />
+                </button>
+                <button @click="() => aniadir_favorito(post.post_id)" v-else
+                    class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
+                    <img class="object-scale-down mt-0 " :src="BookmarkEmptySVG" loading="lazy" />
+                </button>
+
+
+            </div>
+            <!-- Contenido del Post -->
+            <div class="information ">
+                <h1>
+                    <img :src="IconoTipo" alt="icono-evento" loading="lazy">
+                    {{ post.title }}
+                </h1>
+                <span>
+                    {{ post.description }}
+                </span>
+                <div class=" hashtags flex">
+                    <a class=" hashtag mr-[10px] font-bold " :href="`busqueda/${hashtag}`" v-for="hashtag in post.hashtags"> #{{
+                        hashtag }}</a>
+                </div>
+
+            </div>
+
+            <!-- Modal de Ver Más -->
+            <div ref="modal" :id="`modal_${post.id}`" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
+                <!-- Botón ver perfil -->
+                <button @click="redirect(`comercio/${post.user_id}`)" :class="`${estilos.modal_button} m-2 `">
+                    <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" loading="lazy" />
+                    Ver perfil
+                </button>
+                <!-- Botón ver reseñas comercio -->
+                <button :class="`${estilos.modal_button} m-2 `">
+                    <img class="w-[30px] h-[30px]  mr-3 " :src="StarSVG" loading="lazy" />
+                    Reseñas
+                </button>
+            </div>
+        </article>
+
+
+        <!------------------------------------ Post DESTACADO ------------------------------>
+        <article v-if="post.userRol == 'commerce' && post.avg >= 3.5" :class="` post ${estilos.post} relative`" :data-start_date="post.start_date" :data-end_date="post.end_date"
+            :data-favorito="(favoritos.indexOf(post.post_id) == -1) ? 'false' : 'true'">
+
+            <!-- Contenedor del header del post -->
+            <div class=" post-header w-[100%] h-[60px] flex items-center ">
+                <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden mr-2 ">
+                    <img @click="redirect(`comercio/${post.user_id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover  "
+                        :src="post.avatar" alt="avatar_usuario">
+                </div>
+                <div class=" flex flex-col items-start texts w-[100%]  h-[100%]  ">
+                    <b @click="redirect(`comercio/${post.id}`)" class="cursor-pointer">{{ post.username }}</b>
+                    <small>{{ datetranslatesql(post.start_date) }}</small>
+                    <button click="" class=" rating flex h-[fit-content] items-center justify-start " v-if="post.avg != null">
+                        <img class="  " :src="StarSVG" v-for="index in Math.floor(post.avg)" alt="star" loading="lazy"
+                            :title="post.avg" />
+                        <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(post.avg))" alt="star" loading="lazy"
+                            :title="post.avg" />
+                        <small>({{ post.avg.toFixed(2) }})</small>
+                    </button>
+                </div>
+                <button @click="() => abrirModal(post.id)" class="mr-4">
+                    <img :src="MoreSVG" alt="dots">
+                </button>
+            </div>
+
+            <!-- Contenedor de la imagen del post -->
+
+            <div
+                class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl overflow-hidden mt-5 mb-5 ">
+                <img @click="redirect(`post/${post.id}`)" class=" w-[100%] h-[100%] object-cover  " :src="post.image"
+                    :alt="post.titulo">
+            </div>
+
+            <!-- post footer -->
+            <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
+
+                <!-- Comentarios -->
+                <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
+                    <img :src="ChatSVG" loading="lazy" />
+                    <template v-if="comentarios != null"> {{ comentarios.comentarios.length }}</template>
+                </button>
+
+                <!-- Quitar y aniadir de guardados -->
+                <button @click="() => aniadir_favorito(post.post_id)" v-if="favoritos.indexOf(post.post_id) != -1"
+                    class=" flex flex-row items-center mr-3 ">
+                    <img :src="BookmarkSVG" loading="lazy" />
+                </button>
+                <button @click="() => aniadir_favorito(post.post_id)" v-else class=" flex flex-row items-center mr-3 ">
+                    <img :src="BookmarkEmptySVG" loading="lazy" />
+                </button>
+
+                <!-- Compartir -->
+                <button @click="share({
+                    title: post.title,
+                    text: post.description,
+                    url: `post/${post.post_id}`
+                })" class=" flex flex-row items-center mr-3 ">
+                    <img :src="ShareSVG" loading="lazy" />
+                </button>
+
+            </div>
+            <!-- Contenido del Post -->
+            <div class="information">
+                <h1>
+                    <img :src="IconoTipo" alt="icono-evento" loading="lazy">
+                    {{ post.title }}
+                </h1>
+                <span>{{ post.description }}</span>
+            </div>
+
+            <!-- Modal de Destacados -->
+            <div :class="` badge modal modal-izq destacado ${estilos.modal} ${estilos.modal_inferior_izq} `">
+                <button :class="`${estilos.modal_button} `">
+                    <img class=" w-[20px] h-[20px]  mr-3 " :src="StarSVG" />
+                    Destacado por la comunidad
+                </button>
+            </div>
+
+            <!-- Modal de Ver Más -->
+            <div ref="modal" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
+                <!-- Botón ver perfil -->
+                <button @click="redirect(`comercio/${post.id}`)" :class="`${estilos.modal_button} m-2 `">
+                    <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" loading="lazy" />
+                    Ver perfil
+                </button>
+                <!-- Botón ver reseñas comercio -->
+                <button :class="`${estilos.modal_button} m-2 `">
+                    <img class="w-[30px] h-[30px]  mr-3 " :src="StarSVG" loading="lazy" />
+                    Reseñas
+                </button>
+            </div>
+
+       
+        </article>
+
+        <!------------------------------------ Post AYUNTAMIENTO ------------------------------>
+        <article v-if="post.userRol == 'ayuntamiento'" :class="` post ${estilos.post} relative`" :data-start_date="post.start_date" :data-end_date="post.end_date"
         :data-favorito="(favoritos.indexOf(post.post_id) == -1) ? 'false' : 'true'">
-        <!-- Contenedor del header del post -->
-        <div class=" post-header w-[100%] h-[60px] flex items-center ">
-            <div class=" avatar-wrapper w-[50px] min-w-[50px] min-h-[50px] h-[50px] rounded-full overflow-hidden mr-2">
-                <img @click="redirect(`comercio/${post.user_id}`)" loading="lazy"
-                    class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.avatar" alt="avatar_usuario">
-            </div>
-            <div class=" flex flex-col items-start w-[100%] h-[100%] ">
-                <b>{{ post.username }}</b>
-                <small>{{ datetranslatesql(post.start_date) }}</small>
-                <button click="" class=" rating flex h-[fit-content] items-center justify-start " v-if="post.avg != null">
-                    <img class="  " :src="StarSVG" v-for="index in Math.floor(post.avg)" alt="star" :title="post.avg"
-                        loading="lazy" />
-                    <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(post.avg))" alt="star"
-                        :title="post.avg" loading="lazy" />
-                    <small>({{ post.avg.toFixed(2) }})</small>
+
+            <!-- post header -->
+            <div class=" post-header w-[100%] h-[fit-content] flex items-center pt-3 pb-4 ">
+                <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden  mr-2 ">
+                    <img @click="redirect(`ayuntamiento/${post.user_id}`)" loading="lazy"
+                        class=" cursor-pointer w-[100%] h-[100%] object-cover" :src="post.avatar" alt="avatar_usuario">
+                </div>
+                <div @click="redirect(`ayuntamiento/${post.id}`)"
+                    class=" cursor-pointer flex flex-col items-start texts w-[100%] h-[100%] ">
+                    <b>{{ post.usuario.nombre }}</b>
+                    <small> Organización </small>
+                </div>
+                <button @click="() => abrirModal(post.id)" class="mr-4">
+                    <img :src="MoreSVG" alt="dots" loading="lazy">
                 </button>
             </div>
-            <button @click="() => abrirModal(post.id)" class="mr-4">
-                <img :src="MoreSVG" alt="dots">
-            </button>
-        </div>
 
-        <!-- Contenedor de la imagen del post -->
+            <!-- post image -->
 
-        <div
-            class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl  overflow-hidden mt-5 ">
-            <img @click="redirect(`post/${post.post_id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover "
-                :src="post.image" :alt="post.titulo">
-        </div>
-
-        <!-- Contenedor de botones del post -->
-        <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
-
-            <!-- Comentarios -->
-            <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
-                <img :src="ChatSVG" loading="lazy" />
-                {{ comentarios.length }}
-            </button>
-
-            <!-- Compartir -->
-            <button @click="share({
-                title: post.title,
-                text: post.description,
-                url: `post/${post.post_id}`
-            })" class=" flex flex-row items-center mr-3 ">
-                <img :src="ShareSVG" loading="lazy" />
-            </button>
-
-            <!-- Quitar y aniadir de guardados -->
-            <button @click="() => aniadir_favorito(post.post_id)" v-if="favoritos.indexOf(post.post_id) != -1"
-                class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
-                <img class="object-scale-down" :src="BookmarkSVG" loading="lazy" />
-            </button>
-            <button @click="() => aniadir_favorito(post.post_id)" v-else
-                class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
-                <img class="object-scale-down mt-0 " :src="BookmarkEmptySVG" loading="lazy" />
-            </button>
-
-
-        </div>
-        <!-- Contenido del Post -->
-        <div class="information ">
-            <h1>
-                <img :src="IconoTipo" alt="icono-evento" loading="lazy">
-                {{ post.title }}
-            </h1>
-            <span>
-                {{ post.description }}
-            </span>
-            <div class=" hashtags flex">
-                <a class=" hashtag mr-[10px] font-bold " :href="`busqueda/${hashtag}`" v-for="hashtag in post.hashtags"> #{{
-                    hashtag }}</a>
+            <div
+                class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl overflow-hidden ">
+                <img @click="redirect(`post/${post.id}`)" loading="lazy" class=" cursor-pointer w-[100%] h-[100%] object-cover "
+                    :src="post.image" :alt="post.titulo">
             </div>
 
-        </div>
+            <!-- post footer -->
+            <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
+                <!-- Los destacados de ayuntamiento no tienen botones de feedback salvo el de guardar -->
 
-        <!-- Modal de Ver Más -->
-        <div ref="modal" :id="`modal_${post.id}`" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
-            <!-- Botón ver perfil -->
-            <button @click="redirect(`comercio/${post.user_id}`)" :class="`${estilos.modal_button} m-2 `">
-                <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" loading="lazy" />
-                Ver perfil
-            </button>
-            <!-- Botón ver reseñas comercio -->
-            <button :class="`${estilos.modal_button} m-2 `">
-                <img class="w-[30px] h-[30px]  mr-3 " :src="StarSVG" loading="lazy" />
-                Reseñas
-            </button>
-        </div>
-    </article>
+                <!-- Quitar y aniadir de guardados -->
+                <button @click="() => aniadir_favorito(post.post_id)" v-if="en_favoritos(post.post_id)"
+                    class=" flex flex-row items-center mr-3 ">
+                    <img :src="BookmarkSVG" loading="lazy" />
+                </button>
+                <button @click="() => aniadir_favorito(post.post_id)" v-else class=" flex flex-row items-center mr-3 ">
+                    <img :src="BookmarkEmptySVG" loading="lazy" />
+                </button>
 
+                <!-- Comentarios -->
+                <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
+                    <img :src="ChatSVG" loading="lazy" />
+                    {{ comentarios.value.length }}
+                </button>
 
-    <!------------------------------------ Post DESTACADO ------------------------------>
-    <article v-if="tipo_usuario == 'comercio' && post.avg >= 4" :class="` post ${estilos.post} relative`">
+                <!-- Compartir -->
+                <button @click="share({
+                    title: post.title,
+                    text: post.description,
+                    url: `post/${post.post_id}`
+                })" class=" flex flex-row items-center mr-3 ">
+                    <img :src="ShareSVG" loading="lazy" />
+                </button>
 
-        <!-- Contenedor del header del post -->
-        <div class=" post-header w-[100%] h-[60px] flex items-center ">
-            <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden mr-2 ">
-                <img @click="redirect(`comercio/${post.user_id}`)" class=" cursor-pointer w-[100%] h-[100%] object-cover  "
-                    :src="post.avatar" alt="avatar_usuario">
             </div>
-            <div class=" flex flex-col items-start texts w-[100%]  h-[100%]  ">
-                <b @click="redirect(`comercio/${post.id}`)" class="cursor-pointer">{{ post.username }}</b>
-                <small>{{ datetranslatesql(post.start_date) }}</small>
-                <button click="" class=" rating flex h-[fit-content] items-center justify-start " v-if="post.avg != null">
-                    <img class="  " :src="StarSVG" v-for="index in Math.floor(post.avg)" alt="star" loading="lazy"
-                        :title="post.avg" />
-                    <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(post.avg))" alt="star" loading="lazy"
-                        :title="post.avg" />
-                    <small>({{ post.avg.toFixed(2) }})</small>
+
+            <!-- Contenido del Post -->
+            <div class="information">
+                <h1>
+                    <img :src="IconoTipo" alt="icono-evento" loading="lazy">
+                    {{ post.title }}
+                </h1>
+                <span>{{ post.description }}</span>
+            </div>
+
+            <!-- Modal de Evento Institucional -->
+            <div :class="` badge modal modal-izq ${estilos.modal}  ${estilos.modal_inferior_izq}`">
+                <button :class="`${estilos.modal_button} `">
+                    <img class=" w-[20px] h-[20px]  mr-3 " :src="StarSVG" loading="lazy" />
+                    Evento Institucional
                 </button>
             </div>
-            <button @click="() => abrirModal(post.id)" class="mr-4">
-                <img :src="MoreSVG" alt="dots">
-            </button>
-        </div>
 
-        <!-- Contenedor de la imagen del post -->
-
-        <div
-            class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl overflow-hidden mt-5 mb-5 ">
-            <img @click="redirect(`post/${post.id}`)" class=" w-[100%] h-[100%] object-cover  " :src="post.image"
-                :alt="post.titulo">
-        </div>
-
-        <!-- post footer -->
-        <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
-
-            <!-- Comentarios -->
-            <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
-                <img :src="ChatSVG" loading="lazy" />
-            </button>
-
-            <!-- Quitar y aniadir de guardados -->
-            <button @click="() => aniadir_favorito(post.post_id)" v-if="favoritos.indexOf(post.post_id) != -1"
-                class=" flex flex-row items-center mr-3 ">
-                <img :src="BookmarkSVG" loading="lazy" />
-            </button>
-            <button @click="() => aniadir_favorito(post.post_id)" v-else class=" flex flex-row items-center mr-3 ">
-                <img :src="BookmarkEmptySVG" loading="lazy" />
-            </button>
-
-            <!-- Compartir -->
-            <button @click="share({
-                title: post.title,
-                text: post.description,
-                url: `post/${post.post_id}`
-            })" class=" flex flex-row items-center mr-3 ">
-                <img :src="ShareSVG" loading="lazy" />
-            </button>
-
-        </div>
-        <!-- Contenido del Post -->
-        <div class="information">
-            <h1>
-                <img :src="IconoTipo" alt="icono-evento" loading="lazy">
-                {{ post.title }}
-            </h1>
-            <span>{{ post.description }}</span>
-        </div>
-
-        <!-- Modal de Destacados -->
-        <div :class="` badge modal modal-izq destacado ${estilos.modal} ${estilos.modal_inferior_izq} `">
-            <button :class="`${estilos.modal_button} `">
-                <img class=" w-[20px] h-[20px]  mr-3 " :src="StarSVG" />
-                Destacado por la comunidad
-            </button>
-        </div>
-
-        <!-- Modal de Ver Más -->
-        <div ref="modal" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
-            <!-- Botón ver perfil -->
-            <button @click="redirect(`comercio/${post.id}`)" :class="`${estilos.modal_button} m-2 `">
-                <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" loading="lazy" />
-                Ver perfil
-            </button>
-            <!-- Botón ver reseñas comercio -->
-            <button :class="`${estilos.modal_button} m-2 `">
-                <img class="w-[30px] h-[30px]  mr-3 " :src="StarSVG" loading="lazy" />
-                Reseñas
-            </button>
-        </div>
-
-    </article>
-
-    <!------------------------------------ Post AYUNTAMIENTO ------------------------------>
-    <article v-if="tipo_usuario == 'ayuntamiento'" :class="` post ${estilos.post} relative`">
-
-        <!-- post header -->
-        <div class=" post-header w-[100%] h-[fit-content] flex items-center pt-3 pb-4 ">
-            <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden  mr-2 ">
-                <img @click="redirect(`ayuntamiento/${post.user_id}`)" loading="lazy"
-                    class=" cursor-pointer w-[100%] h-[100%] object-cover" :src="post.avatar" alt="avatar_usuario">
+            <!-- Modal de Ver Más -->
+            <div ref="modal" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
+                <!-- Botón ver perfil -->
+                <button @click="redirect(`ayuntamiento/${post.id}`)" :class="`${estilos.modal_button} m-2 `">
+                    <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" loading="lazy" />
+                    Ver perfil
+                </button>
+                <!-- Botón ver reseñas comercio -->
+                <button :class="`${estilos.modal_button} m-2 `">
+                    <img class="w-[30px] h-[30px]  mr-3 " :src="StarSVG" loading="lazy" />
+                    Reseñas
+                </button>
             </div>
-            <div @click="redirect(`ayuntamiento/${post.id}`)"
-                class=" cursor-pointer flex flex-col items-start texts w-[100%] h-[100%] ">
-                <b>{{ post.usuario.nombre }}</b>
-                <small> Organización </small>
-            </div>
-            <button @click="() => abrirModal(post.id)" class="mr-4">
-                <img :src="MoreSVG" alt="dots" loading="lazy">
-            </button>
+        </article>
+
+        <!-- El modal de comentarios -->
+        <Comentarios v-if="comentariosVisibles" :post="post" :handler="abrirComentarios" />
         </div>
-
-        <!-- post image -->
-
-        <div
-            class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl overflow-hidden ">
-            <img @click="redirect(`post/${post.id}`)" loading="lazy" class=" cursor-pointer w-[100%] h-[100%] object-cover "
-                :src="post.image" :alt="post.titulo">
-        </div>
-
-        <!-- post footer -->
-        <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
-            <!-- Los destacados de ayuntamiento no tienen botones de feedback salvo el de guardar -->
-
-            <!-- Quitar y aniadir de guardados -->
-            <button @click="() => aniadir_favorito(post.post_id)" v-if="en_favoritos(post.post_id)"
-                class=" flex flex-row items-center mr-3 ">
-                <img :src="BookmarkSVG" loading="lazy" />
-            </button>
-            <button @click="() => aniadir_favorito(post.post_id)" v-else class=" flex flex-row items-center mr-3 ">
-                <img :src="BookmarkEmptySVG" loading="lazy" />
-            </button>
-
-            <!-- Comentarios -->
-            <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
-                <img :src="ChatSVG" loading="lazy" />
-                {{ comentarios.value.length }}
-            </button>
-
-            <!-- Compartir -->
-            <button @click="share({
-                title: post.title,
-                text: post.description,
-                url: `post/${post.post_id}`
-            })" class=" flex flex-row items-center mr-3 ">
-                <img :src="ShareSVG" loading="lazy" />
-            </button>
-
-        </div>
-
-        <!-- Contenido del Post -->
-        <div class="information">
-            <h1>
-                <img :src="IconoTipo" alt="icono-evento" loading="lazy">
-                {{ post.title }}
-            </h1>
-            <span>{{ post.description }}</span>
-        </div>
-
-        <!-- Modal de Evento Institucional -->
-        <div :class="` badge modal modal-izq ${estilos.modal}  ${estilos.modal_inferior_izq}`">
-            <button :class="`${estilos.modal_button} `">
-                <img class=" w-[20px] h-[20px]  mr-3 " :src="StarSVG" loading="lazy" />
-                Evento Institucional
-            </button>
-        </div>
-
-        <!-- Modal de Ver Más -->
-        <div ref="modal" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
-            <!-- Botón ver perfil -->
-            <button @click="redirect(`ayuntamiento/${post.id}`)" :class="`${estilos.modal_button} m-2 `">
-                <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" loading="lazy" />
-                Ver perfil
-            </button>
-            <!-- Botón ver reseñas comercio -->
-            <button :class="`${estilos.modal_button} m-2 `">
-                <img class="w-[30px] h-[30px]  mr-3 " :src="StarSVG" loading="lazy" />
-                Reseñas
-            </button>
-        </div>
-
-    </article>
-
-    <!-- El modal de comentarios -->
-    <Comentarios v-if="comentariosVisibles" :post="post" :handler="abrirComentarios" />
+        
+    </Suspense>
 </template>
 
 <style scoped lang="scss">
