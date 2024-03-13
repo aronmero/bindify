@@ -73,6 +73,7 @@
                     <p class="text-[#c6c6c6] mb-[-10px] text-md " >{{ filteredResults.length > 1 ? filteredResults.length + " " +  section + " encontrados" : filteredResults.length === 0 ? "Sin resultados" :  filteredResults.length +  " comercio encontrado" }}</p>
                 </div>
                 <commercesResults :comercios="filteredResults" v-show="section === 'comercios'"/>
+                <postsResults :posts="filteredResults" v-show="section ==='Posts'" />
             </div>
             <scrollUpButton />
             <changeSearchButton @changeSection="changeSection"/>
