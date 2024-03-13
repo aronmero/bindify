@@ -13,6 +13,8 @@
     import Filter from "@/components/search/filter.vue";
     import { onMounted, ref, watch } from 'vue';
     import { actualSection } from "@/stores/actualSection";
+    import postsResults from "@/components/search/postsResults.vue";
+    
    
     
     const { filteredResults, apiRequest, resetFilters } = useSearchLogic();
@@ -66,6 +68,7 @@
                 <button @click="resetFilters" class="text-right font-semibold rounded-full text-sm flex-none" id="results">resetear filtros</button>
                 <p class="text-[#c6c6c6] mb-[-10px] text-md " >{{ filteredResults.length > 1 ? filteredResults.length + " " +  section + " encontrados" : filteredResults.length === 0 ? "Sin resultados" :  filteredResults.length +  " comercio encontrado" }}</p>
                 <commercesResults :comercios="filteredResults"/>
+                
             </div>
             <scrollUpButton />
             <changeSearchButton @changeSection="changeSection"/>
@@ -82,4 +85,3 @@
     }
     
 </style>
-
