@@ -1,7 +1,13 @@
 <script setup>
+    /* Importa el componente Horarios */
     import Horarios from '../../components/intervalos_horarios/Horarios.vue';
 </script>
+
 <template>
-    <Horarios></Horarios>
+    <Horarios></Horarios>   <!-- Componente de Horarios -->
 </template>
-<style></style>
+
+
+<style scoped>
+/* Estilos */
+</style>

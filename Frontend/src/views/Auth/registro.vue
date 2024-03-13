@@ -1,18 +1,21 @@
 <script setup>
+/* Importar componentes y funciones */
+import Input from "@/components/comun/input.vue";
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { solicitarCategorias, solicitarMunicipios } from '@/Api/Auth/desplegables_registro.js';
 
-/** Importa el Modal de Horarios */
-import Horarios from '../../components/intervalos_horarios/Horarios.vue';
 
 import { register } from '../../Api/auth';
 import Input from "@/components/comun/input.vue";
+/* Array de opciones */
 
 let options = ref("null"); /* Cambiar por info del back */
 let optionsSex = [{id: 0, name: "M"}, {id: 1, name: "H"}]; /* Cambiar por info del back */
 let arrayTipos = [{id: 0, name: "Particular"}, {id: 1, name: "Comercio"}];
 let optionsCategory = ref("null");
+
+/* Declaración de variables reactivas para los errores */
 let errorIMG = ref(null);
 let errorMunic = ref(null);
 let errorDate = ref(null);
@@ -44,6 +47,8 @@ const repetirNueva = ref(null);
 const token = ref(null);
 const isValid = ref(null);
 
+
+
 /* Genera la referencia para controlar el estado de mostrado u oculto */
 const controlador_modal = ref(false);
 
@@ -55,6 +60,7 @@ const solicitarDatosApi = async()=>{
 solicitarDatosApi();
 /* Falta vincular modal de editar horario y hacer las validaciones */
 const tratarDatos = ()=>{
+    /* Devuelve por consola los valores obtenidos de las variables reactivas */
     console.log(tipoUsuario.value);
     console.log(usuario.value);
     console.log(nombre.value);
@@ -249,33 +255,30 @@ const tratarDatos = ()=>{
  * */
  const obtenerCambioHorario = (cambio) => {
     horarioActual.value = cambio;
-    console.log("obtenido cambio")
+    console.log("obtenido cambio");     // Devuelve por consola el mensaje 'obtenido cambio'
     controlador_modal.value = false;
 }
 
 
-/** Controla la dinámica de mostrar y ocultar el modal
- * @author David Martín Concepción
- */
+/* Controla la dinámica de mostrar y ocultar el modal */
 const controlarModal = () => {
-    console.log("test")
+    console.log("test");    // Devuelve por consola el mensaje 'test'
     if(controlador_modal.value) {
-        controlador_modal.value = false;
+        controlador_modal.value = false;    // Oculta el modal
     } else {
-        controlador_modal.value = true;
+        controlador_modal.value = true;     // Muestra el modal
     }
 }
-
 </script>
 
 
 <template>
     <div class="flex w-[99vw] justify-center xl:justify-end mb-5">
         <div class="fixed h-full hidden xl:flex items-center top-0 left-0 w-[50vw] justify-center">
-            <img src="@public/img/fondo.png" alt="Imagen Fondo">
+            <img src="@public/img/fondo.png" id="imagen" alt="Imagen Fondo">    <!-- Imagen de fondo -->
         </div>
         <div class="xl:w-[60vw] w-[90vw] flex flex-col lg:items-center mt-10">
-            <h1 class="text-center text-5xl mb-7">Registro</h1>
+            <h1 class="text-center text-5xl mb-7">Registro</h1>     <!-- Título de introducción -->
             <form action="javascript:void(0);" class="flex flex-col gap-y-5 lg:w-[55%] xl:w-[45%]">
                 <Input @datos="(nuevosDatos)=>{tipoUsuario = arrayTipos[nuevosDatos].name.toLowerCase()}" class="lg:w-[50%]" tipo="selection" requerido="true" :opciones="arrayTipos" placeholder="Tipos" v-model='tipoUsuario' label="Tipo de usuario" :valor="tipoUsuario" :error="errorType"/>
                 <Input @datos="(nuevosDatos)=>{usuario = nuevosDatos}" tipo="text" requerido="true" label="Usuario" :valor="usuario" :error="errorUsuario"/>
@@ -285,6 +288,7 @@ const controlarModal = () => {
                     <Input @datos="(nuevosDatos)=>{imagenPerfil = nuevosDatos}" tipo="file" label="Imagen de perfil" clase="perfil" :error="errorIMG" :valor="imagenPerfil"/>
                     <Input @datos="(nuevosDatos)=>{imagenBanner = nuevosDatos}" tipo="file" label="Imagen de fondo" clase="banner" :valor="imagenBanner"/>
                 </div>
+
                 <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" label="Teléfono" :valor="telefono"/>
                 <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" requerido="true" label="Teléfono" :valor="telefono" :error="errorPhone"/>
                 <Input @datos="(nuevosDatos)=>{email = nuevosDatos}" tipo="text" requerido="true" label="Email" :valor="email" :error="errorMail"/>
@@ -296,25 +300,52 @@ const controlarModal = () => {
                 <Input v-if="tipoUsuario == 'comercio'"  @click="controlarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
                 <Input v-if="tipoUsuario == 'comercio'" tipo="text" label="Token (Si tienes)" :valor="token"/>
                 <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
+                
+                <!-- Sección para la nueva contraseña -->
                 <div class="cambiocontra flex flex-col gap-y-5">
                     <Input @datos="(nuevosDatos)=>{contraNueva = nuevosDatos}" tipo="password" requerido="true" label="Contraseña Nueva" :valor="contraNueva" :error="errorContra"/>
                     <Input @datos="(nuevosDatos)=>{repetirNueva = nuevosDatos}" tipo="password" requerido="true" label="Repetir contraseña" :valor="repetirNueva" :error="errorContra"/>
                 </div>
+
+                <!-- Sección para guardar los datos recogidos en los campos de los componentes Input -->
                 <div class="flex flex-col items-center w-full justify-center mt-3 gap-y-10">
                     <Input @click="tratarDatos" tipo="submit" clase="oscuro" valor="Registrarme" class="w-[50%]"/>
                 </div>
             </form>
+
+            <!-- Sección para volver al inicio de sesión -->
             <div class="flex justify-center gap-x-1 mt-3">
                 <p>¿Ya tienes una cuenta?</p>
                 <button @click="router.push('/login')" class="font-semibold">Inicia sesión</button>
             </div>
         </div>
     </div>
+    <!-- Componente Horarios -->
     <Horarios v-if="controlador_modal" :referencia_padre="horarioActual" :controlar_modal="controlarModal" :enviar_cambios="obtenerCambioHorario" />
 </template>
 
 
-<style scoped>
+<style scoped lang="scss">
+/* Estilos para pantallas 900 x 1400 pixeles */
+@media screen and (min-width: 900px) and (max-width: 1400px) {
+    #imagen-container-fondo {
+        display: none;
+    }
 
+    #container {
+        margin: 0 auto;
+        width: 100%;
+
+        form {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin-top: 50px;
+        }
+    }
+
+}
 </style>
 

@@ -35,14 +35,6 @@ const seleccionarImagen = (e)=>{
             imagenSubida.value = e.target.parentNode.children[1].files[0];
             imagenSubida.value = URL.createObjectURL(imagenSubida.value);
         }
-    });
-    e.target.parentNode.children[1].click();
-}
-const emitirDatos = (e)=>{
-    if(e.target.type == "file"){
-        emit("datos", e.target.files[0]);
-    }else{
-        emit("datos", e.target.value);
     }
 }
 const borrarImagen = (e)=>{
@@ -51,13 +43,19 @@ const borrarImagen = (e)=>{
     imagenSubida.value = null;
 }
 </script>
+
+
 <template>
+    <!-- Contenedor principal del componente -->
     <div class="flex flex-col gap-y-2 justify-center">
+        <!-- Etiqueta y mensaje de error -->
         <div v-if="label != null" class="label flex items-center">
             <label for="" class="ms-1 text-lg">{{label}}</label>
             <p v-if="requerido == 'true'" class="text-primary-700 text-xl">*</p>
             <p v-if="error != null" class="text-primary-700 text-xs lg:text-sm ms-3">{{ error }}</p>
         </div>
+
+        <!-- Inputs -->
         <input @change="emitirDatos" v-if="(tipo == 'text' || tipo == 'password' || tipo == 'email') && img != null" :type="tipo" class="ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
         <input @change="emitirDatos" v-if="(tipo == 'text' || tipo == 'password' || tipo == 'email') && img == null" :type="tipo" class="ps-3 bg-background-100 text-text-950 py-3 px-1 rounded-xl" :placeholder="placeholder" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'button' && clase == null" :type="tipo" class="ps-12 bg-background-100 text-text-950 py-3 rounded-xl w-fit px-4 cursor-pointer" :value="valor">
@@ -68,12 +66,18 @@ const borrarImagen = (e)=>{
         <input @change="emitirDatos" v-if="tipo == 'hora'" type="time" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'fecha'" type="date" :min="diaActual" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
         <input @change="emitirDatos" v-if="tipo == 'fechaLibre'" type="date" class=" ps-12 bg-background-100 text-text-950 py-3 px-1 rounded-xl w-[10rem]" :value="valor">
+        
+        <!-- Select -->
         <select @change="emitirDatos" v-if="tipo == 'selection'" class="bg-background-100 text-text-950 py-3 px-1 text-center rounded-xl cursor-pointer">
             <option value="" disabled selected>{{ placeholder }}</option>
             <option v-if="valor != null" v-for="(value, clave) in opciones" :value="clave" :selected="value.name == valor" :id="value.id">{{ value.name }}</option>
             <option v-else v-for="(value, clave) in opciones" :value="clave" :id="value.id">{{ value.name }}</option>
         </select>
+        
+        <!-- Textarea -->
         <textarea @change="emitirDatos" v-if="tipo == 'texto'" class="ps-10 bg-background-100 text-text-950 py-3 px-1 rounded-xl resize-none h-[15rem]" :placeholder="placeholder" :value="valor"></textarea>
+        
+        <!-- Botón para seleccionar imagen de perfil -->
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'perfil'" class="flex relative lg:size-40 size-28 justify-center items-center rounded-full border-dotted border border-background-900">
             <p v-if="imagenSubida == null" class="text-[1em] pointer-events-none">Añadir Imagen</p>
             <img v-else :src="imagenSubida" alt="Previsualizacion de foto de perfil" class="pointer-events-none lg:size-40 size-28 rounded-full">
@@ -82,6 +86,8 @@ const borrarImagen = (e)=>{
                 class="max-w-[40px] max-h-[40px] lg:block absolute bottom-0 right-0 lg:-translate-x-1 lg:translate-y-0 translate-x-1 translate-y-1 py-1 px-2 pointer-events-none"
             />
         </button>
+
+        <!-- Botón para seleccionar imagen de banner -->
         <button @click.prevent="seleccionarImagen" v-if="tipo == 'file' && clase == 'banner'" class="flex relative lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] justify-center items-center rounded-xl border-dotted border border-background-900">
             <p v-if="imagenSubida == null" class="text-[1em] pointer-events-none">Añadir Imagen</p>
             <img v-else :src="imagenSubida" alt="Previsualizacion de foto del Banner" class=" pointer-events-none lg:h-[10rem] lg:w-[12rem] h-[7rem] w-[9rem] rounded-xl">
@@ -96,24 +102,32 @@ const borrarImagen = (e)=>{
                 class="max-w-[40px] max-h-[40px] lg:block absolute bottom-1 left-0 hover:bg-primary-500 bg-primary-400 rounded-[0.625rem] p-2"
             />
         </button>
+        
+        <!-- Icono para botones -->
         <div v-if="tipo == 'button' && clase == null" class="relative flex flex-row items-center justify-start">
             <img
             :src="img"
             class="max-w-[30px] max-h-[30px] lg:block absolute -translate-y-[2rem] translate-x-[0.9rem]"
             />
         </div>
+
+        <!-- Icono para botones sociales -->
         <div v-if="tipo == 'button' && clase == 'social'" class="relative flex flex-row items-center justify-center">
             <img
             :src="img"
             class="max-w-[40px] max-h-[40px] lg:block absolute -translate-y-[2.45rem] pointer-events-none"
             />
         </div>
+
+        <!-- Botón para mostrar/ocultar contraseña -->
         <button v-if="tipo == 'password'" @click.prevent="cambiarVision" class="absolute translate-y-[0.8rem] -translate-x-2 self-end hover:bg-background-100 p-2 rounded-full">
             <img
                 :src="ojo"
                 class="max-w-[30px] max-h-[30px] lg:block"
             />
         </button>
+        
+        <!-- Icono para inputs -->
         <div class="absolute translate-y-[1rem] translate-x-3 flex">
             <img v-if="tipo != 'submit' && tipo != 'selection' && tipo != 'file' && tipo != 'fecha' && tipo != 'button'"
             :src="img"
@@ -124,6 +138,8 @@ const borrarImagen = (e)=>{
             class="max-w-[30px] max-h-[30px] lg:block w-[4rem] pointer-events-none select-none hidden"
             /> -->
         </div>
+        
+        <!-- Icono para select -->
         <div class="self-end -translate-y-[2.9rem] -translate-x-[0.25rem] pointer-events-none">
             <img v-if="tipo == 'selection'"
                 src="/assets/icons/expandArrow.svg"
@@ -131,29 +147,36 @@ const borrarImagen = (e)=>{
             />
         </div>
     </div>
-
 </template>
+
+
+
 <style scoped>
-select {
-    -moz-appearance:none;
-    -webkit-appearance:none;
-    appearance:none;
-}
-input[type="time"]::-webkit-calendar-picker-indicator{
-    filter: invert(1);
-    margin-right: 0.5rem;
-}
-input[type="date"]::-webkit-calendar-picker-indicator{
-    position: relative;
-    right: 7.5rem;
-    filter: invert(1);
-}
-textarea::-webkit-scrollbar{
-    background-color: transparent;
-    width: 1rem;
-}
-textarea::-webkit-scrollbar-thumb{
-    background-color: var(--text-600);
-    border-radius: 5rem;
-}
+    /* Estilos para el componente */
+    select {
+        -moz-appearance:none;
+        -webkit-appearance:none;
+        appearance:none;
+    }
+
+    input[type="time"]::-webkit-calendar-picker-indicator{
+        filter: invert(1);
+        margin-right: 0.5rem;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator{
+        position: relative;
+        right: 7.5rem;
+        filter: invert(1);
+    }
+
+    textarea::-webkit-scrollbar{
+        background-color: transparent;
+        width: 1rem;
+    }
+
+    textarea::-webkit-scrollbar-thumb{
+        background-color: var(--text-600);
+        border-radius: 5rem;
+    }
 </style>

@@ -72,7 +72,7 @@
     /**
     * Enviar el comentario
     */
-     const enviarComentarioPorSubmit = (post_id, user_id, event) => {
+    const enviarComentarioPorSubmit = (post_id, user_id, event) => {
         if(event.key == 'Enter' ) {
             let texto = event.target.value;
             if(!posteado.value ) {
@@ -85,19 +85,19 @@
                         .then(() => refrescarPosicion() );
                     
                 }
-               
+            
                 antiSpamFunction();
             }
             event.target.value = "";
         }
-     };
+    };
 
-     const enviarComentarioPorClick = (post_id, user_id, texto) => {
+    const enviarComentarioPorClick = (post_id, user_id, texto) => {
 
         /**
          *  Cambiar por la función de lógica backend de enviar comentario
          * */
-         
+        
         if(!posteado.value && texto != "") {
             agregar_comentario(user_id, post_id, texto)
                 .then(() => refrescarPosicion());
@@ -105,9 +105,9 @@
         chat_input.value = "";
         antiSpamFunction();
         texto = "";
-     };
+    };
 
-     /**
+    /**
      * Función que se encarga de evitar que el usuario desde el front envíe las peticiones que quiera
      * */
     const antiSpamFunction = () => {
@@ -115,11 +115,11 @@
         let secs = 0;
         posteado.value = true;
         
-         interval = setInterval(() => {
+        interval = setInterval(() => {
             secs++;
             chat_input.value.placeholder = `Debes esperar ${60 - secs} segundos para enviar otro comentario.`;
             if(secs == 60) {
-                clearInterval(interval); 
+                clearInterval(interval);
                 posteado.value = false;
                 chat_input.value.placeholder = `Agregar comentario.`;
             };

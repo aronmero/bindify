@@ -7,8 +7,9 @@ const routes = [
   // { path: "/", component: () => import("@/views/example.vue") },
   { path: "/", component: () => import("@/views/home.vue") },
   { path: "/login", component: () => import("@/views/Auth/login.vue") },
-  { path: "/registro", component: () => import("@/views/Auth/registroParticular.vue") },
-  { path: "/registro-comercio", component: () => import("@/views/Auth/registroComercio.vue") },
+  { path: "/registro", component: () => import("@/views/Auth/registro.vue") },
+  { path: "/password-modal", component: () => import("@/views/Auth/password-modal.vue") },
+  //{ path: "/registro-comercio", component: () => import("@/views/Auth/registroComercio_prueba.vue") },
   { path: "/horarios-modal", component: () => import("@/views/Auth/horarios.vue") },
 
   { path: "/post/:id", component: () => import("@/views/eventos/evento.vue") },
@@ -81,7 +82,7 @@ const router = createRouter({
  * Guard para las vistas de publicaciones si no es un commercio
  */
 router.beforeEach((to, from, next) => {
-  const publicRoutes = ["/login", "/registro"];
+  const publicRoutes = ["/login", "/registro", "/password-modal"];
   const comercioRoutes = ["/post/nuevo"];
   const userData = JSON.parse(sessionStorage.getItem("usuario"));
 
