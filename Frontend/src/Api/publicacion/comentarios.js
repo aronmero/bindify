@@ -1,4 +1,4 @@
-import { genOptions, urlApiHome } from "@/Api/api.js";
+import { genOptions, urlApi } from "@/Api/api.js";
 
 /**
  * Devuelve los comentarios de una publicacion

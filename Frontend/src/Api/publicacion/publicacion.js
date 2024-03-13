@@ -1,5 +1,5 @@
 //Pillar de sesion storage o store de pinia cuando se realice
-import { genOptions,urlApiHome } from "@/Api/api.js";
+import { genOptions,urlApi } from "@/Api/api.js";
 /**
  * Devuelve un objeto publicacion con sus datos
  * @date 3/10/2024 - 12:10:35 PM

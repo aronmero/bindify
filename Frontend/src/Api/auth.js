@@ -1,9 +1,9 @@
-import { urlApiHome } from "@/Api/api.js";
+import { urlApi } from "@/Api/api.js";
 export async function login(email,pass) {
   try {
     const options = genOptionsLogin("POST");
     const response = await fetch(
-      `${urlApiHome}/api/login?email=${email}&password=${pass}`,
+      `${urlApi}/api/login?email=${email}&password=${pass}`,
       options
     );
     const data = await response.json();
@@ -25,7 +25,7 @@ export async function register(datos) {
     /* const datos = JSON.stringify(datosRecibidos); */
     const options = genOptionsRegister("POST", formData);
     const response = await fetch(
-      `${urlApiHome}/api/register`,
+      `${urlApi}/api/register`,
       options
     );
     const data = await response.json().then(response => console.log(response));

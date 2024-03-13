@@ -1,4 +1,4 @@
-import { urlApiHome as urlApi, genOptions, genOptionsWithoutBody } from "../api";
+import { urlApi as urlApi, genOptions, genOptionsWithoutBody } from "../api";
 
 /**
  * Devuelve el resultado de los datos del usuario seleccionado

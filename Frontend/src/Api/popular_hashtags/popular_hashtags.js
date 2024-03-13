@@ -1,10 +1,10 @@
 //ruta para obtener todos los municipios registrados
-import { genOptions,urlApiHome } from "@/Api/api.js";
+import { genOptions,urlApi } from "@/Api/api.js";
 
 export async function getPopularHashtags(metodo, type,body=null) {
     try {
       const options = genOptions(metodo,body);
-      const url = new URL(`${urlApiHome}/api/hashtag/trending`);
+      const url = new URL(`${urlApi}/api/hashtag/trending`);
 
       url.searchParams.append('type', type);
       console.log(url);

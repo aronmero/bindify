@@ -1,4 +1,4 @@
-import { genOptions, urlApiHome } from "@/Api/api.js";
+import { genOptions, urlApi } from "@/Api/api.js";
 
 export async function getCommerces(metodo, body = null) {
   try {
