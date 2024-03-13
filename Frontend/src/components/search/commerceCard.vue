@@ -6,17 +6,18 @@
     })
 
     import starSVG from '/assets/icons/star.svg';
-
+    import router from '@/router';
     import { setRandomGradient } from '@/utils/randomGradient.js';
 
+    const redirect = (username) => {
+        router.push(`perfil/${username}/comercio`);
+    }
  
-
 </script>
 
-
 <template>
-
-    <div class="flex items-center gap-x-2 p-2 transition-colors duration-300 ease-in hover:bg-[#eeeeee] cursor-pointer">
+    
+    <div class="flex items-center gap-x-2 p-2 transition-colors duration-300 ease-in hover:bg-[#eeeeee] cursor-pointer" loading="lazy" @click="redirect(commerce.username)"  >
         <img :src="commerce.avatar" alt="profile-image" class="size-20 rounded-full" />
         <div class="flex flex-col flex-1 m-1 gap-y-4">
             <div class="flex items-center gap-x-2">

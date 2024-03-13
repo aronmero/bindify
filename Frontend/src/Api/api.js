@@ -10,7 +10,7 @@ export const urlApi = "http://127.0.0.1:8000";
  */
 export const genOptions = (metodo, body = null) => {
   const user = JSON.parse(sessionStorage.getItem("usuario"));
-  const token = "2|PIqDK83AQlDUt4bafSh1NCDfqLOQV2WJ4o7eFo37fd5ae6cf";
+  const token = user.usuario.token;
 
   return {
     method: metodo,

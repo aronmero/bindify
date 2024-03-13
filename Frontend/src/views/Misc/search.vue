@@ -67,7 +67,7 @@
                 <Menu title="posts" :menuOptions="tiposPost" v-show="section === 'Posts'" />
                 <button @click="resetFilters" class="text-right font-semibold rounded-full text-sm flex-none" id="results">resetear filtros</button>
                 <p class="text-[#c6c6c6] mb-[-10px] text-md " >{{ filteredResults.length > 1 ? filteredResults.length + " " +  section + " encontrados" : filteredResults.length === 0 ? "Sin resultados" :  filteredResults.length +  " comercio encontrado" }}</p>
-                <commercesResults :comercios="filteredResults"/>
+                <commercesResults :comercios="filteredResults" v-show="section === 'comercios'"/>
                 
             </div>
             <scrollUpButton />
