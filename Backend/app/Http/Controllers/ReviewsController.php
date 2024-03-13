@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ModelCreated;
 use App\Http\Requests\StoreReviewsRequest;
 use App\Http\Requests\UpdateReviewsRequest;
 use App\Models\User;
@@ -93,6 +94,8 @@ class ReviewsController extends Controller
 
             Utils::AVG_Reviews($id);
 
+            event(new ModelCreated($review));
+
             return response()->json([
                 'status' => true,
                 'message' => 'Review creada',
@@ -169,7 +172,6 @@ class ReviewsController extends Controller
             foreach ($reviews as $review) {
                 // Obtener los datos necesarios para cada reviews
                 $reviewData = [
-                    'id' => Crypt::encryptString($review->id),
                     'id' => Crypt::encryptString($review->id),
                     'username' => $review->user->username,
                     'avatarUsuario' => $review->user->avatar,

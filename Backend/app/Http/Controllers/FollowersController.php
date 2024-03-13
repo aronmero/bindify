@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ModelCreated;
 use App\Models\Follower;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -110,6 +111,11 @@ class FollowersController extends Controller
             } else {
                 $user->follows()->attach($usuarioSeguir->id);
                 $mensaje = "Usuario seguido";
+                
+                $seguido = Follower::where("follower_id", $user->id)->where('follows_id', $usuarioSeguir->id)->first();
+
+                event(new ModelCreated($seguido));
+
             }
 
 

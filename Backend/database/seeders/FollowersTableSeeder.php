@@ -48,12 +48,6 @@ class FollowersTableSeeder extends Seeder
                 'favorito' => $factory->boolean,
             ]);
 
-            // DB::table('followers')->insert([
-            //     'follows_id' => $followsId->followsId,
-            //     'follower_id' => $followerId->followerId,
-            //     'favorito' => $factory->boolean,
-            // ]);
-
             event(new ModelCreated($follower));
 
         }
