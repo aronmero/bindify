@@ -1,4 +1,4 @@
-export const urlApi="http://apiproyecto.ajdevprojects.com";
+export const urlApi="http://127.0.0.1:8000";
 /**
  * Genera unas opciones para hacer una peticion a una api. Obtiene un token del SessionStorage
  * @date 3/10/2024 - 5:32:17 PM

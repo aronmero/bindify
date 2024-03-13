@@ -61,6 +61,12 @@ return [
             'url' => env('APP_URL').'/storage/avatars', // URL base para acceder a los avatares
             'visibility' => 'public',
         ],
+        'posts' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/posts'), // Directorio donde se almacenarÃ¡n los avatares
+            'url' => env('APP_URL').'/storage/posts', // URL base para acceder a los avatares
+            'visibility' => 'public',
+        ],
     ],
 
     /*
