@@ -14,40 +14,113 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
+/**
+ * @OA\Info(title= "API Posts", version="1.0")
+ * 
+ * @OA\Server(url="http://127.0.0.1:8000/api")
+ */
 class PostsController extends Controller
 {
 
     /**
-     * Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.
-     *
-     * Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.
-     *
-     * @authenticated
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "data": [
-     *         {
-     *             "post_id": "ID_de_la_publicación",
-     *             "image": "imagen_de_la_publicación",
-     *             "title": "título_de_la_publicación",
-     *             "description": "descripción_de_la_publicación",
-     *             "name": "nombre_del_tipo_de_publicación",
-     *             "start_date": "fecha_de_inicio_de_la_publicación",
-     *             "end_date": "fecha_de_finalización_de_la_publicación",
-     *             "created_at": "fecha_de_creación_de_la_publicación",
-     *             "username": "nombre_de_usuario",
-     *             "user_id": "ID_del_usuario",
-     *             "avatar": "avatar_del_usuario"
-     *         },
-     *         ...
-     *     ]
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "mensaje_de_error"
-     * }
+     * @OA\Get(
+     *     path="/home_calendario",
+     *     summary="Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.",
+     *     description="Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.",
+     *     operationId="getPublications",
+     *     tags={"Publicaciones"},
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de publicaciones para el usuario autenticado",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(
+     *                         property="post_id",
+     *                         type="string",
+     *                         description="ID de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="image",
+     *                         type="string",
+     *                         description="Imagen de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="title",
+     *                         type="string",
+     *                         description="Título de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="description",
+     *                         type="string",
+     *                         description="Descripción de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         description="Nombre del tipo de publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="start_date",
+     *                         type="string",
+     *                         description="Fecha de inicio de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="end_date",
+     *                         type="string",
+     *                         description="Fecha de finalización de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="created_at",
+     *                         type="string",
+     *                         description="Fecha de creación de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="username",
+     *                         type="string",
+     *                         description="Nombre de usuario"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="user_id",
+     *                         type="string",
+     *                         description="ID del usuario"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="avatar",
+     *                         type="string",
+     *                         description="Avatar del usuario"
+     *                     ),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontraron publicaciones para el usuario.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Mensaje de error"
+     *             )
+     *         )
+     *     )
+     * )
      */
 
     public function home_calendario()
@@ -104,38 +177,124 @@ class PostsController extends Controller
     }
 
     /**
-     * Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.
-     *
-     * Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.
-     *
-     * @authenticated
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "data": [
-     *         {
-     *             "post_id": "ID_de_la_publicación",
-     *             "image": "imagen_de_la_publicación",
-     *             "title": "título_de_la_publicación",
-     *             "description": "descripción_de_la_publicación",
-     *             "name": "nombre_del_tipo_de_publicación",
-     *             "start_date": "fecha_de_inicio_de_la_publicación",
-     *             "end_date": "fecha_de_finalización_de_la_publicación",
-     *             "created_at": "fecha_de_creación_de_la_publicación",
-     *             "username": "nombre_de_usuario",
-     *             "user_id": "ID_del_usuario",
-     *             "avatar": "avatar_del_usuario"
-     *         },
-     *         ...
-     *     ]
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "mensaje_de_error"
-     * }
+     * @OA\Get(
+     *     path="/home_todos",
+     *     summary="Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.",
+     *     description="Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.",
+     *     operationId="getHomeTodos",
+     *     tags={"Publicaciones"},
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de publicaciones para el usuario autenticado",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(
+     *                         property="post_id",
+     *                         type="string",
+     *                         description="ID de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="image",
+     *                         type="string",
+     *                         description="Imagen de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="title",
+     *                         type="string",
+     *                         description="Título de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="description",
+     *                         type="string",
+     *                         description="Descripción de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         description="Nombre del tipo de publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="start_date",
+     *                         type="string",
+     *                         description="Fecha de inicio de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="end_date",
+     *                         type="string",
+     *                         description="Fecha de finalización de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="created_at",
+     *                         type="string",
+     *                         description="Fecha de creación de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="username",
+     *                         type="string",
+     *                         description="Nombre de usuario"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="user_id",
+     *                         type="string",
+     *                         description="ID del usuario"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="avatar",
+     *                         type="string",
+     *                         description="Avatar del usuario"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="comment_count",
+     *                         type="integer",
+     *                         description="Número de comentarios en la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="hashtags",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             type="string",
+     *                             description="Nombre del hashtag"
+     *                         ),
+     *                         description="Lista de hashtags asociados a la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="userRol",
+     *                         type="string",
+     *                         description="Rol del usuario"
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontraron publicaciones para el usuario.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Mensaje de error"
+     *             )
+     *         )
+     *     )
+     * )
      */
-
     public function home_todos()
     {
         try {
@@ -187,37 +346,122 @@ class PostsController extends Controller
     }
 
     /**
-     * Muestra una lista de publicaciones para el usuario actual.
-     *
-     * Este método devuelve una lista de publicaciones para el usuario autenticado.
-     *
-     * @authenticated
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "data": [
-     *         {
-     *             "post_id": "ID_de_la_publicación",
-     *             "image": "imagen_de_la_publicación",
-     *             "title": "título_de_la_publicación",
-     *             "description": "descripción_de_la_publicación",
-     *             "name": "nombre_del_tipo_de_publicación",
-     *             "start_date": "fecha_de_inicio_de_la_publicación",
-     *             "end_date": "fecha_de_finalización_de_la_publicación",
-     *             "created_at": "fecha_de_creación_de_la_publicación",
-     *             "username": "nombre_de_usuario",
-     *             "user_id": "ID_del_usuario",
-     *             "avatar": "avatar_del_usuario"
-     *         },
-     *         ...
-     *     ]
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "mensaje_de_error"
-     * }
+     * @OA\Get(
+     *     path="/home",
+     *     summary="Muestra una lista de publicaciones de los usuarios que sigue el usuario actual.",
+     *     description="Este método devuelve una lista de publicaciones de los usuarios que sigue el usuario autenticado.",
+     *     operationId="getHomePosts",
+     *     tags={"Publicaciones"},
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de publicaciones de los usuarios seguidos por el usuario autenticado",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(
+     *                         property="post_id",
+     *                         type="string",
+     *                         description="ID de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="image",
+     *                         type="string",
+     *                         description="Imagen de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="title",
+     *                         type="string",
+     *                         description="Título de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="description",
+     *                         type="string",
+     *                         description="Descripción de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         description="Nombre del tipo de publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="start_date",
+     *                         type="string",
+     *                         description="Fecha de inicio de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="end_date",
+     *                         type="string",
+     *                         description="Fecha de finalización de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="created_at",
+     *                         type="string",
+     *                         description="Fecha de creación de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="username",
+     *                         type="string",
+     *                         description="Nombre de usuario"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="user_id",
+     *                         type="string",
+     *                         description="ID del usuario"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="avatar",
+     *                         type="string",
+     *                         description="Avatar del usuario"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="comment_count",
+     *                         type="integer",
+     *                         description="Número de comentarios en la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="hashtags",
+     *                         type="array",
+     *                         @OA\Items(type="string"),
+     *                         description="Lista de hashtags en la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="userRol",
+     *                         type="string",
+     *                         description="Rol del usuario"
+     *                     ),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontraron publicaciones de los usuarios seguidos por el usuario actual.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Mensaje de error"
+     *             )
+     *         )
+     *     )
+     * )
      */
+
 
     public function home()
     {
@@ -274,39 +518,115 @@ class PostsController extends Controller
     }
 
     /**
-     * Crea una nueva publicación en la plataforma.
-     *
-     * Este método permite al usuario autenticado crear una nueva publicación en la plataforma,
-     * con los datos proporcionados en la solicitud.
-     *
-     * @authenticated
-     *
-     * @param  \App\Http\Requests\StorePostsRequest  $request
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "message": "Post creado",
-     *     "data": {
-     *         "post_id": "ID_de_la_publicación",
-     *         "image": "imagen_de_la_publicación",
-     *         "title": "título_de_la_publicación",
-     *         "description": "descripción_de_la_publicación",
-     *         "post_type_name": "nombre_del_tipo_de_publicación",
-     *         "start_date": "fecha_de_inicio_de_la_publicación",
-     *         "end_date": "fecha_de_finalización_de_la_publicación",
-     *         "active": true,
-     *         "ubicacion": "ubicacion_de_la_publicación",
-     *         "fecha_creacion": "fecha_de_creación_de_la_publicación",
-     *         "hashtags": ["hashtag1", "hashtag2", ...]
-     *     }
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "mensaje_de_error"
-     * }
+     * @OA\Post(
+     *     path="/posts",
+     *     summary="Crea una nueva publicación en la plataforma.",
+     *     description="Este método permite al usuario autenticado crear una nueva publicación en la plataforma, con los datos proporcionados en la solicitud.",
+     *     operationId="createPost",
+     *     tags={"Publicaciones"},
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Datos de la nueva publicación",
+     *         @OA\JsonContent(ref="#/components/schemas/StorePostsRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Publicación creada exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post creado"
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="post_id",
+     *                     type="string",
+     *                     description="ID de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="image",
+     *                     type="string",
+     *                     description="Imagen de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="title",
+     *                     type="string",
+     *                     description="Título de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",
+     *                     type="string",
+     *                     description="Descripción de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="post_type_name",
+     *                     type="string",
+     *                     description="Nombre del tipo de publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="start_date",
+     *                     type="string",
+     *                     description="Fecha de inicio de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="end_date",
+     *                     type="string",
+     *                     description="Fecha de finalización de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="active",
+     *                     type="boolean",
+     *                     description="Indica si la publicación está activa"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="ubicacion",
+     *                     type="string",
+     *                     description="Ubicación de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="fecha_creacion",
+     *                     type="string",
+     *                     description="Fecha de creación de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="hashtags",
+     *                     type="array",
+     *                     @OA\Items(type="string"),
+     *                     description="Lista de hashtags en la publicación"
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se pudo crear la publicación",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Mensaje de error"
+     *             )
+     *         )
+     *     )
+     * )
      */
+
     public function store(StorePostsRequest $request)
     {
         try {
@@ -354,71 +674,184 @@ class PostsController extends Controller
     }
 
     /**
-     * Muestra los detalles de una publicación específica junto con los comentarios y usuarios asociados.
-     *
-     * Este método recupera información detallada sobre una publicación específica, incluyendo su imagen,
-     * título, descripción, tipo, fechas, estado, ubicación, fecha de creación y hashtags asociados.
-     * Además, obtiene hasta 5 comentarios asociados con la publicación, junto con los nombres de usuario,
-     * avatares e IDs de los comentaristas. También recupera información sobre los usuarios que son propietarios
-     * de la publicación, incluyendo sus nombres, nombres de usuario, avatares e IDs.
-     *
-     * @param string $id
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @response 200 {
-     * "status": true,
-     * "data": {
-     * "post": {
-     * "image": "imagen_de_la_publicación",
-     * "title": "título_de_la_publicación",
-     * "description": "descripción_de_la_publicación",
-     * "post_type_name": "nombre_del_tipo_de_publicación",
-     * "start_date": "fecha_de_inicio_de_la_publicación",
-     * "end_date": "fecha_de_finalización_de_la_publicación",
-     * "active": true,
-     * "ubicacion": "ubicación_de_la_publicación",
-     * "fecha_creacion": "fecha_de_creación_de_la_publicación",
-     * "hashtags": ["hashtag1", "hashtag2", ...]
-     * },
-     * "users": [
-     * {
-     * "name": "nombre_del_usuario",
-     * "username": "nombre_de_usuario",
-     * "avatar": "avatar_del_usuario",
-     * "id": "ID_del_usuario"
-     * },
-     * ...
-     * ],
-     * "comments": [
-     * {
-     * "username": "nombre_de_usuario",
-     * "content": "contenido_del_comentario",
-     * "comment_id": "ID_del_comentario",
-     * "avatar": "avatar_del_usuario",
-     * "user_id": "ID_del_usuario"
-     * },
-     * ...
-     * ]
-     * }
-     * }
-     *
-     * @response 404 {
-     * "status": false,
-     * "message": "mensaje_de_error"
-     * }
+     * @OA\Get(
+     *     path="/posts/{id}",
+     *     summary="Muestra los detalles de una publicación específica junto con los comentarios y usuarios asociados.",
+     *     description="Este método recupera información detallada sobre una publicación específica, incluyendo su imagen, título, descripción, tipo, fechas, estado, ubicación, fecha de creación y hashtags asociados. Además, obtiene hasta 5 comentarios asociados con la publicación, junto con los nombres de usuario, avatares e IDs de los comentaristas. También recupera información sobre los usuarios que son propietarios de la publicación, incluyendo sus nombres, nombres de usuario, avatares e IDs.",
+     *     operationId="getPostDetails",
+     *     tags={"Publicaciones"},
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID de la publicación",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalles de la publicación recuperados exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="post",
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="image",
+     *                         type="string",
+     *                         description="Imagen de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="title",
+     *                         type="string",
+     *                         description="Título de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="description",
+     *                         type="string",
+     *                         description="Descripción de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="post_type_name",
+     *                         type="string",
+     *                         description="Nombre del tipo de publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="start_date",
+     *                         type="string",
+     *                         description="Fecha de inicio de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="end_date",
+     *                         type="string",
+     *                         description="Fecha de finalización de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="active",
+     *                         type="boolean",
+     *                         description="Indica si la publicación está activa"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="ubicacion",
+     *                         type="string",
+     *                         description="Ubicación de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="fecha_creacion",
+     *                         type="string",
+     *                         description="Fecha de creación de la publicación"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="hashtags",
+     *                         type="array",
+     *                         @OA\Items(type="string"),
+     *                         description="Lista de hashtags en la publicación"
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="users",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(
+     *                             property="name",
+     *                             type="string",
+     *                             description="Nombre del usuario"
+     *                         ),
+     *                         @OA\Property(
+     *                             property="username",
+     *                             type="string",
+     *                             description="Nombre de usuario"
+     *                         ),
+     *                         @OA\Property(
+     *                             property="avatar",
+     *                             type="string",
+     *                             description="Avatar del usuario"
+     *                         ),
+     *                         @OA\Property(
+     *                             property="id",
+     *                             type="string",
+     *                             description="ID del usuario"
+     *                         )
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="comments",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(
+     *                             property="username",
+     *                             type="string",
+     *                             description="Nombre de usuario del comentario"
+     *                         ),
+     *                         @OA\Property(
+     *                             property="content",
+     *                             type="string",
+     *                             description="Contenido del comentario"
+     *                         ),
+     *                         @OA\Property(
+     *                             property="comment_id",
+     *                             type="string",
+     *                             description="ID del comentario"
+     *                         ),
+     *                         @OA\Property(
+     *                             property="avatar",
+     *                             type="string",
+     *                             description="Avatar del usuario que comentó"
+     *                         ),
+     *                         @OA\Property(
+     *                             property="user_id",
+     *                             type="string",
+     *                             description="ID del usuario que comentó"
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontró la publicación especificada",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Mensaje de error"
+     *             )
+     *         )
+     *     )
+     * )
      */
+
     public function show(string $id)
     {
         try {
 
-             try {
-                 $id = Crypt::decryptString($id);
-             } catch (DecryptException $e) {
-                 return response()->json([
-                     'status' => false,
-                     'message' => 'Post inexistente',
-                 ], 500);
-             }
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Post inexistente',
+                ], 500);
+            }
 
             // Obtener el post
             $post = Post::with('users')->findOrFail($id);
@@ -687,7 +1120,7 @@ class PostsController extends Controller
                     'start_date' => $post->start_date,
                     'end_date' => $post->end_date,
                     'ubicacion' => $post->ubicacion,
-                    'hashtags' =>  "#" . implode('#', $post->hashtags->pluck('name')->toArray()),
+                    'hashtags' => "#" . implode('#', $post->hashtags->pluck('name')->toArray()),
                     'deleted_date' => $nowFormatted
                 ];
 

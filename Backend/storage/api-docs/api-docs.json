@@ -1,0 +1,360 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Posts",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api"
+        }
+    ],
+    "paths": {
+        "/home_calendario": {
+            "get": {
+                "tags": [
+                    "Publicaciones"
+                ],
+                "summary": "Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.",
+                "description": "Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.",
+                "operationId": "getPublications",
+                "responses": {
+                    "200": {
+                        "description": "Lista de publicaciones para el usuario autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "post_id": {
+                                                        "description": "ID de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "image": {
+                                                        "description": "Imagen de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "description": "Título de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "description": "Descripción de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "description": "Nombre del tipo de publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "start_date": {
+                                                        "description": "Fecha de inicio de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "end_date": {
+                                                        "description": "Fecha de finalización de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "description": "Fecha de creación de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "description": "Nombre de usuario",
+                                                        "type": "string"
+                                                    },
+                                                    "user_id": {
+                                                        "description": "ID del usuario",
+                                                        "type": "string"
+                                                    },
+                                                    "avatar": {
+                                                        "description": "Avatar del usuario",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontraron publicaciones para el usuario.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "description": "Mensaje de error",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/home_todos": {
+            "get": {
+                "tags": [
+                    "Publicaciones"
+                ],
+                "summary": "Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.",
+                "description": "Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.",
+                "operationId": "getHomeTodos",
+                "responses": {
+                    "200": {
+                        "description": "Lista de publicaciones para el usuario autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "post_id": {
+                                                        "description": "ID de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "image": {
+                                                        "description": "Imagen de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "description": "Título de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "description": "Descripción de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "description": "Nombre del tipo de publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "start_date": {
+                                                        "description": "Fecha de inicio de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "end_date": {
+                                                        "description": "Fecha de finalización de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "description": "Fecha de creación de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "description": "Nombre de usuario",
+                                                        "type": "string"
+                                                    },
+                                                    "user_id": {
+                                                        "description": "ID del usuario",
+                                                        "type": "string"
+                                                    },
+                                                    "avatar": {
+                                                        "description": "Avatar del usuario",
+                                                        "type": "string"
+                                                    },
+                                                    "comment_count": {
+                                                        "description": "Número de comentarios en la publicación",
+                                                        "type": "integer"
+                                                    },
+                                                    "hashtags": {
+                                                        "description": "Lista de hashtags asociados a la publicación",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "description": "Nombre del hashtag",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "userRol": {
+                                                        "description": "Rol del usuario",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontraron publicaciones para el usuario.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "description": "Mensaje de error",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/home": {
+            "get": {
+                "tags": [
+                    "Publicaciones"
+                ],
+                "summary": "Muestra una lista de publicaciones de los usuarios que sigue el usuario actual.",
+                "description": "Este método devuelve una lista de publicaciones de los usuarios que sigue el usuario autenticado.",
+                "operationId": "getHomePosts",
+                "responses": {
+                    "200": {
+                        "description": "Lista de publicaciones de los usuarios seguidos por el usuario autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "post_id": {
+                                                        "description": "ID de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "image": {
+                                                        "description": "Imagen de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "description": "Título de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "description": "Descripción de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "description": "Nombre del tipo de publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "start_date": {
+                                                        "description": "Fecha de inicio de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "end_date": {
+                                                        "description": "Fecha de finalización de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "description": "Fecha de creación de la publicación",
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "description": "Nombre de usuario",
+                                                        "type": "string"
+                                                    },
+                                                    "user_id": {
+                                                        "description": "ID del usuario",
+                                                        "type": "string"
+                                                    },
+                                                    "avatar": {
+                                                        "description": "Avatar del usuario",
+                                                        "type": "string"
+                                                    },
+                                                    "comment_count": {
+                                                        "description": "Número de comentarios en la publicación",
+                                                        "type": "integer"
+                                                    },
+                                                    "hashtags": {
+                                                        "description": "Lista de hashtags en la publicación",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "userRol": {
+                                                        "description": "Rol del usuario",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontraron publicaciones de los usuarios seguidos por el usuario actual.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "description": "Mensaje de error",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    }
+}
