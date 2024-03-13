@@ -528,7 +528,7 @@ class PostsController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         description="Datos de la nueva publicación",
-     *         @OA\JsonContent(ref="#/components/schemas/StorePostsRequest")
+     *         @OA\JsonContent(ref="App\Http\Requests\StorePostsRequest")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -920,53 +920,85 @@ class PostsController extends Controller
         }
     }
 
+
     /**
-     * Actualiza la información de una publicación existente.
-     *
-     * Este método permite al usuario autenticado actualizar la información de una publicación existente
-     * proporcionando los datos actualizados en la solicitud.
-     *
-     * @param  \App\Http\Requests\UpdatePostsRequest  $request
-     * @param  string  $id
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "message": "Post actualizado",
-     *     "data": {
-     *         "post": {
-     *             "image": "imagen_de_la_publicación",
-     *             "title": "título_de_la_publicación",
-     *             "description": "descripción_de_la_publicación",
-     *             "post_type_name": "nombre_del_tipo_de_publicación",
-     *             "start_date": "fecha_de_inicio_de_la_publicación",
-     *             "end_date": "fecha_de_finalización_de_la_publicación",
-     *             "active": true,
-     *             "ubicacion": "ubicacion_de_la_publicación",
-     *             "fecha_creacion": "fecha_de_creación_de_la_publicación",
-     *             "hastags": ["hashtag1", "hashtag2", ...]
-     *         },
-     *         "users": [
-     *             {
-     *                 "name": "nombre_del_usuario",
-     *                 "username": "nombre_de_usuario",
-     *                 "avatar": "avatar_del_usuario",
-     *                 "id": "ID_del_usuario"
-     *             },
-     *             ...
-     *         ]
-     *     }
-     * }
-     *
-     * @response 403 {
-     *     "status": false,
-     *     "message": "Post no actualizado. No tienes permisos sobre este post."
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "mensaje_de_error"
-     * }
+     * @OA\Put(
+     *     path="/posts/{id}",
+     *     summary="Actualiza la información de una publicación existente.",
+     *     description="Este método permite al usuario autenticado actualizar la información de una publicación existente proporcionando los datos actualizados en la solicitud.",
+     *     operationId="updatePost",
+     *     tags={"Publicaciones"},
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID de la publicación a actualizar",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Datos actualizados de la publicación",
+     *         @OA\JsonContent(ref="App\Http\Requests\UpdatePostsRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Publicación actualizada exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post actualizado"
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No tienes permisos sobre este post",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post no actualizado. No tienes permisos sobre este post."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Mensaje de error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post no actualizado. No tienes permisos sobre este post."
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function update(UpdatePostsRequest $request, string $id)
     {

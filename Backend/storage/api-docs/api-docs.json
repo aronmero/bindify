@@ -355,6 +355,395 @@
                     }
                 ]
             }
+        },
+        "/posts": {
+            "post": {
+                "tags": [
+                    "Publicaciones"
+                ],
+                "summary": "Crea una nueva publicación en la plataforma.",
+                "description": "Este método permite al usuario autenticado crear una nueva publicación en la plataforma, con los datos proporcionados en la solicitud.",
+                "operationId": "createPost",
+                "requestBody": {
+                    "description": "Datos de la nueva publicación",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "App\\Http\\Requests\\StorePostsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Publicación creada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post creado"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "post_id": {
+                                                    "description": "ID de la publicación",
+                                                    "type": "string"
+                                                },
+                                                "image": {
+                                                    "description": "Imagen de la publicación",
+                                                    "type": "string"
+                                                },
+                                                "title": {
+                                                    "description": "Título de la publicación",
+                                                    "type": "string"
+                                                },
+                                                "description": {
+                                                    "description": "Descripción de la publicación",
+                                                    "type": "string"
+                                                },
+                                                "post_type_name": {
+                                                    "description": "Nombre del tipo de publicación",
+                                                    "type": "string"
+                                                },
+                                                "start_date": {
+                                                    "description": "Fecha de inicio de la publicación",
+                                                    "type": "string"
+                                                },
+                                                "end_date": {
+                                                    "description": "Fecha de finalización de la publicación",
+                                                    "type": "string"
+                                                },
+                                                "active": {
+                                                    "description": "Indica si la publicación está activa",
+                                                    "type": "boolean"
+                                                },
+                                                "ubicacion": {
+                                                    "description": "Ubicación de la publicación",
+                                                    "type": "string"
+                                                },
+                                                "fecha_creacion": {
+                                                    "description": "Fecha de creación de la publicación",
+                                                    "type": "string"
+                                                },
+                                                "hashtags": {
+                                                    "description": "Lista de hashtags en la publicación",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se pudo crear la publicación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "description": "Mensaje de error",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/posts/{id}": {
+            "get": {
+                "tags": [
+                    "Publicaciones"
+                ],
+                "summary": "Muestra los detalles de una publicación específica junto con los comentarios y usuarios asociados.",
+                "description": "Este método recupera información detallada sobre una publicación específica, incluyendo su imagen, título, descripción, tipo, fechas, estado, ubicación, fecha de creación y hashtags asociados. Además, obtiene hasta 5 comentarios asociados con la publicación, junto con los nombres de usuario, avatares e IDs de los comentaristas. También recupera información sobre los usuarios que son propietarios de la publicación, incluyendo sus nombres, nombres de usuario, avatares e IDs.",
+                "operationId": "getPostDetails",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la publicación",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalles de la publicación recuperados exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "post": {
+                                                    "properties": {
+                                                        "image": {
+                                                            "description": "Imagen de la publicación",
+                                                            "type": "string"
+                                                        },
+                                                        "title": {
+                                                            "description": "Título de la publicación",
+                                                            "type": "string"
+                                                        },
+                                                        "description": {
+                                                            "description": "Descripción de la publicación",
+                                                            "type": "string"
+                                                        },
+                                                        "post_type_name": {
+                                                            "description": "Nombre del tipo de publicación",
+                                                            "type": "string"
+                                                        },
+                                                        "start_date": {
+                                                            "description": "Fecha de inicio de la publicación",
+                                                            "type": "string"
+                                                        },
+                                                        "end_date": {
+                                                            "description": "Fecha de finalización de la publicación",
+                                                            "type": "string"
+                                                        },
+                                                        "active": {
+                                                            "description": "Indica si la publicación está activa",
+                                                            "type": "boolean"
+                                                        },
+                                                        "ubicacion": {
+                                                            "description": "Ubicación de la publicación",
+                                                            "type": "string"
+                                                        },
+                                                        "fecha_creacion": {
+                                                            "description": "Fecha de creación de la publicación",
+                                                            "type": "string"
+                                                        },
+                                                        "hashtags": {
+                                                            "description": "Lista de hashtags en la publicación",
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "name": {
+                                                                "description": "Nombre del usuario",
+                                                                "type": "string"
+                                                            },
+                                                            "username": {
+                                                                "description": "Nombre de usuario",
+                                                                "type": "string"
+                                                            },
+                                                            "avatar": {
+                                                                "description": "Avatar del usuario",
+                                                                "type": "string"
+                                                            },
+                                                            "id": {
+                                                                "description": "ID del usuario",
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "comments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "username": {
+                                                                "description": "Nombre de usuario del comentario",
+                                                                "type": "string"
+                                                            },
+                                                            "content": {
+                                                                "description": "Contenido del comentario",
+                                                                "type": "string"
+                                                            },
+                                                            "comment_id": {
+                                                                "description": "ID del comentario",
+                                                                "type": "string"
+                                                            },
+                                                            "avatar": {
+                                                                "description": "Avatar del usuario que comentó",
+                                                                "type": "string"
+                                                            },
+                                                            "user_id": {
+                                                                "description": "ID del usuario que comentó",
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontró la publicación especificada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "description": "Mensaje de error",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Publicaciones"
+                ],
+                "summary": "Actualiza la información de una publicación existente.",
+                "description": "Este método permite al usuario autenticado actualizar la información de una publicación existente proporcionando los datos actualizados en la solicitud.",
+                "operationId": "updatePost",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la publicación a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Datos actualizados de la publicación",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "App\\Http\\Requests\\UpdatePostsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Publicación actualizada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post actualizado"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "No tienes permisos sobre este post",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post no actualizado. No tienes permisos sobre este post."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Mensaje de error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post no actualizado. No tienes permisos sobre este post."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     }
 }
