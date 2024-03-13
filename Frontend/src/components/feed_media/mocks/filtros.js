@@ -3,7 +3,7 @@ import { categorias } from './categorias';
 
 
 export const filtros = [
-    'Para tí', 'Activos', 'Guardados'
+    'Para tí', 'Activos hoy', 'Guardados'
 ];
 
 /**

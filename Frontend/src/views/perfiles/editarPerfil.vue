@@ -60,9 +60,11 @@ const categoria = ref(user.value.categories_name);
 const hashtags = ref("");
 const fechaNac = ref(user.value.birth_date);
 const sexo = ref(user.value.gender);
-user.value.hashtags.forEach(hashtag =>{
-    hashtags.value = hashtags.value+" "+hashtag;
-});
+if(userType.value.tipo == 'commerce'){
+    user.value.hashtags.forEach(hashtag =>{
+        hashtags.value = hashtags.value+" "+hashtag;
+    });
+}
 if(imagenPerfil.value == 'default'){
     imagenPerfil.value = imagenPerfilDefault;
 }
@@ -87,106 +89,61 @@ const tratarDatos = ()=>{
     console.log(contraActual.value);
     console.log(tipoUsuario.value);
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if(isValid.value == null || isValid.value == false){
-        if(nombre.value == null || nombre.value.length == 0){
-            window.scroll({top:100, right:0, behavior: 'smooth'});
-            errorNombre.value = "Es necesario indicar tu nombre para identificarte en la aplicación.";
-            isValid.value = false;
+    if(nombre.value == null || nombre.value.length == 0){
+        window.scroll({top:50, right:0, behavior: 'smooth'});
+        errorNombre.value = "Es necesario indicar tu nombre para identificarte en la aplicación.";
+    }else{
+        errorNombre.value = null;
+    }
+    if(email.value == null || email.value.length == 0){
+        window.scroll({top:500, right:0, behavior: 'smooth'});
+        errorMail.value = "Es necesario indicar un email.";
+    }else{
+        if(!emailRegex.test(email.value)) {
+        window.scroll({top:500, right:0, behavior: 'smooth'});
+        errorMail.value = "El email indicado no es válido.";
         }else{
-            errorNombre.value = null;
-            isValid.value = true;
+            errorMail.value = null;
         }
-        if(email.value == null || email.value.length == 0){
-            window.scroll({top:500, right:0, behavior: 'smooth'});
-            errorMail.value = "Es necesario indicar un email.";
-            isValid.value = false;
+    }
+    if(municipio.value == null || municipio.value.length == 0){
+        errorMunic.value = "Debes seleccionar el municipio en el que vives.";
+    }else{
+        errorMunic.value = null;
+    }
+    if((contraNueva.value != null && contraNueva.value.length > 0)){
+        if(repetirNueva.value == null || repetirNueva.value.length == 0){
+            errorContra.value = "Debe indicar y repetir una contraseña.";
         }else{
-            if(!emailRegex.test(email.value)) {
-            window.scroll({top:500, right:0, behavior: 'smooth'});
-            errorMail.value = "El email indicado no es válido.";
-            isValid.value = false;
+            if(contraActual.value == null || contraActual.value.length == 0){
+                errorContra.value = "Debes proporcionar tu contraseña actual.";
             }else{
-                errorMail.value = null;
-                isValid.value = true;
-            }
-        }
-        if(municipio.value == null || municipio.value.length == 0){
-            errorMunic.value = "Debes seleccionar el municipio en el que vives.";
-            isValid.value = false;
-        }else{
-            errorMunic.value = null;
-            isValid.value = true;
-        }
-        if((contraNueva.value != null && contraNueva.value.length > 0)){
-            if(repetirNueva.value == null || repetirNueva.value.length == 0){
-                errorContra.value = "Debe indicar y repetir una contraseña.";
-                isValid.value = false;
-            }else{
-                if(contraActual.value == null || contraActual.value.length == 0){
-                    errorContra.value = "Debes proporcionar tu contraseña actual.";
-                    isValid.value = false;
+                if(contraNueva.value != repetirNueva.value){
+                    errorContra.value = "Las contraseñas no coinciden.";
+                    contraNueva.value = null;
+                    repetirNueva.value = null;
                 }else{
-                    if(contraNueva.value != repetirNueva.value){
-                        errorContra.value = "Las contraseñas no coinciden.";
-                        contraNueva.value = null;
-                        repetirNueva.value = null;
-                        isValid.value = false;
-                    }
+                    errorContra.value = null;
                 }
-            }
-        }else{
-            errorContra.value = null;
-            isValid.value = true;
-        }
-        if(tipoUsuario.value == 'customer'){
-            if(fechaNac.value == null || fechaNac.value.length == 0){
-                errorDate.value = "Debe indicar su fecha de nacimiento.";
-                isValid.value = false;
-            }else{
-                errorDate.value = null;
-                isValid.value = true;
-            }
-        }else{
-            if(telefono.value == null || telefono.value.length == 0){
-                errorPhone.value = "Debe indicar el teléfono de su negocio.";
-                isValid.value = false;
-            }else{
-                errorPhone.value = null;
-                isValid.value = true;
-            }
-            if(direccion.value == null || direccion.value.length == 0){
-                errorDirec.value = "Debe indicar la dirección de su negocio.";
-                isValid.value = false;
-            }else{
-                errorDirec.value = null;
-                isValid.value = true;
-            }
-            if(horarioActual.value == null || horarioActual.value.length == 0){
-                errorSche.value = "Debe indicar el horario de su negocio.";
-                isValid.value = false;
-            }else{
-                errorSche.value = null;
-                isValid.value = true;
-            }
-            if(categoria.value == null || categoria.value.length == 0){
-                errorCategory.value = "Debe seleccionar la categoria de su negocio.";
-                isValid.value = false;
-            }else{
-                errorCategory.value = null;
-                isValid.value = true;
             }
         }
     }else{
-        if(imagenBanner.value == imagenBannerDefault){
-            imagenBanner.value = null;
+        errorContra.value = null;
+    }
+    if(tipoUsuario.value == 'customer'){
+        if(fechaNac.value == null || fechaNac.value.length == 0){
+            errorDate.value = "Debe indicar su fecha de nacimiento.";
+        }else{
+            errorDate.value = null;
         }
-        if(imagenPerfil.value == imagenPerfilDefault){
-            imagenPerfil.value = null;
-        }
-        if(tipoUsuario.value == 'customer'){
-            let datos = null;
-            console.log(sexo.value);
-            datos = {
+        if(errorDate.value == null && errorContra.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
+            if(imagenBanner.value == imagenBannerDefault){
+                imagenBanner.value = null;
+            }
+            if(imagenPerfil.value == imagenPerfilDefault){
+                imagenPerfil.value = null;
+            }
+            let datos =  {
                 "email": email.value,
                 "password": contraNueva.value,
                 "phone": telefono.value,
@@ -202,8 +159,8 @@ const tratarDatos = ()=>{
                 "birth_date": fechaNac.value,
                 "password_confirmation": repetirNueva.value,
             }
-            console.log(datos);
-            let respuesta = updateUserData("PUT", datos);
+            let respuesta = updateUserData("PUT", datos, userType.value.username);
+            console.log(respuesta);
             if(respuesta.status){
                 email.value = null;
                 nombre.value = null;
@@ -219,10 +176,47 @@ const tratarDatos = ()=>{
                     JSON.stringify({ usuario: data.message })
                     );
                     router.go(-1);
-                }else{
-                console.log("Error de back en el registro");
+            }else{
+            console.log("Error de back en el registro");
             }
+        }
+    }else{
+        if(telefono.value == null || telefono.value.length == 0){
+            errorPhone.value = "Debe indicar el teléfono de su negocio.";
+
         }else{
+            errorPhone.value = null;
+
+        }
+        if(direccion.value == null || direccion.value.length == 0){
+            errorDirec.value = "Debe indicar la dirección de su negocio.";
+
+        }else{
+            errorDirec.value = null;
+
+        }
+        if(horarioActual.value == null || horarioActual.value.length == 0){
+            console.log("Entro en lo del horario");
+            errorSche.value = "Debe indicar el horario de su negocio.";
+
+        }else{
+            errorSche.value = null;
+
+        }
+        if(categoria.value == null || categoria.value.length == 0){
+            errorCategory.value = "Debe seleccionar la categoria de su negocio.";
+
+        }else{
+            errorCategory.value = null;
+
+        }
+        if(errorCategory.value == null && errorSche.value == null && errorDirec.value == null && errorPhone.value == null && errorContra.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
+            if(imagenBanner.value == imagenBannerDefault){
+                imagenBanner.value = null;
+            }
+            if(imagenPerfil.value == imagenPerfilDefault){
+                imagenPerfil.value = null;
+            }
             let datos = {
                 "email": email.value,
                 "password": contraNueva.value,
@@ -241,7 +235,7 @@ const tratarDatos = ()=>{
                 "password_confirmation": repetirNueva.value,
             }
             console.log(datos);
-            let respuesta = updateUserData("PUT", datos);
+            let respuesta = updateUserData("PUT", datos, userType.value.username);
             if(respuesta.status){
                 email.value = null;
                 nombre.value = null;
@@ -262,7 +256,6 @@ const tratarDatos = ()=>{
                 console.log("Error de back en el registro");
             } 
         }
-          
     }
 }
 /** Controla la apertura del modal de horarios */
@@ -310,14 +303,14 @@ const obtenerCambioHorario = (cambio) => {
                     <Input v-if="tipoUsuario == 'customer'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" label="Teléfono" :valor="telefono"/>
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" requerido="true" label="Teléfono" :valor="telefono" :error="errorPhone"/>
                     <Input @datos="(nuevosDatos)=>{email = nuevosDatos}" tipo="text" requerido="true" label="Email" :valor="email" :error="errorMail"/>
-                    <Input @datos="(nuevosDatos)=>{municipio = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Municipio" :opciones="options" placeholder="Selecciona un municipio" :error="errorMunic" :valor="municipio"/>
+                    <Input @datos="(nuevosDatos)=>{municipio = nuevosDatos}" tipo="selection" requerido="true" label="Municipio" :opciones="options" placeholder="Selecciona un municipio" :error="errorMunic" :valor="municipio"/>
                     <Input v-if="tipoUsuario == 'customer'" @datos="(nuevosDatos)=>{fechaNac = nuevosDatos}" tipo="fechaLibre" requerido="true" label="Fecha de nacimiento" :valor="fechaNac" :error="errorDate"/>
-                    <Input v-if="tipoUsuario == 'customer'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" @change="mostrarInformacion" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
+                    <Input v-if="tipoUsuario == 'customer'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{direccion = nuevosDatos}" tipo="text" requerido="true" label="Dirección" :valor="direccion" :error="errorDirec"/>
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{hastags = nuevosDatos}" tipo="text" label="Hashtags" :valor="hashtags"/>
                     <Input v-if="tipoUsuario == 'commerce'" tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual"/>
                     <Input v-if="tipoUsuario == 'commerce'" @click="controlarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
-                    <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
+                    <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
                     <div class="cambiocontra flex flex-col gap-y-5">
                         <p v-if="errorContra != null" class="text-primary-700 text-xs lg:text-sm ms-3">{{ errorContra }}</p>
                         <Input @datos="(nuevosDatos)=>{contraActual = nuevosDatos}" tipo="password" label="Contraseña Actual" :valor="contraActual" />

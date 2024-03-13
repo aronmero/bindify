@@ -51,10 +51,11 @@ const redirect = (url) => {
   router.push(url);
 };
 
-const tipo = props.post.post_type_id;
+/** Agregué que se listaran ya los tipos */
+const tipo = props.post.name;
 let IconoTipo = "";
-if (tipo == 1) IconoTipo = TipoOferta;
-if (tipo == 2) IconoTipo = TipoEvento;
+if (tipo == 'Post') IconoTipo = TipoOferta;
+if (tipo == 'Evento') IconoTipo = TipoEvento;
 </script>
 
 <template>

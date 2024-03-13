@@ -3,8 +3,9 @@ import { categorias } from './categorias';
 
 
 export const filtros = [
-    'Para tí', 'Activos', 'Cercanos', 'Similares'
+    'Todos'
 ];
+
 
 /**
  * Devuelve el valor maquetado de los filtros del usuario dependiendo de los gustos de este
