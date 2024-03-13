@@ -19,7 +19,7 @@ import {
   followUser,
   aniadirFavorito,
 } from "@/Api/perfiles/perfil.js";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 console.log("REDIRIGE")
 import eventos from "@/components/perfiles/containers/contenedorVistaEventos.vue";
 import posts from "@/components/perfiles/containers/contenedorVistaPosts.vue";
@@ -43,6 +43,11 @@ let isCustomer = false;
 //   isCustomer = true
 
 // }
+
+// onMounted(() => {
+//   console.log("Montado")
+  
+// })
 const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };

@@ -63,6 +63,7 @@ function editarPost(evento){
   console.log(props.post)
   sessionStorage.setItem("postData",JSON.stringify({ postData: props.post }))
   console.log(JSON.parse(sessionStorage.getItem("postData")))
+  router.push(`/post/${props.post.post_id}/editar`)
 }
 </script>
 
