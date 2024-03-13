@@ -403,14 +403,14 @@ class PostsController extends Controller
     {
         try {
 
-            // try {
-            //     $id = Crypt::decryptString($id);
-            // } catch (DecryptException $e) {
-            //     return response()->json([
-            //         'status' => false,
-            //         'message' => 'Post inexistente',
-            //     ], 500);
-            // }
+             try {
+                 $id = Crypt::decryptString($id);
+             } catch (DecryptException $e) {
+                 return response()->json([
+                     'status' => false,
+                     'message' => 'Post inexistente',
+                 ], 500);
+             }
 
             // Obtener el post
             $post = Post::with('users')->findOrFail($id);

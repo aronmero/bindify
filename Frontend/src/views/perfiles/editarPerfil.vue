@@ -9,13 +9,14 @@ import Input from "@/components/comun/input.vue";
 
 import Horarios from '@/components/intervalos_horarios/Horarios.vue';
 import { solicitarCategorias, solicitarMunicipios } from '@/Api/Auth/desplegables_registro.js';
+import { updateUserData } from "../../Api/perfiles/perfil";
 
 /* Genera la referencia para controlar el estado de mostrado u oculto */
 const controlador_modal = ref(false);
 
 let options = ref(null);
 let optionsCategory = ref(null);
-let optionsSex = ["M", "H"];
+let optionsSex = [{id: 0, name: "M"}, {id: 1, name: "H"}];
 const solicitarDatosApi = async()=>{
     optionsCategory.value = await solicitarCategorias("GET").then(data => data = data.data);
     options.value = await solicitarMunicipios("GET").then(data => data = data.data);
@@ -31,39 +32,44 @@ let errorDirec = ref(null);
 let errorPhone = ref(null);
 let errorContra = ref(null);
 let errorSche = ref(null);
+const imagenPerfilDefault = '/img/placeholderPerfil.webp';
+const imagenBannerDefault = '/img/placeholderBanner.webp';
 const userType = ref(JSON.parse(sessionStorage.getItem("usuario")));
 userType.value = userType.value.usuario;
 console.log(userType.value);
-const user = ref(JSON.parse(sessionStorage.getItem("userData")));
-user.value = user.value.userData[0];
-console.log(user.value);
-const horarioActual = ref(user.value.schedule);
 const tipoUsuario = ref(userType.value.tipo);
+const user = ref(JSON.parse(sessionStorage.getItem("userData")));
+if(tipoUsuario.value == 'customer'){
+    user.value = user.value.userData;
+}else{
+    user.value = user.value.userData[0];
+}
+console.log(user.value);
 const nombre = ref(user.value.name);
 const imagenPerfil = ref(user.value.avatar);
 const imagenBanner = ref(user.value.banner);
 const telefono = ref(user.value.phone);
 const email = ref(user.value.email);
 const municipio = ref(user.value.municipality_name);
-const fechaNac = ref(user.value.birth_date);
-const sexo = ref(user.value.gender);
-const direccion = ref(user.value.address);
-const categoria = ref(user.value.categories_name);
-const hashtags = ref("");
 const contraActual = ref(null);
 const contraNueva = ref(null);
 const repetirNueva = ref(null);
-const isValid = ref(null);
+const direccion = ref(user.value.address);
+const horarioActual = ref(user.value.schedule);
+const categoria = ref(user.value.categories_name);
+const hashtags = ref("");
+const fechaNac = ref(user.value.birth_date);
+const sexo = ref(user.value.gender);
 user.value.hashtags.forEach(hashtag =>{
     hashtags.value = hashtags.value+" "+hashtag;
 });
-const mostrarInformacion = (e)=>{
-    let opciones = [...e.target.children];
-    let opcionSeleccionada = opciones.filter(opcion => opcion.selected == true);
-    if(opcionSeleccionada[0].textContent != null){
-        tipo.value = opcionSeleccionada[0].textContent;
-    }
+if(imagenPerfil.value == 'default'){
+    imagenPerfil.value = imagenPerfilDefault;
 }
+if(imagenBanner.value == 'default'){
+    imagenBanner.value = imagenBannerDefault;
+}
+const isValid = ref(null);
 const tratarDatos = ()=>{
     console.log(nombre.value);
     console.log(imagenPerfil.value);
@@ -72,7 +78,7 @@ const tratarDatos = ()=>{
     console.log(email.value.length);
     console.log(municipio.value);
     console.log(fechaNac.value);
-    console.log(optionsSex[sexo.value]);
+    console.log(sexo.value);
     console.log(horarioActual.value);
     console.log(direccion.value);
     console.log(categoria.value);
@@ -171,24 +177,33 @@ const tratarDatos = ()=>{
             }
         }
     }else{
+        if(imagenBanner.value == imagenBannerDefault){
+            imagenBanner.value = null;
+        }
+        if(imagenPerfil.value == imagenPerfilDefault){
+            imagenPerfil.value = null;
+        }
         if(tipoUsuario.value == 'customer'){
-            let datos = {
-            "email": email.value,
-            "password": contraNueva.value,
-            "phone": telefono.value,
-            "municipality_id": municipio.value,
-            "avatar": imagenPerfil.value,
-            "name": nombre.value,
-            "category_id": categoria.value,
-            "empresa": false,
-            "schedule": horarioActual.value,
-            "address": direccion.value,
-            "gender": optionsSex[sexo.value].name,
-            "birth_date": fechaNac.value,
-            "password_confirmation": repetirNueva.value,
+            let datos = null;
+            console.log(sexo.value);
+            datos = {
+                "email": email.value,
+                "password": contraNueva.value,
+                "phone": telefono.value,
+                "municipality_id": municipio.value,
+                "avatar": imagenPerfil.value,
+                "banner": imagenBanner.value,
+                "name": nombre.value,
+                "category_id": categoria.value,
+                "empresa": false,
+                "schedule": horarioActual.value,
+                "address": direccion.value,
+                "gender": sexo.value,
+                "birth_date": fechaNac.value,
+                "password_confirmation": repetirNueva.value,
             }
             console.log(datos);
-            /* let respuesta = register(datos);
+            let respuesta = updateUserData("PUT", datos);
             if(respuesta.status){
                 email.value = null;
                 nombre.value = null;
@@ -203,11 +218,10 @@ const tratarDatos = ()=>{
                     "userData",
                     JSON.stringify({ usuario: data.message })
                     );
-                    router.push("/");
-                    router.go();
+                    router.go(-1);
                 }else{
                 console.log("Error de back en el registro");
-            } */
+            }
         }else{
             let datos = {
                 "email": email.value,
@@ -215,18 +229,19 @@ const tratarDatos = ()=>{
                 "phone": telefono.value,
                 "municipality_id": municipio.value,
                 "avatar": imagenPerfil.value,
+                "banner": imagenBanner.value,
                 "name": nombre.value,
                 "category_id": categoria.value,
                 "description": hashtags.value,
                 "empresa": true,
                 "schedule": horarioActual.value,
                 "address": direccion.value,
-                "gender": optionsSex[sexo.value],
+                "gender": sexo.value,
                 "birth_date": fechaNac.value,
                 "password_confirmation": repetirNueva.value,
             }
             console.log(datos);
-            /* let respuesta = register(datos);
+            let respuesta = updateUserData("PUT", datos);
             if(respuesta.status){
                 email.value = null;
                 nombre.value = null;
@@ -242,11 +257,10 @@ const tratarDatos = ()=>{
                     "userData",
                     JSON.stringify({ usuario: data.message })
                 );
-                router.push("/");
-                router.go();
+                router.go(-1);
             }else{
                 console.log("Error de back en el registro");
-            } */
+            } 
         }
           
     }
@@ -297,12 +311,12 @@ const obtenerCambioHorario = (cambio) => {
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" requerido="true" label="Teléfono" :valor="telefono" :error="errorPhone"/>
                     <Input @datos="(nuevosDatos)=>{email = nuevosDatos}" tipo="text" requerido="true" label="Email" :valor="email" :error="errorMail"/>
                     <Input @datos="(nuevosDatos)=>{municipio = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Municipio" :opciones="options" placeholder="Selecciona un municipio" :error="errorMunic" :valor="municipio"/>
-                    <Input v-if="tipoUsuario == 'customer'" @datos="(nuevosDatos)=>{fechaNac = nuevosDatos}" tipo="fecha" requerido="true" label="Fecha de nacimiento" :valor="fechaNac" :error="errorDate"/>
+                    <Input v-if="tipoUsuario == 'customer'" @datos="(nuevosDatos)=>{fechaNac = nuevosDatos}" tipo="fechaLibre" requerido="true" label="Fecha de nacimiento" :valor="fechaNac" :error="errorDate"/>
                     <Input v-if="tipoUsuario == 'customer'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" @change="mostrarInformacion" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{direccion = nuevosDatos}" tipo="text" requerido="true" label="Dirección" :valor="direccion" :error="errorDirec"/>
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{hastags = nuevosDatos}" tipo="text" label="Hashtags" :valor="hashtags"/>
                     <Input v-if="tipoUsuario == 'commerce'" tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual"/>
-                    <Input @click="controlarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
+                    <Input v-if="tipoUsuario == 'commerce'" @click="controlarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
                     <div class="cambiocontra flex flex-col gap-y-5">
                         <p v-if="errorContra != null" class="text-primary-700 text-xs lg:text-sm ms-3">{{ errorContra }}</p>
