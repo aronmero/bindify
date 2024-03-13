@@ -9,18 +9,15 @@ import ayuntamiento from "@/views/perfiles/ayuntamiento.vue";
 import router from "@/router/index.js";
 import { ref } from "vue";
 const user = JSON.parse(sessionStorage.getItem("usuario"));
-console.log(user.usuario.tipo);
 let tipoUsuario = ref(user.usuario.tipo);
 
 let username = router.currentRoute.value.params.username;
 
-console.log(username);
-
 if (username == undefined) {
   username = user.usuario.username;
-  console.log(username);
+  router.push(`/perfil/${username}`)
 }
-
+/*
 switch (tipoUsuario.value) {
   case "commerce":
     router.push(`/perfil/${username}/comercio`);
@@ -28,14 +25,19 @@ switch (tipoUsuario.value) {
   case "customer":
     router.push(`/perfil/${username}/particular`);
     break;
+  
+  case "ayuntamiento":
+     router.push(`/perfil/${username}/ayuntamiento`);
+     break;
   }
-  // case "ayuntamiento":
-  //   router.push(`/perfil/${username}/ayuntamiento`);
-  //   break;
-
-
+  */
 </script>
 
-<template></template>
+<template>
+  <template v-if="router.currentRoute.value.params.username != undefined">
+    <particular v-if="tipoUsuario == 'customer'"></particular>
+    <comercio v-if="tipoUsuario == 'commerce' || tipoUsuario == 'ayuntamiento'"></comercio>
+  </template>
+</template>
 
 <style scoped></style>

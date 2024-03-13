@@ -17,15 +17,27 @@ import favoritos from "@/components/perfiles/containers/contenedorVistaFavoritos
 import seguidos from "@/components/perfiles/containers/contenedorVistaFavoritos.vue";
 
 let linkUsername = ref(router.currentRoute.value.params.username);
+const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
+let userExterno = ref(false);
 let userData = ref(null);
 
 // console.log(getUserData("get"));
 
-async function responseCatcher(metodo,subRuta) {
+async function responseCatcher(metodo, subRuta) {
   userData.value = await getUserData(metodo, subRuta);
   console.log(userData.value);
+
 }
-responseCatcher("get","/api/profile");
+// responseCatcher("get","/api/profile");
+
+if (linkUsername.value == userLogeado.usuario.username) {
+  responseCatcher("get", "/api/profile");
+} else {
+  //console.log(linkUsername.value);
+  // router.push()
+  responseCatcher("get", `/api/user/${linkUsername.value}`);
+  userExterno.value = true;
+}
 
 let clickedLink = null;
 const estilos = {
@@ -40,40 +52,40 @@ function pintar(evento) {
   clickedLink = evento.target;
 }
 
-const isFidelidad = ref(false)
-const isFavoritos = ref(false)
-const isSeguidos = ref(false)
+const isFidelidad = ref(false);
+const isFavoritos = ref(false);
+const isSeguidos = ref(false);
 
 /**
  * Oculta todos los componentes
  */
 function ocultar() {
-  isFidelidad.value = false
-  isFavoritos.value = false
-  isSeguidos.value = false
+  isFidelidad.value = false;
+  isFavoritos.value = false;
+  isSeguidos.value = false;
 }
 
 /**
  * Ejecuta una serie de funciones que requieren de un evento.
  * Cambia un estilo, oculta todos los contenedores, y muestra uno en concreto
- * @param {*} evento 
+ * @param {*} evento
  */
 function manipulacion(evento) {
-  pintar(evento)
+  pintar(evento);
 
   ocultar();
   switch (evento.target.value) {
     case "1":
-    console.log(evento.target.value)
-    isFidelidad.value = true
+      console.log(evento.target.value);
+      isFidelidad.value = true;
       break;
     case "2":
-    console.log(evento.target.value)
-    isFavoritos.value = true
+      console.log(evento.target.value);
+      isFavoritos.value = true;
       break;
     case "3":
-    console.log(evento.target.value)
-    isSeguidos.value = true
+      console.log(evento.target.value);
+      isSeguidos.value = true;
       break;
     default:
       break;
@@ -112,23 +124,26 @@ function manipulacion(evento) {
         <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser>
       </div>
       <div class="flex w-full justify-center gap-6">
-          <textoEnNegrita
-            @click="manipulacion"
-            texto="Fidelidad"
-            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`" value="1"
-          />
+        <textoEnNegrita
+          @click="manipulacion"
+          texto="Fidelidad"
+          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          value="1"
+        />
 
-          <textoEnNegrita
-            @click="manipulacion"
-            texto="Favoritos"
-            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`" value="2"
-          />
+        <textoEnNegrita
+          @click="manipulacion"
+          texto="Favoritos"
+          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          value="2"
+        />
 
-          <textoEnNegrita
-            @click="manipulacion"
-            texto="Seguidos"
-            :class="`text-sm lg:text-base ${estilos.hoverLinks}`" value="3"
-          />
+        <textoEnNegrita
+          @click="manipulacion"
+          texto="Seguidos"
+          :class="`text-sm lg:text-base ${estilos.hoverLinks}`"
+          value="3"
+        />
       </div>
       <fidelidad v-if="isFidelidad"></fidelidad>
       <favoritos v-if="isFavoritos"></favoritos>

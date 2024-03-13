@@ -10,6 +10,8 @@ import imgRectangular from "@/components/perfiles/widgets/imgRectangular.vue";
 
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
+const userData = JSON.parse(sessionStorage.getItem("userData"));
+console.log(userData);
 </script>
 
 <template>
@@ -20,14 +22,25 @@ import { users } from "@/components/perfiles/helpers/users.js";
     <div class="flex flex-col gap-1 items-center">
       <div>
         <imgsPerfil
-          rutaBaner="https://placehold.co/600x400"
+          v-if="userData.userData.banner == 'default'"
+          rutaBaner="/img/placeholderPerfil.webp"
           altTextBaner="foto baner"
-          :rutaPerfil="users[0].avatar"
+          rutaPerfil="/img/placeholderBanner.webp"
+          altTextPerfil="foto perfil"
+        ></imgsPerfil>
+        <imgsPerfil
+          v-else
+          :rutaBaner="userData.userData.banner"
+          altTextBaner="foto baner"
+          :rutaPerfil="userData.userData.avatar"
           altTextPerfil="foto perfil"
         ></imgsPerfil>
       </div>
       <div class="flex flex-col justify-evenly lg:flex-row">
-        <textoEnNegrita :texto="users[0].name" class="text-base lg:text-xl" />
+        <textoEnNegrita
+          :texto="userData.userData.name"
+          class="text-base lg:text-xl"
+        />
       </div>
       <imgRectangular
         ruta="/img/codigo-qr.svg"

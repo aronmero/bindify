@@ -91,3 +91,48 @@ export async function updateUserData(metodo,datos,userName) {
       console.error(error);
     }
   }
+export async function getUserFollows(metodo,subRuta,body=null) {
+    // const user = JSON.parse(sessionStorage.getItem("usuario"));
+    // console.log(user)
+    try {
+      const options = genOptions(metodo,body);
+      const response = await fetch(`${urlApi}${subRuta}`, options);
+      const data = await response.json();
+      console.log(data.data)
+      return data.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+export async function followUser(metodo,subRuta,body=null) {
+    try {
+      const options = genOptions(metodo,body);
+      const response = await fetch(`${urlApi}${subRuta}`, options);
+      const data = await response.json();
+      console.log(data)
+      if(data.message =="Usuario seguido"){
+        return true
+      }else{
+        return false
+      }
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+export async function aniadirFavorito(metodo,subRuta,body=null) {
+    try {
+      const options = genOptions(metodo,body);
+      const response = await fetch(`${urlApi}${subRuta}`, options);
+      const data = await response.json();
+      console.log(data)
+      if(data.message =="Usuario añadido a favoritos"){
+        return true
+      }else{
+        return false
+      }
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
