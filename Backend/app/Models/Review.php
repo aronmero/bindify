@@ -30,4 +30,8 @@ class Review extends Model
         return $this->belongsTo(User::class, 'commerce_id');
     }
 
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'element');
+    }
 }

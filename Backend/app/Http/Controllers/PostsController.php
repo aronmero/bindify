@@ -82,6 +82,8 @@ class PostsController extends Controller
 
 
             $listado->each(function ($post) {
+                $commentsCount = Comment::where('post_id', $post->post_id)->count();
+                $post->comment_count = $commentsCount;
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
@@ -146,7 +148,6 @@ class PostsController extends Controller
                     'posts.image',
                     'posts.title',
                     'posts.description',
-                    'posts.description',
                     'post_types.name',
                     'posts.start_date',
                     'posts.end_date',
@@ -154,15 +155,17 @@ class PostsController extends Controller
                     'users.username',
                     'users.id AS user_id',
                     'users.avatar',
-                    'commerces.avg as avg'
+                    'commerces.avg as avg',
                 )
                 ->where('posts.active', '=', true)
                 ->orderBy('posts.start_date', 'desc')
                 ->get();
 
-            
+
 
             $listado->each(function ($post) {
+                $commentsCount = Comment::where('post_id', $post->post_id)->count();
+                $post->comment_count = $commentsCount;
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
                 $post->post_id = Crypt::encryptString($post->post_id);
                 $user = User::where('username', $post->username)->first();
@@ -234,7 +237,6 @@ class PostsController extends Controller
                     'posts.image',
                     'posts.title',
                     'posts.description',
-                    'posts.description',
                     'post_types.name',
                     'posts.start_date',
                     'posts.end_date',
@@ -249,6 +251,8 @@ class PostsController extends Controller
                 ->get();
 
             $listado->each(function ($post) {
+                $commentsCount = Comment::where('post_id', $post->post_id)->count();
+                $post->comment_count = $commentsCount;
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
                 $post->post_id = Crypt::encryptString($post->post_id);
                 $user = User::where('username', $post->username)->first();
@@ -403,14 +407,14 @@ class PostsController extends Controller
     {
         try {
 
-            // try {
-            //     $id = Crypt::decryptString($id);
-            // } catch (DecryptException $e) {
-            //     return response()->json([
-            //         'status' => false,
-            //         'message' => 'Post inexistente',
-            //     ], 500);
-            // }
+             try {
+                 $id = Crypt::decryptString($id);
+             } catch (DecryptException $e) {
+                 return response()->json([
+                     'status' => false,
+                     'message' => 'Post inexistente',
+                 ], 500);
+             }
 
             // Obtener el post
             $post = Post::with('users')->findOrFail($id);
@@ -432,10 +436,10 @@ class PostsController extends Controller
                 'ubicacion' => $post->ubicacion,
                 'fecha_creacion' => $post->created_at,
                 'hastags' => $post->hashtags->pluck('name'),
-                'userRol' => $post->userRol 
+                'userRol' => $post->userRol
             ];
-            
-            
+
+
 
             // Obtener los 5 primeros comentarios del post
             $comments = Comment::where('post_id', $id)->with('user')->take(5)->get();
@@ -446,7 +450,7 @@ class PostsController extends Controller
                 $formattedComment = [
                     'username' => $comment->user->username,
                     'content' => $comment->content,
-                    'comment_id' => $comment->id,
+                    //'comment_id' => $comment->id,
                     'comment_id' => Crypt::encryptString($comment->id),
                     'avatar' => $comment->user->avatar,
                 ];
@@ -685,6 +689,8 @@ class PostsController extends Controller
                 ];
 
                 DB::table('deleted_posts')->insert($postData);
+
+                $post->notifications()->delete();
 
                 $post->delete();
 

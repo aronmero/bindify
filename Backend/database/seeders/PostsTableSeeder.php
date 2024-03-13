@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Events\ModelCreated;
 use App\Models\Commerce;
 use App\Models\Post;
 use App\Models\User;
@@ -19,11 +20,14 @@ class PostsTableSeeder extends Seeder
 
         for ($i = 0; $i < $cantidad; $i++) {
             $post = Post::factory()->create();
+
             $userId = Commerce::select('user_id')
             ->inRandomOrder()
             ->first();
             $user = User::find($userId);
-            $post = $post->users()->attach($user);
+            $post->users()->attach($user);
+
+            event(new ModelCreated($post));
         }
     }
 }

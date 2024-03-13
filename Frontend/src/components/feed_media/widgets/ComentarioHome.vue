@@ -67,7 +67,7 @@ const abrirModal = () => {
 
 
 
-console.log(props.comentario)
+//console.log(props.comentario)
 </script>
 <template>
     <!-- Contenedor Comentario -->

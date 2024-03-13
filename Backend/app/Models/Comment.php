@@ -34,4 +34,9 @@ class Comment extends Model
 
         return $this->belongsTo(Post::class, 'post_id');
     }
+
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'element');
+    }
 }

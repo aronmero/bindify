@@ -17,4 +17,9 @@ class Follower extends Model
         'favorito'
     ];
 
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'element');
+    }
+
 }
