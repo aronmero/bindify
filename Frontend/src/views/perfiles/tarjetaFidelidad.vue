@@ -28,6 +28,13 @@ console.log(userData);
           rutaPerfil="/img/placeholderBanner.webp"
           altTextPerfil="foto perfil"
         ></imgsPerfil>
+        <imgsPerfil
+          v-else
+          :rutaBaner="userData.userData.banner"
+          altTextBaner="foto baner"
+          :rutaPerfil="userData.userData.avatar"
+          altTextPerfil="foto perfil"
+        ></imgsPerfil>
       </div>
       <div class="flex flex-col justify-evenly lg:flex-row">
         <textoEnNegrita

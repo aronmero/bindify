@@ -11,6 +11,7 @@ import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
 import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPuntuacion.vue";
 import contenedorFollower from "@/components/perfiles/containers/contenedorFollower.vue";
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
+import { setDefaultImgs } from "@/components/perfiles/helpers/defaultImgs";
 import router from "@/router/index.js";
 import { RouterLink, RouterView } from "vue-router";
 import {
@@ -75,6 +76,8 @@ async function responseCatcher(metodo, subRuta) {
     userData.value = userData.value[0];
   }
   console.log(userData.value);
+  userData.value = setDefaultImgs(userData.value);
+  console.log(userData.value);
 }
 
 if (linkUsername.value == userLogeado.usuario.username) {
@@ -102,6 +105,16 @@ async function responseCatcherFavoritos() {
   );
   console.log(cambioAFavorito.value);
 }
+
+// function setDefaultImgs(objeto){
+//   if(objeto.banner!= undefined && objeto.banner=="default"){
+//     objeto.banner = "/img/placeholderPerfil.webp"
+//   }
+//   if(objeto.avatar!= undefined && objeto.avatar=="default"){
+//     objeto.avatar = "/img/placeholderBanner.webp"
+//   }
+//   return objeto
+// }
 
 const isEventos = ref(false);
 const isPosts = ref(false);
@@ -261,7 +274,7 @@ function manipulacion(evento) {
             >
             </btnConText>
           </RouterLink>
-          <RouterLink to="/tarjeta-fidelidad" v-if="!userExterno && isCustomer" >
+          <RouterLink to="/tarjeta-fidelidad" v-if="!userExterno && isCustomer">
             <btnConImg
               ruta="/assets/icons/qrCode.svg"
               altText="icono codigo qr"

@@ -3,6 +3,7 @@ import contenedorResenia from "@/components/perfiles/containers/contenedorReseni
 import FeedPost from "@/components/perfiles/containers/TipoPost.vue";
 import { posts } from "@/components/perfiles/helpers/posts.js";
 import { getUserReviews } from "@/Api/perfiles/perfil.js";
+import { setDefaultImgs } from "@/components/perfiles/helpers/defaultImgs";
 import router from "@/router/index.js";
 import { ref } from "vue";
 let userReviews = ref(null);
@@ -14,6 +15,7 @@ async function responseCatcher() {
     `/api/review/${linkUsername.value}`
   );
   console.log(userReviews.value);
+  userReviews.value = setDefaultImgs(userReviews.value);
 }
 responseCatcher();
 </script>
@@ -24,6 +26,8 @@ responseCatcher();
     :nombre="review.username"
     :texto="review.comment"
     :puntuacion="review.note"
+    imagen="https://png.pngtree.com/background/20230610/original/pngtree-landscapes-wallpaper-images-picture-image_3021437.jpg"
+    imgAltText="imagen de reseña"
   ></contenedorResenia>
 </template>
 <style scoped></style>
