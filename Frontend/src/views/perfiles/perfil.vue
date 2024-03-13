@@ -35,8 +35,9 @@ switch (tipoUsuario.value) {
 
 <template>
   <template v-if="router.currentRoute.value.params.username != undefined">
-    <particular v-if="tipoUsuario == 'customer'"></particular>
-    <comercio v-if="tipoUsuario == 'commerce' || tipoUsuario == 'ayuntamiento'"></comercio>
+    <comercio></comercio>
+    <!-- <particular v-if="tipoUsuario == 'customer'"></particular> -->
+    <!-- <comercio v-if="tipoUsuario == 'commerce' || tipoUsuario == 'ayuntamiento'"></comercio> -->
   </template>
 </template>
 

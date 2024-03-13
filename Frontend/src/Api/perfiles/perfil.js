@@ -64,7 +64,7 @@ export async function updateUserData(metodo,datos,userName) {
       formData.append(clave, datos[clave]);
     }
     const options = genOptionsUpdate(metodo,formData);
-    const response = await fetch(`${urlApi}/api/user/${userName}`, options);
+    const response = await fetch(`${urlApi}/api/user/${userName}?_method=PUT`, options);
     const data = await response.json();
     // sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
     console.log(data)
@@ -73,7 +73,7 @@ export async function updateUserData(metodo,datos,userName) {
       console.error(error);
     }
   }
-  export async function postUserReview(metodo, body=null) {
+  export async function postUserReview(metodo, body = null) {
     // const user = JSON.parse(sessionStorage.getItem("usuario"));
     // console.log(user)
     try {
@@ -87,6 +87,51 @@ export async function updateUserData(metodo,datos,userName) {
       // sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
       console.log(data.reviews)
       return data.reviews;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+export async function getUserFollows(metodo,subRuta,body=null) {
+    // const user = JSON.parse(sessionStorage.getItem("usuario"));
+    // console.log(user)
+    try {
+      const options = genOptions(metodo,body);
+      const response = await fetch(`${urlApi}${subRuta}`, options);
+      const data = await response.json();
+      console.log(data.data)
+      return data.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+export async function followUser(metodo,subRuta,body=null) {
+    try {
+      const options = genOptions(metodo,body);
+      const response = await fetch(`${urlApi}${subRuta}`, options);
+      const data = await response.json();
+      console.log(data)
+      if(data.message =="Usuario seguido"){
+        return true
+      }else{
+        return false
+      }
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+export async function aniadirFavorito(metodo,subRuta,body=null) {
+    try {
+      const options = genOptions(metodo,body);
+      const response = await fetch(`${urlApi}${subRuta}`, options);
+      const data = await response.json();
+      console.log(data)
+      if(data.message =="Usuario añadido a favoritos"){
+        return true
+      }else{
+        return false
+      }
+      return data;
     } catch (error) {
       console.error(error);
     }

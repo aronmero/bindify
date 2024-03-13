@@ -44,7 +44,7 @@ class NotificationsController extends Controller
 
             $user = Auth::user();
 
-            $notificaciones = $user->notifications;
+            $notificaciones = $user->notifications()->orderBy('created_at', 'desc')->get();
 
             foreach ($notificaciones as $notificacion) {
 
@@ -63,10 +63,8 @@ class NotificationsController extends Controller
 
                         $notificacion->username = $comment->user->username;
                         $notificacion->avatar = $comment->user->avatar;
-                        $notificacion->content = $comment->content;
-                        $notificacion->post_id = Crypt::encryptString($post->id);
-                        $notificacion->post_title = $post->post_title;
-                        $notificacion->post_imagen = $post->image;
+                        $notificacion->id_link = Crypt::encryptString($post->id);
+                        $notificacion->type = 'Comment';
 
                         break;
 
@@ -75,11 +73,12 @@ class NotificationsController extends Controller
 
                         $review = Review::where('id', '=', $notificacion->element_id)->first();
 
+                        $notificacion->id = Crypt::encryptString($notificacion->id);
+
                         $notificacion->username = $review->user->username;
                         $notificacion->avatar = $review->user->avatar;
-                        $notificacion->review_id = Crypt::encryptString($review->id);
-                        $notificacion->comment = $review->comment;
-                        $notificacion->note = $review->note;
+                        $notificacion->id_link = Crypt::encryptString($review->id);
+                        $notificacion->type = 'Review';
 
                         break;
 
@@ -88,8 +87,11 @@ class NotificationsController extends Controller
 
                         $user = User::where('id', '=', $notificacion->element_id)->first();
 
+                        $notificacion->id = Crypt::encryptString($notificacion->id);
+
                         $notificacion->username = $user->username;
                         $notificacion->avatar = $user->avatar;
+                        $notificacion->type = 'Follower';
 
                         break;
 
@@ -98,12 +100,12 @@ class NotificationsController extends Controller
 
                         $post = Post::where('id', '=', $notificacion->element_id)->first();
 
+                        $notificacion->id = Crypt::encryptString($notificacion->id);
+
                         $notificacion->username = $post->users->first()->username;
                         $notificacion->avatar = $post->users->first()->avatar;
-                        $notificacion->post_imagen = $post->image;
-                        $notificacion->municipality = $post->users->first()->municipality->name;
-                        $notificacion->post = Crypt::encryptString($post->id);
-                        $notificacion->post_type = $post->post_type->name;
+                        $notificacion->id_link = Crypt::encryptString($post->id);
+                        $notificacion->type = 'Post';
 
                         break;
                 }

@@ -35,80 +35,6 @@
     const user = encontrar_usuario_por_id(1);
 
     /**
-     * Obtiene el comentario por la id del post
-     */
-
-    //let en_comentarios = ref(comentarios_por_post(post.id));
-
-    let interval;
-
-    /**
-     * Controla la dinámica de cerrar este modal desde el hijo
-     * Llama a la función padre abrirComentarios()
-     * Limpia el intervalo para evitar bugs
-     * Cambia el estilo de overflow para volver a permitir el scroll en background
-     */
-    const cerrarModal = () => {
-        props.handler();
-        clearInterval(interval);
-        document.body.style.overflow= "scroll"
-    };
-
-    const refrescarPosicion = () => {
-        console.log(comentario_handler.value.getBoundingClientRect());
-        console.log(comentario_handler.value.scrollHeight);
-        comentario_handler.value.scrollTop = comentario_handler.value.scrollHeight;
-    }
-
-    const agregar_comentario = async (post_id, user_id, texto) => {
-        en_comentarios.value.push({
-            id: en_comentarios.length + 1,
-            user_id: user_id,
-            post_id: post_id,
-            content: texto,
-            active: true
-        });
-    }
-
-    /**
-    * Enviar el comentario
-    */
-     const enviarComentarioPorSubmit = (post_id, user_id, event) => {
-        if(event.key == 'Enter' ) {
-            let texto = event.target.value;
-            if(!posteado.value ) {
-                if(texto != "") {
-                    /**
-                    *  Cambiar por la función de lógica backend de enviar comentario
-                    * */
-
-                    agregar_comentario(user_id, post_id, texto)
-                        .then(() => refrescarPosicion() );
-                    
-                }
-               
-                antiSpamFunction();
-            }
-            event.target.value = "";
-        }
-     };
-
-     const enviarComentarioPorClick = (post_id, user_id, texto) => {
-
-        /**
-         *  Cambiar por la función de lógica backend de enviar comentario
-         * */
-         
-        if(!posteado.value && texto != "") {
-            agregar_comentario(user_id, post_id, texto)
-                .then(() => refrescarPosicion());
-        }
-        chat_input.value = "";
-        antiSpamFunction();
-        texto = "";
-     };
-
-    /**
      * Bloqueamos overflow en background
      * */
 
@@ -137,10 +63,9 @@
                         <!-- Mensaje central de comentarios -->
                         <h2 class="w-[90%] text-center">Notificaciones</h2>
                 </nav>
-                <!-- El listado de comentarios -->
+                <!-- El listado de notificaciones -->
                 <div ref="comentario_handler" class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
-                    <!-- <Comentario v-if="en_comentarios.length >= 1" v-for="comentario in en_comentarios" :comentario="comentario"/>
-                    <Comentario v-else  :comentario="{content: 'No hay comentarios, ¡se el primero!'}"/> -->
+
                 </div>
                 
             
