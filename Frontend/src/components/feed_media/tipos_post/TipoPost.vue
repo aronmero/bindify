@@ -189,17 +189,17 @@ const { stop } = useIntersectionObserver(post_reference,
                         title: post.title,
                         text: post.description,
                         url: `post/${post.post_id}`
-                    })" class=" flex flex-row items-center mr-3 ">
+                    })" class=" flex flex-row items-center mr-2 ">
                         <img :src="ShareSVG" loading="lazy" />
                     </button>
 
                     <!-- Quitar y aniadir de guardados -->
                     <button @click="() => aniadir_favorito(post.post_id)" v-if="favoritos.indexOf(post.post_id) != -1"
-                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
+                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-0 ">
                         <img class="object-scale-down" :src="BookmarkSVG" loading="lazy" />
                     </button>
                     <button @click="() => aniadir_favorito(post.post_id)" v-else
-                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
+                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-0 ">
                         <img class="object-scale-down mt-0 " :src="BookmarkEmptySVG" loading="lazy" />
                     </button>
 
@@ -287,24 +287,23 @@ const { stop } = useIntersectionObserver(post_reference,
                         {{ post.comment_count }}
                     </button>
 
-                    <!-- Quitar y aniadir de guardados -->
-                    <button @click="() => aniadir_favorito(post.post_id)" v-if="favoritos.indexOf(post.post_id) != -1"
-                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
-                        <img class="object-scale-down" :src="BookmarkSVG" loading="lazy" />
-                    </button>
-                    <button @click="() => aniadir_favorito(post.post_id)" v-else
-                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
-                        <img class="object-scale-down mt-0 " :src="BookmarkEmptySVG" loading="lazy" />
-                    </button>
-
-
                     <!-- Compartir -->
                     <button @click="share({
                         title: post.title,
                         text: post.description,
                         url: `post/${post.post_id}`
-                    })" class=" flex flex-row items-center mr-3 ">
+                    })" class=" flex flex-row items-center mr-2 ">
                         <img :src="ShareSVG" loading="lazy" />
+                    </button>
+
+                    <!-- Quitar y aniadir de guardados -->
+                    <button @click="() => aniadir_favorito(post.post_id)" v-if="favoritos.indexOf(post.post_id) != -1"
+                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-0 ">
+                        <img class="object-scale-down" :src="BookmarkSVG" loading="lazy" />
+                    </button>
+                    <button @click="() => aniadir_favorito(post.post_id)" v-else
+                        class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-0 ">
+                        <img class="object-scale-down mt-0 " :src="BookmarkEmptySVG" loading="lazy" />
                     </button>
 
                 </div>
