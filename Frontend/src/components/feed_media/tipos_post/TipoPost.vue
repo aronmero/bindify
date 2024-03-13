@@ -117,7 +117,8 @@ let tipo_usuario = ref("comercio");
 /** referencia los comentarios */
 let comentarios = ref(null);
 
-
+//Esto es buena idea en Post.vue para cada 50 publicaciones pedir otras 50 o asi, aqui realiza peticiones continuas a la base de datos.
+/*
 const { stop } = useIntersectionObserver(post_reference,
     async ([{ isIntersecting }], observerElement) => {
         if (isIntersecting) {
@@ -132,7 +133,7 @@ const { stop } = useIntersectionObserver(post_reference,
         }
     },
 )
-
+*/
 </script>
 
 <template>
@@ -163,7 +164,7 @@ const { stop } = useIntersectionObserver(post_reference,
                             <small>({{ post.avg.toFixed(2) }})</small>
                         </button>
                     </div>
-                    <button @click="() => abrirModal(post.id)" class="mr-4">
+                    <button @click="() => abrirModal(post.post_id)" class="mr-4">
                         <img :src="MoreSVG" alt="dots">
                     </button>
                 </div>
@@ -183,7 +184,7 @@ const { stop } = useIntersectionObserver(post_reference,
 
                     <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
                         <img :src="ChatSVG" loading="lazy" />
-                        <template v-if="comentarios != null"> {{ comentarios.comentarios.length }}</template>
+                        {{ post.comment_count }}
                     </button>
 
                     <!-- Compartir -->
@@ -225,7 +226,7 @@ const { stop } = useIntersectionObserver(post_reference,
                 </div>
 
                 <!-- Modal de Ver Más -->
-                <div ref="modal" :id="`modal_${post.id}`"
+                <div ref="modal" :id="`modal_${post.post_id}`"
                     :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
                     <!-- Botón ver perfil -->
                     <button @click="redirect(`perfil/${post.username}`)" :class="`${estilos.modal_button} m-2 `">
@@ -254,7 +255,7 @@ const { stop } = useIntersectionObserver(post_reference,
                             alt="avatar_usuario">
                     </div>
                     <div class=" flex flex-col items-start texts w-[100%]  h-[100%]  ">
-                        <b @click="redirect(`perfil/${post.id}`)" class="cursor-pointer">{{ post.username }}</b>
+                        <b @click="redirect(`perfil/${post.username}`)" class="cursor-pointer">{{ post.username }}</b>
                         <small>{{ datetranslatesql(post.start_date) }}</small>
                         <button click="" class=" rating flex h-[fit-content] items-center justify-start "
                             v-if="post.avg != null">
@@ -274,7 +275,7 @@ const { stop } = useIntersectionObserver(post_reference,
 
                 <div
                     class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl overflow-hidden mt-5 mb-5 ">
-                    <img @click="redirect(`post/${post.id}`)" class=" w-[100%] h-[100%] object-cover  "
+                    <img @click="redirect(`post/${post.post_id}`)" class=" w-[100%] h-[100%] object-cover  cursor-pointer"
                         :src="post.image" :alt="post.titulo">
                 </div>
 
@@ -284,7 +285,7 @@ const { stop } = useIntersectionObserver(post_reference,
                     <!-- Comentarios -->
                     <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
                         <img :src="ChatSVG" loading="lazy" />
-                        <template v-if="comentarios != null"> {{ comentarios.comentarios.length }}</template>
+                        {{ post.comment_count }}
                     </button>
 
                     <!-- Quitar y aniadir de guardados -->
@@ -327,7 +328,7 @@ const { stop } = useIntersectionObserver(post_reference,
                 <!-- Modal de Ver Más -->
                 <div ref="modal" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
                     <!-- Botón ver perfil -->
-                    <button @click="redirect(`perfil/${post.id}`)" :class="`${estilos.modal_button} m-2 `">
+                    <button @click="redirect(`perfil/${post.username}`)" :class="`${estilos.modal_button} m-2 `">
                         <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" loading="lazy" />
                         Ver perfil
                     </button>
@@ -353,12 +354,12 @@ const { stop } = useIntersectionObserver(post_reference,
                             class=" cursor-pointer w-[100%] h-[100%] object-cover" :src="post.avatar"
                             alt="avatar_usuario">
                     </div>
-                    <div @click="redirect(`ayuntamiento/${post.id}`)"
+                    <div @click="redirect(`ayuntamiento/${post.post_id}`)"
                         class=" cursor-pointer flex flex-col items-start texts w-[100%] h-[100%] ">
                         <b>{{ post.username }}</b>
                         <small> Organización </small>
                     </div>
-                    <button @click="() => abrirModal(post.id)" class="mr-4">
+                    <button @click="() => abrirModal(post.post_id)" class="mr-4">
                         <img :src="MoreSVG" alt="dots" loading="lazy">
                     </button>
                 </div>
@@ -367,7 +368,7 @@ const { stop } = useIntersectionObserver(post_reference,
 
                 <div
                     class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl overflow-hidden ">
-                    <img @click="redirect(`post/${post.id}`)" loading="lazy"
+                    <img @click="redirect(`post/${post.post_id}`)" loading="lazy"
                         class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.image" :alt="post.titulo">
                 </div>
 
@@ -388,7 +389,7 @@ const { stop } = useIntersectionObserver(post_reference,
                     <!-- Comentarios -->
                     <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
                         <img :src="ChatSVG" loading="lazy" />
-                        <template v-if="comentarios != null"> {{ comentarios.comentarios.length }}</template>
+                        {{ post.comment_count }}
                     </button>
 
                     <!-- Compartir -->
