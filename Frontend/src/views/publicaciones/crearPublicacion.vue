@@ -56,7 +56,7 @@ const tratarDatos = async()=>{
             if(publiTipo.value == 1){
                 let datos = {
                     "title": titulo.value, 
-                    "imagen": imagen.value, 
+                    "image": imagen.value, 
                     "description": descripcion.value,
                     "post_type_id": publiTipo.value,
                 };
@@ -65,7 +65,7 @@ const tratarDatos = async()=>{
             }else{
                 let datos = {
                     "title": titulo.value, 
-                    "imagen": imagen.value,
+                    "image": imagen.value,
                     "description": descripcion.value,
                     "post_type_id": publiTipo.value,
                     "start_date": fechaInicio.value, 
