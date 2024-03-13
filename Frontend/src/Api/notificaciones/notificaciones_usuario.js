@@ -9,7 +9,7 @@ import { genOptionsWithoutBody,urlApi } from "@/Api/api.js";
  * @author David Martín Concepción
  * @export
  * @async
- * @param {Number} id de la publicacion
+ * @param {Number} id de la notificacion
  * @returns {Object}
  */
 export async function getNotificacion() {
@@ -27,17 +27,42 @@ export async function getNotificacion() {
 }
 
 /**
- * Devuelve la notificación por consola del estado actual de la petición
+ * Marca como vista una notificacion
  * @date 3/13/2024 - 10:42:21 PM
  * @author Aarón Medina Rodríguez 
  * @export
  * @async
- * @param {Number} id de la publicacion
+ * @param {Number} id de la notificacion
  * @returns {Object}
  */
 export async function vistoNotificacion(id) {
   try {
     const options = genOptionsWithoutBody("POST");
+    const response = await fetch(
+      `${urlApi}/api/notifications/${id}`,
+      options
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+/**
+ * Elimina una notificacion
+ * @date 3/13/2024 - 11:14:15 PM
+ * @author Aarón Medina Rodríguez
+ *
+ * @export
+ * @async
+* @param {Number} id de la notificacion
+ * @returns {Object}
+ */
+export async function deleteNotificacion(id) {
+  try {
+    const options = genOptionsWithoutBody("DELETE");
     const response = await fetch(
       `${urlApi}/api/notifications/${id}`,
       options
