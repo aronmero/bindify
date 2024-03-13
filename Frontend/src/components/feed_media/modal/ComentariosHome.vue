@@ -85,6 +85,7 @@ const refrescarPosicion = () => {
  * */
 onBeforeUnmount(() => {
     clearInterval(interval);
+    document.body.style.overflow = "auto";
 });
 
 /**
