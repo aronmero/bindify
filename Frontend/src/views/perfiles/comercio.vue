@@ -20,7 +20,7 @@ import {
   aniadirFavorito,
 } from "@/Api/perfiles/perfil.js";
 import { ref, onMounted } from "vue";
-console.log("REDIRIGE")
+console.log("REDIRIGE");
 import eventos from "@/components/perfiles/containers/contenedorVistaEventos.vue";
 import posts from "@/components/perfiles/containers/contenedorVistaPosts.vue";
 import resenias from "@/components/perfiles/containers/contenedorVistaResenias.vue";
@@ -33,7 +33,7 @@ let clickedLink = null;
 let userData = ref(null);
 let userExterno = ref(false);
 let linkUsername = ref(router.currentRoute.value.params.username);
-console.log(linkUsername.value)
+console.log(linkUsername.value);
 if (linkUsername.value == undefined) {
   router.push(`/perfil`);
 }
@@ -46,7 +46,7 @@ let isCustomer = false;
 
 // onMounted(() => {
 //   console.log("Montado")
-  
+
 // })
 const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
@@ -154,12 +154,12 @@ function manipulacion(evento) {
   ocultar();
   switch (evento.target.value) {
     case "1":
-    console.log(evento.target.value)
-    isPosts.value = true
+      console.log(evento.target.value);
+      isPosts.value = true;
       break;
     case "2":
-    console.log(evento.target.value)
-    isEventos.value = true
+      console.log(evento.target.value);
+      isEventos.value = true;
       break;
     case "3":
       console.log(evento.target.value);
@@ -182,10 +182,10 @@ function manipulacion(evento) {
       break;
   }
 }
-let bloquearVerParticular = ref(false)
-if(!isCustomer && userExterno.value){
-  bloquearVerParticular.value = true
-}
+// let bloquearVerParticular = ref(false)
+// if(!isCustomer && userExterno.value){
+//   bloquearVerParticular.value = true
+// }
 </script>
 
 <template>
@@ -193,8 +193,8 @@ if(!isCustomer && userExterno.value){
   <Grid
     ><template v-slot:Left></template>
     <btnAtras titulo="Perfil"></btnAtras>
-    <h3 v-if="bloquearVerParticular">Nos puedes ver el perfil de este usuario</h3>
-    <div class="flex flex-col gap-6" v-if="userData != null && !bloquearVerParticular" >
+    <!-- <h3 v-if="bloquearVerParticular">Nos puedes ver el perfil de este usuario</h3> -->
+    <div class="flex flex-col gap-6" v-if="userData != null">
       <div>
         <imgsPerfil
           :rutaBaner="userData.banner"
@@ -283,7 +283,10 @@ if(!isCustomer && userExterno.value){
             >
             </btnConText>
           </RouterLink>
-          <RouterLink to="/resenia" v-if="userExterno && !isCustomer && userData.tipo != 'ayuntamiento'">
+          <RouterLink
+            to="/resenia"
+            v-if="userExterno && !isCustomer && userData.tipo != 'ayuntamiento'"
+          >
             <btnConImg
               ruta="/assets/icons/christmasStar.svg"
               altText="icono codigo qr"

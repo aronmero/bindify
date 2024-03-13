@@ -11,6 +11,7 @@ import UserSVG from "@public/assets/icons/user.svg";
 import TipoOferta from "@public/assets/icons/tipo_oferta.svg";
 import TipoEvento from "@public/assets/icons/tipo_evento.svg";
 const userData = JSON.parse(sessionStorage.getItem("userData"));
+const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
 console.log(userData.userData[0]);
 import { datetranslate } from "@/components/feed_media/helpers/datetranslate.js";
 import router from "@/router/index.js";
@@ -146,7 +147,7 @@ function editarPost(evento){
       </RouterLink>
       <!-- Botón editar post -->
       
-      <button :class="`${estilos.modal_button} m-2 `" @click="editarPost" :id="post.post_id">
+      <button :class="`${estilos.modal_button} m-2 `" @click="editarPost" :id="post.post_id" v-if="userLogeado.usuario.tipo == 'commerce'">
         <img class="w-[30px] h-[30px] mr-3" :src="StarSVG" />
         Editar
       </button>
