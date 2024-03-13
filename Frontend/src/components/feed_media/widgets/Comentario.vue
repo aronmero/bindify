@@ -34,11 +34,11 @@ const modalHandler = ref(false);
  * Instauro las opciones que le voy a pasar al componente del modal reutilizable
  * */
 const opcionesModal = [
-    // {
-    //     name: "Borrar Comentario",
-    //     action: `/comentario/${comentario.comment_id}/delete`,
-    //     icon: DeleteSVG
-    // },
+    {
+        name: "Borrar Comentario",
+        action: `/comentario/${comentario.comment_id}/delete`,
+        icon: DeleteSVG
+    },
     {
         name: "Ver perfil",
         action: `/perfil/${comentario.username}`,
@@ -78,7 +78,6 @@ const abrirModal = () => {
                 <button click="" class=" mt-[-15px] rating flex h-[fit-content] items-center justify-start "
                     v-if="comentario.rating != null">
                     <img class="  " :src="StarSVG" v-for="index in Math.floor(user.rating)" alt="star"
-
                         :title="user.rating" />
                     <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(user.avg))" alt="star"
                         :title="user.rating" />
@@ -86,7 +85,8 @@ const abrirModal = () => {
                 </button>
             </div>
             <!-- Botón de Ver Más -->
-            <button v-if="comentario.username != null" @click="() => abrirModal()" class="w-[20px] h-[20px] absolute right-10">
+            <button v-if="comentario.username != null" @click="() => abrirModal()"
+                class="w-[20px] h-[20px] absolute right-10">
                 <img class="  " :src="MoreSVG" alt="">
             </button>
         </div>
@@ -111,4 +111,5 @@ const abrirModal = () => {
             width: 20px;
         }
     }
-}</style>
+}
+</style>
