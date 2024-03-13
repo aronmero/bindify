@@ -24,8 +24,9 @@ class UpdateUserRequest extends FormRequest
         return [
             'email' => 'required|email', // Email del usuario
             'password' => 'required', //Contraseña del usuario
-            'phone' => 'required|integer|max_digits:9', // Numero de telefono del usuario
+            'phone' => 'required|integer|max:9', // Numero de telefono del usuario
             'municipality_id' => 'required|integer', //Id del municipio
+            'avatar' => 'image', // Imagen de perfil
             'username' => 'required|string', // Nombre de usuario
             'name' => 'required|string', // Nombre real del usuario
             'address' => 'string', // Dirección del comercio
@@ -35,6 +36,7 @@ class UpdateUserRequest extends FormRequest
             'description' => 'string|max:300', // Descripción de la empresa
             'gender' => 'string', // Género del cliente
             'birth_date' => 'date|before:today', // Fecha de nacimiento del cliente
+            'banner' => 'image', // Imagen de banner del usuario
         ];
     }
 
@@ -51,12 +53,13 @@ class UpdateUserRequest extends FormRequest
             'phone' => [
                 'required' => 'El teléfono es requerido',
                 'integer' => 'Formato de dato incorrecto, integer requerido',
-                'max_digits' => 'El numero es demasiado largo para un número de teléfono'
+                'max' => 'El numero es demasiado largo para un número de teléfono'
             ],
             'municipality_id' => [
                 'required' => 'El id del municipio es requerido',
                 'integer' => 'Formato de dato incorrecto, integer requerido',
             ],
+            'avatar' => 'El archivo no es una imagen, (jpg, jpeg, png, bmp, gif, svg, or webp)',
             'username' => [
                 'required' => 'El nombre de usuario es requerido',
                 'string' => 'Formato de dato incorrecto, string requerido',
