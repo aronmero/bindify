@@ -77,10 +77,10 @@
     }
 
     /** Dependiendo del tipo de  */
-    const tipo = ref(null);
+    const tipo = post.name;
     let IconoTipo = "";
-    if (tipo == 1) IconoTipo = TipoOferta; // 1 Post
-    if (tipo == 2) IconoTipo = TipoEvento; // 2 Event
+    if (tipo == 'Post') IconoTipo = TipoOferta; // 1 Post
+    if (tipo == 'Evento') IconoTipo = TipoEvento; // 2 Event
 
     /**
      * Abre el modal de comentarios
@@ -220,7 +220,7 @@
             </div>
 
             <!-- Modal de Ver Más -->
-            <div ref="modal" :id="`modal_${post.id}`" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
+            <div ref="modal" :id="`modal_${post.post_id}`" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
                 <!-- Botón ver perfil -->
                 <button @click="redirect(`comercio/${post.user_id}`)" :class="`${estilos.modal_button} m-2 `">
                     <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" loading="lazy" />
@@ -246,7 +246,7 @@
                         :src="post.avatar" alt="avatar_usuario">
                 </div>
                 <div class=" flex flex-col items-start texts w-[100%]  h-[100%]  ">
-                    <b @click="redirect(`comercio/${post.id}`)" class="cursor-pointer">{{ post.username }}</b>
+                    <b @click="redirect(`comercio/${post_id}`)" class="cursor-pointer">{{ post.username }}</b>
                     <small>{{ datetranslatesql(post.start_date) }}</small>
                     <button click="" class=" rating flex h-[fit-content] items-center justify-start " v-if="post.avg != null">
                         <img class="  " :src="StarSVG" v-for="index in Math.floor(post.avg)" alt="star" loading="lazy"
@@ -256,7 +256,7 @@
                         <small>({{ post.avg.toFixed(2) }})</small>
                     </button>
                 </div>
-                <button @click="() => abrirModal(post.id)" class="mr-4">
+                <button @click="() => abrirModal(post_id)" class="mr-4">
                     <img :src="MoreSVG" alt="dots">
                 </button>
             </div>
@@ -317,7 +317,7 @@
             <!-- Modal de Ver Más -->
             <div ref="modal" :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`">
                 <!-- Botón ver perfil -->
-                <button @click="redirect(`comercio/${post.id}`)" :class="`${estilos.modal_button} m-2 `">
+                <button @click="redirect(`comercio/${post.post_id}`)" :class="`${estilos.modal_button} m-2 `">
                     <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" loading="lazy" />
                     Ver perfil
                 </button>

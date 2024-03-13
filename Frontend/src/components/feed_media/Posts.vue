@@ -8,15 +8,15 @@
     const user = JSON.parse(sessionStorage.getItem("usuario"));
 
     // primero se lee los usuarios de su feed
-    //const posts_feed = await obtener_posts_seguidos();
-    //let posts = posts_feed.data;
-    //console.log(posts);
-    //if(posts_feed.data.length == 0) {
+    const posts_feed = await obtener_posts_seguidos();
+    let posts = posts_feed.data;
+
+    if(posts_feed.data.length <= 0) {
         // sino se obtienen los posts por defecto
         const posts_request = await obtener_posts();
         console.log("obtenido feed por defecto");
-        const posts = posts_request.data;
-    //}
+        posts = posts_request.data;
+    }
     
 </script>
 
