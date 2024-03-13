@@ -50,11 +50,11 @@ const controlador_modal = ref(false);
 const solicitarDatosApi = async()=>{
     optionsCategory.value = await solicitarCategorias("GET").then(data => data = data.data);
     options.value = await solicitarMunicipios("GET").then(data => data = data.data);
+    console.log(options.value);
 }
 solicitarDatosApi();
 /* Falta vincular modal de editar horario y hacer las validaciones */
 const tratarDatos = ()=>{
-    /* Mostrar todos los errores a la vez */
     console.log(tipoUsuario.value);
     console.log(usuario.value);
     console.log(nombre.value);
@@ -71,118 +71,72 @@ const tratarDatos = ()=>{
     console.log(contraNueva.value);
     console.log(repetirNueva.value);
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if(isValid.value == null || isValid.value == false){
-        if(tipoUsuario.value == null){
-            window.scroll({top:100, right:0, behavior: 'smooth'});
-            errorType.value = "Debe seleccionar un tipo de usuario.";
-            isValid.value = false;
-        }else{
-            errorType.value = null;
-            isValid.value = true;
-        }
-        if(usuario.value == null || usuario.value.length == 0){
-            window.scroll({top:100, right:0, behavior: 'smooth'});
-            errorUsuario.value = "Es necesario indicar un usuario para registrarse.";
-            isValid.value = false;
-        }else{
-            errorUsuario.value = null;
-            isValid.value = true;
-        }
-        if(nombre.value == null || nombre.value.length == 0){
-            window.scroll({top:100, right:0, behavior: 'smooth'});
-            errorNombre.value = "Es necesario indicar tu nombre para identificarte en la aplicación.";
-            isValid.value = false;
-        }else{
-            errorNombre.value = null;
-            isValid.value = true;
-        }
-        if(email.value == null || email.value.length == 0){
-            errorMail.value = "Es necesario indicar un email.";
-            isValid.value = false;
-        }else{
-            if(!emailRegex.test(email.value)) {
-            errorMail.value = "El email indicado no es válido.";
-            isValid.value = false;
-            }else{
-                errorMail.value = null;
-                isValid.value = true;
-            }
-        }
-        if(municipio.value == null || municipio.value.length == 0){
-            errorMunic.value = "Debes seleccionar el municipio en el que vives.";
-            isValid.value = false;
-        }else{
-            errorMunic.value = null;
-            isValid.value = true;
-        }
-        if((contraNueva.value == null || contraNueva.value.length == 0) && (repetirNueva.value == null || repetirNueva.value.length == 0)){
-            errorContra.value = "Debe indicar y repetir una contraseña.";
-            isValid.value = false;
-        }else{
-            if(contraNueva.value != repetirNueva.value){
-            errorContra.value = "Las contraseñas no coinciden.";
-            isValid.value = false;
-            contraNueva.value = null;
-            repetirNueva.value = null;
-            }else{
-                errorContra.value = null;
-                isValid.value = true;
-            }
-        }
-        if(tipoUsuario.value == 'particular'){
-            if(fechaNac.value == null || fechaNac.value.length == 0){
-                errorDate.value = "Debe indicar su fecha de nacimiento.";
-                isValid.value = false;
-            }else{
-                errorDate.value = null;
-                isValid.value = true;
-            }
-        }else{
-            if(telefono.value == null || telefono.value.length == 0){
-                errorPhone.value = "Debe indicar el teléfono de su negocio.";
-                isValid.value = false;
-            }else{
-                errorPhone.value = null;
-                isValid.value = true;
-            }
-            if(direccion.value == null || direccion.value.length == 0){
-                errorDirec.value = "Debe indicar la dirección de su negocio.";
-                isValid.value = false;
-            }else{
-                errorDirec.value = null;
-                isValid.value = true;
-            }
-            if(horarioActual.value == null || horarioActual.value.length == 0){
-                errorSche.value = "Debe indicar el horario de su negocio.";
-                isValid.value = false;
-            }else{
-                errorSche.value = null;
-                isValid.value = true;
-            }
-            if(categoria.value == null || categoria.value.length == 0){
-                errorCategory.value = "Debe seleccionar la categoria de su negocio.";
-                isValid.value = false;
-            }else{
-                errorCategory.value = null;
-                isValid.value = true;
-            }
-        }
+    if(tipoUsuario.value == null){
+        window.scroll({top:100, right:0, behavior: 'smooth'});
+        errorType.value = "Debe seleccionar un tipo de usuario.";
     }else{
-        if(tipoUsuario.value == 'particular'){
+        errorType.value = null;
+    }
+    if(usuario.value == null || usuario.value.length == 0){
+        window.scroll({top:100, right:0, behavior: 'smooth'});
+        errorUsuario.value = "Es necesario indicar un usuario para registrarse.";
+    }else{
+        errorUsuario.value = null;
+    }
+    if(nombre.value == null || nombre.value.length == 0){
+        window.scroll({top:100, right:0, behavior: 'smooth'});
+        errorNombre.value = "Es necesario indicar tu nombre para identificarte en la aplicación.";
+    }else{
+        errorNombre.value = null;
+    }
+    if(email.value == null || email.value.length == 0){
+        errorMail.value = "Es necesario indicar un email.";
+    }else{
+        if(!emailRegex.test(email.value)) {
+        errorMail.value = "El email indicado no es válido.";
+        }else{
+            errorMail.value = null;
+        }
+    }
+    if(municipio.value == null || municipio.value.length == 0){
+        errorMunic.value = "Debes seleccionar el municipio en el que vives.";
+    }else{
+        errorMunic.value = null;
+    }
+    if((contraNueva.value == null || contraNueva.value.length == 0) && (repetirNueva.value == null || repetirNueva.value.length == 0)){
+        errorContra.value = "Debe indicar y repetir una contraseña.";
+    }else{
+        if(contraNueva.value != repetirNueva.value){
+        errorContra.value = "Las contraseñas no coinciden.";
+        contraNueva.value = null;
+        repetirNueva.value = null;
+        }else{
+            errorContra.value = null;
+        }
+    }
+    if(tipoUsuario.value == 'particular'){
+        if(fechaNac.value == null || fechaNac.value.length == 0){
+            errorDate.value = "Debe indicar su fecha de nacimiento.";
+        }else{
+            errorDate.value = null;
+        }
+        if(errorDate.value == null && errorContra.value == null && errorType.value == null && errorUsuario.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
             let datos = {
             "email": email.value,
             "password": contraNueva.value,
             "phone": telefono.value,
             "municipality_id": municipio.value,
-            "avatar": URL.createObjectURL(imagenPerfil.value), /* No tiene mucho sentido esto mirar esto en clase por que si el usuario no sube foto esto es una mierda */
+            "avatar": imagenPerfil.value,
+            "banner": imagenBanner.value,
             "username": usuario.value,
             "name": nombre.value,
             "category_id": categoria.value,
-            "empresa": false,
+            "empresa": 0,
             "schedule": horarioActual.value,
             "address": direccion.value,
-            "gender": optionsSex[sexo.value],
+            "gender": optionsSex[sexo.value] == undefined ? null : optionsSex[sexo.value].name,
             "birth_date": fechaNac.value,
+            "password_confirmation": repetirNueva.value,
             }
             let respuesta = register(datos);
             if(respuesta.status){
@@ -206,21 +160,59 @@ const tratarDatos = ()=>{
                 console.log("Error de back en el registro"); /* Mostrar el error en algún lado */
             }
         }else{
+            console.log("Hay errores");
+        }
+    }else{
+        if(telefono.value == null || telefono.value.length == 0){
+            errorPhone.value = "Debe indicar el teléfono de su negocio.";
+            
+
+        }else{
+            errorPhone.value = null;
+            
+        }
+        if(direccion.value == null || direccion.value.length == 0){
+            errorDirec.value = "Debe indicar la dirección de su negocio.";
+            
+
+        }else{
+            errorDirec.value = null;
+            
+        }
+        if(horarioActual.value == null || horarioActual.value.length == 0){
+            errorSche.value = "Debe indicar el horario de su negocio.";
+            
+
+        }else{
+            errorSche.value = null;
+            
+        }
+        if(categoria.value == null || categoria.value.length == 0){
+            errorCategory.value = "Debe seleccionar la categoria de su negocio.";
+            
+
+        }else{
+            errorCategory.value = null;
+            
+        }
+        if(errorCategory.value == null && errorSche.value == null && errorDirec.value == null && errorPhone.value == null && errorContra.value == null && errorType.value == null && errorUsuario.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
             let datos = {
                 "email": email.value,
                 "password": contraNueva.value,
                 "phone": telefono.value,
                 "municipality_id": municipio.value,
-                "avatar": URL.createObjectURL(imagenPerfil.value), /* No tiene mucho sentido esto */
+                "avatar": imagenPerfil.value,
+                "banner": imagenBanner.value,
                 "username": usuario.value,
                 "name": nombre.value,
                 "category_id": categoria.value,
-                "empresa": true,
+                "empresa": 1,
                 "schedule": horarioActual.value,
                 "address": direccion.value,
                 "gender": optionsSex[sexo.value],
                 "birth_date": fechaNac.value,
                 "verification_token_id": token.value,
+                "password_confirmation": repetirNueva.value,
             }
             let respuesta = register(datos);
             if(respuesta.status){
@@ -245,10 +237,11 @@ const tratarDatos = ()=>{
             }else{
                 console.log("Error de back en el registro"); /* Mostrar el error en algún lado */
             }
+        }else{
+            console.log("Hay errores")
         }
-          
-    }
-}
+    }           
+}  
 
 /** 
  * Agrega el cambio de horario
@@ -295,14 +288,14 @@ const controlarModal = () => {
                 <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" label="Teléfono" :valor="telefono"/>
                 <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" requerido="true" label="Teléfono" :valor="telefono" :error="errorPhone"/>
                 <Input @datos="(nuevosDatos)=>{email = nuevosDatos}" tipo="text" requerido="true" label="Email" :valor="email" :error="errorMail"/>
-                <Input @datos="(nuevosDatos)=>{municipio = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Municipio" :opciones="options" placeholder="Selecciona un municipio" :error="errorMunic" :valor="municipio"/>
+                <Input @datos="(nuevosDatos)=>{municipio = nuevosDatos}" tipo="selection" requerido="true" label="Municipio" :opciones="options" placeholder="Selecciona un municipio" :error="errorMunic" :valor="municipio"/>
                 <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{fechaNac = nuevosDatos}" tipo="fechaLibre" requerido="true" label="Fecha de nacimiento" :valor="fechaNac" :error="errorDate"/>
-                <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" class="xl:w-[40%] w-[60%]" @change="mostrarInformacion" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
+                <Input v-if="tipoUsuario == 'particular'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" class="xl:w-[40%] w-[60%]" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
                 <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{direccion = nuevosDatos}" tipo="text" requerido="true" label="Dirección" :valor="direccion" :error="errorDirec"/>
                 <Input v-if="tipoUsuario == 'comercio'" tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual" class="pointer-events-none"  :error="errorSche"/>
                 <Input v-if="tipoUsuario == 'comercio'"  @click="controlarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
                 <Input v-if="tipoUsuario == 'comercio'" tipo="text" label="Token (Si tienes)" :valor="token"/>
-                <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" @change="mostrarInformacion" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
+                <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
                 <div class="cambiocontra flex flex-col gap-y-5">
                     <Input @datos="(nuevosDatos)=>{contraNueva = nuevosDatos}" tipo="password" requerido="true" label="Contraseña Nueva" :valor="contraNueva" :error="errorContra"/>
                     <Input @datos="(nuevosDatos)=>{repetirNueva = nuevosDatos}" tipo="password" requerido="true" label="Repetir contraseña" :valor="repetirNueva" :error="errorContra"/>

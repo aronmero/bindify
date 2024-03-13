@@ -47,11 +47,9 @@ class SearchController extends Controller
 
     public function search(Request $request)
     {
-
         try {
 
             if ($request->type == 'Posts') {
-
                 $posts = Post::leftJoin('posts-hashtags', 'posts-hashtags.post_id', '=', 'posts.id')
                     ->leftJoin('hashtags', 'posts-hashtags.hashtag_id', '=', 'hashtags.id')
                     ->join('users-posts', 'users-posts.post_id', '=', 'posts.id')

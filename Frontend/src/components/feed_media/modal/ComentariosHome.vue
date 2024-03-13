@@ -52,7 +52,7 @@ const id_post = props.post.post_id;
  */
 const apiCall = async () => {
     await getCommentsOfPost(id_post).then(data => comentarios.value = data.comentarios)
-    console.log(comentarios.value);
+   // console.log(comentarios.value);
 }
 apiCall();
 
@@ -85,6 +85,7 @@ const refrescarPosicion = () => {
  * */
 onBeforeUnmount(() => {
     clearInterval(interval);
+    document.body.style.overflow = "auto";
 });
 
 /**

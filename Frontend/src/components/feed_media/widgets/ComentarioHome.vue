@@ -35,11 +35,11 @@ const modalHandler = ref(false);
  * Instauro las opciones que le voy a pasar al componente del modal reutilizable
  * */
 const opcionesModal = [
-    // {
-    //     name: "Borrar Comentario",
-    //     action: `comentario/null/delete`,
-    //     icon: DeleteSVG
-    // },
+     {
+         name: "Borrar Comentario",
+         action: `comentario/null/delete`,
+         icon: DeleteSVG
+     },
     {
         name: "Ver perfil",
         action: `perfil/` || null,
@@ -67,7 +67,7 @@ const abrirModal = () => {
 
 
 
-console.log(props.comentario)
+//console.log(props.comentario)
 </script>
 <template>
     <!-- Contenedor Comentario -->

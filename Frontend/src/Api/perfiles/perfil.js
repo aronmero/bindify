@@ -1,5 +1,6 @@
 //Pillar de sesion storage o store de pinia cuando se realice
-import { genOptions, urlApi } from "@/Api/api.js";
+import { genOptions, urlApi, genOptionsUpdate } from "@/Api/api.js";
+
 
 /**
  * Devuelve un objeto publicacion con sus datos
@@ -50,6 +51,24 @@ export async function getUserReviews(metodo,subRuta,body=null) {
       // sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
       console.log(data.reviews)
       return data.reviews;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+export async function updateUserData(metodo,datos,userName) {
+    // const user = JSON.parse(sessionStorage.getItem("usuario"));
+    // console.log(user)
+    try {
+    let formData = new FormData();
+    for(let clave in datos){
+      formData.append(clave, datos[clave]);
+    }
+    const options = genOptionsUpdate(metodo,formData);
+    const response = await fetch(`${urlApi}/api/user/${userName}`, options);
+    const data = await response.json();
+    // sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
+    console.log(data)
+    return data;
     } catch (error) {
       console.error(error);
     }

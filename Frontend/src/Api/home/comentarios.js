@@ -1,4 +1,4 @@
-import { urlApiHome as urlApi, genOptions, genOptionsWithoutBody } from "../api";
+import { urlApi as urlApi, genOptions, genOptionsWithoutBody } from "../api";
 
 export async function obtener_posts_seguidos() {
     const options = genOptionsWithoutBody('GET');
@@ -53,9 +53,6 @@ export async function agregar_comentario_post(post_id, comentario) {
         })
     })
         .then(res => res.json())
-        .catch(error => {
-            console.error(error.message)
-        })
         .then(res => res)
         
     return data;

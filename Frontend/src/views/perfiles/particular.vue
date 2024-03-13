@@ -12,6 +12,10 @@ import { RouterLink, RouterView } from "vue-router";
 import { getUserData } from "@/Api/perfiles/perfil.js";
 import { ref } from "vue";
 import router from "@/router/index.js";
+import fidelidad from "@/components/perfiles/containers/contenedorVistaFidelidad.vue";
+import favoritos from "@/components/perfiles/containers/contenedorVistaFavoritos.vue";
+import seguidos from "@/components/perfiles/containers/contenedorVistaFavoritos.vue";
+
 let linkUsername = ref(router.currentRoute.value.params.username);
 let userData = ref(null);
 
@@ -34,6 +38,46 @@ function pintar(evento) {
   }
   evento.target.classList.add("text-accent-400");
   clickedLink = evento.target;
+}
+
+const isFidelidad = ref(false)
+const isFavoritos = ref(false)
+const isSeguidos = ref(false)
+
+/**
+ * Oculta todos los componentes
+ */
+function ocultar() {
+  isFidelidad.value = false
+  isFavoritos.value = false
+  isSeguidos.value = false
+}
+
+/**
+ * Ejecuta una serie de funciones que requieren de un evento.
+ * Cambia un estilo, oculta todos los contenedores, y muestra uno en concreto
+ * @param {*} evento 
+ */
+function manipulacion(evento) {
+  pintar(evento)
+
+  ocultar();
+  switch (evento.target.value) {
+    case "1":
+    console.log(evento.target.value)
+    isFidelidad.value = true
+      break;
+    case "2":
+    console.log(evento.target.value)
+    isFavoritos.value = true
+      break;
+    case "3":
+    console.log(evento.target.value)
+    isSeguidos.value = true
+      break;
+    default:
+      break;
+  }
 }
 </script>
 
@@ -68,29 +112,27 @@ function pintar(evento) {
         <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser>
       </div>
       <div class="flex w-full justify-center gap-6">
-        <RouterLink :to="`/perfil/${linkUsername}/particular/fidelidad`">
           <textoEnNegrita
-            @click="pintar"
+            @click="manipulacion"
             texto="Fidelidad"
-            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`" value="1"
           />
-        </RouterLink>
-        <RouterLink :to="`/perfil/${linkUsername}/particular/favoritos`">
+
           <textoEnNegrita
-            @click="pintar"
+            @click="manipulacion"
             texto="Favoritos"
-            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+            :class="`text-sm lg:text-base  ${estilos.hoverLinks}`" value="2"
           />
-        </RouterLink>
-        <RouterLink :to="`/perfil/${linkUsername}/particular/seguidos`">
+
           <textoEnNegrita
-            @click="pintar"
+            @click="manipulacion"
             texto="Seguidos"
-            :class="`text-sm lg:text-base ${estilos.hoverLinks}`"
+            :class="`text-sm lg:text-base ${estilos.hoverLinks}`" value="3"
           />
-        </RouterLink>
       </div>
-      <RouterView></RouterView>
+      <fidelidad v-if="isFidelidad"></fidelidad>
+      <favoritos v-if="isFavoritos"></favoritos>
+      <seguidos v-if="isSeguidos"></seguidos>
     </div>
 
     <template v-slot:Right></template>
