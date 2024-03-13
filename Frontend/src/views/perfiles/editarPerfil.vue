@@ -294,7 +294,7 @@ const obtenerCambioHorario = (cambio) => {
                     </div>
                     <Input v-if="tipoUsuario == 'customer'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" label="Teléfono" :valor="telefono"/>
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{telefono = nuevosDatos}" tipo="text" requerido="true" label="Teléfono" :valor="telefono" :error="errorPhone"/>
-                    <Input @datos="(nuevosDatos)=>{email = nuevosDatos}" tipo="text" requerido="true" label="Email" :valor="email" :error="errorMail"/>
+                    <Input @datos="(nuevosDatos)=>{email = nuevosDatos}" tipo="text" label="Email (No editable)" :valor="email" :error="errorMail" class="pointer-events-none"/>
                     <Input @datos="(nuevosDatos)=>{municipio = nuevosDatos}" tipo="selection" requerido="true" label="Municipio" :opciones="options" placeholder="Selecciona un municipio" :error="errorMunic" :valor="municipio"/>
                     <Input v-if="tipoUsuario == 'customer'" @datos="(nuevosDatos)=>{fechaNac = nuevosDatos}" tipo="fechaLibre" requerido="true" label="Fecha de nacimiento" :valor="fechaNac" :error="errorDate"/>
                     <Input v-if="tipoUsuario == 'customer'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
