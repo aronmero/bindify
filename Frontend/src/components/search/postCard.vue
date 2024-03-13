@@ -51,15 +51,15 @@ import { setRandomGradient } from '@/utils/randomGradient.js';
     </div>
     <!-- Contenido del Post -->
     <div class="information">
-        <h3 class="flex items-center gap-x-2 font-bold">
+        <h2 class="flex items-center gap-x-2 font-medium mt-3 mb-3 text-[18px]">
             <img :src="post.post_type === 'Post' ? TipoOferta : TipoEvento" alt="icono-evento" loading="lazy"
                 class="size-8 rounded-full bg-[#fe822f] p-1">
             {{ post.title }}
-        </h3>
-        <span>
+        </h2>
+        <span >
             {{ post.description }}
         </span>
-        <div class=" hashtags flex mb-10 mt-2">
+        <div class=" hashtags flex mb-10 mt-3">
             <a :style="{ background: setRandomGradient() }" class="hashtag mr-[10px] font-bold text-white rounded-md text-xs p-1 hover:text-white"  v-for="hashtag in post.hashtags"> #{{
                 hashtag }}</a>
         </div>

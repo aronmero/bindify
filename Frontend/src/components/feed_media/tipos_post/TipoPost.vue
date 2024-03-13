@@ -1,14 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
-import { useIntersectionObserver } from '@vueuse/core'
+//import { useIntersectionObserver } from '@vueuse/core'
 
 import StarSVG from '@public/assets/icons/star.svg';
 import StarEmptySVG from '@public/assets/icons/starEmpty.svg';
 
-import { obtener_comentarios_post } from '@/Api/home/comentarios';
-
-import HeartSVG from '@public/assets/icons/like.svg';
 import ShareSVG from '@public/assets/icons/share.svg';
 import ChatSVG from '@public/assets/icons/chat.svg';
 import BookmarkEmptySVG from '@public/assets/icons/bookmark_empty.png'
@@ -28,7 +25,7 @@ import router from '../../../router';
 import { en_favoritos, obtener_favoritos } from '../helpers/favoritos';
 
 import Comentarios from '../modal/ComentariosHome.vue';
-import { obtener_tipo_comercio } from '@/Api/home/publicaciones';
+
 
 const props = defineProps({
     post: Object,
@@ -37,7 +34,7 @@ const props = defineProps({
 
 
 const post = ref(props.post);
-const post_reference = ref(null);
+const post_reference = ref({dataset: {favorito:false}});
 const modalHandler = ref(false);
 const modal = ref(null);
 
@@ -46,7 +43,7 @@ const modal_comentarios = ref(null);
 const comentariosVisibles = ref(false);
 
 /** Genero la referencia para obtener los favoritos del usuario, hecho en frontend por no poderse poner en back */
-const favoritos = ref(JSON.parse(sessionStorage.getItem("favoritos")));
+const favoritos = ref(obtener_favoritos());
 
 /** Abre el modal del perfil */
 const abrirModal = () => {
@@ -76,43 +73,46 @@ const redirect = (url) => {
     router.push(url)
 }
 
-/** Dependiendo del tipo de  */
-const tipo = ref(null);
-let IconoTipo = "";
-if (tipo == 1) IconoTipo = TipoOferta; // 1 Post
-if (tipo == 2) IconoTipo = TipoEvento; // 2 Event
+    /** Dependiendo del tipo de post, carga un icono  */
+    const tipo = post.value.name;
+    // console.log(post);
+    let IconoTipo = "";
+    if (tipo == 'Post') IconoTipo = TipoOferta; // 1 Post
+    if (tipo == 'Evento') IconoTipo = TipoEvento; // 2 Event
 
-    /**
-     * Abre el modal de comentarios
-     */
-    const abrirComentarios = () => {
-        if (comentariosVisibles.value) {
-            comentariosVisibles.value = false;
+/**
+ * Abre el modal de comentarios
+ */
+const abrirComentarios = () => {
+  if (comentariosVisibles.value) {
+    comentariosVisibles.value = false;
+  } else {
+    comentariosVisibles.value = true;
+  }
+};
+/**
+ * Añade un favorito se realiza desde el componente
+ * para aprovechar la variable de referencia y
+ * aplicar los cambiso en el Front del usuario
+ * */
+
+    const aniadir_favorito = (item) => {
+        if (favoritos.value.indexOf(item) == -1) {
+            favoritos.value.push(item);
+            console.log(post_reference.value)
+            post_reference.value.dataset.favorito = "true";
+            console.log("agregado")
         } else {
-            comentariosVisibles.value = true;
+            favoritos.value.splice(favoritos.value.indexOf(item), 1);
+            post_reference.value.dataset.favorito = "false";
+            console.log("borrado");
         }
-    };
-    /**
-     * Añade un favorito se realiza desde el componente 
-     * para aprovechar la variable de referencia y
-     * aplicar los cambiso en el Front del usuario
-     * */
+        // guardamos los cambios
+        localStorage.setItem("favoritos", JSON.stringify(favoritos.value));
 
-const aniadir_favorito = (item) => {
-    if (favoritos.value.indexOf(item) == -1) {
-        favoritos.value.push(item);
-        post_reference.value.dataset.favorito = "true";
-        console.log("agregado")
-    } else {
-        favoritos.value.splice(favoritos.value.indexOf(item), 1);
-        post_reference.value.dataset.favorito = "false";
-        console.log("borrado");
-    }
-    // guardamos los cambios
-    sessionStorage.setItem("favoritos", JSON.stringify(favoritos.value));
 }
 
-let tipo_usuario = ref("comercio");
+let tipo_usuario = ref(post.userRol);
 
 /** referencia los comentarios */
 let comentarios = ref(null);
@@ -180,6 +180,7 @@ const { stop } = useIntersectionObserver(post_reference,
                 <!-- Contenedor de botones del post -->
                 <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
 
+
                     <!-- Comentarios -->
 
                     <button @click="() => abrirComentarios()" class=" flex flex-row items-center mr-3 ">
@@ -207,7 +208,9 @@ const { stop } = useIntersectionObserver(post_reference,
                     </button>
 
 
+
                 </div>
+
                 <!-- Contenido del Post -->
                 <div class="information ">
                     <h1>
