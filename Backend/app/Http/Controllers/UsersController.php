@@ -245,9 +245,6 @@ class UsersController extends Controller
             $request->request->remove("phone");
             $request->request->remove("email");
 
-
-
-
             // Busca al usuario por su nombre de usuario
             $user = User::where("username", $username)->firstOrFail();
             // Revisa si el usuario es él mismo el que se va a cambiar
@@ -276,7 +273,7 @@ class UsersController extends Controller
 
                 $customer->save();
                 $updatedUser = $customer->user;
-                
+
             } else {
                 // Si el usuario es un comercio, actualiza los detalles como comercio
                 $commerce = Commerce::where('user_id', $user->id)->first();
