@@ -64,7 +64,7 @@ export async function updateUserData(metodo,datos,userName) {
       formData.append(clave, datos[clave]);
     }
     const options = genOptionsUpdate(metodo,formData);
-    const response = await fetch(`${urlApi}/api/user/${userName}`, options);
+    const response = await fetch(`${urlApi}/api/user/${userName}?_method=PUT`, options);
     const data = await response.json();
     // sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
     console.log(data)
@@ -73,7 +73,7 @@ export async function updateUserData(metodo,datos,userName) {
       console.error(error);
     }
   }
-  export async function postUserReview(metodo, body=null) {
+  export async function postUserReview(metodo, body = null) {
     // const user = JSON.parse(sessionStorage.getItem("usuario"));
     // console.log(user)
     try {

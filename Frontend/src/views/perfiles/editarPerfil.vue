@@ -159,7 +159,7 @@ const tratarDatos = ()=>{
                 "birth_date": fechaNac.value,
                 "password_confirmation": repetirNueva.value,
             }
-            let respuesta = updateUserData("PUT", datos, userType.value.username);
+            let respuesta = updateUserData("POST", datos, userType.value.username);
             console.log(respuesta);
             if(respuesta.status){
                 email.value = null;
@@ -195,14 +195,6 @@ const tratarDatos = ()=>{
             errorDirec.value = null;
 
         }
-        if(horarioActual.value == null || horarioActual.value.length == 0){
-            console.log("Entro en lo del horario");
-            errorSche.value = "Debe indicar el horario de su negocio.";
-
-        }else{
-            errorSche.value = null;
-
-        }
         if(categoria.value == null || categoria.value.length == 0){
             errorCategory.value = "Debe seleccionar la categoria de su negocio.";
 
@@ -210,7 +202,7 @@ const tratarDatos = ()=>{
             errorCategory.value = null;
 
         }
-        if(errorCategory.value == null && errorSche.value == null && errorDirec.value == null && errorPhone.value == null && errorContra.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
+        if(errorCategory.value == null && errorDirec.value == null && errorPhone.value == null && errorContra.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
             if(imagenBanner.value == imagenBannerDefault){
                 imagenBanner.value = null;
             }
@@ -235,7 +227,7 @@ const tratarDatos = ()=>{
                 "password_confirmation": repetirNueva.value,
             }
             console.log(datos);
-            let respuesta = updateUserData("PUT", datos, userType.value.username);
+            let respuesta = updateUserData("POST", datos, userType.value.username);
             if(respuesta.status){
                 email.value = null;
                 nombre.value = null;
@@ -308,7 +300,7 @@ const obtenerCambioHorario = (cambio) => {
                     <Input v-if="tipoUsuario == 'customer'" @datos="(nuevosDatos)=>{sexo = nuevosDatos}" tipo="selection" label="Sexo" :opciones="optionsSex" placeholder="Selecciona tu sexo" :valor="sexo"/>
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{direccion = nuevosDatos}" tipo="text" requerido="true" label="Dirección" :valor="direccion" :error="errorDirec"/>
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{hastags = nuevosDatos}" tipo="text" label="Hashtags" :valor="hashtags"/>
-                    <Input v-if="tipoUsuario == 'commerce'" tipo="texto" requerido="true" label="Horario Actual" :valor="horarioActual"/>
+                    <Input v-if="tipoUsuario == 'commerce'" tipo="texto" label="Horario Actual" :valor="horarioActual"/>
                     <Input v-if="tipoUsuario == 'commerce'" @click="controlarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
                     <div class="cambiocontra flex flex-col gap-y-5">
