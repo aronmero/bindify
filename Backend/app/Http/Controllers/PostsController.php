@@ -179,7 +179,115 @@ class PostsController extends Controller
         }
     }
 
-   
+    /**
+     * @OA\Post(
+     *     path="/posts",
+     *     summary="Crea una nueva publicación en la plataforma.",
+     *     description="Este método permite al usuario autenticado crear una nueva publicación en la plataforma, con los datos proporcionados en la solicitud.",
+     *     operationId="createPost",
+     *     tags={"Publicaciones"},
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Datos de la nueva publicación",
+     *         @OA\JsonContent(ref="App\Http\Requests\StorePostsRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Publicación creada exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post creado"
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="post_id",
+     *                     type="string",
+     *                     description="ID de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="image",
+     *                     type="string",
+     *                     description="Imagen de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="title",
+     *                     type="string",
+     *                     description="Título de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",
+     *                     type="string",
+     *                     description="Descripción de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="post_type_name",
+     *                     type="string",
+     *                     description="Nombre del tipo de publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="start_date",
+     *                     type="string",
+     *                     description="Fecha de inicio de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="end_date",
+     *                     type="string",
+     *                     description="Fecha de finalización de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="active",
+     *                     type="boolean",
+     *                     description="Indica si la publicación está activa"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="ubicacion",
+     *                     type="string",
+     *                     description="Ubicación de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="fecha_creacion",
+     *                     type="string",
+     *                     description="Fecha de creación de la publicación"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="hashtags",
+     *                     type="array",
+     *                     @OA\Items(type="string"),
+     *                     description="Lista de hashtags en la publicación"
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se pudo crear la publicación",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Mensaje de error"
+     *             )
+     *         )
+     *     )
+     * )
+     */
 
     public function store(StorePostsRequest $request)
     {
@@ -309,53 +417,85 @@ class PostsController extends Controller
         }
     }
 
+
     /**
-     * Actualiza la información de una publicación existente.
-     *
-     * Este método permite al usuario autenticado actualizar la información de una publicación existente
-     * proporcionando los datos actualizados en la solicitud.
-     *
-     * @param  \App\Http\Requests\UpdatePostsRequest  $request
-     * @param  string  $id
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "message": "Post actualizado",
-     *     "data": {
-     *         "post": {
-     *             "image": "imagen_de_la_publicación",
-     *             "title": "título_de_la_publicación",
-     *             "description": "descripción_de_la_publicación",
-     *             "post_type_name": "nombre_del_tipo_de_publicación",
-     *             "start_date": "fecha_de_inicio_de_la_publicación",
-     *             "end_date": "fecha_de_finalización_de_la_publicación",
-     *             "active": true,
-     *             "ubicacion": "ubicacion_de_la_publicación",
-     *             "fecha_creacion": "fecha_de_creación_de_la_publicación",
-     *             "hastags": ["hashtag1", "hashtag2", ...]
-     *         },
-     *         "users": [
-     *             {
-     *                 "name": "nombre_del_usuario",
-     *                 "username": "nombre_de_usuario",
-     *                 "avatar": "avatar_del_usuario",
-     *                 "id": "ID_del_usuario"
-     *             },
-     *             ...
-     *         ]
-     *     }
-     * }
-     *
-     * @response 403 {
-     *     "status": false,
-     *     "message": "Post no actualizado. No tienes permisos sobre este post."
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "mensaje_de_error"
-     * }
+     * @OA\Put(
+     *     path="/posts/{id}",
+     *     summary="Actualiza la información de una publicación existente.",
+     *     description="Este método permite al usuario autenticado actualizar la información de una publicación existente proporcionando los datos actualizados en la solicitud.",
+     *     operationId="updatePost",
+     *     tags={"Publicaciones"},
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID de la publicación a actualizar",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Datos actualizados de la publicación",
+     *         @OA\JsonContent(ref="App\Http\Requests\UpdatePostsRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Publicación actualizada exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post actualizado"
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No tienes permisos sobre este post",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post no actualizado. No tienes permisos sobre este post."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Mensaje de error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post no actualizado. No tienes permisos sobre este post."
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function update(UpdatePostsRequest $request, string $id)
     {
@@ -445,28 +585,74 @@ class PostsController extends Controller
     }
 
     /**
-     * Elimina una publicación existente de forma lógica.
-     *
-     * Este método permite al usuario autenticado eliminar una publicación existente de forma lógica,
-     * marcándola como inactiva en lugar de eliminarla físicamente de la base de datos.
-     *
-     * @param  string  $id
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "message": "Post eliminado"
-     * }
-     *
-     * @response 403 {
-     *     "status": false,
-     *     "message": "Post no eliminado. No tienes permisos sobre este post."
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "mensaje_de_error"
-     * }
+     * @OA\Delete(
+     *     path="/posts/{id}",
+     *     summary="Elimina una publicación existente de forma lógica.",
+     *     description="Este método permite al usuario autenticado eliminar una publicación existente de forma lógica, marcándola como inactiva en lugar de eliminarla físicamente de la base de datos.",
+     *     operationId="deletePost",
+     *     tags={"Publicaciones"},
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID de la publicación a eliminar",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Publicación eliminada exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post eliminado"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No tienes permisos sobre este post",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post no eliminado. No tienes permisos sobre este post."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Mensaje de error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Post no eliminado. No tienes permisos sobre este post."
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function destroy(string $id)
     {
