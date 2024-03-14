@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Scripts\Utils;
+use App\Models\Category;
 use App\Models\Commerce;
 use App\Models\Customer;
 use App\Models\Follower;
+use App\Models\Municipality;
 use App\Models\Post;
 use App\Models\User;
 use Exception;
@@ -185,7 +187,6 @@ class UsersController extends Controller
                     } else {
                         $commerce->followed = false;
                     }
-
                 });
 
                 return response()->json([
@@ -235,7 +236,7 @@ class UsersController extends Controller
      */
 
 
-    public function update(Request $request, string $username)
+    public function update(UpdateUserRequest $request, string $username)
     {
         try {
 
@@ -247,8 +248,10 @@ class UsersController extends Controller
                 return response()->json(["status" => false, "message" => "No autorizado"], 401);
             }
 
-            //campos de usuario base 
-            $user->name = $request->input('name');
+            //campos de usuario base
+            $user->name = $request->name;
+            $user->phone = $request->phone;
+            $user->municipality_id = Municipality::where('name', '=', $request->municipality)->first()->id;
 
             // Guarda las imágenes si están presentes en la solicitud
             if ($request->hasFile('avatar')) {
@@ -261,24 +264,21 @@ class UsersController extends Controller
             }
 
             if ($request->hasFile('banner')) {
+                dump('a');
                 $banner = $request->file('banner');
-                $rutaBanner = 'storage/avatars/' . $username . '/banner.webp';
-                Storage::disk('public')->putFileAs('avatars/' . $username, $banner, 'banner.webp');
+                $rutaBanner = 'storage/banners/' . $username . '/imagenBanner.webp';
+                Storage::disk('banners')->putFileAs($username, $banner, 'imagenBanner.webp');
                 $user->banner = asset($rutaBanner);
             } else {
                 $user->banner = "default";
             }
 
-            $user->phone = $request->input('phone');
-            $user->municipality_id = $request->input('municipality_id');
-
-            if ($request->has('password')) {
-                $pass1 = $request->input('password');
-                $pass2 = $request->input('password_confirmation');
+            if ($request->password) {
+                $pass1 = $request->password;
+                $pass2 = $request->password_confirmation;
                 if ($pass1 == $pass2) {
                     $user->password = $pass1;
                 }
-
             }
 
             // Determina el rol del usuario
@@ -286,51 +286,35 @@ class UsersController extends Controller
                 // Si el usuario es un cliente, actualiza los detalles como cliente
                 $customer = Customer::where('user_id', $user->id)->first();
 
-                // Actualiza los campos uno por uno
-                if ($request->has('gender')) { // COMO PASA LA POSICION DEL ARRAY LO HACE ASI , SE PUEDE MODIFICAR EL FRONT PARA AHORRARNOS ESTO 
-                    $genero = $request->input('gender');
-                    if ($genero == 1) {
-                        $customer->gender = 'H';
-                    } else {
-                        $customer->gender = 'M';
-                    }
+                $customer->gender = $request->gender;
 
-                }
-
-                if ($request->has('birth_date')) {
-                    $customer->birth_date = $request->input('birth_date');
-
+                if ($request->birth_date) {
+                    $customer->birth_date = $request->birth_date;
                 }
                 // Actualiza otros campos de ser necesario
-
+                $updatedUser = $customer->user->makeHidden('id');
                 $customer->save();
                 $user->save();
-                $updatedUser = $customer->user;
-
             } else {
                 // Si el usuario es un comercio, actualiza los detalles como comercio
                 $commerce = Commerce::where('user_id', $user->id)->first();
 
-                // Actualiza los campos uno por uno
-                if ($request->has('address')) {
-                    $commerce->address = $request->input('address');
-                }
-                if ($request->has('schedule')) {
-                    $commerce->schedule = $request->input('schedule');
-
+                if ($request->description) {
+                    $commerce->description = $request->description;
                 }
 
-                if ($request->has('description')) {
-                    $commerce->description = $request->input('description');
+                if ($request->schedule) {
+                    $commerce->schedule = $request->schedule;
                 }
 
-                if ($request->has('category_id')) {
-                    $commerce->category_id = $request->input('category_id');
+                if ($request->address) {
+                    $commerce->schedule = $request->address;
                 }
-                // Actualiza otros campos de ser necesario
+
+                $commerce->category_id = Category::where('name', '=', $request->category)->first()->id;
+                $updatedUser = $commerce->user->makeHidden('id');
                 $commerce->save();
                 $user->save();
-                $updatedUser = $commerce->user;
             }
 
             // Devuelve una respuesta JSON exitosa con los detalles del usuario actualizados

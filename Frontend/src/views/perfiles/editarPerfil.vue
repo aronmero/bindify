@@ -16,7 +16,7 @@ const controlador_modal = ref(false);
 
 let options = ref(null);
 let optionsCategory = ref(null);
-let optionsSex = [{id: 0, name: "M"}, {id: 1, name: "H"}];
+let optionsSex = [{id: "M", name: "M"}, {id: "H", name: "H"}];
 const solicitarDatosApi = async()=>{
     optionsCategory.value = await solicitarCategorias("GET").then(data => data = data.data);
     options.value = await solicitarMunicipios("GET").then(data => data = data.data);
@@ -65,10 +65,10 @@ if(userType.value.tipo == 'commerce'){
     });
 }
 if(imagenPerfil.value == 'default'){
-    imagenPerfil.value = imagenPerfilDefault;
+    imagenPerfil.value = '/public/img/placeholderPerfil.webp';
 }
 if(imagenBanner.value == 'default'){
-    imagenBanner.value = imagenBannerDefault;
+    imagenBanner.value = '/public/img/placeholderBanner.webp';
 }
 const isValid = ref(null);
 const tratarDatos = ()=>{
@@ -177,6 +177,18 @@ const tratarDatos = ()=>{
             }
         }
     }else{
+
+        let auxFechaNacBack = null;
+
+        if(fechaNac.value == undefined){
+            console.log('No esta definida la fechaNac');
+        }else{
+            console.log("Al fin usas la fechaNac");
+            console.log(fechaNac);
+            console.log(fechaNac.value);
+            auxFechaNacBack = fechaNac.value;
+        }
+
         if(telefono.value == null || telefono.value.length == 0){
             errorPhone.value = "Debe indicar el teléfono de su negocio.";
 
@@ -199,12 +211,6 @@ const tratarDatos = ()=>{
 
         }
         if(errorCategory.value == null && errorDirec.value == null && errorPhone.value == null && errorContra.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
-            if(imagenBanner.value == imagenBannerDefault){
-                imagenBanner.value = null;
-            }
-            if(imagenPerfil.value == imagenPerfilDefault){
-                imagenPerfil.value = null;
-            }
             if(municipio.value != null && municipio.value != user.value.municipality_name){
                 municipio.value = options.value[municipio.value].name;
             }
@@ -225,7 +231,7 @@ const tratarDatos = ()=>{
                 "schedule": horarioActual.value,
                 "address": direccion.value,
                 "gender": sexo.value,
-                "birth_date": fechaNac.value,
+                "birth_date": auxFechaNacBack,
                 "password_confirmation": repetirNueva.value,
             }
             console.log(datos);
