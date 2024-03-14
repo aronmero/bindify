@@ -24,45 +24,61 @@ class UsersController extends Controller
         $this->middleware("can:admin")->only("destroy");
     }
     /**
-     * Muestra la información de un usuario específico.
-     *
-     * Esta función recibe el nombre de usuario y busca en la base de datos la información correspondiente.
-     * Dependiendo del tipo de usuario (cliente o comercio), recopila y devuelve información relevante dependiendo si es un cliente o un comercio en formato JSON.
-     * Si no se encuentra el usuario, devuelve un mensaje de error y un estado 404.
-     *
-     * @param string $username - El nombre de usuario del usuario a mostrar.
-     *
-     * @return \Illuminate\Http\JsonResponse - Una respuesta JSON con la información del usuario o un mensaje de error.
-     *
-     * Ejemplo de respuesta exitosa:
-     *
-     * @response 200 {
-     *   "status": true,
-     *   "data": {
-     *       "email": "correo@example.com",
-     *       "phone": "123456789",
-     *       "municipality_name": "NombreMunicipio",
-     *       "avatar": "url_avatar",
-     *       "username": "nombre_usuario",
-     *       "name": "Nombre",
-     *       "gender": "Género",
-     *       "birth_date": "Fecha de Nacimiento",
-     *       "address": "Dirección",
-     *       "description": "Descripción del Comercio",
-     *       "categories_name": "Nombre de la Categoría",
-     *       "schedule": "Horario",
-     *       "active": "Estado de Actividad"
-     *   }
-     * }
-     *
-     * Ejemplo de respuesta de error:
-     *
-     * @response 404 {
-     *   "status": false,
-     *   "error": "Usuario no encontrado"
-     * }
+     * @OA\Get(
+     *     path="/user/{username}",
+     *     summary="Muestra la información de un usuario específico.",
+     *     description="Esta función recibe el nombre de usuario y busca en la base de datos la información correspondiente. Dependiendo del tipo de usuario (cliente o comercio), recopila y devuelve información relevante dependiendo si es un cliente o un comercio en formato JSON. Si no se encuentra el usuario, devuelve un mensaje de error y un estado 404.",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="username",
+     *         in="path",
+     *         required=true,
+     *         description="El nombre de usuario del usuario a mostrar.",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Información del usuario obtenida exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="email", type="string", example="correo@example.com"),
+     *                 @OA\Property(property="phone", type="string", example="123456789"),
+     *                 @OA\Property(property="municipality_name", type="string", example="NombreMunicipio"),
+     *                 @OA\Property(property="avatar", type="string", example="url_avatar"),
+     *                 @OA\Property(property="username", type="string", example="nombre_usuario"),
+     *                 @OA\Property(property="name", type="string", example="Nombre"),
+     *                 @OA\Property(property="gender", type="string", example="Género"),
+     *                 @OA\Property(property="birth_date", type="string", example="Fecha de Nacimiento"),
+     *                 @OA\Property(property="address", type="string", example="Dirección"),
+     *                 @OA\Property(property="description", type="string", example="Descripción del Comercio"),
+     *                 @OA\Property(property="categories_name", type="string", example="Nombre de la Categoría"),
+     *                 @OA\Property(property="schedule", type="string", example="Horario"),
+     *                 @OA\Property(property="active", type="string", example="Estado de Actividad")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuario no encontrado.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="error", type="string", example="Usuario no encontrado")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno del servidor.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="error", type="string", example="Mensaje de error interno")
+     *         )
+     *     )
+     * )
      */
-
     public function show(string $username)
     {
         try {
@@ -211,32 +227,93 @@ class UsersController extends Controller
     }
 
     /**
-     * Actualiza la información de un usuario específico.
-     *
-     * Comprueba que un usuario por su nombre sea de tipo costumer o commercie
-     * para luego poder actualizar los campos respectivos de cada uno
-     *
-     * @param \Illuminate\Http\Request $request - La solicitud HTTP con los datos de actualización.
-     * @param string $username - El nombre de usuario del usuario a actualizar.
-     *
-     * @return \Illuminate\Http\JsonResponse - Una respuesta JSON con el resultado de la actualización o un mensaje de error.
-     *
-     *@response 200 {
-     *   "status": true,
-     *   "data": "Datos del usuario recien actualizado"
-     * }
-     * * @response 500 {
-     *   "status": false,
-     *   "error": "Error en la base de datos"
-     * }
-     * @response 404 {
-     *   "status": false,
-     *   "error": "Usuario no encontrado"
-     * }
-     *
+     * @OA\Put(
+     *     path="/user/{username}",
+     *     summary="Actualiza la información de un usuario específico.",
+     *     description="Comprueba que un usuario por su nombre sea de tipo costumer o commercie para luego poder actualizar los campos respectivos de cada uno.",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="username",
+     *         in="path",
+     *         required=true,
+     *         description="El nombre de usuario del usuario a actualizar.",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Datos de actualización del usuario.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="username", type="string"),
+     *                 @OA\Property(property="email", type="string"),
+     *                 @OA\Property(property="phone", type="string"),
+     *                 @OA\Property(property="municipality_name", type="string"),
+     *                 @OA\Property(property="avatar", type="string"),
+     *                 @OA\Property(property="banner", type="string"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="gender", type="string"),
+     *                 @OA\Property(property="birth_date", type="string"),
+     *                 @OA\Property(property="address", type="string"),
+     *                 @OA\Property(property="description", type="string"),
+     *                 @OA\Property(property="categories_name", type="string"),
+     *                 @OA\Property(property="schedule", type="string"),
+     *                 @OA\Property(property="active", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuario actualizado exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Usuario actualizado Correctamente:"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="username", type="string"),
+     *                 @OA\Property(property="email", type="string"),
+     *                 @OA\Property(property="phone", type="string"),
+     *                 @OA\Property(property="municipality_name", type="string"),
+     *                 @OA\Property(property="avatar", type="string"),
+     *                 @OA\Property(property="banner", type="string"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="gender", type="string"),
+     *                 @OA\Property(property="birth_date", type="string"),
+     *                 @OA\Property(property="address", type="string"),
+     *                 @OA\Property(property="description", type="string"),
+     *                 @OA\Property(property="categories_name", type="string"),
+     *                 @OA\Property(property="schedule", type="string"),
+     *                 @OA\Property(property="active", type="string")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error en la base de datos.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="error", type="string", example="Error en la base de datos")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuario no encontrado.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="error", type="string", example="Usuario no encontrado")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autorizado.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="No autorizado")
+     *         )
+     *     )
+     * )
      */
-
-
     public function update(UpdateUserRequest $request, string $username)
     {
         try {
@@ -264,7 +341,7 @@ class UsersController extends Controller
                     Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
                     $customer->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
                 }
-                
+
                 if ($request->hasFile('banner')) {
                     $banner = $request->file('banner');
                     Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
@@ -285,7 +362,7 @@ class UsersController extends Controller
                     Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
                     $commerce->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
                 }
-                
+
                 if ($request->hasFile('banner')) {
                     $banner = $request->file('banner');
                     Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
@@ -308,32 +385,47 @@ class UsersController extends Controller
     }
 
     /**
-     * Elimina un usuario específico.
-     *
-     * Si el usuario es un costumer , se elimina de la base de datos directamente
-     * pero si es un Commerce , cambia el valor del campo active a false
-     * por lo que no se borra de la base de datos
-     *
-     * @param string $username - El nombre de usuario del usuario a eliminar.
-     *
-     * @return \Illuminate\Http\JsonResponse - Una respuesta JSON con el resultado de la eliminación o un mensaje de error.
-     *
-     *  *@response 200 {
-     *   "status": true,
-     *   "data": "Usuario eliminado exitosamente"
-     * }
-     * * @response 500 {
-     *   "status": false,
-     *   "error": "Error en la base de datos"
-     * }
-     * @response 404 {
-     *   "status": false,
-     *   "error": "Usuario no encontrado"
-     * }
-     *
+     * @OA\Delete(
+     *     path="/user/{username}",
+     *     summary="Elimina un usuario específico.",
+     *     description="Si el usuario es un costumer, se elimina de la base de datos directamente. Si es un Commerce, cambia el valor del campo active a false por lo que no se borra de la base de datos.",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="username",
+     *         in="path",
+     *         required=true,
+     *         description="El nombre de usuario del usuario a eliminar.",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuario eliminado exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Usuario eliminado exitosamente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error en la base de datos.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="error", type="string", example="Error en la base de datos")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuario no encontrado.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="error", type="string", example="Usuario no encontrado")
+     *         )
+     *     )
+     * )
      */
-
-
     public function destroy(string $username)
     {
         try {
@@ -364,45 +456,64 @@ class UsersController extends Controller
     }
 
     /**
-     * Retorna las publicaciones de un usuario específico.
-     *
-     * Este método recupera las publicaciones de un usuario específico, identificado por su nombre de usuario.
-     * Las publicaciones incluyen información como la imagen, título, descripción, tipo, fechas de inicio y fin,
-     * fecha de creación, nombre de usuario y avatar. Además, se obtienen los hashtags asociados a cada publicación.
-     *----------------------------------------------------------------------
-     * @param string $username
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @response 200 {
-     * "status": true,
-     * "data": [
-     * {
-     * "post_id": "ID_de_la_publicación",
-     * "image": "imagen_de_la_publicación",
-     * "title": "título_de_la_publicación",
-     * "description": "descripción_de_la_publicación",
-     * "name": "nombre_del_tipo_de_publicación",
-     * "start_date": "fecha_de_inicio_de_la_publicación",
-     * "end_date": "fecha_de_finalización_de_la_publicación",
-     * "created_at": "fecha_de_creación_de_la_publicación",
-     * "username": "nombre_de_usuario",
-     * "user_id": "ID_del_usuario",
-     * "avatar": "avatar_del_usuario",
-     * "hashtags": ["hashtag1", "hashtag2", ...]
-     * },
-     * ...
-     * ]
-     * }
-     *
-     * @response 404 {
-     * "status": false,
-     * "message": "Usuario no encontrado en la base de datos: mensaje_de_error"
-     * }
-     *
-     * @response 500 {
-     * "status": false,
-     * "message": "Error en la base de datos : mensaje_de_error"
-     * }
+     * @OA\Get(
+     *     path="/user/{username}/posts",
+     *     summary="Retorna las publicaciones de un usuario específico.",
+     *     description="Este método recupera las publicaciones de un usuario específico, identificado por su nombre de usuario. Las publicaciones incluyen información como la imagen, título, descripción, tipo, fechas de inicio y fin, fecha de creación, nombre de usuario y avatar. Además, se obtienen los hashtags asociados a cada publicación.",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="username",
+     *         in="path",
+     *         required=true,
+     *         description="El nombre de usuario del usuario del cual se desean obtener las publicaciones.",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Publicaciones obtenidas exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="post_id", type="string", example="ID_de_la_publicación"),
+     *                     @OA\Property(property="image", type="string", example="imagen_de_la_publicación"),
+     *                     @OA\Property(property="title", type="string", example="título_de_la_publicación"),
+     *                     @OA\Property(property="description", type="string", example="descripción_de_la_publicación"),
+     *                     @OA\Property(property="name", type="string", example="nombre_del_tipo_de_publicación"),
+     *                     @OA\Property(property="start_date", type="string", example="fecha_de_inicio_de_la_publicación"),
+     *                     @OA\Property(property="end_date", type="string", example="fecha_de_finalización_de_la_publicación"),
+     *                     @OA\Property(property="created_at", type="string", example="fecha_de_creación_de_la_publicación"),
+     *                     @OA\Property(property="username", type="string", example="nombre_de_usuario"),
+     *                     @OA\Property(property="user_id", type="string", example="ID_del_usuario"),
+     *                     @OA\Property(property="avatar", type="string", example="avatar_del_usuario"),
+     *                     @OA\Property(property="hashtags", type="array",
+     *                         @OA\Items(type="string", example="hashtag1")
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuario no encontrado en la base de datos.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Usuario no encontrado en la base de datos: mensaje_de_error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error en la base de datos.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error en la base de datos : mensaje_de_error")
+     *         )
+     *     )
+     * )
      */
     public function posts(string $username)
     {
@@ -463,47 +574,65 @@ class UsersController extends Controller
 
 
     /**
-     * Retorna los eventos asociados a un usuario específico.
-     *
-     * Este método recupera los eventos asociados a un usuario específico, identificado por su nombre de usuario.
-     * Los eventos incluyen información como la imagen, título, descripción, tipo, fechas de inicio y fin,
-     * fecha de creación, nombre de usuario y avatar. Además, se obtienen los hashtags asociados a cada evento.
-     *
-     * @param string $username
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @response 200 {
-     * "status": true,
-     * "data": [
-     * {
-     * "post_id": "ID_del_evento",
-     * "image": "imagen_del_evento",
-     * "title": "título_del_evento",
-     * "description": "descripción_del_evento",
-     * "name": "nombre_del_tipo_de_evento",
-     * "start_date": "fecha_de_inicio_del_evento",
-     * "end_date": "fecha_de_finalización_del_evento",
-     * "created_at": "fecha_de_creación_del_evento",
-     * "username": "nombre_de_usuario",
-     * "user_id": "ID_del_usuario",
-     * "avatar": "avatar_del_usuario",
-     * "hashtags": ["hashtag1", "hashtag2", ...]
-     * },
-     * ...
-     * ]
-     * }
-     *
-     * @response 404 {
-     * "status": false,
-     * "message": "Usuario no encontrado en la base de datos: mensaje_de_error"
-     * }
-     *
-     * @response 500 {
-     * "status": false,
-     * "message": "Error en la base de datos : mensaje_de_error"
-     * }
+     * @OA\Get(
+     *     path="/user/{username}/events",
+     *     summary="Retorna los eventos asociados a un usuario específico.",
+     *     description="Este método recupera los eventos asociados a un usuario específico, identificado por su nombre de usuario. Los eventos incluyen información como la imagen, título, descripción, tipo, fechas de inicio y fin, fecha de creación, nombre de usuario y avatar. Además, se obtienen los hashtags asociados a cada evento.",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="username",
+     *         in="path",
+     *         required=true,
+     *         description="El nombre de usuario del usuario del cual se desean obtener los eventos.",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Eventos obtenidos exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="post_id", type="string", example="ID_del_evento"),
+     *                     @OA\Property(property="image", type="string", example="imagen_del_evento"),
+     *                     @OA\Property(property="title", type="string", example="título_del_evento"),
+     *                     @OA\Property(property="description", type="string", example="descripción_del_evento"),
+     *                     @OA\Property(property="name", type="string", example="nombre_del_tipo_de_evento"),
+     *                     @OA\Property(property="start_date", type="string", example="fecha_de_inicio_del_evento"),
+     *                     @OA\Property(property="end_date", type="string", example="fecha_de_finalización_del_evento"),
+     *                     @OA\Property(property="created_at", type="string", example="fecha_de_creación_del_evento"),
+     *                     @OA\Property(property="username", type="string", example="nombre_de_usuario"),
+     *                     @OA\Property(property="user_id", type="string", example="ID_del_usuario"),
+     *                     @OA\Property(property="avatar", type="string", example="avatar_del_usuario"),
+     *                     @OA\Property(property="hashtags", type="array",
+     *                         @OA\Items(type="string", example="hashtag1")
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuario no encontrado en la base de datos.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Usuario no encontrado en la base de datos: mensaje_de_error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error en la base de datos.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error en la base de datos : mensaje_de_error")
+     *         )
+     *     )
+     * )
      */
-
     public function events(string $username)
     {
         try {
@@ -566,51 +695,59 @@ class UsersController extends Controller
     }
 
     /**
-     * Retorna el perfil del usuario autenticado.
-     *
-     * Este método recupera y devuelve el perfil del usuario autenticado.
-     * Si el usuario es un cliente, se devuelve la información relacionada con el cliente,
-     * incluyendo correo electrónico, teléfono, municipio, avatar, banner, nombre de usuario,
-     * nombre, género y fecha de nacimiento.
-     * Si el usuario es un comercio, se devuelve la información relacionada con el comercio,
-     * incluyendo correo electrónico, teléfono, municipio, avatar, banner, nombre de usuario,
-     * nombre, dirección, descripción del comercio, categoría, horario, estado activo, promedio de calificación
-     * y recuento de reseñas.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @response 200 {
-     * "status": true,
-     * "data": {
-     * "email": "correo_electrónico",
-     * "phone": "número_de_teléfono",
-     * "municipality_name": "nombre_del_municipio",
-     * "avatar": "avatar_del_usuario",
-     * "banner": "banner_del_usuario",
-     * "username": "nombre_de_usuario",
-     * "name": "nombre_del_usuario",
-     * "gender": "género_del_usuario",
-     * "birth_date": "fecha_de_nacimiento_del_usuario",
-     * "address": "dirección_del_comercio",
-     * "description": "descripción_del_comercio",
-     * "categories_name": "nombre_de_la_categoría",
-     * "schedule": "horario_del_comercio",
-     * "active": true,
-     * "avg": "promedio_de_calificación_del_comercio",
-     * "review_count": "recuento_de_reseñas_del_comercio",
-     * "hashtags": ["hashtag1", "hashtag2", ...]
-     * }
-     * }
-     *
-     * @response 404 {
-     * "status": false,
-     * "message": "Usuario no encontrado: mensaje_de_error"
-     * }
-     *
-     * @response 500 {
-     * "status": false,
-     * "message": "Error en la base de datos: mensaje_de_error"
-     * }
+     * @OA\Get(
+     *     path="/profile",
+     *     summary="Retorna el perfil del usuario autenticado.",
+     *     description="Este método recupera y devuelve el perfil del usuario autenticado. Si el usuario es un cliente, se devuelve la información relacionada con el cliente, incluyendo correo electrónico, teléfono, municipio, avatar, banner, nombre de usuario, nombre, género y fecha de nacimiento. Si el usuario es un comercio, se devuelve la información relacionada con el comercio, incluyendo correo electrónico, teléfono, municipio, avatar, banner, nombre de usuario, nombre, dirección, descripción del comercio, categoría, horario, estado activo, promedio de calificación y recuento de reseñas.",
+     *     tags={"Users"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Perfil del usuario autenticado obtenido exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="email", type="string", example="correo_electrónico"),
+     *                 @OA\Property(property="phone", type="string", example="número_de_teléfono"),
+     *                 @OA\Property(property="municipality_name", type="string", example="nombre_del_municipio"),
+     *                 @OA\Property(property="avatar", type="string", example="avatar_del_usuario"),
+     *                 @OA\Property(property="banner", type="string", example="banner_del_usuario"),
+     *                 @OA\Property(property="username", type="string", example="nombre_de_usuario"),
+     *                 @OA\Property(property="name", type="string", example="nombre_del_usuario"),
+     *                 @OA\Property(property="gender", type="string", example="género_del_usuario"),
+     *                 @OA\Property(property="birth_date", type="string", example="fecha_de_nacimiento_del_usuario"),
+     *                 @OA\Property(property="address", type="string", example="dirección_del_comercio"),
+     *                 @OA\Property(property="description", type="string", example="descripción_del_comercio"),
+     *                 @OA\Property(property="categories_name", type="string", example="nombre_de_la_categoría"),
+     *                 @OA\Property(property="schedule", type="string", example="horario_del_comercio"),
+     *                 @OA\Property(property="active", type="boolean", example=true),
+     *                 @OA\Property(property="avg", type="string", example="promedio_de_calificación_del_comercio"),
+     *                 @OA\Property(property="review_count", type="string", example="recuento_de_reseñas_del_comercio"),
+     *                 @OA\Property(property="hashtags", type="array",
+     *                     @OA\Items(type="string", example="hashtag1")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuario no encontrado.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Usuario no encontrado: mensaje_de_error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error en la base de datos.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error en la base de datos: mensaje_de_error")
+     *         )
+     *     )
+     * )
      */
     public function profile()
     {
