@@ -4,6 +4,9 @@ import { vistoNotificacion, deleteNotificacion } from '@/Api/notificaciones/noti
 import { datetranslate } from "@/components/notificaciones/helpers/datetranslate.js";
 const props = defineProps({ notificacion: Object });
 
+if(props.notificacion.avatar=="default"){
+    props.notificacion.avatar="public/img/placeholderPerfil.webp";
+}
 /**
  * Determina si esta eliminada la publicacion para ocultarla
  */
@@ -18,7 +21,7 @@ const marcarVisto = async () => {
             const data = await vistoNotificacion(props.notificacion.id_noti);
             props.notificacion.seen = true;
         }
-    }, 100)
+    }, 200)
 
 
 }
