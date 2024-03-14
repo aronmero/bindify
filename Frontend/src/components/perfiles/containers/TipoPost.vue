@@ -112,7 +112,7 @@ function clickBorrarPost(evento) {
       <img
         @click="redirect(`/post/${post.post_id}`)"
         class="cursor-pointer w-[100%] h-[100%] object-cover"
-        :src="post.avatar"
+        :src="post.image"
         :alt="post.title"
       />
     </div>

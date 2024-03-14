@@ -57,6 +57,10 @@ const estilos = {
 // Al recargar la pagina se quita la marca arregla a futuro con variables de estado
 // a lo mejor
 function pintar(evento) {
+  if(clickedLink == null){
+
+    clickedLink = document.querySelector("#linkPost")
+  }
   if (clickedLink != null) {
     clickedLink.classList.remove("text-accent-400");
   }
@@ -122,7 +126,7 @@ async function responseCatcherFavoritos() {
 // }
 
 const isEventos = ref(false);
-const isPosts = ref(false);
+const isPosts = ref(true);
 const isResenias = ref(false);
 
 const isFidelidad = ref(false);
@@ -346,9 +350,10 @@ function manipulacion(evento) {
           v-if="!isCustomer"
           @click="manipulacion"
           texto="Posts"
-          class="text-sm lg:text-base"
+          class="text-sm lg:text-base text-accent-400"
           :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
           value="1"
+          id="linkPost"
         />
         <textoEnNegrita
           v-if="!isCustomer"

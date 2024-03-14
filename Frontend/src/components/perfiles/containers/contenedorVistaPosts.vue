@@ -15,6 +15,7 @@ async function responseCatcher() {
     `/api/user/${linkUsername.value}/posts`
   );
   show.value = true;
+  console.log(userPosts.value)
   userPosts.value = setDefaultImgs(userPosts.value);
   console.log(userPosts.value.length);
 }

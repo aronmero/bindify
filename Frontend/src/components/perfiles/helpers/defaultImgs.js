@@ -12,6 +12,9 @@ export const  setDefaultImgs = (objeto) =>{
               if(elemento.avatarUsuario!= undefined  && elemento.avatarUsuario=="default"){
                 elemento.avatarUsuario = "/img/placeholderPerfil.webp"
               }
+              if(elemento.image!= undefined  && elemento.image=="default"){
+                elemento.image = "/img/placeholderPerfil.webp"
+              }
         });
     }
     if(objeto.banner!= undefined && objeto.banner=="default"){
@@ -19,6 +22,9 @@ export const  setDefaultImgs = (objeto) =>{
     }
     if(objeto.avatar!= undefined && objeto.avatar=="default"){
       objeto.avatar = "/img/placeholderPerfil.webp"
+    }
+    if(objeto.image!= undefined  && objeto.image=="default"){
+      objeto.image = "/img/placeholderPerfil.webp"
     }
     return objeto
   }
