@@ -258,7 +258,7 @@ const tratarDatos = async ()=>{
                 categoria.value = null;
                 sessionStorage.setItem(
                     "userData",
-                    JSON.stringify({ usuario: data.data })
+                    JSON.stringify({ usuario: respuesta.data })
                 );
                 router.go(-1);
             }else{
