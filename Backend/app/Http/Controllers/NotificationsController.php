@@ -19,24 +19,41 @@ class NotificationsController extends Controller
 {
 
     /**
-     * Muestra la lista de notificaciones del usuario.
-     *
-     * @authenticated
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "data": [
-     *         {
-     *             notificación 1
-     *         },
-     *         ...
-     *     ]
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "message": "Error: Mensaje de error"
-     * }
+     * @OA\Get(
+     *     path="/notifications",
+     *     summary="Muestra la lista de notificaciones del usuario.",
+     *     description="Este método muestra la lista de notificaciones del usuario autenticado.",
+     *     tags={"Notifications"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de notificaciones obtenida exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="string", example="ID_de_la_notificación"),
+     *                     @OA\Property(property="seen", type="boolean", example=true),
+     *                     @OA\Property(property="username", type="string", example="nombre_de_usuario"),
+     *                     @OA\Property(property="avatar", type="string", example="avatar_del_usuario"),
+     *                     @OA\Property(property="id_link", type="string", example="ID_encriptado_del_elemento_relacionado"),
+     *                     @OA\Property(property="type", type="string", example="Tipo_de_notificación"),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Error al obtener la lista de notificaciones.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error: Mensaje de error")
+     *         )
+     *     ),
+     * )
      */
     public function index()
     {
@@ -53,7 +70,7 @@ class NotificationsController extends Controller
 
                 switch ($notificacion->element_type) {
 
-                        // Verificar si la notificación es un comentario
+                    // Verificar si la notificación es un comentario
                     case 'App\\Models\\Comment':
 
                         $comment = Comment::where('id', '=', $notificacion->element_id)->first();
@@ -68,7 +85,7 @@ class NotificationsController extends Controller
 
                         break;
 
-                        // Verificar si la notificación es una review
+                    // Verificar si la notificación es una review
                     case 'App\\Models\\Review':
 
                         $review = Review::where('id', '=', $notificacion->element_id)->first();
@@ -82,7 +99,7 @@ class NotificationsController extends Controller
 
                         break;
 
-                        // Verificar si la notificación es un follower
+                    // Verificar si la notificación es un follower
                     case 'App\\Models\\Follower':
 
                         $user = User::where('id', '=', $notificacion->element_id)->first();
@@ -95,7 +112,7 @@ class NotificationsController extends Controller
 
                         break;
 
-                        // Verificar si la notificación es sobre un post
+                    // Verificar si la notificación es sobre un post
                     case 'App\\Models\\Post':
 
                         $post = Post::where('id', '=', $notificacion->element_id)->first();

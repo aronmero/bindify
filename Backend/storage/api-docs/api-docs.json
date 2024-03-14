@@ -1113,13 +1113,13 @@
                 }
             }
         },
-        "/hashtag/populares": {
-            "get": {
+        "/hashtag/trending": {
+            "post": {
                 "tags": [
                     "Hashtags"
                 ],
                 "summary": "Obtiene los hashtags más populares",
-                "operationId": "628a9a6cda03d6477a3326c5c6036063",
+                "operationId": "21a5777a684c5f6c228b6150bdaadb78",
                 "parameters": [
                     {
                         "name": "type",
@@ -1263,6 +1263,91 @@
                         }
                     }
                 }
+            }
+        },
+        "/notifications": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Muestra la lista de notificaciones del usuario.",
+                "description": "Este método muestra la lista de notificaciones del usuario autenticado.",
+                "operationId": "0ec7184d002932a05c27539db661a9eb",
+                "responses": {
+                    "200": {
+                        "description": "Lista de notificaciones obtenida exitosamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "ID_de_la_notificación"
+                                                    },
+                                                    "seen": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    },
+                                                    "username": {
+                                                        "type": "string",
+                                                        "example": "nombre_de_usuario"
+                                                    },
+                                                    "avatar": {
+                                                        "type": "string",
+                                                        "example": "avatar_del_usuario"
+                                                    },
+                                                    "id_link": {
+                                                        "type": "string",
+                                                        "example": "ID_encriptado_del_elemento_relacionado"
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "example": "Tipo_de_notificación"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Error al obtener la lista de notificaciones.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error: Mensaje de error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/home_calendario": {
