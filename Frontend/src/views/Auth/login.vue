@@ -38,7 +38,7 @@ async function tryLogin() {
 
     if (isValido) {
         const data = await login(email.value, password.value);
-
+        console.log(data);
         if (data.status) {
             sessionStorage.setItem(
                 "usuario",
