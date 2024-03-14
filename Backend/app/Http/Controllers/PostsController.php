@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+
 class PostsController extends Controller
 {
 
@@ -314,11 +315,16 @@ class PostsController extends Controller
 
             $rutaFotoPost = 'default';
 
+            if (isset($request->start_date)) {
+                return response()->json(['status' => true, 'message' => 'isset', 'data' => $request->start_date], 200);
+            }
+
+            return response()->json(['status' => true, 'message' => 'startdate', 'data' => $request->start_date], 200);
+
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $rutaFotoPost = 'posts/' . $user->username . '/imagenPost.webp';
-                Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
-                $rutaFotoPost = asset($rutaFotoPost);
+                Storage::disk('posts')->putFileAs($user->username, $image, '/imagenPost.webp');
+                $rutaFotoPost = env('APP_URL').Storage::url('posts/'.$user->username . '/imagenPost.webp');
             }
 
             $post = Post::create([
@@ -558,11 +564,9 @@ class PostsController extends Controller
 
                 if ($request->hasFile('image')) {
                     $image = $request->file('image');
-                    $rutaFotoPost = 'posts/' . $user->username . '/imagenPost.webp';
-                    Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
-                    $rutaFotoPost = asset($rutaFotoPost);
+                    Storage::disk('posts')->putFileAs($user->username, $image, '/imagenPost.webp');
+                    $rutaFotoPost = env('APP_URL').Storage::url('posts/'.$user->username . '/imagenPost.webp');
                 }
-
 
                 if ($request->active) {
                     $post->active = $request->active;
