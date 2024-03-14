@@ -34,7 +34,7 @@ export async function getUserPosts(metodo,subRuta,body=null) {
       const options = genOptions(metodo,body);
       const response = await fetch(`${urlApi}${subRuta}`, options);
       const data = await response.json();
-      sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
+      // sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
       console.log(data.data)
       return data.data;
     } catch (error) {

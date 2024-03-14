@@ -44,10 +44,9 @@ let isCustomer = false;
 
 // }
 
-// onMounted(() => {
-//   console.log("Montado")
-
-// })
+onMounted(() => {
+  console.log("Montado");
+});
 const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
@@ -69,10 +68,7 @@ async function responseCatcher(metodo, subRuta) {
   console.log(userData.value[0]);
 
   console.log(userLogeado.usuario.tipo);
-  if (
-    userLogeado.usuario.tipo == "customer" &&
-    userData.value[0] == undefined
-  ) {
+  if (userData.value[0] == undefined) {
     console.log("es Customer");
     isCustomer = true;
   }
@@ -285,11 +281,16 @@ function manipulacion(evento) {
           </RouterLink>
           <RouterLink
             to="/resenia"
-            v-if="userExterno && !isCustomer && userData.tipo != 'ayuntamiento'"
+            v-if="
+              userExterno &&
+              !isCustomer &&
+              userData.tipo != 'ayuntamiento' &&
+              userLogeado.usuario.tipo != 'commerce'
+            "
           >
             <btnConImg
               ruta="/assets/icons/christmasStar.svg"
-              altText="icono codigo qr"
+              altText="icono estrella"
               :borde="true"
             ></btnConImg>
           </RouterLink>
@@ -363,7 +364,7 @@ function manipulacion(evento) {
           value="3"
         />
         <textoEnNegrita
-          v-if="isCustomer"
+          v-if="isCustomer && !userExterno"
           @click="manipulacion"
           texto="Fidelidad"
           class="text-sm lg:text-base"
@@ -371,20 +372,20 @@ function manipulacion(evento) {
           value="4"
         />
         <textoEnNegrita
-          v-if="isCustomer"
-          @click="manipulacion"
-          texto="Favoritos"
-          class="text-sm lg:text-base"
-          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
-          value="5"
-        />
-        <textoEnNegrita
-          v-if="isCustomer"
+          v-if="!userExterno"
           @click="manipulacion"
           texto="Seguidos"
           class="text-sm lg:text-base"
           :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
           value="6"
+        />
+        <textoEnNegrita
+          v-if="!userExterno"
+          @click="manipulacion"
+          texto="Favoritos"
+          class="text-sm lg:text-base"
+          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          value="5"
         />
       </div>
       <!--<RouterView></RouterView>-->

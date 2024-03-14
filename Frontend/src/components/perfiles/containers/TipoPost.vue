@@ -11,6 +11,7 @@ import UserSVG from "@public/assets/icons/user.svg";
 import TipoOferta from "@public/assets/icons/tipo_oferta.svg";
 import TipoEvento from "@public/assets/icons/tipo_evento.svg";
 const userData = JSON.parse(sessionStorage.getItem("userData"));
+console.log(userData);
 const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
 console.log(userData.userData[0]);
 import { datetranslate } from "@/components/feed_media/helpers/datetranslate.js";
@@ -56,15 +57,14 @@ const redirect = (url) => {
 /** Agregué que se listaran ya los tipos */
 const tipo = props.post.name;
 let IconoTipo = "";
-if (tipo == 'Post') IconoTipo = TipoOferta;
-if (tipo == 'Evento') IconoTipo = TipoEvento;
+if (tipo == "Post") IconoTipo = TipoOferta;
+if (tipo == "Evento") IconoTipo = TipoEvento;
 
-
-function editarPost(evento){
-  console.log(props.post)
-  sessionStorage.setItem("postData",JSON.stringify({ postData: props.post }))
-  console.log(JSON.parse(sessionStorage.getItem("postData")))
-  router.push(`/post/${props.post.post_id}/editar`)
+function editarPost(evento) {
+  console.log(props.post);
+  sessionStorage.setItem("postData", JSON.stringify({ postData: props.post }));
+  console.log(JSON.parse(sessionStorage.getItem("postData")));
+  router.push(`/post/${props.post.post_id}/editar`);
 }
 </script>
 
@@ -111,12 +111,12 @@ function editarPost(evento){
       </button>
 
       <!-- Guardar -->
-      <button class="flex flex-row items-center mr-3 " >
+      <button class="flex flex-row items-center mr-3">
         <img :src="BookmarkSVG" />
       </button>
 
       <!-- Compartir -->
-      <button class="flex flex-row items-center mr-3 ">
+      <button class="flex flex-row items-center mr-3">
         <img :src="ShareSVG" />
       </button>
     </div>
@@ -137,17 +137,22 @@ function editarPost(evento){
     >
       <!-- Botón ver post -->
       <RouterLink :to="`/post/${post.post_id}`">
-        <button
-          :class="`${estilos.modal_button} m-2 `"
-        >
+        <button :class="`${estilos.modal_button} m-2 `">
           <img class="w-[30px] h-[30px] mr-3" :src="UserSVG" />
           Detalles
         </button>
-
       </RouterLink>
       <!-- Botón editar post -->
-      
-      <button :class="`${estilos.modal_button} m-2 `" @click="editarPost" :id="post.post_id" v-if="userLogeado.usuario.tipo == 'commerce'">
+
+      <button
+        :class="`${estilos.modal_button} m-2 `"
+        @click="editarPost"
+        :id="post.post_id"
+        v-if="
+          userLogeado.usuario.tipo == 'commerce' &&
+          userLogeado.usuario.username == userData.userData[0].username
+        "
+      >
         <img class="w-[30px] h-[30px] mr-3" :src="StarSVG" />
         Editar
       </button>
