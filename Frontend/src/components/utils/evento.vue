@@ -25,12 +25,12 @@ const props = defineProps({
     fecha_publicacion: String,
     comentarios: Array,
 });
-const users=props.user;
+const users = props.user;
 //Añade imagen default
 for (let index = 0; index < users.length; index++) {
-    if(users[index].avatar=="default"){
-        users[index].avatar="/public/img/placeholderPerfil.webp";
-}
+    if (users[index].avatar == "default") {
+        users[index].avatar = "/public/img/placeholderPerfil.webp";
+    }
 }
 
 
@@ -84,9 +84,9 @@ const enviarComentarioPorSubmit = async (post_id, event) => {
                 const body = JSON.stringify({ "content": `${texto}`, "post_id": post_id })
                 const response = await storeCommentsOfPost(body)
             }
-
-            antiSpamFunction();
-            apiCall();
+            router.go() //Impletacion para que se recarge la imagen pero esto es terrible
+            //antiSpamFunction();
+            //apiCall();
         }
     }
 };
@@ -95,8 +95,9 @@ const enviarComentarioPorClick = async (post_id, texto) => {
     if (!posteado.value && texto != "") {
         const body = JSON.stringify({ "content": `${texto}`, "post_id": post_id })
         const response = await storeCommentsOfPost(body)
-        antiSpamFunction();
-        apiCall();
+        router.go() //Impletacion para que se recarge la imagen pero esto es terrible
+        //antiSpamFunction();
+        //apiCall();
     }
 };
 
@@ -119,7 +120,6 @@ const antiSpamFunction = () => {
         };
     }, 1000);
 }
-console.log(props.user);
 </script>
 
 <template>
@@ -140,7 +140,9 @@ console.log(props.user);
     </div>
     <div class="flex m-[20px] flex-col">
         <div class="flex justify-between w-full font-bold pb-[40px] relative">
-            <div class="flex items-center">{{ props.titulo }}<BotonSpeaker :texto="props.titulo" class="scale-75" /></div>
+            <div class="flex items-center">{{ props.titulo }}
+                <BotonSpeaker :texto="props.titulo" class="scale-75" />
+            </div>
             <div class="cursor-pointer" @click="openModal">...</div>
             <div id="modalEvento" @click="copyModal"
                 class="top-[30px] right-0 absolute bg-background-50 drop-shadow-sm rounded-[5px] font-normal p-[5px] flex gap-[5px] items-center cursor-pointer hidden">
@@ -150,14 +152,21 @@ console.log(props.user);
         <div>
             <div class="flex" v-if="tipo == 'Evento' && props.ubicacion != null"><img
                     src="@public/assets/icons/location.svg" class="w-[20px] mr-[5px]">{{ props.ubicacion
-                }}<BotonSpeaker :texto="props.ubicacion" class="scale-75" />
+                    }}
+                <BotonSpeaker :texto="props.ubicacion" class="scale-75" />
             </div>
             <div class="flex " v-if="tipo == 'Evento' && props.fechaInicio != null && props.fechaFin != null"><img
-                    src="@public/assets/icons/schedule.svg" class=" w-[20px] mr-[5px]"><div class="flex items-center">{{
-                props.fechaInicio }}
-                al {{ props.fechaFin }}<BotonSpeaker :texto="`${props.fechaInicio} al ${props.fechaFin}`" class="scale-75" /></div></div>
+                    src="@public/assets/icons/schedule.svg" class=" w-[20px] mr-[5px]">
+                <div class="flex items-center">{{
+                    props.fechaInicio }}
+                    al {{ props.fechaFin }}
+                    <BotonSpeaker :texto="`${props.fechaInicio} al ${props.fechaFin}`" class="scale-75" />
+                </div>
+            </div>
         </div>
-        <div> {{ props.descripcion }}<BotonSpeaker :texto="props.descripcion" class="scale-75" /></div>
+        <div> {{ props.descripcion }}
+            <BotonSpeaker :texto="props.descripcion" class="scale-75" />
+        </div>
         <div class="text-[24px] font-bold my-[30px]" v-if="tipo == 'Evento'">Periodo del evento</div>
         <div v-if="tipo == 'Evento'">
             <Calendar :post="props" />
@@ -178,10 +187,9 @@ console.log(props.user);
             <template v-if="comentarios != null">
                 <Comentario v-if="comentarios.length >= 1" v-for="comentario in comentarios" :comentario="comentario" />
                 <Comentario v-else :comentario="{ content: 'No hay comentarios, ¡se el primero!' }" />
-            </template>
+        </template>
 
-        </div>
     </div>
-</template>
+</div></template>
 
 <style scoped></style>
