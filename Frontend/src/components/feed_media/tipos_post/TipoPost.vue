@@ -23,8 +23,7 @@ const modalHandler = ref(false);
 const modal = ref(null);
 
 const esSeguido = ref(false);
-console.log(props.seguidos);
-console.log(post);
+
 props.seguidos.forEach(seguido => {
     if(seguido.username == post.value.username) esSeguido.value = true;
 });
