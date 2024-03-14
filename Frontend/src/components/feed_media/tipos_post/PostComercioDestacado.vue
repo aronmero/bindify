@@ -38,7 +38,8 @@ import PostAyuntamiento from './PostAyuntamiento.vue';
 
 const props = defineProps({
     post: Object,
-    tipo: String
+    tipo: String,
+    abrirComentarios: Function
 });
 
 
