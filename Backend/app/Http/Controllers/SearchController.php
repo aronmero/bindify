@@ -17,35 +17,54 @@ class SearchController extends Controller
 {
 
     /**
-     * Muestra una lista de publicaciones por municipio.
-     *
-     * Este método devuelve una lista de publicaciones asociadas a un municipio dado.
-     *
-     * @urlParam municipality string required El nombre del municipio.
-     *
-     * @response 200 {
-     *     "status": true,
-     *     "data": [
-     *         {
-     *             "avatar": "avatar_del_usuario",
-     *             "username": "nombre_de_usuario",
-     *             "name": "nombre_del_usuario",
-     *             "image": "imagen_de_la_publicación",
-     *             "title": "título_de_la_publicación",
-     *             "description": "descripción_de_la_publicación",
-     *             "name": "nombre_del_tipo_de_publicación",
-     *             "active": "activo_o_inactivo"
-     *         },
-     *         ...
-     *     ]
-     * }
-     *
-     * @response 404 {
-     *     "status": false,
-     *     "error": "mensaje_de_error"
-     * }
+     * @OA\Get(
+     *     path="/search",
+     *     summary="Muestra una lista de publicaciones por municipio.",
+     *     description="Este método devuelve una lista de publicaciones asociadas a un municipio dado.",
+     *     operationId="searchPostsByMunicipality",
+     *     tags={"Search"},
+     *     @OA\Parameter(
+     *         name="municipality",
+     *         in="query",
+     *         description="El nombre del municipio.",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de publicaciones por municipio",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="avatar", type="string", example="avatar_del_usuario"),
+     *                     @OA\Property(property="username", type="string", example="nombre_de_usuario"),
+     *                     @OA\Property(property="name", type="string", example="nombre_del_usuario"),
+     *                     @OA\Property(property="image", type="string", example="imagen_de_la_publicación"),
+     *                     @OA\Property(property="title", type="string", example="título_de_la_publicación"),
+     *                     @OA\Property(property="description", type="string", example="descripción_de_la_publicación"),
+     *                     @OA\Property(property="post_type", type="string", example="nombre_del_tipo_de_publicación"),
+     *                     @OA\Property(property="active", type="string", example="activo_o_inactivo")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Error al buscar publicaciones",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="error", type="string", example="mensaje_de_error")
+     *         )
+     *     )
+     * )
      */
-
     public function search(Request $request)
     {
         try {
@@ -152,7 +171,7 @@ class SearchController extends Controller
             $commerces->each(function ($commerce) {
                 $commerce->hashtags = Commerce::find($commerce->user_id)->hashtags->pluck('name')->toArray();
                 $commerce->review_count = Review::where('commerce_id', $commerce->user_id)->count();
-                unset($commerce->user_id);
+                unset ($commerce->user_id);
                 $user = User::where('username', $commerce->username)->first();
                 $commerce->userRol = $user->getRoleNames()[0];
             });
