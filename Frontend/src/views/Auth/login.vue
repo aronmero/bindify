@@ -61,7 +61,7 @@ function Registro() {
 </script>
 
 <template>
-    <div class="mt-[1rem] flex flex-col lg:flex-row justify-center items-center">
+    <div class="mt-[40px] flex flex-col lg:flex-row justify-center items-center">
         <div class="w-[45vw] lg:flex justify-center items-center hidden">
             <img src="/img/fondo.png" alt="imagen">
         </div>

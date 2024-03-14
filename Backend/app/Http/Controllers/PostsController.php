@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\Events\ModelCreated;
 use App\Http\Requests\StorePostsRequest;
 use App\Http\Requests\UpdatePostsRequest;
+use App\Http\Scripts\Utils;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Models\User;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -86,7 +85,7 @@ class PostsController extends Controller
                 $commentsCount = Comment::where('post_id', $post->post_id)->count();
                 $post->comment_count = $commentsCount;
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                $post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Utils::Crypt($post->post_id);
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
             });
@@ -169,7 +168,7 @@ class PostsController extends Controller
                 $commentsCount = Comment::where('post_id', $post->post_id)->count();
                 $post->comment_count = $commentsCount;
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                $post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Utils::Crypt($post->post_id);
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
             });
@@ -256,7 +255,7 @@ class PostsController extends Controller
                 $commentsCount = Comment::where('post_id', $post->post_id)->count();
                 $post->comment_count = $commentsCount;
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                $post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Utils::Crypt($post->post_id);
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
             });
@@ -353,7 +352,7 @@ class PostsController extends Controller
             event(new ModelCreated($post));
 
             $postData = [
-                'post_id' => $post->id = Crypt::encryptString($post->id),
+                'post_id' => $post->id = Utils::Crypt($post->id),
                 'image' => $post->image,
                 'title' => $post->title,
                 'description' => $post->description,
@@ -428,7 +427,6 @@ class PostsController extends Controller
     public function show(string $id)
     {
         try {
-
             try {
                 $id = Crypt::decryptString($id);
             } catch (DecryptException $e) {
@@ -472,7 +470,7 @@ class PostsController extends Controller
                 $formattedComment = [
                     'username' => $comment->user->username,
                     'content' => $comment->content,
-                    'comment_id' => Crypt::encryptString($comment->id),
+                    'comment_id' => Utils::Crypt($comment->id),
                     'avatar' => $comment->user->avatar,
                 ];
                 $formattedComments[] = $formattedComment;
@@ -557,15 +555,7 @@ class PostsController extends Controller
     {
         try {
 
-            try {
-                $id = Crypt::decryptString($id);
-            } catch (DecryptException $e) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Post inexistente',
-                ], 500);
-            }
-
+            $id = Utils::deCrypt($id);
             $user = Auth::user();
             $post = Post::find($id);
             $userVerificado = false;
@@ -668,15 +658,7 @@ class PostsController extends Controller
     {
         try {
 
-            try {
-                $id = Crypt::decryptString($id);
-            } catch (DecryptException $e) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Post inexistente',
-                ], 500);
-            }
-
+            $id = Utils::deCrypt($id);
             $user = Auth::user();
             $post = Post::find($id);
             $userVerificado = false;

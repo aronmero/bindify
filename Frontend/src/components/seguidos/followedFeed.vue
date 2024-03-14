@@ -4,8 +4,8 @@
     import {usersAux, loading, searchByFilter, followedListAux, fetchUsers} from "@/utils/followedSearchLogic.js";
     import { onMounted } from "vue";
 
-    onMounted(() => {
-      fetchUsers();
+    onMounted(async() => {
+      await fetchUsers();
     });
 
   

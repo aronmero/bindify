@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Scripts\Utils;
 use App\Models\Commerce;
 use App\Models\Customer;
 use App\Models\Follower;
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
 use Exception;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -298,8 +296,10 @@ class UsersController extends Controller
                     }
 
                 }
+
                 if ($request->has('birth_date')) {
                     $customer->birth_date = $request->input('birth_date');
+
                 }
                 // Actualiza otros campos de ser necesario
 
@@ -317,6 +317,7 @@ class UsersController extends Controller
                 }
                 if ($request->has('schedule')) {
                     $commerce->schedule = $request->input('schedule');
+
                 }
 
                 if ($request->has('description')) {
@@ -483,7 +484,7 @@ class UsersController extends Controller
 
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                $post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Utils::Crypt($post->post_id);
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
             });
@@ -583,7 +584,7 @@ class UsersController extends Controller
 
             $posts->each(function ($post) {
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                $post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Utils::Crypt($post->post_id);
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
             });
