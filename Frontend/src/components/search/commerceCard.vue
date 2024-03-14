@@ -1,49 +1,46 @@
 <script setup>
 
-
     defineProps({
         commerce : Object,
     })
 
-    import starSVG from '/assets/icons/star.svg';
     import router from '@/router';
     import { setRandomGradient } from '@/utils/randomGradient.js';
 
     const redirect = (username) => {
         router.push(`perfil/${username}`);
     }
+
+    import StarSVG from '@public/assets/icons/star.svg';
+    import StarEmptySVG from '@public/assets/icons/starEmpty.svg';
  
 </script>
 
 <template>
-    
     <div class="flex items-center gap-x-2 p-2 transition-colors duration-300 ease-in hover:bg-[#eeeeee] cursor-pointer" loading="lazy" @click="redirect(commerce.username)"  >
         <img :src="commerce.avatar" alt="profile-image" class="size-20 rounded-full" />
         <div class="flex flex-col flex-1 m-1 gap-y-4">
-            <div class="flex items-center gap-x-2">
+            <div class="flex flex-col md:flex-row  items-start md:items-center gap-x-2">
                 <h1 class="font-medium text-[1.3em] md:text-[1.7em]">{{ commerce.username }}</h1>
-                <div class="flex items-center mt-1">
-                    <img :src="starSVG" alt="star" class="size-5 md:size-7" v-if="commerce.avg >0" />
-                    <p class="font-bold text-[0.8em] md:text-[1.4em]" v-if="commerce.avg >0">{{ commerce.avg }}</p>
-                </div>
-                <div v-if="commerce.review_count === 0">
-                    Sin calificar
-                </div>
-                <div v-else>
-                    <small class="text-[0.7em] md:text-[0.8em]">({{ commerce.review_count }} votos)</small>
-                </div>
-              
+                <div class="flex gap-x-2 items-center">
+                    <div class="flex items-center mt-1 rating h-[fit-content] justify-start " v-if="commerce.avg != null">
+                <img class="size-4" :src="StarSVG" v-for="index in Math.floor(commerce.avg)" alt="star" loading="lazy"
+                    :title="commerce.avg" />
+                <img class="size-3.5" :src="StarEmptySVG" v-for="index in (5 - Math.floor(commerce.avg))" alt="star" loading="lazy"
+                    :title="commerce.avg" />
+                <small class="ml-1 text-xs">({{ commerce.avg.toFixed(2) }})</small>  
             </div>
-                <div class="flex flex-wrap items-center gap-x-2 gap-y-2 text-xs">
-                   <p v-if="commerce.hashtags.length === 0">Sin hashtags</p> 
-                     <ul v-for="(hastag, index) in commerce.hashtags" :key="index" >
+        </div>
+                
+        </div>
+            <div class="flex flex-wrap items-center gap-x-2 gap-y-2 text-xs">
+                <p v-if="commerce.hashtags.length === 0">Sin hashtags</p> 
+                    <ul v-for="(hastag, index) in commerce.hashtags" :key="index" >
                         <li :style="{ background: setRandomGradient() }" class="p-1 text-[10px] font-bold text-white rounded-md">#{{ hastag }}</li>
                     </ul>
-                </div>    
+            </div>    
         </div>
     </div>
-    
- 
 </template>
 
 
