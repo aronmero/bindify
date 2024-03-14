@@ -264,7 +264,6 @@ class UsersController extends Controller
             }
 
             if ($request->hasFile('banner')) {
-                dump('a');
                 $banner = $request->file('banner');
                 $rutaBanner = 'storage/banners/' . $username . '/imagenBanner.webp';
                 Storage::disk('banners')->putFileAs($username, $banner, 'imagenBanner.webp');
