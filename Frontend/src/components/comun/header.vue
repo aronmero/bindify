@@ -3,6 +3,7 @@ import { RouterLink } from "vue-router";
 import router from '@/router/index.js';
 import  logo  from '@public/img/fondo.png';
 import {  closeSession} from "@/Api/auth.js";
+const tipo = JSON.parse(sessionStorage.getItem("usuario")).usuario.tipo;
 
 /**
  * Cierra la sesion actual y redirige al usuario
@@ -28,7 +29,7 @@ import {  closeSession} from "@/Api/auth.js";
       </RouterLink>
     </nav>
     <div class="menu-right flex">
-    <nav class="w-[50px] flex justify-center items-center">
+    <nav class="w-[50px] flex justify-center items-center" v-if="tipo==`ayuntamiento` || tipo==`commerce`">
       <RouterLink to="/post/nuevo">
         <img title="Nuevo Post" src="/assets/icons/add_rounded.svg" class="max-w-[50px] max-h-[50px] hidden lg:block"
           alt="Nuevo Post" />
