@@ -4,12 +4,12 @@
  * @returns 
  */
 export const obtener_favoritos = () => {
-    let favoritos = localStorage.getItem("favoritos");
+    let favoritos = JSON.parse(localStorage.getItem("favoritos"));
 
     if(favoritos != null) {
-        return JSON.parse(favoritos)
+        return favoritos;
     } else {
-        localStorage.setItem('favoritos', '[]');
+        localStorage.setItem('favoritos', '[{}]');
         favoritos = JSON.parse(localStorage.getItem("favoritos"));
     }
     return favoritos
@@ -33,15 +33,19 @@ export const borrar_favorito = (item) => {
     favoritos.splice(favoritos.indexOf(item), 1);
     // guardamos los cambios
     localStorage.setItem("favoritos", favoritos);
-
 }
 
 export const en_favoritos = (item) => {
+    let existe = false;
     const favoritos = JSON.parse(obtener_favoritos());
-    return favoritos.indexOf(item) != -1;
+    console.log(favoritos)
+    // favoritos.forEach(favorito => {
+    //     if(favorito == item) existe  =  true;
+    // })
+    return existe;
 }
 
-export const guardar_en_session = (array) => {
+export const guardar_en_local = (array) => {
     localStorage.setItem('favoritos', array);
 }
 
