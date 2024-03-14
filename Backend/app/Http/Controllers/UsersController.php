@@ -316,38 +316,41 @@ class UsersController extends Controller
     public function update(UpdateUserRequest $request, string $username)
     {
         try {
-            // Elimina campos que no queremos actualizar
-            $request->request->remove("username");
-            $request->request->remove("phone");
-            $request->request->remove("email");
-            $request->request->remove("password");
+           // Elimina campos que no queremos actualizar
+           $request->request->remove("username");
+           $request->request->remove("email");
+           $request->request->remove("password");
 
-            $user = User::find(Auth::user()->id);
+           $user = User::find(Auth::user()->id);
 
-            //campos de usuario base
-            $user->name = $request->name;
-            if ($request->phone && $request->phone != "null") {
-                $user->phone = $request->phone;
-            }
-            $user->municipality_id = Municipality::where('name', '=', $request->municipality)->first()->id;
+           //campos de usuario base
+           $user->name = $request->name;
+           if ($request->phone && $request->phone != "null") {
+               $user->phone = $request->phone;
+           }
+           $user->municipality_id = Municipality::where('name', '=', $request->municipality)->first()->id;
 
-            // Guarda las imágenes si están presentes en la solicitud
-
-            if ($request->hasFile('avatar')) {
-                $image = $request->file('avatar');
-                Storage::disk('avatars')->putFileAs($user->username, $image, '/imagenPerfil.webp');
-                $user->avatar = env('APP_URL').Storage::url('avatars/'.$user->username. '/imagenPerfil.webp');
-            }else{
-                $user->avatar = "dafault";
-            }
-            if ($request->hasFile('banner')) {
-                $image = $request->file('banner');
-                Storage::disk('banners')->putFileAs($user->username, $image, '/imagenBanner.webp');
-                $user->banner = env('APP_URL').Storage::url('banners/'.$user->username. '/imagenBanner.webp');
-            }else{
-                $user->banner = "default";
-            }
-
+           // Guarda las imágenes si están presentes en la solicitud
+           
+           $numeroRandom = mt_rand(100, 9999999);
+           if ($request->hasFile('avatar')) {
+               $image = $request->file('avatar');
+               Storage::disk('avatars')->putFileAs($user->username, $image, '/imagenPerfil'.$numeroRandom.'.webp');
+               $user->avatar = env('APP_URL').Storage::url('avatars/'.$user->username. '/imagenPerfil'.$numeroRandom.'.webp');
+           }else{
+              if($request->avatar == null || $request->avatar == "null"){
+                   $user->avatar = "default";
+               }
+           }
+           if ($request->hasFile('banner')) {
+               $image = $request->file('banner');
+               Storage::disk('banners')->putFileAs($user->username, $image, '/imagenBanner'.$numeroRandom.'.webp');
+               $user->banner = env('APP_URL').Storage::url('banners/'.$user->username. '/imagenBanner'.$numeroRandom.'.webp');
+           }else{
+               if($request->banner == null || $request->banner == "null"){
+                   $user->banner = "default";
+               }
+           }
             if ($request->password) {
                 $pass1 = $request->password;
                 $pass2 = $request->password_confirmation;
