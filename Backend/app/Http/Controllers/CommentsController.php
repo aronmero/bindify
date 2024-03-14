@@ -10,6 +10,8 @@ use App\Models\Comment;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use App\Http\Controllers\APIDocumentationController;
 
 class CommentsController extends Controller
 {
@@ -19,23 +21,40 @@ class CommentsController extends Controller
         $this->middleware("can:editar comments")->only("store", "update", "destroy");
     }
     /**
-     * Store de un nuevo comentario.
-     *
-     * Esta función guarda un nuevo comentario en la base de datos.
-     *
-     * @param \Illuminate\Http\Request $request - La solicitud HTTP que contiene los datos del comentario.
-     *
-     * @return \Illuminate\Http\JsonResponse - Respuesta JSON que indica el éxito del almacenamiento del comentario.
-     *
-     * @response 201 {
-     *   "status": true,
-     *   "message": "Comentario almacenado exitosamente"
-     * }
-     *
-     * @response 400 {
-     *   "status": false,
-     *   "message": "Error al almacenar el comentario"
-     * }
+     * @OA\Post(
+     *     path="/comment",
+     *     summary="Store de un nuevo comentario.",
+     *     description="Esta función guarda un nuevo comentario en la base de datos.",
+     *     tags={"Comments"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="La solicitud HTTP que contiene los datos del comentario.",
+     *         @OA\JsonContent(
+     *             required={"post_id", "content"},
+     *             @OA\Property(property="post_id", type="integer", example=1),
+     *             @OA\Property(property="content", type="string", example="Este es un nuevo comentario.")
+     *         ),
+     *     ),
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\Response(
+     *         response=201,
+     *         description="Comentario almacenado exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Comentario almacenado exitosamente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error al almacenar el comentario.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error al almacenar el comentario")
+     *         )
+     *     )
+     * )
      */
     public function store(StoreCommentsRequest $request)
     {
@@ -63,34 +82,58 @@ class CommentsController extends Controller
         }
     }
 
-
-
     /**
-     * Muestra los comentarios relacionados con una publicación.
-     *
-     * Esta función obtiene y formatea los comentarios asociados con una publicación específica.
-     * Si no se encuentran comentarios para la publicación, devuelve un mensaje de error.
-     *
-     * @param string $id - El ID de la publicación para la que se desean obtener los comentarios.
-     *
-     * @return \Illuminate\Http\JsonResponse - Respuesta JSON que contiene los comentarios formateados.
-     *
-     * @response 200 {
-     *   "status": true,
-     *   "comentarios": [
-     *     {
-     *       "username": "nombre_de_usuario",
-     *       "content": "contenido_del_comentario",
-     *       "comment_id": "identificador_del_comentario"
-     *     },
-     *     ...
-     *   ]
-     * }
-     *
-     * @response 404 {
-     *   "status": false,
-     *   "message": "No se encontraron comentarios para esta publicación"
-     * }
+     * @OA\Get(
+     *     path="/comment/{id}",
+     *     summary="Muestra los comentarios relacionados con una publicación.",
+     *     description="Esta función obtiene y formatea los comentarios asociados con una publicación específica. Si no se encuentran comentarios para la publicación, devuelve un mensaje de error.",
+     *     tags={"Comments"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="El ID de la publicación para la que se desean obtener los comentarios.",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Comentarios obtenidos exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="comentarios",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="string", example="encrypted_comment_id"),
+     *                     @OA\Property(property="username", type="string", example="nombre_de_usuario"),
+     *                     @OA\Property(property="content", type="string", example="contenido_del_comentario"),
+     *                     @OA\Property(property="comment_creation", type="string", format="date-time", example="2022-03-15 10:30:00"),
+     *                     @OA\Property(property="avatar", type="string", example="avatar_url")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontraron comentarios para esta publicación.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="No se encontraron comentarios para esta publicación")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener los comentarios.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Publicación inexistente")
+     *         )
+     *     )
+     * )
      */
 
     public function show(string $id)
@@ -125,34 +168,72 @@ class CommentsController extends Controller
 
 
     /**
-     * Actualizar un comentario existente.
-     *
-     * Esta función busca un comentario por su ID y actualiza su contenido con los datos proporcionados en la solicitud.
-     *
-     * @param \Illuminate\Http\Request $request - La solicitud HTTP que contiene los datos para actualizar el comentario.
-     * @param int $id - El ID del comentario que se desea actualizar.
-     *
-     * @return \Illuminate\Http\JsonResponse - Respuesta JSON que indica el éxito o el fracaso de la actualización del comentario.
-     *
-     * @response 200 {
-     *   "status": true,
-     *   "message": "Comentario actualizado exitosamente"
-     * }
-     *
-     * @response 400 {
-     *   "status": false,
-     *   "message": "Error al editar el comentario (Algún dato de la solicitud no es válido)"
-     * }
-     *
-     * @response 403 {
-     *   "status": false,
-     *   "message": "Comentario no actualizado. No tienes permisos sobre este comentario"
-     * }
-     *
-     * @response 404 {
-     *   "status": false,
-     *   "message": "Comentario no encontrado"
-     * }
+     * @OA\Put(
+     *     path="/comment/{id}",
+     *     summary="Actualizar un comentario existente.",
+     *     description="Esta función busca un comentario por su ID y actualiza su contenido con los datos proporcionados en la solicitud.",
+     *     tags={"Comments"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="El ID del comentario que se desea actualizar.",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Datos para actualizar el comentario.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="content", type="string", example="Nuevo contenido del comentario")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Comentario actualizado exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Comentario actualizado exitosamente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error al editar el comentario (Algún dato de la solicitud no es válido).",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error al editar el comentario (Algún dato de la solicitud no es válido)")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Comentario no actualizado. No tienes permisos sobre este comentario.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Comentario no actualizado. No tienes permisos sobre este comentario.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Comentario no encontrado.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Comentario no encontrado")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Comentario inexistente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Comentario inexistente")
+     *         )
+     *     )
+     * )
      */
     public function update(UpdateCommentsRequest $request, string $id)
     {
@@ -197,33 +278,64 @@ class CommentsController extends Controller
 
 
     /**
-     * Elimina un comentario existente.
-     *
-     * Esta función busca un comentario por su ID y lo elimina de la base de datos.
-     *
-     * @param string $id - El ID del comentario que se desea eliminar.
-     *
-     * @return \Illuminate\Http\JsonResponse - Respuesta JSON que indica el éxito o el fracaso de la eliminación del comentario.
-     *
-     * @response 200 {
-     *   "status": true,
-     *   "message": "Comentario eliminado exitosamente"
-     * }
-     *
-     * @response 403 {
-     *   "status": false,
-     *   "message": "Comentario no eliminado. No tienes permisos sobre este comentario"
-     * }
-     *
-     * @response 404 {
-     *   "status": false,
-     *   "message": "Comentario no encontrado"
-     * }
-     *
-     * @response 400 {
-     *   "status": false,
-     *   "message": "Error al eliminar el comentario"
-     * }
+     * @OA\Delete(
+     *     path="/comment/{id}",
+     *     summary="Eliminar un comentario existente.",
+     *     description="Esta función busca un comentario por su ID y lo elimina de la base de datos.",
+     *     tags={"Comments"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="El ID del comentario que se desea eliminar.",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Comentario eliminado exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Comentario eliminado exitosamente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Comentario no eliminado. No tienes permisos sobre este comentario.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Comentario no eliminado. No tienes permisos sobre este comentario.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Comentario no encontrado.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Comentario no encontrado")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error al eliminar el comentario.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error al eliminar el comentario")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Comentario inexistente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Comentario inexistente")
+     *         )
+     *     )
+     * )
      */
 
     public function destroy(string $id)
@@ -262,43 +374,72 @@ class CommentsController extends Controller
     }
 
     /**
-     * Muestra los comentarios que son respuestas a otros comentarios.
-     *
-     * Esta función obtiene y formatea los comentarios asociados con un comentario específico.
-     * Si no se encuentran comentarios, devuelve un mensaje de error.
-     *
-     * @param string $id - El ID del comentario para la que se desean obtener las respuestas.
-     *
-     * @return \Illuminate\Http\JsonResponse - Respuesta JSON que contiene los comentarios formateados.
-     *
-     * @response 200 {
-     *   "status": true,
-     *   "comentarios": [
-     *     {
-     *       "username": "nombre_de_usuario",
-     *       "content": "contenido_del_comentario",
-     *       "comment_id": "identificador_del_comentario"
-     *     },
-     *     ...
-     *   ]
-     * }
-     *
-     * @response 404 {
-     *   "status": false,
-     *   "message": "No se encontraron respuestas para esta comentario"
-     * }
-     *
-     * @response 404 {
-     *   "status": false,
-     *   "message": "Comentario padre inexistente"
-     * }
-     *
-     * @response 400 {
-     *   "status": false,
-     *   "message": "Error al mostrar los comentarios"
-     * }
+     * @OA\Get(
+     *     path="/comment/{id}/replies",
+     *     summary="Muestra los comentarios que son respuestas a otros comentarios.",
+     *     description="Esta función obtiene y formatea los comentarios asociados con un comentario específico. Si no se encuentran comentarios, devuelve un mensaje de error.",
+     *     tags={"Comments"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="El ID del comentario para el que se desean obtener las respuestas.",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Comentarios obtenidos exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="comentarios", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="string", example="encrypted_comment_id"),
+     *                 @OA\Property(property="username", type="string", example="nombre_de_usuario"),
+     *                 @OA\Property(property="content", type="string", example="contenido_del_comentario"),
+     *                 @OA\Property(property="comment_creation", type="string", example="fecha_creacion_comentario"),
+     *                 @OA\Property(property="father_id", type="string", example="encrypted_father_comment_id"),
+     *                 @OA\Property(property="avatar", type="string", example="url_avatar_usuario")
+     *             ))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontraron respuestas para este comentario.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="No se encontraron respuestas para este comentario")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Comentario padre inexistente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Comentario padre inexistente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error al mostrar los comentarios.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error al mostrar los comentarios")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Comentario inexistente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Comentario inexistente")
+     *         )
+     *     )
+     * )
      */
-
     public function replies(string $id)
     {
         try {

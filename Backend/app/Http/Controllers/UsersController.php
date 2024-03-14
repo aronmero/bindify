@@ -239,6 +239,11 @@ class UsersController extends Controller
     public function update(UpdateUserRequest $request, string $username)
     {
         try {
+            // Elimina campos que no queremos actualizar
+            $request->request->remove("username");
+            $request->request->remove("phone");
+            $request->request->remove("email");
+            $request->request->remove("password");
 
             // Busca al usuario por su nombre de usuario
             $user = User::where("username", $username)->firstOrFail();
