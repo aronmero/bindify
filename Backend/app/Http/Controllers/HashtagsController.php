@@ -125,8 +125,8 @@ class HashtagsController extends Controller
     }
 
     /**
-     * @OA\Get(
-     *     path="/hashtag/populares",
+     * @OA\Post(
+     *     path="/hashtag/trending",
      *     summary="Obtiene los hashtags más populares",
      *     tags={"Hashtags"},
      *     @OA\Parameter(

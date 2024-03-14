@@ -25,7 +25,7 @@ class PostsController extends Controller
      *     summary="Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.",
      *     description="Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.",
      *     operationId="getPublications",
-     *     tags={"Publicaciones"},
+     *     tags={"Posts"},
      *     security={ {"bearerAuth": {}} },
      *     @OA\Response(
      *         response=200,
@@ -179,7 +179,7 @@ class PostsController extends Controller
      *     summary="Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.",
      *     description="Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.",
      *     operationId="getHomeTodos",
-     *     tags={"Publicaciones"},
+     *     tags={"Posts"},
      *     security={ {"bearerAuth": {}} },
      *     @OA\Response(
      *         response=200,
@@ -379,7 +379,7 @@ class PostsController extends Controller
      *     summary="Muestra una lista de publicaciones de los usuarios que sigue el usuario actual.",
      *     description="Este método devuelve una lista de publicaciones de los usuarios que sigue el usuario autenticado.",
      *     operationId="getHomePosts",
-     *     tags={"Publicaciones"},
+     *     tags={"Posts"},
      *     security={ {"bearerAuth": {}} },
      *     @OA\Response(
      *         response=200,
@@ -553,7 +553,7 @@ class PostsController extends Controller
      *     summary="Crea una nueva publicación en la plataforma.",
      *     description="Este método permite al usuario autenticado crear una nueva publicación en la plataforma, con los datos proporcionados en la solicitud.",
      *     operationId="createPost",
-     *     tags={"Publicaciones"},
+     *     tags={"Posts"},
      *     security={ {"bearerAuth": {}} },
      *     @OA\RequestBody(
      *         required=true,
@@ -722,7 +722,7 @@ class PostsController extends Controller
      *     summary="Muestra los detalles de una publicación específica junto con los comentarios y usuarios asociados.",
      *     description="Este método recupera información detallada sobre una publicación específica, incluyendo su imagen, título, descripción, tipo, fechas, estado, ubicación, fecha de creación y hashtags asociados. Además, obtiene hasta 5 comentarios asociados con la publicación, junto con los nombres de usuario, avatares e IDs de los comentaristas. También recupera información sobre los usuarios que son propietarios de la publicación, incluyendo sus nombres, nombres de usuario, avatares e IDs.",
      *     operationId="getPostDetails",
-     *     tags={"Publicaciones"},
+     *     tags={"Posts"},
      *     security={ {"bearerAuth": {}} },
      *     @OA\Parameter(
      *         name="id",
@@ -963,7 +963,7 @@ class PostsController extends Controller
      *     summary="Actualiza la información de una publicación existente.",
      *     description="Este método permite al usuario autenticado actualizar la información de una publicación existente proporcionando los datos actualizados en la solicitud.",
      *     operationId="updatePost",
-     *     tags={"Publicaciones"},
+     *     tags={"Posts"},
      *     security={ {"bearerAuth": {}} },
      *     @OA\Parameter(
      *         name="id",
@@ -1136,7 +1136,7 @@ class PostsController extends Controller
      *     summary="Elimina una publicación existente de forma lógica.",
      *     description="Este método permite al usuario autenticado eliminar una publicación existente de forma lógica, marcándola como inactiva en lugar de eliminarla físicamente de la base de datos.",
      *     operationId="deletePost",
-     *     tags={"Publicaciones"},
+     *     tags={"Posts"},
      *     security={ {"bearerAuth": {}} },
      *     @OA\Parameter(
      *         name="id",

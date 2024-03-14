@@ -14,7 +14,7 @@ class CategoryController extends Controller
      *     path="/category",
      *     summary="Muestra una lista de todas las categorías.",
      *     description="Este método devuelve una lista de todas las categorías. Si se encuentran categorías, devuelve una respuesta JSON con los datos de las categorías y un estado 200. Si no se encuentran categorías, devuelve una respuesta JSON con un mensaje de error y un estado 404. Si ocurre algún otro error durante el proceso, devuelve una respuesta JSON con un mensaje de error y un estado 500.",
-     *     tags={"Categorias"},
+     *     tags={"Category"},
      *     @OA\Response(
      *         response=200,
      *         description="Lista de categorías obtenida exitosamente.",
