@@ -219,12 +219,21 @@ class AuthController extends Controller
         $token = $user->createtoken('my_app_token')->plainTextToken;
         $tipo = $user->getRoleNames();
 
-        $response = [
+      /*  $response = [
             'status' => true,
             'message' => 'Usuario creado correctamente',
             'user' => $user,
             'token' => $token,
             'tipo' => $tipo,
+        ];*/
+
+        $response = [
+            'status' => true,
+            'message' => [
+                'username' => $user->username,
+                'token' => $token,
+                'tipo' => $tipo[0]
+            ]
         ];
 
 
