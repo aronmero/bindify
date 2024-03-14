@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Scripts\Utils;
 use App\Models\Comment;
-use App\Models\Follower;
 use App\Models\Notification;
 use App\Models\Post;
 use App\Models\Review;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
 
 class NotificationsController extends Controller
 {
@@ -59,11 +57,12 @@ class NotificationsController extends Controller
                         $comment = Comment::where('id', '=', $notificacion->element_id)->first();
                         $post = $comment->post;
 
-                        $notificacion->id = Crypt::encryptString($notificacion->id);
+                        $encrypted_id = Utils::Crypt(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
 
                         $notificacion->username = $comment->user->username;
                         $notificacion->avatar = $comment->user->avatar;
-                        $notificacion->id_link = Crypt::encryptString($post->id);
+                        $notificacion->id_link = Utils::Crypt($post->id);
                         $notificacion->type = 'Comment';
 
                         break;
@@ -73,11 +72,12 @@ class NotificationsController extends Controller
 
                         $review = Review::where('id', '=', $notificacion->element_id)->first();
 
-                        $notificacion->id = Crypt::encryptString($notificacion->id);
+                        $encrypted_id = Utils::Crypt(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
 
                         $notificacion->username = $review->user->username;
                         $notificacion->avatar = $review->user->avatar;
-                        $notificacion->id_link = Crypt::encryptString($review->id);
+                        $notificacion->id_link = Utils::Crypt($review->id);
                         $notificacion->type = 'Review';
 
                         break;
@@ -87,7 +87,8 @@ class NotificationsController extends Controller
 
                         $user = User::where('id', '=', $notificacion->element_id)->first();
 
-                        $notificacion->id = Crypt::encryptString($notificacion->id);
+                        $encrypted_id = Utils::Crypt(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
 
                         $notificacion->username = $user->username;
                         $notificacion->avatar = $user->avatar;
@@ -100,12 +101,15 @@ class NotificationsController extends Controller
 
                         $post = Post::where('id', '=', $notificacion->element_id)->first();
 
-                        $notificacion->id = Crypt::encryptString($notificacion->id);
+                        $encrypted_id = Utils::Crypt(strval($notificacion->id));
+                        $notificacion->id_noti = $encrypted_id;
 
                         $notificacion->username = $post->users->first()->username;
                         $notificacion->avatar = $post->users->first()->avatar;
-                        $notificacion->id_link = Crypt::encryptString($post->id);
+                        $notificacion->id_link = Utils::Crypt($post->id);
                         $notificacion->type = 'Post';
+                        // dump($notificacion->id);
+
 
                         break;
                 }
@@ -158,7 +162,27 @@ class NotificationsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+
+            $id = Utils::deCrypt($id);
+            $notificacion = Notification::where('id', $id)->firstOrFail();
+            $notificacion->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Notificación eliminada',
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => "Notificación no encontrada",
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => "Error: " . $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -195,16 +219,8 @@ class NotificationsController extends Controller
     {
         try {
 
-            try {
-                $id = Crypt::decryptString($id);
-            } catch (DecryptException $e) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Error de Decrypt',
-                ], 500);
-            }
-
-            $notificacion = Notification::where('id', $id)->firstOrFail()->favorito;
+            $id = Utils::deCrypt($id);
+            $notificacion = Notification::where('id', $id)->firstOrFail();
 
             if ($notificacion->seen) {
                 return response()->json([
@@ -212,12 +228,14 @@ class NotificationsController extends Controller
                     'message' => 'Notificación ya revisada',
                 ], 403);
             }
+
+            $notificacion->seen = true;
+            $notificacion->save();
+
             return response()->json([
                 'status' => true,
                 'message' => 'Notificación revisada',
             ], 200);
-
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'status' => false,

@@ -1,13 +1,13 @@
 <script setup>
 import { ref, onBeforeUnmount } from 'vue';
 import Comentario from '../widgets/ComentarioHome.vue';
-//import { comentarios_por_post } from './../mocks/comentarios';
-import { encontrar_usuario_por_id } from './../mocks/users';
+
 import BackSVG from '@public/assets/icons/forward.svg';
 import EnviarSVG from '@public/assets/icons/forward.svg';
 //import { obtener_comentarios_post, agregar_comentario_post } from '@/Api/home/comentarios'
 import { getCommentsOfPost, storeCommentsOfPost } from "@/Api/publicacion/comentarios.js";
-import { obtener_datos_usuario } from '../../../Api/home/users';
+import { obtener_datos_usuario } from '@/Api/home/users';
+import { obtener_comentarios, guardar_comentario } from '@/Api/home/comentarios';
 
 /**
  * Define props
@@ -41,10 +41,12 @@ const user_session = JSON.parse(sessionStorage.getItem("usuario"))
 const user_req = await obtener_datos_usuario(user_session.usuario.username);
 
 /** 
- * Corrección del 13/03 por David, por cambiar el tipo de respuesta del Backend, devuelve ahora un array en vez de un dato concreto
+ * Corrección del 13/03 por David, por cambiar el tipo de respuesta del Backend, devuelve ahora un array en vez de un dato concreto, 
+ * Han estado haciendo cambios, así que hago la comprobación para que se ajuste dependiendo de la versión
+ * 
  * */
 
-const user = user_req.data;
+const user =  (!Array.isArray(user_req.data)) ? user_req.data : user_req.data[0];
 
 let comentarios = ref(null);
 const id_post = props.post.post_id;
@@ -52,8 +54,7 @@ const id_post = props.post.post_id;
  * Obtiene el comentario por la id del post
  */
 const apiCall = async () => {
-    await getCommentsOfPost(id_post).then(data => comentarios.value = data.comentarios)
-   // console.log(comentarios.value);
+    await obtener_comentarios(id_post).then(data => comentarios.value = data.comentarios)
 }
 apiCall();
 
@@ -93,12 +94,13 @@ onBeforeUnmount(() => {
 * Enviar el comentario
 */
 const enviarComentarioPorSubmit = async (post_id, event) => {
+    /* Si pulsa enter */
     if (event.key == 'Enter') {
         let texto = event.target.value;
         if (!posteado.value) {
             if (texto != "") {
                 const body = JSON.stringify({ "content": `${texto}`, "post_id": post_id })
-                const response = await storeCommentsOfPost(body);
+                const response = await guardar_comentario(body);
 
                 if (response.status) {
                     refrescarPosicion()
@@ -113,16 +115,14 @@ const enviarComentarioPorSubmit = async (post_id, event) => {
 };
 
 const enviarComentarioPorClick = async (post_id, texto) => {
-
+    /* si no ha posteado previamente */
     if (!posteado.value && texto != "") {
         const body = JSON.stringify({ "content": texto, "post_id": post_id })
-        const response = await storeCommentsOfPost(body)
-
+        const response = await guardar_comentario(body)
         if (response.status) {
             refrescarPosicion()
         }
     }
-
     antiSpamFunction();
     apiCall();
 };
@@ -158,7 +158,7 @@ document.body.style.overflow = "hidden";
 </script>
 
 <template>
-    <Suspense>
+
         <div ref="modal" :id="`comentarios_${post.post_id}`" class="screen-modal flex flex-col items-center py-[50px]">
             <!-- El wrapper para dar forma al contenedor del centro -->
             <div
@@ -198,7 +198,6 @@ document.body.style.overflow = "hidden";
                 </div>
             </div>
         </div>
-    </Suspense>
 </template>
 
 <style scoped lang="scss">

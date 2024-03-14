@@ -20,3 +20,23 @@ export const obtener_datos_usuario = async (username) => {
         return data;
 };
 
+/**
+ * Devuelve el resultado de los datos de los seguidos del usuario autenticado
+ * @date 3/12/2024 - 6:21:50 PM
+ *
+ * @async
+ * @param {*} username - nombre de usuario
+ * @returns {unknown}
+ */
+ export const obtener_followers = async () => {
+        const options = genOptionsWithoutBody('GET');
+        const user = JSON.parse(sessionStorage.getItem("usuario"));
+        const token = user.usuario.token;
+    
+        let data = await fetch(`${urlApi}/api/follower`, options)
+        .then(res => res.json())
+        .then(res => res);
+        
+        return data;
+};
+

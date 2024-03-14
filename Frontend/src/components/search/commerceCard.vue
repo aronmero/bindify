@@ -10,7 +10,7 @@
     import { setRandomGradient } from '@/utils/randomGradient.js';
 
     const redirect = (username) => {
-        router.push(`perfil/${username}/comercio`);
+        router.push(`perfil/${username}`);
     }
  
 </script>
@@ -24,7 +24,7 @@
                 <h1 class="font-medium text-[1.3em] md:text-[1.7em]">{{ commerce.username }}</h1>
                 <div class="flex items-center mt-1">
                     <img :src="starSVG" alt="star" class="size-5 md:size-7" v-if="commerce.avg >0" />
-                    <p class="font-bold text-[0.8em] md:text-[1.4em]" v-if="commerce.avg >0">{{ commerce.avg }}</p>
+                    <p class="font-bold text-[0.8em] md:text-[1.4em]" v-if="commerce.avg >0">{{ commerce.avg.toFixed(2) }}</p>
                 </div>
                 <div v-if="commerce.review_count === 0">
                     Sin calificar

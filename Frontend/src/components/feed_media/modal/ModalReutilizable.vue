@@ -1,6 +1,6 @@
 <script setup>
 import router from '../../../router';
-import { deleteCommentsOfPost } from "@/Api/publicacion/comentarios.js";
+import { borrar_comentario } from '../../../Api/home/comentarios';
 
 const props = defineProps({
     info: Object,
@@ -10,8 +10,6 @@ const props = defineProps({
 });
 const user = JSON.parse(sessionStorage.getItem("usuario"));
 const username = user.usuario.username;
-//console.log(username)
-//console.log(props.info.username)
 
 /**
  * Elimina la opcion de borrar comentario si no eres el propietario
@@ -22,13 +20,13 @@ if (props.info.username != username && props.options[0].name == "Borrar Comentar
 
 async function deleteComentario(id) {
     console.log(id)
-    const response = await deleteCommentsOfPost(id);
+    const response = await borrar_comentario(id);
     console.log(response)
-    if(response.status){
+    if (response.status) {
         router.go();
     }
 }
-//console.log(props.info.id)
+
 /**
  * Recoge estilos del padre
  * */

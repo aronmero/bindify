@@ -7,9 +7,18 @@
     import { filtros } from './calendario/mocks/filtros';
     import { exportar_dia } from './calendario/helpers/exportardia';
     import { obtener_posts_municipios, obtener_municipios } from '@/Api/home/municipios'
+    import router from '@/router/index';
     
     const hoy = new Date();
     let dia = exportar_dia(hoy);
+
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const query = searchParams.get('q');
+
+    
+    if(query) filtrar_por_fecha(query);
+
 
     const posts_request = await obtener_posts_municipios();
     const posts = posts_request.data;
@@ -19,14 +28,14 @@
     //console.log(posts);
   
     const filtrar_por_fecha = (date) => {
-        //console.log(date.getLocalString());
         let cards = Array.from(document.getElementsByClassName('card'));
         cards.forEach(card => {
             card.style.display = "none";
         });
     }
 
-    filtrar_por_fecha(hoy);
+    if(query != undefined) filtrar_por_fecha(hoy);
+
 </script>
 <template>
     <div class="flexible flex flex-col ">
