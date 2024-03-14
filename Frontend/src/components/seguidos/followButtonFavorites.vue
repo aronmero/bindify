@@ -14,18 +14,27 @@
     const props = defineProps({
         user: Object
     })
-    async function responseCatcherFollow() {
-    // console.log(userData.value.username);
-    respuesta.value = await followUser(
+//     async function responseCatcherFollow() {
+//     // console.log(userData.value.username);
+//     respuesta.value = await followUser(
+//     "post",
+//     `/api/follow/${props.user.username}`
+//   );
+//   console.log(respuesta.value);
+// }
+
+async function responseCatcherFavoritos() {
+  
+  respuesta.value = await aniadirFavorito(
     "post",
-    `/api/follow/${props.user.username}`
+    `/api/favorite/${props.user.username}`
   );
   console.log(respuesta.value);
 }
 
     function unfollow(){
         console.log("unfollow " + props.user.username)
-        responseCatcherFollow("get", "/api/follows");
+        responseCatcherFavoritos("get", "/api/favorite");
     }
 
 
@@ -46,7 +55,7 @@
     </button> -->
 
     <button :class="[seguido ? ' bg-[#828181]' : 'bg-[#EB5959]', 'px-2', 'p-1', 'rounded-md', 'font-semibold', 'text-white', 'text-sm', 'rounded-md', 'transition-transform', 'duration-100', 'hover:scale-110']" @click="toogleButton()">
-        {{ seguido ? "Siguiendo" : "Seguir"}}
+        {{ seguido ? "En Favoritos" : "Add a Favoritos"}}
     </button>
 </template>
 

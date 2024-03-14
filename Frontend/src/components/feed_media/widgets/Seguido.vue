@@ -4,7 +4,9 @@
         user: Object
     });
 
-    
+    if(props.user.avatar=="default"){
+        props.user.avatar="public/img/placeholderPerfil.webp";
+}
 </script>
 <template>
     <div @click="router.push(`perfil/${props.user.username}`)" class="follower flex flex-col items-center mr-[10px] h-[100%] ">

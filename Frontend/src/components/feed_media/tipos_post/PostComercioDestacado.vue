@@ -34,7 +34,9 @@ const props = defineProps({
     tipo: String,
     esSeguido: Boolean
 });
-
+if(props.post.avatar=="default"){
+        props.post.avatar="public/img/placeholderPerfil.webp";
+}
 
 const post = ref(props.post);
 const post_reference = ref({dataset: {favorito:false}});

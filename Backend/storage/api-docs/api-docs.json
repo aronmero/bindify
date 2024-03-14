@@ -1247,13 +1247,13 @@
                     "Followers"
                 ],
                 "summary": "Añade como favorito a un usuario seguido.",
-                "description": "Este método permite al usuario autenticado seguir o dejar de seguir a otro usuario especificado por su username.",
+                "description": "Este método permite al usuario autenticado añadir a favoritos a un usuario especificado por su username.",
                 "operationId": "73616c07f5f48b4635a80be74407a68d",
                 "parameters": [
                     {
                         "name": "username",
                         "in": "path",
-                        "description": "El username del usuario a seguir o dejar de seguir.",
+                        "description": "El username del usuario a añadir a favorito.",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1490,6 +1490,10 @@
                                                     "name": {
                                                         "type": "string",
                                                         "example": "hashtag1"
+                                                    },
+                                                    "hashtag_count": {
+                                                        "type": "integer",
+                                                        "example": "4"
                                                     }
                                                 },
                                                 "type": "object"
@@ -1832,7 +1836,7 @@
                                                         "description": "Descripción de la publicación",
                                                         "type": "string"
                                                     },
-                                                    "name": {
+                                                    "post_type": {
                                                         "description": "Nombre del tipo de publicación",
                                                         "type": "string"
                                                     },

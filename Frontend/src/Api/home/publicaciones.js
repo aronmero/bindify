@@ -47,22 +47,6 @@ export async function obtener_tipo_comercio(comercio_username) {
     return data;
 
 }
-
-
-export async function obtener_post(post_id) {
-    const options = genOptionsWithoutBody('GET');
-    const user = JSON.parse(sessionStorage.getItem("usuario"));
-    const token = user.usuario.token;
-    console.log(post_id)
-
-    let data = await fetch(`${urlApi}/api/post/${post_id}`, options)
-        .then(res => res.json())
-        .then(res => res);
-
-    return data;
-
-}
-
 /**
  * UPDATE DE POST
  * @date 3/14/2024 - 2:57:22 PM
@@ -116,4 +100,3 @@ export async function actualizar_posts(post_id, body) {
 
     return data;
 }
-

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\APIDocumentationController;
+
 class PostsController extends Controller
 {
 
@@ -195,66 +196,18 @@ class PostsController extends Controller
      *                 property="data",
      *                 type="array",
      *                 @OA\Items(
-     *                     @OA\Property(
-     *                         property="post_id",
-     *                         type="string",
-     *                         description="ID de la publicación"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="image",
-     *                         type="string",
-     *                         description="Imagen de la publicación"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="title",
-     *                         type="string",
-     *                         description="Título de la publicación"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="description",
-     *                         type="string",
-     *                         description="Descripción de la publicación"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="name",
-     *                         type="string",
-     *                         description="Nombre del tipo de publicación"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="start_date",
-     *                         type="string",
-     *                         description="Fecha de inicio de la publicación"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="end_date",
-     *                         type="string",
-     *                         description="Fecha de finalización de la publicación"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="created_at",
-     *                         type="string",
-     *                         description="Fecha de creación de la publicación"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="username",
-     *                         type="string",
-     *                         description="Nombre de usuario"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="user_id",
-     *                         type="string",
-     *                         description="ID del usuario"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="avatar",
-     *                         type="string",
-     *                         description="Avatar del usuario"
-     *                     ),
-     *                     @OA\Property(
-     *                         property="comment_count",
-     *                         type="integer",
-     *                         description="Número de comentarios en la publicación"
-     *                     ),
+     *                     @OA\Property(property="post_id", type="string", description="ID de la publicación"),
+     *                     @OA\Property(property="image", type="string", description="Imagen de la publicación"),
+     *                     @OA\Property(property="title", type="string", description="Título de la publicación"),
+     *                     @OA\Property(property="description", type="string", description="Descripción de la publicación"),
+     *                     @OA\Property(property="post_type", type="string", description="Nombre del tipo de publicación"),
+     *                     @OA\Property(property="start_date", type="string", description="Fecha de inicio de la publicación"),
+     *                     @OA\Property(property="end_date", type="string", description="Fecha de finalización de la publicación"),
+     *                     @OA\Property(property="created_at", type="string", description="Fecha de creación de la publicación"),
+     *                     @OA\Property(property="username", type="string", description="Nombre de usuario"),
+     *                     @OA\Property(property="user_id", type="string", description="ID del usuario"),
+     *                     @OA\Property(property="avatar", type="string", description="Avatar del usuario"),
+     *                     @OA\Property(property="comment_count", type="integer", description="Número de comentarios en la publicación"),
      *                     @OA\Property(
      *                         property="hashtags",
      *                         type="array",
@@ -264,11 +217,7 @@ class PostsController extends Controller
      *                         ),
      *                         description="Lista de hashtags asociados a la publicación"
      *                     ),
-     *                     @OA\Property(
-     *                         property="userRol",
-     *                         type="string",
-     *                         description="Rol del usuario"
-     *                     )
+     *                     @OA\Property(property="userRol", type="string", description="Rol del usuario")
      *                 )
      *             )
      *         )
@@ -678,12 +627,15 @@ class PostsController extends Controller
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp'.$post->id);
-                $rutaFotoPost = env('APP_URL').Storage::url('posts/'.$user->username . '/imagenPost.webp'.$post->id);
+                Storage::disk('public')->putFileAs('posts/' . $user->username, $image, '/imagenPost.webp' . $post->id);
+                $rutaFotoPost = env('APP_URL') . Storage::url('posts/' . $user->username . '/imagenPost.webp' . $post->id);
                 $post->image = $rutaFotoPost;
                 $post->save();
+            }else{
+                $post->image = "default";
+                $post->save();
             }
-            
+
             try {
                 $post->users()->attach($user->id);
             } catch (\Throwable $th) {
@@ -1057,6 +1009,8 @@ class PostsController extends Controller
                     $image = $request->file('image');
                     Storage::disk('posts')->putFileAs($user->username, $image, '/imagenPost.webp'. $post->id);
                     $rutaFotoPost = env('APP_URL').Storage::url('posts/'.$user->username . '/imagenPost.webp'. $post->id);
+                }else{
+                    $rutaFotoPost = "default";
                 }
 
                 if ($request->active) {

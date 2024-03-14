@@ -17,7 +17,9 @@ const props = defineProps({
 });
 
 const comentario = props.comentario;
-
+if(comentario.avatar=="default"){
+    comentario.avatar="/public/img/placeholderPerfil.webp";
+}
 const user = comentario.username;
 
 
@@ -74,7 +76,7 @@ const abrirModal = () => {
         <!-- Header del comentario -->
         <div class=" header-comentario flex ">
             <!-- Avatar del usuario -->
-            <img v-if="comentario.avatar" class=" mr-[10px] " :src="comentario.avatar" alt="">
+            <img v-if="props.comentario.avatar" class=" mr-[10px] " :src="props.comentario.avatar" alt="">
             <!-- Textos del usuario -->
             <div class="textos m-l flex flex-col">
                 <b v-if="user != null"> {{ user }}</b>
