@@ -22,12 +22,14 @@ import TipoEvento from '@public/assets/icons/tipo_evento.svg'
 
 import { share } from '@/components/feed_media/helpers/share.js';
 
+
 import { datetranslatesql } from './../helpers/datetranslate.js'
 import router from '../../../router';
 
 import { en_favoritos, obtener_favoritos, purgarFavoritos } from '../helpers/favoritos';
-import ComentarioTiny from '../widgets/ComentarioTiny.vue';
+
 import ComentariosLanding from '../widgets/ComentariosLanding.vue';
+import BotonSpeaker from '../widgets/BotonSpeaker.vue';
 
 //purgarFavoritos();
 
@@ -177,12 +179,15 @@ const abrirComentariosLanding = () => {
             <h1>
                 <img :src="IconoTipo" alt="icono-evento" loading="lazy">
                 {{ post.title }}
+                <BotonSpeaker :texto="post.title" />
             </h1>
             <span>
                 {{ post.description }} 
                 <a :href="`busqueda/q=${hashtag}`" v-if="post.hashtags.length != 0" v-for="hashtag in post.hashtags" class="mr-[3px] font-bold">#{{hashtag}}</a>
+                <BotonSpeaker :texto="post.description" />
             </span>
 
+            <!-- Comentarios en landing -->
             <div class=" comentarios m-[20px_0px] flex flex-col">
                 <b class=" flex ">Comentarios 
                     <button  class="shadow-sm" @click="abrirComentariosLanding" > 
@@ -192,7 +197,6 @@ const abrirComentariosLanding = () => {
                 </b>
                 <ComentariosLanding v-if="comentariosPadre" :post="post"/>
             </div>
-
         </div>
 
         <!-- Modal de Ver Más -->
@@ -204,9 +208,9 @@ const abrirComentariosLanding = () => {
                 Ver perfil
             </button>
             <!-- Botón ver reseñas comercio -->
-            <button :class="`${estilos.modal_button} m-2 `">
+            <button @click="redirect(`resenia`)" :class="`${estilos.modal_button} m-2 `">
                 <img class="w-[30px] h-[30px]  mr-3 " :src="StarSVG" loading="lazy" />
-                Reseñas
+                Reseñar
             </button>
         </div>
     </article>

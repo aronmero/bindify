@@ -115,7 +115,7 @@ const { stop } = useIntersectionObserver(post_reference,
         >
         </PostAyuntamiento>
         <!-- El modal de comentarios -->
-        <!-- <Comentarios v-if="comentariosVisibles" :post="post" :handler="abrirComentarios" /> -->
+         <Comentarios v-if="comentariosVisibles" :post="post" :handler="abrirComentarios" /> 
     </div>
 </template>
 

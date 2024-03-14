@@ -39,8 +39,6 @@ const chat_input = ref(null);
 const user_session = JSON.parse(sessionStorage.getItem("usuario"))
 const user_req = await obtener_datos_usuario(user_session.usuario.username);
 
-
-
 /** 
  * Corrección del 13/03 por David, por cambiar el tipo de respuesta del Backend, devuelve ahora un array en vez de un dato concreto, 
  * Han estado haciendo cambios, así que hago la comprobación para que se ajuste dependiendo de la versión
@@ -55,7 +53,6 @@ let comentarios_req = await obtener_comentarios(post.post_id);
 comentarios.value = comentarios_req.comentarios;
 
 let interval;
-
 
 /**
  * Refresca la posición del modal de comentarios
@@ -142,10 +139,8 @@ const antiSpamFunction = () => {
     <!-- El listado de comentarios -->
     <div ref="comentario_handler"
         class="comentarios  max-h-[500px]    overflow-y-scroll">
-        <template v-if="comentarios != null">
             <ComentarioTiny v-if="comentarios.length >= 1" v-for="comentario in comentarios" :comentario="comentario" /> 
             <ComentarioTiny v-else :comentario="{ content: 'No hay comentarios, ¡se el primero!' }" />
-        </template>
     </div>
 
     <!-- Formulario para enviar comentario -->

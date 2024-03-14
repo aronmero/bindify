@@ -7,6 +7,10 @@ import StarSVG from '@public/assets/icons/star.svg';
 
 import ShareSVG from '@public/assets/icons/share.svg';
 import ChatSVG from '@public/assets/icons/chat.svg';
+import DownSVG from '@public/assets/icons/down.svg';
+
+import UpSVG from '@public/assets/icons/up.svg';
+
 import BookmarkEmptySVG from '@public/assets/icons/bookmark_empty.png'
 import BookmarkSVG from '@public/assets/icons/bookmark.png';
 
@@ -18,6 +22,8 @@ import TipoEvento from '@public/assets/icons/tipo_evento.svg'
 
 import { share } from '@/components/feed_media/helpers/share.js';
 
+import ComentariosLanding from '../widgets/ComentariosLanding.vue';
+import BotonSpeaker from '../widgets/BotonSpeaker.vue';
 
 import router from '../../../router';
 
@@ -79,6 +85,18 @@ const aniadir_favorito = (item) => {
     localStorage.setItem("favoritos", JSON.stringify(favoritos.value));
 }
 
+const comentariosPadre = ref(false);
+
+
+const abrirComentariosLanding = () => {
+    if(!comentariosPadre.value) {
+        comentariosPadre.value = true;
+    } else {
+        comentariosPadre.value = false;
+    }
+
+}
+
 </script>
 <template>
     <article :class="` post ${estilos.post} relative`" ref="post_reference" :data-start_date="post.start_date"
@@ -138,13 +156,29 @@ const aniadir_favorito = (item) => {
 
         </div>
 
-        <!-- Contenido del Post -->
-        <div class="information">
+         <!-- Contenido del Post -->
+         <div class="information ">
             <h1>
                 <img :src="IconoTipo" alt="icono-evento" loading="lazy">
                 {{ post.title }}
+                <BotonSpeaker :texto="post.title" />
             </h1>
-            <span>{{ post.description }}</span>
+            <span>
+                {{ post.description }} 
+                <a :href="`busqueda/q=${hashtag}`" v-if="post.hashtags.length != 0" v-for="hashtag in post.hashtags" class="mr-[3px] font-bold">#{{hashtag}}</a>
+                <BotonSpeaker :texto="post.description" />
+            </span>
+
+            <!-- Comentarios en landing -->
+            <div class=" comentarios m-[20px_0px] flex flex-col">
+                <b class=" flex ">Comentarios 
+                    <button  class="shadow-sm" @click="abrirComentariosLanding" > 
+                        <img class="shadow-none" v-if="!comentariosPadre" :src="DownSVG" alt="">
+                        <img class="shadow-none" v-if="comentariosPadre" :src="UpSVG" alt="">
+                    </button>
+                </b>
+                <ComentariosLanding v-if="comentariosPadre" :post="post"/>
+            </div>
         </div>
 
         <!-- Modal de Evento Institucional -->
