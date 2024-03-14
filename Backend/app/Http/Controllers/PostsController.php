@@ -13,12 +13,9 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Http\Controllers\APIDocumentationController;
 
-/**
- * @OA\Info(title= "API Posts", version="1.0")
- * 
- * @OA\Server(url="http://127.0.0.1:8000/api")
- */
+
 class PostsController extends Controller
 {
 

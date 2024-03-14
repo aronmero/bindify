@@ -1,15 +1,97 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API Posts",
+        "title": "API Proyecto Final",
+        "description": "Documentación de la API para el proyecto final",
         "version": "1.0"
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000/api"
+            "url": "http://127.0.0.1:8000/api",
+            "description": "API Server"
         }
     ],
     "paths": {
+        "/municipality": {
+            "get": {
+                "tags": [
+                    "Municipios"
+                ],
+                "summary": "Muestra una lista de los municipios.",
+                "description": "Este método devuelve una lista de todos los municipios. Si se encuentran municipios, devuelve una respuesta JSON con los datos de los municipios y un estado 200. Si no se encuentran municipios, devuelve una respuesta JSON con un mensaje de error y un estado 404. Si ocurre algún otro error durante el proceso, devuelve una respuesta JSON con un mensaje de error y un estado 500.",
+                "operationId": "getMunicipalities",
+                "responses": {
+                    "200": {
+                        "description": "Lista de municipios recuperada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "name": {
+                                                        "description": "Nombre del municipio",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontró ninguna categoría",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No se encontró ninguna categoría"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Hubo un problema al obtener las categorías",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Hubo un problema al obtener los municipios: mensaje_de_error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/home_calendario": {
             "get": {
                 "tags": [
