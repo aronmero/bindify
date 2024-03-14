@@ -1,19 +1,26 @@
 <script setup>
 import { onMounted, ref } from "vue";
 
-import StarSVG from "@public/assets/icons/star.svg";
+import DeleteSVG from "@public/assets/icons/delete.svg";
+import EditSVG from "@public/assets/icons/edit_pen.svg";
+import DetallesSVG from "@public/assets/icons/eye.svg";
 import HeartSVG from "@public/assets/icons/like.svg";
 import ShareSVG from "@public/assets/icons/share.svg";
 import BookmarkSVG from "@public/assets/icons/bookmark.png";
 import MoreSVG from "@public/assets/icons/ellipsis.svg";
 import UserSVG from "@public/assets/icons/user.svg";
-
+import { borrarPost } from "@/Api/perfiles/perfil.js";
 import TipoOferta from "@public/assets/icons/tipo_oferta.svg";
+import { setDefaultImgs } from "@/components/perfiles/helpers/defaultImgs";
 import TipoEvento from "@public/assets/icons/tipo_evento.svg";
 const userData = JSON.parse(sessionStorage.getItem("userData"));
+console.log(userData);
+const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
+userData.userData[0] = setDefaultImgs(userData.userData[0]);
 console.log(userData.userData[0]);
 import { datetranslate } from "@/components/feed_media/helpers/datetranslate.js";
 import router from "@/router/index.js";
+import { RouterLink } from "vue-router";
 const props = defineProps({
   post: Object,
 });
@@ -54,8 +61,26 @@ const redirect = (url) => {
 /** Agregué que se listaran ya los tipos */
 const tipo = props.post.name;
 let IconoTipo = "";
-if (tipo == 'Post') IconoTipo = TipoOferta;
-if (tipo == 'Evento') IconoTipo = TipoEvento;
+if (tipo == "Post") IconoTipo = TipoOferta;
+if (tipo == "Evento") IconoTipo = TipoEvento;
+
+function editarPost(evento) {
+  console.log(props.post);
+  sessionStorage.setItem("postData", JSON.stringify({ postData: props.post }));
+  console.log(JSON.parse(sessionStorage.getItem("postData")));
+  router.push(`/post/${props.post.post_id}/editar`);
+}
+let response = ref(null);
+async function responseCatcher(metodo, subRuta) {
+  response.value = await borrarPost(metodo, subRuta);
+  console.log(response.value);
+  router.go();
+}
+function clickBorrarPost(evento) {
+  if (confirm("Estas seguro de que quieres borrar esta publicación ?")) {
+    responseCatcher("delete", `/api/post/${props.post.post_id}`);
+  }
+}
 </script>
 
 <template>
@@ -85,15 +110,15 @@ if (tipo == 'Evento') IconoTipo = TipoEvento;
       class="post-content w-[100%] h-[400px] rounded-2xl bg-slate-400 overflow-hidden mt-5"
     >
       <img
-        @click="redirect(`evento/${post.id}`)"
+        @click="redirect(`/post/${post.post_id}`)"
         class="cursor-pointer w-[100%] h-[100%] object-cover"
-        :src="post.avatar"
+        :src="post.image"
         :alt="post.title"
       />
     </div>
 
     <!-- Contenedor de botones del post -->
-    <div class="post-footer w-[100%] h-[50px] flex pt-5 pb-5">
+    <div class="post-footer w-[100%] h-[50px] flex pt-5 pb-5 hidden">
       <!-- Rating -->
       <button class="flex flex-row items-center mr-3 hidden">
         <img @click="redirect(`evento/${post.post_id}`)" :src="StarSVG" />
@@ -125,18 +150,40 @@ if (tipo == 'Evento') IconoTipo = TipoEvento;
       :id="`modal_${post.id}`"
       :class="`modal ${estilos.modal} ${estilos.modal_superior_dcha}`"
     >
-      <!-- Botón ver perfil -->
+      <!-- Botón ver post -->
+      <RouterLink :to="`/post/${post.post_id}`">
+        <button :class="`${estilos.modal_button} m-2 `">
+          <img class="w-[30px] h-[30px] mr-3" :src="DetallesSVG" />
+          Detalles
+        </button>
+      </RouterLink>
+      <!-- Botón editar post -->
+
       <button
-        @click="redirect(`comercio/${userData.userData[0].username}`)"
         :class="`${estilos.modal_button} m-2 `"
+        @click="editarPost"
+        :id="post.post_id"
+        v-if="
+          (userLogeado.usuario.tipo == 'commerce' || userLogeado.usuario.tipo == 'ayuntamiento') &&
+          userLogeado.usuario.username == userData.userData[0].username
+        "
       >
-        <img class="w-[30px] h-[30px] mr-3" :src="UserSVG" />
-        Ver perfil
+        <img class="w-[30px] h-[30px] mr-3" :src="EditSVG" />
+        Editar
       </button>
-      <!-- Botón ver reseñas comercio -->
-      <button :class="`${estilos.modal_button} m-2 `">
-        <img class="w-[30px] h-[30px] mr-3" :src="StarSVG" />
-        Reseñas
+      <!-- Botón eliminar post -->
+
+      <button
+        :class="`${estilos.modal_button} m-2 `"
+        @click="clickBorrarPost"
+        :id="post.post_id"
+        v-if="
+          (userLogeado.usuario.tipo == 'commerce' || userLogeado.usuario.tipo == 'ayuntamiento') &&
+          userLogeado.usuario.username == userData.userData[0].username
+        "
+      >
+        <img class="w-[30px] h-[30px] mr-3" :src="DeleteSVG" />
+        Eliminar
       </button>
     </div>
   </article>

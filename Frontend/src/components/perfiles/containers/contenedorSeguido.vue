@@ -4,7 +4,7 @@ import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
 import imgRedonda from "@/components/perfiles/widgets/imgRedonda.vue";
 import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPuntuacion.vue";
 import { RouterLink } from "vue-router";
-import router from "@/router/index.js"
+import router from "@/router/index.js";
 defineProps({
   rutaPerfil: String,
   nombre: String,
@@ -15,9 +15,9 @@ defineProps({
   imagenAltText: String,
 });
 
-function irAPerfil(evento){
-  router.push(`/perfil/${evento.target.id}/`)
-  setTimeout(()=>{router.go()},100)
+function irAPerfil(evento) {
+  router.push(`/perfil/${evento.target.id}/`);
+  // setTimeout(()=>{router.go()},100)
 }
 </script>
 <template>
@@ -25,9 +25,12 @@ function irAPerfil(evento){
     <div class="flex justify-start">
       <imgRedonda :ruta="rutaPerfil"></imgRedonda>
       <div class="flex flex-col">
-
-          <textoEnNegrita  @click="irAPerfil"  :id="nombre" :texto="nombre" class="text-base lg:text-xl" />
-        
+        <textoEnNegrita
+          @click="irAPerfil"
+          :id="nombre"
+          :texto="nombre"
+          class="text-base lg:text-xl"
+        />
 
         <textoNormal :texto="fecha" class="text-sm lg:text-base"></textoNormal>
       </div>

@@ -7,11 +7,17 @@ import contenedorBtnsPerfilUser from "@/components/perfiles/containers/contenedo
 import textoEnNegrita from "@/components/perfiles/widgets/textoEnNegrita.vue";
 import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
 import imgRectangular from "@/components/perfiles/widgets/imgRectangular.vue";
-
+import { setDefaultImgs } from "@/components/perfiles/helpers/defaultImgs";
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { users } from "@/components/perfiles/helpers/users.js";
-const userData = JSON.parse(sessionStorage.getItem("userData"));
+import router from "@/router/index.js";
+let userData = JSON.parse(sessionStorage.getItem("userData"));
+const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
+userData = setDefaultImgs(userData.userData);
 console.log(userData);
+if (userData.username != userLogeado.usuario.username && userLogeado.usuario.tipo!="customer") {
+  router.push("/perfil");
+}
 </script>
 
 <template>
@@ -22,25 +28,14 @@ console.log(userData);
     <div class="flex flex-col gap-1 items-center">
       <div>
         <imgsPerfil
-          v-if="userData.userData.banner == 'default'"
-          rutaBaner="/img/placeholderPerfil.webp"
+          :rutaBaner="userData.banner"
           altTextBaner="foto baner"
-          rutaPerfil="/img/placeholderBanner.webp"
-          altTextPerfil="foto perfil"
-        ></imgsPerfil>
-        <imgsPerfil
-          v-else
-          :rutaBaner="userData.userData.banner"
-          altTextBaner="foto baner"
-          :rutaPerfil="userData.userData.avatar"
+          :rutaPerfil="userData.avatar"
           altTextPerfil="foto perfil"
         ></imgsPerfil>
       </div>
       <div class="flex flex-col justify-evenly lg:flex-row">
-        <textoEnNegrita
-          :texto="userData.userData.name"
-          class="text-base lg:text-xl"
-        />
+        <textoEnNegrita :texto="userData.name" class="text-base lg:text-xl" />
       </div>
       <imgRectangular
         ruta="/img/codigo-qr.svg"
