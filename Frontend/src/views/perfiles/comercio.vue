@@ -27,6 +27,9 @@ import resenias from "@/components/perfiles/containers/contenedorVistaResenias.v
 import fidelidad from "@/components/perfiles/containers/contenedorVistaFidelidad.vue";
 import favoritos from "@/components/perfiles/containers/contenedorVistaFavoritos.vue";
 import seguidos from "@/components/perfiles/containers/contenedorVistaSeguidos.vue";
+import seguidosNew from "@/views/perfiles/seguidos.vue";
+import FollowedFeed from "@/components/seguidos/followedFeed.vue";
+
 let cambioAFollowed = ref(false);
 let cambioAFavorito = ref(false);
 let clickedLink = null;
@@ -393,8 +396,12 @@ function manipulacion(evento) {
       <eventos v-if="isEventos"></eventos>
       <resenias v-if="isResenias"></resenias>
       <fidelidad v-if="isFidelidad"></fidelidad>
-      <favoritos v-if="isFavoritos"></favoritos>
-      <seguidos v-if="isSeguidos"></seguidos>
+      <!-- <favoritos v-if="isFavoritos"></favoritos> -->
+      <!-- <seguidos v-if="isSeguidos"></seguidos> -->
+      <!-- <seguidosNew v-if="isFavoritos"></seguidosNew> -->
+      <!-- <seguidosNew v-if="isSeguidos"></seguidosNew> -->
+      <FollowedFeed v-if="isSeguidos"></FollowedFeed>
+      <FollowedFeed v-if="isFavoritos"></FollowedFeed>
     </div>
 
     <template v-slot:Right></template>
