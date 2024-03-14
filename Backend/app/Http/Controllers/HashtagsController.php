@@ -1,119 +1,45 @@
 <?php
-/**
- * @OA\Info(
- *   title="API de Hashtags",
- *   version="1.0.0",
- *   description="API para gestionar hashtags",
- *   @OA\Contact(
- *     email="tu@email.com",
- *     name="Tu Nombre"
- *   )
- * )
- */
 
-/**
- * @OA\Get(
- *     path="/api/hashtags",
- *     summary="Muestra todos los hashtags disponibles",
- *     @OA\Response(
- *         response=200,
- *         description="Lista de hashtags obtenida exitosamente",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="status", type="boolean", example=true),
- *             @OA\Property(property="data", type="array", @OA\Items(type="object", properties={"name": {"type": "string"}}))
- *         )
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="No se encontraron hashtags",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="status", type="boolean", example=false),
- *             @OA\Property(property="message", type="string")
- *         )
- *     )
- * )
- */
-
-/**
- * @OA\Post(
- *     path="/api/hashtags",
- *     summary="Almacena un nuevo hashtag",
- *     @OA\RequestBody(
- *         @OA\JsonContent(
- *             required={"name"},
- *             @OA\Property(property="name", type="string", description="El nombre del hashtag")
- *         )
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Hashtag creado exitosamente",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="status", type="boolean", example=true),
- *             @OA\Property(property="message", type="string")
- *         )
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Error al almacenar el hashtag",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="status", type="boolean", example=false),
- *             @OA\Property(property="message", type="string")
- *         )
- *     ),
- *     @OA\Response(
- *         response=400,
- *         description="El hashtag ya existe",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="status", type="boolean", example=false),
- *             @OA\Property(property="message", type="string")
- *         )
- *     )
- * )
- */
-
-/**
- * @OA\Get(
- *     path="/api/hashtags/populares",
- *     summary="Obtiene los hashtags más populares",
- *     @OA\Parameter(
- *         name="type",
- *         in="query",
- *         required=true,
- *         @OA\Schema(type="string", enum={"Posts", "Commerces"})
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Lista de hashtags populares obtenida exitosamente",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="status", type="boolean", example=true),
- *             @OA\Property(property="data", type="array", @OA\Items(type="object", properties={"name": {"type": "string"}}))
- *         )
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Error al obtener los hashtags populares",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="status", type="boolean", example=false),
- *             @OA\Property(property="message", type="string")
- *         )
- *     )
- * )
- */
 namespace App\Http\Controllers;
 
 use App\Models\Hashtag;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreHashtagRequest;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\APIDocumentationController;
+
 class HashtagsController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/hashtags",
+     *     summary="Muestra todos los hashtags disponibles",
+     *     tags={"Hashtags"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de hashtags obtenida exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="name", type="string", example="hashtag1")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontraron hashtags",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         try {
@@ -133,6 +59,46 @@ class HashtagsController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/hashtags",
+     *     summary="Almacena un nuevo hashtag",
+     *     tags={"Hashtags"},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             required={"name"},
+     *             @OA\Property(property="name", type="string", description="El nombre del hashtag")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Hashtag creado exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Error al almacenar el hashtag",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="El hashtag ya existe",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
+     */
     public function store(StoreHashtagRequest $request)
     {
         // Verificar si el hashtag ya existe en la base de datos
@@ -159,63 +125,64 @@ class HashtagsController extends Controller
     }
 
     /**
- * @swagger
- * /hashtags/populares:
- *   get:
- *     summary: Obtiene los 8 hashtags más populares.
- *     description: >
- *       Este método busca los 8 hashtags más usados por los commerces y los posts.
- *     parameters:
- *       - in: query
- *         name: type
- *         schema:
- *           type: string
- *         required: true
- *         description: Tipo de publicación (Posts o Commerces).
- *     responses:
- *       200:
- *         description: Lista de hashtags populares obtenida exitosamente.
- *         content:
- *           application/json:
- *             example:
- *               status: true
- *               data:
- *                 - name: NombreHashtag1
- *                   hashtag_count: 10
- *                 - name: NombreHashtag2
- *                   hashtag_count: 8
- *                 # ...
- *       404:
- *         description: Error al obtener la lista de hashtags populares.
- *         content:
- *           application/json:
- *             example:
- *               status: false
- *               message: mensaje_de_error
- */
+     * @OA\Get(
+     *     path="/hashtags/populares",
+     *     summary="Obtiene los hashtags más populares",
+     *     tags={"Hashtags"},
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(type="string", enum={"Posts", "Commerces"})
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de hashtags populares obtenida exitosamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="name", type="string", example="hashtag1")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Error al obtener los hashtags populares",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
+     */
     public function populares(Request $request)
     {
         try {
 
             if ($request->type == 'Posts') {
 
-            $hashtags = Hashtag::join('posts-hashtags', 'posts-hashtags.hashtag_id', '=', 'hashtags.id')
-                ->select(
-                    'hashtags.name',
-                    DB::raw('count(`posts-hashtags`.hashtag_id) as hashtag_count')
-                )
-                ->orderBy('hashtag_count', 'desc')
-                ->groupBy('hashtags.name')
-                ->limit(8)
-                ->get();
+                $hashtags = Hashtag::join('posts-hashtags', 'posts-hashtags.hashtag_id', '=', 'hashtags.id')
+                    ->select(
+                        'hashtags.name',
+                        DB::raw('count(`posts-hashtags`.hashtag_id) as hashtag_count')
+                    )
+                    ->orderBy('hashtag_count', 'desc')
+                    ->groupBy('hashtags.name')
+                    ->limit(8)
+                    ->get();
 
-            return response()->json([
-                'status' => true,
-                'data' => $hashtags
-            ], 200);
-        }
+                return response()->json([
+                    'status' => true,
+                    'data' => $hashtags
+                ], 200);
+            }
 
-        $hashtags = Hashtag::join('commerces-hashtags', 'commerces-hashtags.hashtag_id', '=', 'hashtags.id')
+            $hashtags = Hashtag::join('commerces-hashtags', 'commerces-hashtags.hashtag_id', '=', 'hashtags.id')
                 ->select(
                     'hashtags.name',
                     DB::raw('count(`commerces-hashtags`.hashtag_id) as hashtag_count')
