@@ -22,7 +22,6 @@ export const google_login = () => {
     console.log("login google");
 
     googleSdkLoaded(google => {
-
         const sendCode = async (code) => {
             try {
                 const options = genOptionsLogin("POST");

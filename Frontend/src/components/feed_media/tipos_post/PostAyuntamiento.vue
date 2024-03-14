@@ -86,9 +86,11 @@ const aniadir_favorito = (item) => {
     localStorage.setItem("favoritos", JSON.stringify(favoritos.value));
 }
 
+/** El ref para el estado del modal */
+
 const comentariosPadre = ref(false);
 
-
+/** Abre el listado de comentarios en la Landing */
 const abrirComentariosLanding = () => {
     if(!comentariosPadre.value) {
         comentariosPadre.value = true;
@@ -102,7 +104,6 @@ const abrirComentariosLanding = () => {
 <template>
     <article :class="` post ${estilos.post} relative`" ref="post_reference" :data-start_date="post.start_date"
         :data-end_date="post.end_date" :data-favorito="(favoritos.indexOf(post.title) == -1) ? 'false' : 'true'">
-
         <!-- post header -->
         <div class=" post-header w-[100%] h-[fit-content] flex items-center pt-3 pb-4 ">
             <div class=" avatar-wrapper w-[50px] h-[50px] rounded-full overflow-hidden  mr-2 ">
@@ -113,14 +114,18 @@ const abrirComentariosLanding = () => {
                 class=" cursor-pointer flex flex-col items-start texts w-[100%] h-[100%] ">
                 <b>{{ post.username }}</b>
                 <small> Organización </small>
+                <!-- Muestra si está seguido -->
+                <small v-if="props.esSeguido" class="flex items-center">
+                        <img title="Busqueda" src="/assets/icons/following.svg" class="max-w-[30px] max-h-[30px] hidden lg:block" alt="Siguiendo" />
+                        Seguido
+                </small>
             </div>
-            <button @click="() => abrirModal(post.post_id)" class="mr-4">
+            <button @click="() => abrirModal()" class="mr-4">
                 <img :src="MoreSVG" alt="dots" loading="lazy">
             </button>
         </div>
 
         <!-- post image -->
-
         <div
             class=" post-content w-[100%] h-[300px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] 2xl:h-[600px] rounded-2xl overflow-hidden ">
             <img @click="redirect(`post/${post.post_id}`)" loading="lazy"
@@ -141,7 +146,7 @@ const abrirComentariosLanding = () => {
             </button>
 
             <!-- Comentarios -->
-            <button @click="() => props.abrirComentarios()" class=" flex flex-row items-center mr-3 ">
+            <button  class=" flex flex-row items-center mr-3 ">
                 <img :src="ChatSVG" loading="lazy" />
                 {{ post.comment_count }}
             </button>
@@ -198,7 +203,7 @@ const abrirComentariosLanding = () => {
                 Ver perfil
             </button>
             <!-- Botón ver reseñas comercio -->
-            <button :class="`${estilos.modal_button} m-2 `">
+            <button :class="`${estilos.modal_button} m-2`">
                 <img class="w-[30px] h-[30px]  mr-3 " :src="StarSVG" loading="lazy" />
                 Reseñas
             </button>

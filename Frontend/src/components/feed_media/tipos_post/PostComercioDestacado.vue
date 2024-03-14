@@ -29,17 +29,10 @@ import { en_favoritos, obtener_favoritos } from '../helpers/favoritos';
 import ComentariosLanding from '../widgets/ComentariosLanding.vue';
 import BotonSpeaker from '../widgets/BotonSpeaker.vue';
 
-
-import Comentarios from '../modal/ComentariosHome.vue';
-import PostComercio from './PostComercio.vue';
-import PostComercioDestacado from './PostComercioDestacado.vue';
-import PostAyuntamiento from './PostAyuntamiento.vue';
-
-
 const props = defineProps({
     post: Object,
     tipo: String,
-    abrirComentarios: Function
+    esSeguido: Boolean
 });
 
 
@@ -82,10 +75,7 @@ let IconoTipo = "";
 if (tipo == 'Post') IconoTipo = TipoOferta; // 1 Post
 if (tipo == 'Evento') IconoTipo = TipoEvento; // 2 Event
 
-/** referencia los comentarios */
-let comentarios = ref(null);
-
-
+/** Controla la dinámica de agregar y borrar favoritos on click */
 const aniadir_favorito = (item) => {
         if (favoritos.value.indexOf(item) == -1) {
             favoritos.value.push(item);
@@ -100,7 +90,9 @@ const aniadir_favorito = (item) => {
 
     const comentariosPadre = ref(false);
 
-
+/**
+ * Añado los comentarios en la landing
+ */
 const abrirComentariosLanding = () => {
     if(!comentariosPadre.value) {
         comentariosPadre.value = true;
@@ -127,7 +119,8 @@ const abrirComentariosLanding = () => {
             <div class=" flex flex-col items-start texts w-[100%]  h-[100%]  ">
                 <b @click="redirect(`perfil/${post.username}`)" class="cursor-pointer">{{ post.username }}</b>
                 <small>{{ datetranslatesql(post.start_date) }}</small>
-                <button click="" class=" rating flex h-[fit-content] items-center justify-start "
+                <!-- Se muestra las reseñas -->
+                <button class=" rating flex h-[fit-content] items-center justify-start "
                     v-if="post.avg != null">
                     <img class="  " :src="StarSVG" v-for="index in Math.floor(post.avg)" alt="star" loading="lazy"
                         :title="post.avg" />
@@ -135,8 +128,16 @@ const abrirComentariosLanding = () => {
                         loading="lazy" :title="post.avg" />
                     <small>({{ post.avg.toFixed(2) }})</small>
                 </button>
+                <!-- Se muestra si es seguido o no -->
+                <small v-if="props.esSeguido" class="flex items-center">
+                        <img title="Busqueda" src="/assets/icons/following.svg" class="max-w-[30px] max-h-[30px] hidden lg:block"
+                            alt="Siguiendo" />
+                        Seguido
+                    </small>
+
             </div>
-            <button @click="() => abrirModal(post.id)" class="mr-4">
+            <!-- Abre el modal de perfiles -->
+            <button @click="() => abrirModal()" class="mr-4">
                 <img :src="MoreSVG" alt="dots">
             </button>
         </div>
@@ -153,7 +154,7 @@ const abrirComentariosLanding = () => {
         <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
 
             <!-- Comentarios -->
-            <button @click="() => props.abrirComentarios()" class=" flex flex-row items-center mr-3 ">
+            <button  class=" flex flex-row items-center mr-3 ">
                 <img :src="ChatSVG" loading="lazy" />
                 {{ post.comment_count }}
             </button>

@@ -61,16 +61,7 @@ let tipo_usuario = ref(post.userRol);
 /** referencia los comentarios */
 let comentarios = ref(null);
 
-/**
- * Abre el modal de comentarios
- */
-const abrirComentarios = () => {
-    if (comentariosVisibles.value) {
-        comentariosVisibles.value = false;
-    } else {
-        comentariosVisibles.value = true;
-    }
-};
+
 
 /**
  * Observer para ir cargando on scroll, desactivado para evitar colapso de la base de datos 
@@ -103,7 +94,6 @@ const { stop } = useIntersectionObserver(post_reference,
             :post="post" 
             :tipo="tipo"
             :esSeguido="esSeguido"
-            :abrirComentarios="abrirComentarios"
         >
         </PostComercio>
         <!-- Post Destacado -->
@@ -113,7 +103,6 @@ const { stop } = useIntersectionObserver(post_reference,
             :post="post" 
             :tipo="tipo"
             :esSeguido="esSeguido"
-            :abrirComentarios="abrirComentarios"
         ></PostComercioDestacado>
         <!-- Post Ayuntamiento -->
         <PostAyuntamiento 
@@ -122,11 +111,10 @@ const { stop } = useIntersectionObserver(post_reference,
             :post="post" 
             :tipo="tipo"
             :esSeguido="esSeguido"
-            :abrirComentarios="abrirComentarios"
         >
         </PostAyuntamiento>
         <!-- El modal de comentarios -->
-        <Comentarios v-if="comentariosVisibles" :post="post" :handler="abrirComentarios" /> 
+        <Comentarios v-if="comentariosVisibles" :post="post" /> 
     </div>
 </template>
 
