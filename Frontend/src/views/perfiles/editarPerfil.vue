@@ -140,7 +140,7 @@ const tratarDatos = async ()=>{
                 imagenPerfil.value = null;
             }
             if(municipio.value != null && municipio.value != user.value.municipality_name){
-                municipio.value = options.value[municipio.value].name;
+                municipio.value = options.value[municipio.value-1].name;
             } 
             let datos =  {
                 "email": email.value,
@@ -221,10 +221,10 @@ const tratarDatos = async ()=>{
                 imagenPerfil.value = null;
             }
             if(municipio.value != null && municipio.value != user.value.municipality_name){
-                municipio.value = options.value[municipio.value].name;
+                municipio.value = options.value[municipio.value-1].name;
             }
             if(categoria.value != null && categoria.value != user.value.categories_name){
-                categoria.value = optionsCategory.value[categoria.value].name;
+                categoria.value = optionsCategory.value[categoria.value-1].name;
             }
             let datos = {
                 "email": email.value,
@@ -243,7 +243,7 @@ const tratarDatos = async ()=>{
                 "birth_date": auxFechaNacBack,
                 "password_confirmation": repetirNueva.value,
             }
-            //console.log(datos);
+            console.log(datos);
             let respuesta = await updateUserData("POST", datos, userType.value.username);
             //console.log(respuesta)
             if(respuesta.status){
