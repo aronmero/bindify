@@ -10,7 +10,7 @@ import { register } from '../../Api/auth';
 import Input from "@/components/comun/input.vue";
 
 let options = ref("null"); /* Cambiar por info del back */
-let optionsSex = [{ id: 0, name: "M" }, { id: 1, name: "H" }]; /* Cambiar por info del back */
+let optionsSex = [{ id: "M", name: "M" }, { id: "H", name: "H" }]; /* Cambiar por info del back */
 let arrayTipos = [{ id: 0, name: "Particular" }, { id: 1, name: "Comercio" }];
 let optionsCategory = ref("null");
 let errorIMG = ref(null);
@@ -50,7 +50,7 @@ const controlador_modal = ref(false);
 const solicitarDatosApi = async () => {
     optionsCategory.value = await solicitarCategorias("GET").then(data => data = data.data);
     options.value = await solicitarMunicipios("GET").then(data => data = data.data);
-    //console.log(options.value);
+    console.log(optionsCategory.value);
 }
 solicitarDatosApi();
 /* Falta vincular modal de editar horario y hacer las validaciones */
@@ -134,10 +134,11 @@ const tratarDatos = async () => {
                 "empresa": 0,
                 "schedule": horarioActual.value,
                 "address": direccion.value,
-                "gender": optionsSex[sexo.value] == undefined ? null : optionsSex[sexo.value].name,
+                "gender": sexo.value,
                 "birth_date": fechaNac.value,
                 "password_confirmation": repetirNueva.value,
             }
+            console.log(datos);
             let respuesta = await register(datos);
 
             if (respuesta != undefined && respuesta.status) {
@@ -182,14 +183,6 @@ const tratarDatos = async () => {
             errorDirec.value = null;
 
         }
-        if (horarioActual.value == null || horarioActual.value.length == 0) {
-            errorSche.value = "Debe indicar el horario de su negocio.";
-
-
-        } else {
-            errorSche.value = null;
-
-        }
         if (categoria.value == null || categoria.value.length == 0) {
             errorCategory.value = "Debe seleccionar la categoria de su negocio.";
 
@@ -198,7 +191,7 @@ const tratarDatos = async () => {
             errorCategory.value = null;
 
         }
-        if (errorCategory.value == null && errorSche.value == null && errorDirec.value == null && errorPhone.value == null && errorContra.value == null && errorType.value == null && errorUsuario.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null) {
+        if (errorCategory.value == null && errorDirec.value == null && errorPhone.value == null && errorContra.value == null && errorType.value == null && errorUsuario.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null) {
             let datos = {
                 "email": email.value,
                 "password": contraNueva.value,
@@ -212,11 +205,12 @@ const tratarDatos = async () => {
                 "empresa": 1,
                 "schedule": horarioActual.value,
                 "address": direccion.value,
-                "gender": optionsSex[sexo.value],
+                "gender": sexo.value,
                 "birth_date": fechaNac.value,
                 "verification_token_id": token.value,
                 "password_confirmation": repetirNueva.value,
             }
+            console.log(datos);
             let respuesta = await register(datos);
 
             if (respuesta != undefined && respuesta.status) {
@@ -314,7 +308,7 @@ const controlarModal = () => {
                     placeholder="Selecciona tu sexo" :valor="sexo" />
                 <Input v-if="tipoUsuario == 'comercio'" @datos="(nuevosDatos) => { direccion = nuevosDatos }"
                     tipo="text" requerido="true" label="Dirección" :valor="direccion" :error="errorDirec" />
-                <Input v-if="tipoUsuario == 'comercio'" tipo="texto" requerido="true" label="Horario Actual"
+                <Input v-if="tipoUsuario == 'comercio'" tipo="texto" label="Horario Actual"
                     :valor="horarioActual" class="pointer-events-none" :error="errorSche" />
                 <Input v-if="tipoUsuario == 'comercio'" @click="controlarModal" tipo="submit" clase="claro"
                     valor="Cambiar horario" class="w-[50%] self-center" />

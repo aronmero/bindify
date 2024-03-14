@@ -44,9 +44,6 @@ const tratarDatos = async()=>{
             errorTitle.value = null;
             errorDesc.value = null;
             errorType.value = "Es obligatorio seleccionar un tipo de evento para crear una publicación.";
-
-            //Apaño de Rengifo
-
         }else if(publiTipo.value == "2" && (fechaInicio.value == null || fechaFin.value == null) ){ /* Cambiar el tipo cuando llegue la info del back */
             errorTitle.value = null;
             errorDesc.value = null;

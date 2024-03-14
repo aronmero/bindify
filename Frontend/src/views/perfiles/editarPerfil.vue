@@ -111,7 +111,7 @@ const tratarDatos = async ()=>{
     }else{
         errorMunic.value = null;
     }
-    if((contraNueva.value != null && contraNueva.value.length > 0)){
+   /*  if((contraNueva.value != null && contraNueva.value.length > 0)){
         if(repetirNueva.value == null || repetirNueva.value.length == 0){
             errorContra.value = "Debe indicar y repetir una contraseña.";
         }else{
@@ -125,14 +125,14 @@ const tratarDatos = async ()=>{
         }
     }else{
         errorContra.value = null;
-    }
+    } */
     if(tipoUsuario.value == 'customer'){
         if(fechaNac.value == null || fechaNac.value.length == 0){
             errorDate.value = "Debe indicar su fecha de nacimiento.";
         }else{
             errorDate.value = null;
         }
-        if(errorDate.value == null && errorContra.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
+        if(errorDate.value == null /* && errorContra.value == null */ && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
             if(imagenBanner.value == imagenBannerDefault){
                 imagenBanner.value = null;
             }
@@ -144,7 +144,7 @@ const tratarDatos = async ()=>{
             } 
             let datos =  {
                 "email": email.value,
-                "password": contraNueva.value,
+                /* "password": contraNueva.value, */
                 "phone": telefono.value,
                 "municipality": municipio.value,
                 "avatar": imagenPerfil.value,
@@ -156,7 +156,7 @@ const tratarDatos = async ()=>{
                 "address": direccion.value,
                 "gender": sexo.value,
                 "birth_date": fechaNac.value,
-                "password_confirmation": repetirNueva.value,
+                /* "password_confirmation": repetirNueva.value, */
             }
             console.log(datos);
             let respuesta = await updateUserData("POST", datos, userType.value.username);
@@ -213,7 +213,7 @@ const tratarDatos = async ()=>{
             errorCategory.value = null;
 
         }
-        if(errorCategory.value == null && errorDirec.value == null && errorPhone.value == null && errorContra.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
+        if(errorCategory.value == null && errorDirec.value == null && errorPhone.value == null /* && errorContra.value == null */ && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
             if(imagenBanner.value == imagenBannerDefault){
                 imagenBanner.value = null;
             }
@@ -228,7 +228,7 @@ const tratarDatos = async ()=>{
             }
             let datos = {
                 "email": email.value,
-                "password": contraNueva.value,
+                /* "password": contraNueva.value, */
                 "phone": telefono.value,
                 "municipality": municipio.value,
                 "avatar": imagenPerfil.value,
@@ -241,7 +241,7 @@ const tratarDatos = async ()=>{
                 "address": direccion.value,
                 "gender": sexo.value,
                 "birth_date": auxFechaNacBack,
-                "password_confirmation": repetirNueva.value,
+                /* "password_confirmation": repetirNueva.value, */
             }
             console.log(datos);
             let respuesta = await updateUserData("POST", datos, userType.value.username);
@@ -288,6 +288,11 @@ const obtenerCambioHorario = (cambio) => {
     controlador_modal.value = false;
 }
 
+/* <div class="cambiocontra flex flex-col gap-y-5">
+    <p v-if="errorContra != null" class="text-primary-700 text-xs lg:text-sm ms-3">{{ errorContra }}</p>
+    <Input @datos="(nuevosDatos)=>{contraNueva = nuevosDatos}" tipo="password" label="Contraseña Nueva" :valor="contraNueva" />
+    <Input @datos="(nuevosDatos)=>{repetirNueva = nuevosDatos}" tipo="password" label="Repetir contraseña" :valor="repetirNueva" />
+</div> */
 </script>
 
 <template>
@@ -319,11 +324,6 @@ const obtenerCambioHorario = (cambio) => {
                     <Input v-if="tipoUsuario == 'commerce'" tipo="texto" label="Horario Actual" :valor="horarioActual"/>
                     <Input v-if="tipoUsuario == 'commerce'" @click="controlarModal" tipo="submit" clase="claro" valor="Cambiar horario" class="w-[50%] self-center"/>
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
-                    <div class="cambiocontra flex flex-col gap-y-5">
-                        <p v-if="errorContra != null" class="text-primary-700 text-xs lg:text-sm ms-3">{{ errorContra }}</p>
-                        <Input @datos="(nuevosDatos)=>{contraNueva = nuevosDatos}" tipo="password" label="Contraseña Nueva" :valor="contraNueva" />
-                        <Input @datos="(nuevosDatos)=>{repetirNueva = nuevosDatos}" tipo="password" label="Repetir contraseña" :valor="repetirNueva" />
-                    </div>
                     <div class="flex flex-col items-center w-full justify-center mt-3 gap-y-10">
                         <Input @click="tratarDatos" tipo="submit" clase="oscuro" valor="Guardar Cambios" class="w-[50%]"/>
                     </div>
