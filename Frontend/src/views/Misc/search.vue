@@ -15,9 +15,7 @@
     import { actualSection } from "@/stores/actualSection";
     import postsResults from "@/components/search/postsResults.vue";
     import infoSVG from "/assets/icons/infoSVG.svg";
-    
-   
-    
+     
     const { filteredResults, apiRequest, resetFilters } = useSearchLogic();
     let section = ref("comercios");
     let loading = ref(true);
@@ -25,6 +23,7 @@
     
     onMounted(async () => {
         await fetchData(section.value);
+        resetFilters();
     })
 
     const changeSection = (actualSection) => {
