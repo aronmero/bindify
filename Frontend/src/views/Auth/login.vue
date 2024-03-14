@@ -37,11 +37,13 @@ async function tryLogin() {
 
     if (isValido) {
         const data = await login(email.value, password.value);
+
         if (data.status) {
             sessionStorage.setItem(
                 "usuario",
                 JSON.stringify({ usuario: data.message })
             );
+            
             router.push("/");
             router.go();
         } else {
