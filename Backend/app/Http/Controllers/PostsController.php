@@ -665,12 +665,6 @@ class PostsController extends Controller
 
             $rutaFotoPost = 'default';
 
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $rutaFotoPost = 'posts/' . $user->username . '/imagenPost.webp';
-                Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
-                $rutaFotoPost = asset($rutaFotoPost);
-            }
 
             $post = Post::create([
                 'image' => $rutaFotoPost,
@@ -682,7 +676,16 @@ class PostsController extends Controller
                 'active' => true,
             ]);
 
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $rutaFotoPost = 'posts/' . $user->username.$post->id . '/imagenPost.webp';
+                Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
+                $rutaFotoPost = asset($rutaFotoPost);
+            }
 
+            $post->image=$rutaFotoPost;
+            $post->save();
+            
             try {
                 $post->users()->attach($user->id);
             } catch (\Throwable $th) {
