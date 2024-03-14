@@ -1,5 +1,5 @@
 //Pillar de sesion storage o store de pinia cuando se realice
-import { genOptions,urlApi } from "@/Api/api.js";
+import { genOptions,urlApi,genOptionsUpdate } from "@/Api/api.js";
 /**
  * Devuelve un objeto publicacion con sus datos
  * @date 3/10/2024 - 12:10:35 PM
@@ -33,13 +33,13 @@ export async function postId(metodo, id,body=null) {
  * @async
  * @returns {Object}
  */
-export async function crearPublicacion(metodo, body=null) {
+export async function crearPublicacion(metodo, body) {
   try {
     let formData = new FormData();
     for(let clave in body){
       formData.append(clave, body[clave]);
     }
-    const options = genOptions(metodo, formData);
+    const options = genOptionsUpdate(metodo, formData);
     const response = await fetch(
       `${urlApi}/api/post`,
       options

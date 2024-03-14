@@ -85,8 +85,7 @@
 
 
 <style scoped>
-    html{
+    html, body {
         scroll-behavior: smooth;
     }
-    
 </style>

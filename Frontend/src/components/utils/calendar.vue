@@ -74,8 +74,6 @@
 
     // dibuja el calendario 
     manipulate();
-    // asigna el mes por defecto al del mes actual
-    changeMonth(month.value);
 };
 
 onMounted(() => {

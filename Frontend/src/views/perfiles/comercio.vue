@@ -19,8 +19,8 @@ import {
   followUser,
   aniadirFavorito,
 } from "@/Api/perfiles/perfil.js";
-import { ref } from "vue";
-console.log("REDIRIGE")
+import { ref, onMounted } from "vue";
+console.log("REDIRIGE");
 import eventos from "@/components/perfiles/containers/contenedorVistaEventos.vue";
 import posts from "@/components/perfiles/containers/contenedorVistaPosts.vue";
 import resenias from "@/components/perfiles/containers/contenedorVistaResenias.vue";
@@ -33,7 +33,7 @@ let clickedLink = null;
 let userData = ref(null);
 let userExterno = ref(false);
 let linkUsername = ref(router.currentRoute.value.params.username);
-console.log(linkUsername.value)
+console.log(linkUsername.value);
 if (linkUsername.value == undefined) {
   router.push(`/perfil`);
 }
@@ -43,6 +43,10 @@ let isCustomer = false;
 //   isCustomer = true
 
 // }
+
+onMounted(() => {
+  console.log("Montado");
+});
 const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
@@ -64,10 +68,7 @@ async function responseCatcher(metodo, subRuta) {
   console.log(userData.value[0]);
 
   console.log(userLogeado.usuario.tipo);
-  if (
-    userLogeado.usuario.tipo == "customer" &&
-    userData.value[0] == undefined
-  ) {
+  if (userData.value[0] == undefined) {
     console.log("es Customer");
     isCustomer = true;
   }
@@ -149,12 +150,12 @@ function manipulacion(evento) {
   ocultar();
   switch (evento.target.value) {
     case "1":
-    console.log(evento.target.value)
-    isPosts.value = true
+      console.log(evento.target.value);
+      isPosts.value = true;
       break;
     case "2":
-    console.log(evento.target.value)
-    isEventos.value = true
+      console.log(evento.target.value);
+      isEventos.value = true;
       break;
     case "3":
       console.log(evento.target.value);
@@ -177,7 +178,10 @@ function manipulacion(evento) {
       break;
   }
 }
-//console.log(userData.value)
+// let bloquearVerParticular = ref(false)
+// if(!isCustomer && userExterno.value){
+//   bloquearVerParticular.value = true
+// }
 </script>
 
 <template>
@@ -185,7 +189,7 @@ function manipulacion(evento) {
   <Grid
     ><template v-slot:Left></template>
     <btnAtras titulo="Perfil"></btnAtras>
-
+    <!-- <h3 v-if="bloquearVerParticular">Nos puedes ver el perfil de este usuario</h3> -->
     <div class="flex flex-col gap-6" v-if="userData != null">
       <div>
         <imgsPerfil
@@ -267,13 +271,28 @@ function manipulacion(evento) {
         </div>
 
         <!-- <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser> -->
-        <div class="flex justify-center">
+        <div class="flex justify-center items-center gap-4">
           <RouterLink to="/perfil/edit" v-if="!userExterno">
             <btnConText
               texto="EDIT PROFILE"
               class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
             >
             </btnConText>
+          </RouterLink>
+          <RouterLink
+            to="/resenia"
+            v-if="
+              userExterno &&
+              !isCustomer &&
+              userData.tipo != 'ayuntamiento' &&
+              userLogeado.usuario.tipo != 'commerce'
+            "
+          >
+            <btnConImg
+              ruta="/assets/icons/christmasStar.svg"
+              altText="icono estrella"
+              :borde="true"
+            ></btnConImg>
           </RouterLink>
           <RouterLink to="/tarjeta-fidelidad" v-if="!userExterno && isCustomer">
             <btnConImg
@@ -345,7 +364,7 @@ function manipulacion(evento) {
           value="3"
         />
         <textoEnNegrita
-          v-if="isCustomer"
+          v-if="isCustomer && !userExterno"
           @click="manipulacion"
           texto="Fidelidad"
           class="text-sm lg:text-base"
@@ -353,20 +372,20 @@ function manipulacion(evento) {
           value="4"
         />
         <textoEnNegrita
-          v-if="isCustomer"
-          @click="manipulacion"
-          texto="Favoritos"
-          class="text-sm lg:text-base"
-          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
-          value="5"
-        />
-        <textoEnNegrita
-          v-if="isCustomer"
+          v-if="!userExterno"
           @click="manipulacion"
           texto="Seguidos"
           class="text-sm lg:text-base"
           :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
           value="6"
+        />
+        <textoEnNegrita
+          v-if="!userExterno"
+          @click="manipulacion"
+          texto="Favoritos"
+          class="text-sm lg:text-base"
+          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          value="5"
         />
       </div>
       <!--<RouterView></RouterView>-->

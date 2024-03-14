@@ -207,7 +207,8 @@ class PostsController extends Controller
      *             "created_at": "fecha_de_creación_de_la_publicación",
      *             "username": "nombre_de_usuario",
      *             "user_id": "ID_del_usuario",
-     *             "avatar": "avatar_del_usuario"
+     *             "avatar": "avatar_del_usuario",
+     *             "avg": "media_del_reseñas_del_usuario"
      *         },
      *         ...
      *     ]
@@ -234,6 +235,7 @@ class PostsController extends Controller
             $listado = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
                 ->join('users', 'users.id', '=', 'users-posts.user_id')
                 ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                ->join('commerces', 'users.id', 'commerces.user_id')
                 ->select(
                     'posts.id AS post_id',
                     'posts.image',
@@ -245,6 +247,7 @@ class PostsController extends Controller
                     'posts.created_at',
                     'users.username',
                     'users.id AS user_id',
+                    'commerces.avg as avg',
                     'users.avatar'
                 )
                 ->whereIn('users-posts.user_id', $ids)

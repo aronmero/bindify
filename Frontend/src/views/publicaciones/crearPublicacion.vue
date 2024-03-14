@@ -53,6 +53,7 @@ const tratarDatos = async()=>{
             errorDesc.value = null;
             errorType.value = null;
             errorDate.value = null;
+            console.log(publiTipo.value);
             if(publiTipo.value == 1){
                 let datos = {
                     "title": titulo.value, 
