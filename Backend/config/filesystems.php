@@ -38,7 +38,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => public_path(),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
@@ -55,18 +55,7 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
-        'avatars' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/avatars'), // Directorio donde se almacenarÃ¡n los avatares
-            'url' => env('APP_URL').'/storage/avatars', // URL base para acceder a los avatares
-            'visibility' => 'public',
-        ],
-        'posts' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/posts'), // Directorio donde se almacenarÃ¡n los avatares
-            'url' => env('APP_URL').'/storage/posts', // URL base para acceder a los avatares
-            'visibility' => 'public',
-        ],
+
     ],
 
     /*

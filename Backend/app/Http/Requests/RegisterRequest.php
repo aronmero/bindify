@@ -23,7 +23,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'password' => ['required'],
-            'avatar' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'avatar' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'email' => ['required', 'unique:users,email'],
             'phone' => ['unique:users,phone'],
             'username' => ['required', 'unique:users,username'],

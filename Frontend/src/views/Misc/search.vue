@@ -15,9 +15,7 @@
     import { actualSection } from "@/stores/actualSection";
     import postsResults from "@/components/search/postsResults.vue";
     import infoSVG from "/assets/icons/infoSVG.svg";
-    
-   
-    
+     
     const { filteredResults, apiRequest, resetFilters } = useSearchLogic();
     let section = ref("comercios");
     let loading = ref(true);
@@ -25,6 +23,7 @@
     
     onMounted(async () => {
         await fetchData(section.value);
+        resetFilters();
     })
 
     const changeSection = (actualSection) => {
@@ -49,7 +48,6 @@
 </script>
 
 <template>
-    
     <Header />
     <Grid><template v-slot:Left> </template>
         <div class="flex flex-col gap-y-8 rounded-md p-2 ">
@@ -74,7 +72,7 @@
                     <p class="text-[#c6c6c6] mb-[-10px] text-md " >{{ filteredResults.length > 1 ? filteredResults.length + " " +  section + " encontrados" : filteredResults.length === 0 ? "Sin resultados" :  filteredResults.length +  " comercio encontrado" }}</p>
                 </div>
                 <commercesResults :comercios="filteredResults" v-show="section === 'comercios'"/>
-                
+                <postsResults :posts="filteredResults" v-show="section ==='Posts'" />
             </div>
             <scrollUpButton />
             <changeSearchButton @changeSection="changeSection"/>
@@ -86,8 +84,7 @@
 
 
 <style scoped>
-    html{
+    html, body {
         scroll-behavior: smooth;
     }
-    
 </style>

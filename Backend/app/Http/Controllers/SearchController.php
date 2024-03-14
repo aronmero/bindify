@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Scripts\Utils;
 use App\Models\Commerce;
 use App\Models\Municipality;
 use App\Models\Post;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -66,7 +67,8 @@ class SearchController extends Controller
                         'posts.title',
                         'posts.description',
                         'post_types.name AS post_type',
-                        'posts.start_date as publicated_date'
+                        'posts.start_date as publicated_date',
+                        'commerces.avg'
                     )
                     ->where('commerces.active', '=', true)
                     ->where('posts.active', '=', true)
@@ -94,7 +96,9 @@ class SearchController extends Controller
 
                 $posts->each(function ($post) {
                     $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                    $post->post_id = Crypt::encryptString($post->post_id);
+                    $post->post_id = Utils::Crypt($post->post_id);
+                    $user = User::where('username', $post->username)->first();
+                    $post->userRol = $user->getRoleNames()[0];
                 });
 
                 return response()->json([
@@ -149,9 +153,9 @@ class SearchController extends Controller
                 $commerce->hashtags = Commerce::find($commerce->user_id)->hashtags->pluck('name')->toArray();
                 $commerce->review_count = Review::where('commerce_id', $commerce->user_id)->count();
                 unset($commerce->user_id);
+                $user = User::where('username', $commerce->username)->first();
+                $commerce->userRol = $user->getRoleNames()[0];
             });
-
-
 
             return response()->json([
                 "status" => true,

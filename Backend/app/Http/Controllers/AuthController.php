@@ -83,6 +83,7 @@ class AuthController extends Controller
     }
 
     /**
+
      * @OA\Post(
      *     path="/logout",
      *     summary="Cierra la sesión del usuario actual",
@@ -208,14 +209,14 @@ class AuthController extends Controller
 
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
-            $rutaAvatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
+            $rutaAvatar = 'avatars/' . $request->username . '/imagenPerfil.webp';
+            Storage::disk('public')->putFileAs('avatars/' . $request->username, $avatar, 'imagenPerfil.webp');
         }
 
         if ($request->hasFile('banner')) {
             $banner = $request->file('banner');
-            Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
-            $rutaBanner = asset('storage/avatars/' . $request->username . '/banner.webp');
+            $rutaBanner = 'banners/' . $request->username . '/imagenBanner.webp';
+            Storage::disk('public')->putFileAs('banners/' . $request->username, $banner, 'imagenBanner.webp');
         }
 
 
@@ -262,7 +263,7 @@ class AuthController extends Controller
                 }
             } catch (ModelNotFoundException $e) {
                 $user->delete();
-                return response()->json(["status" => false, 'error' => 'Token de verificación incorrecto'], 404);
+                return response()->json(["status" => false, 'error' => 'Token de verificación no encontrado'], 404);
             } catch (Exception $th) {
                 $user->delete();
                 return response()->json(["status" => false, 'error' => $th->getMessage()], 500);
@@ -297,19 +298,28 @@ class AuthController extends Controller
                 ]);
             } catch (Exception $th) {
                 $user->delete();
-                return response()->json(['status' => false, 'message' => 'Datos de creacion de comercio erroneos', 'error' => $th->getMessage()], 500);
+                return response()->json(['status' => false, 'message' => 'Datos de creacion de cliente erroneos', 'error' => $th->getMessage()], 500);
             }
         }
 
         $token = $user->createtoken('my_app_token')->plainTextToken;
         $tipo = $user->getRoleNames();
 
-        $response = [
+      /*  $response = [
             'status' => true,
             'message' => 'Usuario creado correctamente',
             'user' => $user,
             'token' => $token,
             'tipo' => $tipo,
+        ];*/
+
+        $response = [
+            'status' => true,
+            'message' => [
+                'username' => $user->username,
+                'token' => $token,
+                'tipo' => $tipo[0]
+            ]
         ];
 
 

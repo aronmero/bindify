@@ -79,7 +79,7 @@ class MunicipalitiesController extends Controller
     {
         try {
             // Obtener todos los municipios
-            $municipalities = Municipality::select('name')->get();
+            $municipalities = Municipality::select('name','id')->get();
 
             // Devolver una respuesta con los datos de los municipios
             return response()->json(['status' => true, 'data' => $municipalities], 200);

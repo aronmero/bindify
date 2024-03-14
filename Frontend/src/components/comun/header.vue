@@ -24,6 +24,12 @@ import  logo  from '@public/img/fondo.png';
       </RouterLink>
     </nav>
     <div class="menu-right flex">
+    <nav class="w-[50px] flex justify-center items-center">
+      <RouterLink to="/post/nuevo">
+        <img title="Nuevo Post" src="/assets/icons/add_rounded.svg" class="max-w-[50px] max-h-[50px] hidden lg:block"
+          alt="Nuevo Post" />
+      </RouterLink>
+    </nav>
       <nav class="w-[50px] flex justify-center items-center">
         <RouterLink to="/busqueda">
           <img title="Busqueda" src="/assets/icons/search.svg" class="max-w-[30px] max-h-[30px] hidden lg:block"
@@ -71,7 +77,6 @@ import  logo  from '@public/img/fondo.png';
         background: -webkit-linear-gradient(#EC4A41, #FE822F);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 5px 9px 9px rgba(0,0,0,0.25);
       }
       
     }

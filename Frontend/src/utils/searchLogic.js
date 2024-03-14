@@ -4,6 +4,7 @@ import { inputSearch } from '@/stores/inputSearch';
 import { getCommerces } from '@/Api/busqueda/busqueda.js';
 import { actualSection } from '@/stores/actualSection';
 
+
 export default function useSearchLogic() {
     let results = ref([]);
 
@@ -40,7 +41,7 @@ export default function useSearchLogic() {
                 if (actualSection().getActualSection() === "Posts" ) {
                     return (hashtag.value === "" || result.hashtags.includes(hashtag.value)) &&
                         (post.value === "" || result.post_type === post.value) &&
-                        result.name.toLowerCase().includes(searchValue.value.toLowerCase())
+                        result.title.toLowerCase().includes(searchValue.value.toLowerCase())
                 } else {
                     return (category.value === "" || result.categories_name === category.value) &&
                         (location.value === "" || result.municipality_name === location.value) &&
@@ -118,10 +119,12 @@ export default function useSearchLogic() {
         option.setOptionSelectedHashtag('');
         option.setOptionSelectedPost('');
         const selected = document.querySelectorAll('.selected');
-        console.log(selected);
         selected.forEach(element => {
             element.classList.remove('selected');
         });
+        const searhBar = document.querySelector('.search-bar');
+        searhBar.value = '';
+        inputSearch().setInputSearch('');
     }
 
 

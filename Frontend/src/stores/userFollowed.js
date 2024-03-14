@@ -13,7 +13,7 @@ export const userFollowed = defineStore({ //store de usuarios seguidos
             this.followedList.push(userAux); // si no está en la lista de seguidos lo añadimos
         },
         unfollow(userAux){ //elimina un usuario de la lista de seguidos
-            const index = this.followedList.findIndex(user => user.name.first === userAux.name.first); //buscamos el indice del usuario a eliminar
+            const index = this.followedList.findIndex(user => user.username === userAux.username); //buscamos el indice del usuario a eliminar
             this.followedList.splice(index, 1); //eliminamos el usuario de la lista de seguidos
         }
     }

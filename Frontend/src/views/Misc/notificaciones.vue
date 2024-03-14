@@ -1,149 +1,60 @@
 <script setup>
-    import { ref } from 'vue';
-    // import Comentario from '../widgets/Comentario.vue';
-    import router from '@/router/index.js'
-    import { comentarios_por_post } from '@/components/notificaciones/mocks/comentarios';
-    import {encontrar_usuario_por_id} from '@/components/notificaciones/mocks/users';
-    import BackSVG from '@public/assets/icons/forward.svg';
-    import EnviarSVG from '@public/assets/icons/forward.svg';
+import { ref,onBeforeUnmount } from 'vue';
+// import Comentario from '../widgets/Comentario.vue';
+import router from '@/router/index.js'
+import BackSVG from '@public/assets/icons/forward.svg';
+import notificacion from "@/components/utils/notificacion.vue";
+import { getNotificacion } from '@/Api/notificaciones/notificaciones_usuario.js'
+/** Creamos un handler referenciado para el contenedor de comentarios así al refrescar hacemos scrollTop */
+const comentario_handler = ref(null);
 
+/**
+ * Creo una referencia para el modal
+ */
+const modal = ref(null);
+const user = JSON.parse(sessionStorage.getItem("usuario"));
 
-    const props = defineProps({
-        post: Object,
-        handler: Function
-    });
+/**
+ * Redirecciona a Home
+ * */
+const back = () => {
+    router.push('/');
+}
 
-    /** Referencia que controla que el usuario no pueda enviar mensajes a disposición */
-    const posteado = ref(false);
+let data = ref({status:false});
 
-    /** Obtenemos el post por props */
-    const post = props.post;
-
-    /** Creamos un handler referenciado para el contenedor de comentarios así al refrescar hacemos scrollTop */ 
-    const comentario_handler = ref(null);
-
-    /**
-     * Creo una referencia para el modal
-     */
-    const modal = ref(null);
-
-    /**
-     * Creo una referencia para el input del chat y poder enviarlo con click
-     */
-    const chat_input = ref(null);
-
-    const user = encontrar_usuario_por_id(1);
-
-    /**
-     * Obtiene el comentario por la id del post
-     */
-
-    //let en_comentarios = ref(comentarios_por_post(post.id));
-
-    let interval;
-
-    /**
-     * Controla la dinámica de cerrar este modal desde el hijo
-     * Llama a la función padre abrirComentarios()
-     * Limpia el intervalo para evitar bugs
-     * Cambia el estilo de overflow para volver a permitir el scroll en background
-     */
-    const cerrarModal = () => {
-        props.handler();
-        clearInterval(interval);
-        document.body.style.overflow= "scroll"
-    };
-
-    const refrescarPosicion = () => {
-        console.log(comentario_handler.value.getBoundingClientRect());
-        console.log(comentario_handler.value.scrollHeight);
-        comentario_handler.value.scrollTop = comentario_handler.value.scrollHeight;
-    }
-
-    const agregar_comentario = async (post_id, user_id, texto) => {
-        en_comentarios.value.push({
-            id: en_comentarios.length + 1,
-            user_id: user_id,
-            post_id: post_id,
-            content: texto,
-            active: true
-        });
-    }
-
-    /**
-    * Enviar el comentario
-    */
-     const enviarComentarioPorSubmit = (post_id, user_id, event) => {
-        if(event.key == 'Enter' ) {
-            let texto = event.target.value;
-            if(!posteado.value ) {
-                if(texto != "") {
-                    /**
-                    *  Cambiar por la función de lógica backend de enviar comentario
-                    * */
-
-                    agregar_comentario(user_id, post_id, texto)
-                        .then(() => refrescarPosicion() );
-                    
-                }
-               
-                antiSpamFunction();
-            }
-            event.target.value = "";
-        }
-     };
-
-     const enviarComentarioPorClick = (post_id, user_id, texto) => {
-
-        /**
-         *  Cambiar por la función de lógica backend de enviar comentario
-         * */
-         
-        if(!posteado.value && texto != "") {
-            agregar_comentario(user_id, post_id, texto)
-                .then(() => refrescarPosicion());
-        }
-        chat_input.value = "";
-        antiSpamFunction();
-        texto = "";
-     };
-
-    /**
-     * Bloqueamos overflow en background
-     * */
-
-    document.body.style.overflow= "hidden";
-    /**
-     * Redirecciona a Home
-     * */
-    const back = () => {
-        router.push('/');
-        document.body.style.overflow= "scroll";
-    }
+const callApi = async () => {
+     data.value = await getNotificacion();
+    console.log(data.value);
+}
+callApi();
 
 </script>
 
 <template>
     <KeepAlive>
-        <div ref="modal" :id="`notificaciones_${user.id}`" class="screen-modal flex flex-col items-center py-[50px]">
+
+        <div ref="modal" class="screen-modal flex flex-col items-center py-[50px] ">
             <!-- El wrapper para dar forma al contenedor del centro -->
-            <div class="wrapper h-[90%] sm:h-[80%] md:h-[90%] xl:h-[85%] 2xl:w-[40%] xl:w-[60%] lg:w-[60%] md:w-[100%] sm:w-[100%] w-[100%] mt-5relative ">
+            <div
+                class="wrapper h-[90%] sm:h-[80%] md:h-[90%] xl:h-[85%] 2xl:w-[40%] xl:w-[60%] lg:w-[60%] md:w-[100%] sm:w-[100%] w-[100%] mt-5relative ">
                 <!-- Header superior -->
                 <nav class="w-[100%] 2xl:h-[100px] h-[80px] flex items-center justify-start mb-5">
-                        <!-- Boton de cerrar -->
-                        <button @click="back()">
-                            <img class="w-[30px] ml-3 cursor-pointer" :src="BackSVG" alt="">
-                        </button>
-                        <!-- Mensaje central de comentarios -->
-                        <h2 class="w-[90%] text-center">Notificaciones</h2>
+                    <!-- Boton de cerrar -->
+                    <button @click="back()">
+                        <img class="w-[30px] ml-3 cursor-pointer" :src="BackSVG" alt="">
+                    </button>
+                    <!-- Mensaje central de comentarios -->
+                    <h2 class="w-[90%] text-center">Notificaciones</h2>
                 </nav>
                 <!-- El listado de comentarios -->
-                <div ref="comentario_handler" class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
-                    <!-- <Comentario v-if="en_comentarios.length >= 1" v-for="comentario in en_comentarios" :comentario="comentario"/>
-                    <Comentario v-else  :comentario="{content: 'No hay comentarios, ¡se el primero!'}"/> -->
+                <div v-if="data.status" ref="comentario_handler"
+                    class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%] flex gap-[25px] flex-col pr-[15px] pl-[15px]">
+                    <notificacion v-for="not in data.data" :notificacion="not"></notificacion>
+                    
                 </div>
-                
-            
+                    <div v-if=" data.data !=undefined && data.data.length==0" class="flex justify-center">No hay notificaciones en este momento</div>
+
             </div>
         </div>
     </KeepAlive>
@@ -152,29 +63,23 @@
 <style scoped lang="scss">
 
 
-    body {
-        overflow:hidden;
-    }
-    .screen-modal {
-        background:rgba(255, 255, 255, 1);
-        position:fixed;
-        width:100%;
-        height:100%;
-        left:0px;
-        top:0;
-        overflow:hidden;
-        z-index:50;
-        overscroll-behavior: contain;
-        .wrapper {
-            scroll-behavior: smooth;
-            nav {
-                h2 {
-                    font-weight:bold;
-                }
+.screen-modal {
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0;
+    z-index: 50;
+
+    .wrapper {
+        nav {
+            h2 {
+                font-weight: bold;
             }
         }
-        .chat {
-            z-index: 99 !important;
-        }
     }
+
+    .chat {
+        z-index: 99 !important;
+    }
+}
 </style>
