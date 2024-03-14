@@ -6,21 +6,27 @@ import Header from "@/components/comun/header.vue";
 import Footer from "@/components/comun/footer.vue";
 
 import Input from "@/components/comun/input.vue";
-import {posts} from '@/scripts/posts.js';
-let data = posts[2];
-let options = ["Publicación", "Evento"]; /* Cambiar por info del back */
-let tipo = ref(options[(data.post_type_id)-1]);
+const postData = ref(JSON.parse(sessionStorage.getItem("postData")));
+console.log(postData.value.postData);
+let options = [{id: 1, name: "Publicación"}, {id: 2, name: "Evento"}];
+let tipo = ref(null);
+if(postData.value.postData.name == "Post"){
+    tipo.value = options[0].name;
+}else{
+    tipo.value = options[1].name;
+}
+console.log(tipo.value);
 let errorDesc = ref(null);
 let errorIMG = ref(null);
 let errorType = ref(null);
 let errorDate = ref(null);
 let errorTitle = ref(null);
-const titulo = ref(data.title);
-const descripcion = ref(data.description);
-const imagen = ref(data.image);
-const publiTipo = ref(options[(data.post_type_id)-1]);
-const fechaInicio = ref(data.fecha_inicio);
-const fechaFin = ref(data.fecha_fin);
+const titulo = ref(postData.value.postData.title);
+const descripcion = ref(postData.value.postData.description);
+const imagen = ref(postData.value.postData.image);
+const publiTipo = ref(tipo.value);
+const fechaInicio = ref(postData.value.postData.fecha_inicio);
+const fechaFin = ref(postData.value.postData.fecha_fin);
 const colaboradores = ref(null);
 const mostrarInformacion = (e)=>{
     let opciones = [...e.target.children];
