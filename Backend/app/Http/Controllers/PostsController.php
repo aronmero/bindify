@@ -316,18 +316,10 @@ class PostsController extends Controller
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                Storage::disk('posts')->putFileAs($request->username, $image, 'imagenPost.webp');
-                $rutaFotoPost = asset('storage/usuarios/' . $request->username . '/imagenPost.webp');
+                $rutaFotoPost = 'posts/' . $user->username . '/imagenPost.webp';
+                Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
+                $rutaFotoPost = asset($rutaFotoPost);
             }
-
-        /*
-           $rutaAvatar = 'default';
-
-           if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-           $rutaAvatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
-            }
-        */
 
             $post = Post::create([
                 'image' => $rutaFotoPost,
@@ -561,15 +553,30 @@ class PostsController extends Controller
             }
 
             if ($userVerificado) {
+
+                $rutaFotoPost = $post->image;
+
+                if ($request->hasFile('image')) {
+                    $image = $request->file('image');
+                    $rutaFotoPost = 'posts/' . $user->username . '/imagenPost.webp';
+                    Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
+                    $rutaFotoPost = asset($rutaFotoPost);
+                }
+
+
+                if ($request->active) {
+                    $post->active = $request->active;
+                }
+
                 $post->update([
-                    'image' => $request->image,
+                    'image' => $rutaFotoPost,
                     'title' => $request->title,
                     'description' => $request->description,
                     'post_type_id' => $request->post_type_id,
                     'start_date' => $request->start_date,
                     'end_date' => $request->end_date,
                     'ubicacion' => $request->ubicacion,
-                    'active' => $request->active
+                    'active' => $post->active
                 ]);
 
                 //Obtener los datos del post

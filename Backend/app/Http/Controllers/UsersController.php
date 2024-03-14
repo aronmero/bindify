@@ -250,13 +250,15 @@ class UsersController extends Controller
 
             //campos de usuario base
             $user->name = $request->name;
-            $user->phone = $request->phone;
+            if ($request->phone && $request->phone != "null") {
+                $user->phone = $request->phone;
+            }
             $user->municipality_id = Municipality::where('name', '=', $request->municipality)->first()->id;
 
             // Guarda las imágenes si están presentes en la solicitud
             if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
-                $rutaAvatar = 'storage/avatars/' . $username . '/imagenPerfil.webp';
+                $rutaAvatar = 'avatars/' . $username . '/imagenPerfil.webp';
                 Storage::disk('public')->putFileAs('avatars/' . $username, $avatar, 'imagenPerfil.webp');
                 $user->avatar = asset($rutaAvatar);
             } else {
@@ -264,10 +266,9 @@ class UsersController extends Controller
             }
 
             if ($request->hasFile('banner')) {
-                dump('a');
                 $banner = $request->file('banner');
-                $rutaBanner = 'storage/banners/' . $username . '/imagenBanner.webp';
-                Storage::disk('banners')->putFileAs($username, $banner, 'imagenBanner.webp');
+                $rutaBanner = 'banners/' . $username . '/imagenBanner.webp';
+                Storage::disk('public')->putFileAs('banners/' . $username, $banner, 'imagenBanner.webp');
                 $user->banner = asset($rutaBanner);
             } else {
                 $user->banner = "default";
