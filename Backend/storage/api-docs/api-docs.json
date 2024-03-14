@@ -2997,6 +2997,105 @@
                 }
             }
         },
+        "/search": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Muestra una lista de publicaciones por municipio.",
+                "description": "Este método devuelve una lista de publicaciones asociadas a un municipio dado.",
+                "operationId": "searchPostsByMunicipality",
+                "parameters": [
+                    {
+                        "name": "municipality",
+                        "in": "query",
+                        "description": "El nombre del municipio.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de publicaciones por municipio",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "avatar": {
+                                                        "type": "string",
+                                                        "example": "avatar_del_usuario"
+                                                    },
+                                                    "username": {
+                                                        "type": "string",
+                                                        "example": "nombre_de_usuario"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "nombre_del_usuario"
+                                                    },
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": "imagen_de_la_publicación"
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "título_de_la_publicación"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "descripción_de_la_publicación"
+                                                    },
+                                                    "post_type": {
+                                                        "type": "string",
+                                                        "example": "nombre_del_tipo_de_publicación"
+                                                    },
+                                                    "active": {
+                                                        "type": "string",
+                                                        "example": "activo_o_inactivo"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Error al buscar publicaciones",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "mensaje_de_error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/{username}": {
             "get": {
                 "tags": [
