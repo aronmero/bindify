@@ -56,7 +56,7 @@
         <!-- Contenido del Post -->
         <div class=" wrapper ">
             <!-- Título -->
-            <h2 class=" primary max-w-[100px] overflow-hidden">{{ post.title }}</h2>
+            <h2 class=" primary max-w-[100px] overflow-hidden text-ellipsis">{{ post.title }}</h2>
             <!-- Descripcion -->
             <p class=" description  sm:block md:block hidden xl:block" :title="post.description">{{ post.description }}</p>
             <!-- Campo Municipio -->
@@ -74,7 +74,7 @@
             </p>
         </div>
         <div class="">
-            <button class="p-2 absolute top-[0px] right-[20px] " @click="() => abrirModal(post.post_id)">
+            <button class="p-2 absolute top-[0px] right-[0px] " @click="() => abrirModal(post.post_id)">
                 <img :src="MenuSVG" alt="">
             </button>
         </div>
@@ -116,7 +116,7 @@
 
         h2 {
             font-size: 1.3rem;
-            max-width:500px;
+            max-width:400px;
             overflow:hidden;
             text-overflow: ellipsis;
             white-space: nowrap;

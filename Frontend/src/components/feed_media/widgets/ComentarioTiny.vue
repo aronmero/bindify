@@ -14,6 +14,13 @@ const props = defineProps({
 
 const comentario = props.comentario;
 
+console.log(comentario);
+let imagenRuta;
+if(comentario.avatar == 'default'){
+    imagenRuta = 'public/img/placeholderPerfil.webp'
+} else {
+    imagenRuta = comentario.avatar;
+}
 //const user = comentario.username;
 
 
@@ -61,7 +68,7 @@ const comentario = props.comentario;
 <template>
     <div class="comentario w-[100%]  flex relative">
         <div class="left flex flex-col items-center justify-center mr-[30px] max-w-[100px]">
-            <img class="w-[50px] h-[50px] rounded-full bg-slate-400 mr-[10px]" :src="comentario.avatar" alt="">
+            <img class="w-[50px] h-[50px] rounded-full bg-slate-400 mr-[10px]" :src="imagenRuta" alt="">
             <b class=" username whitespace-nowrap max-w-[100px] overflow-hidden text-ellipsis" :title="comentario.username"> {{comentario.username}}</b>
             <small v-if="comentario.comment_creation != null">{{ datetranslatesql(comentario.comment_creation)
             }}</small>
