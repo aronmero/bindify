@@ -225,13 +225,13 @@ class FollowersController extends Controller
      * @OA\Post(
      *     path="/favorite/{username}",
      *     summary="Añade como favorito a un usuario seguido.",
-     *     description="Este método permite al usuario autenticado seguir o dejar de seguir a otro usuario especificado por su username.",
+     *     description="Este método permite al usuario autenticado añadir a favoritos a un usuario especificado por su username.",
      *     tags={"Followers"},
      *     @OA\Parameter(
      *         name="username",
      *         in="path",
      *         required=true,
-     *         description="El username del usuario a seguir o dejar de seguir.",
+     *         description="El username del usuario a añadir a favorito.",
      *         @OA\Schema(type="string")
      *     ),
      *     security={ {"bearerAuth": {}} },
