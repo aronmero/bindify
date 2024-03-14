@@ -44,22 +44,22 @@ async function tryLogin() {
                 "usuario",
                 JSON.stringify({ usuario: data.message })
             );
-            
+
             router.push("/");
             router.go();
         } else {
             errorMsg.value = "Email o contraseña incorrecta";
         }
     }
-  }
+}
 
 
 function OlvidarPassword() {
-  /* Funcion que redirecciona al modal o vista para recuperar la contraseña */
+    router.push("/reset-password");
 }
 
 function Registro() {
-  router.push("/registro");
+    router.push("/registro");
 }
 </script>
 
@@ -77,8 +77,8 @@ function Registro() {
                 <p class="text-center text-primary-700 text-xs lg:text-sm ms-3">{{ errorMsg }}</p>
                 <Input @datos="(nuevosDatos) => { email = nuevosDatos }" tipo="text" label="Email" :valor="email"
                     :error="errorEmail" />
-                <Input @datos="(nuevosDatos) => { password = nuevosDatos }" tipo="password" label="Password"
-                    class="-mt-2" :valor="password" :error="errorPass" />
+                <Input @datos="(nuevosDatos) => { password = nuevosDatos }" tipo="password" label="Password" class="-mt-2"
+                    :valor="password" :error="errorPass" />
                 <Input tipo="submit" clase="oscuro" valor="Iniciar sesión" />
                 <p @click="OlvidarPassword" class="font-semibold lg:text-base text-sm text-right cursor-pointer -mt-3">
                     ¿Olvidaste tu
