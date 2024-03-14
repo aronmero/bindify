@@ -6,7 +6,7 @@ import Comentario from '@/components/feed_media/widgets/Comentario.vue';
 import Calendar from "@/components/utils/calendar.vue";
 import { getCommentsOfPost, storeCommentsOfPost } from "@/Api/publicacion/comentarios.js";
 import router from '@/router/index.js';
-
+import BotonSpeaker from '@/components/feed_media/widgets/BotonSpeaker.vue';
 //https://vueuse.org/core/useClipboard/
 import { useClipboard } from '@vueuse/core'
 
@@ -21,10 +21,18 @@ const props = defineProps({
     dias: { type: String, default: "25" },
     descripcion: { type: String, default: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in tempus lorem. Donec eu felis erat. Aenean eu augue congue, congue ligula vitae, accumsan neque. Mauris auctor lobortis tempor. In hac habitasse platea dictumst. Ut egestas eget nunc quis convallis. Suspendisse potenti. Vivamus commodo lectus quis maximus facilisis. " },
     tipo: { type: String, default: "Evento" },
-    user: Object,
+    user: Array,
     fecha_publicacion: String,
     comentarios: Array,
 });
+const users=props.user;
+//Añade imagen default
+for (let index = 0; index < users.length; index++) {
+    if(users[index].avatar=="default"){
+        users[index].avatar="/public/img/placeholderPerfil.webp";
+}
+}
+
 
 let comentarios = ref(props.comentarios);
 //Abre y cierra el modal
@@ -132,7 +140,7 @@ console.log(props.user);
     </div>
     <div class="flex m-[20px] flex-col">
         <div class="flex justify-between w-full font-bold pb-[40px] relative">
-            <div>{{ props.titulo }}</div>
+            <div class="flex items-center">{{ props.titulo }}<BotonSpeaker :texto="props.titulo" class="scale-75" /></div>
             <div class="cursor-pointer" @click="openModal">...</div>
             <div id="modalEvento" @click="copyModal"
                 class="top-[30px] right-0 absolute bg-background-50 drop-shadow-sm rounded-[5px] font-normal p-[5px] flex gap-[5px] items-center cursor-pointer hidden">
@@ -142,14 +150,14 @@ console.log(props.user);
         <div>
             <div class="flex" v-if="tipo == 'Evento' && props.ubicacion != null"><img
                     src="@public/assets/icons/location.svg" class="w-[20px] mr-[5px]">{{ props.ubicacion
-                }}
+                }}<BotonSpeaker :texto="props.ubicacion" class="scale-75" />
             </div>
-            <div class="flex" v-if="tipo == 'Evento' && props.fechaInicio != null && props.fechaFin != null"><img
-                    src="@public/assets/icons/schedule.svg" class="w-[20px] mr-[5px]">{{
+            <div class="flex " v-if="tipo == 'Evento' && props.fechaInicio != null && props.fechaFin != null"><img
+                    src="@public/assets/icons/schedule.svg" class=" w-[20px] mr-[5px]"><div class="flex items-center">{{
                 props.fechaInicio }}
-                al {{ props.fechaFin }}</div>
+                al {{ props.fechaFin }}<BotonSpeaker :texto="`${props.fechaInicio} al ${props.fechaFin}`" class="scale-75" /></div></div>
         </div>
-        <div> {{ props.descripcion }}</div>
+        <div> {{ props.descripcion }}<BotonSpeaker :texto="props.descripcion" class="scale-75" /></div>
         <div class="text-[24px] font-bold my-[30px]" v-if="tipo == 'Evento'">Periodo del evento</div>
         <div v-if="tipo == 'Evento'">
             <Calendar :post="props" />
