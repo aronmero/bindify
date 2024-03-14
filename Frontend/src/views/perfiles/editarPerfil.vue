@@ -1,4 +1,5 @@
 <script setup>
+import router from "@/router/index.js";
 import { ref } from "vue";
 import Grid from "@/components/comun/layout.vue";
 
@@ -32,11 +33,11 @@ let errorDirec = ref(null);
 let errorPhone = ref(null);
 let errorContra = ref(null);
 let errorSche = ref(null);
-const imagenPerfilDefault = '/img/placeholderPerfil.webp';
-const imagenBannerDefault = '/img/placeholderBanner.webp';
+const imagenPerfilDefault = '/public/img/placeholderPerfil.webp';
+const imagenBannerDefault = '/public/img/placeholderBanner.webp';
 const userType = ref(JSON.parse(sessionStorage.getItem("usuario")));
 userType.value = userType.value.usuario;
-console.log(userType.value);
+//console.log(userType.value);
 const tipoUsuario = ref(userType.value.tipo);
 const user = ref(JSON.parse(sessionStorage.getItem("userData")));
 if(tipoUsuario.value == 'customer'){
@@ -44,7 +45,7 @@ if(tipoUsuario.value == 'customer'){
 }else{
     user.value = user.value.userData[0];
 }
-console.log(user.value);
+//console.log(user.value);
 const nombre = ref(user.value.name);
 const imagenPerfil = ref(user.value.avatar);
 const imagenBanner = ref(user.value.banner);
@@ -65,27 +66,28 @@ if(userType.value.tipo == 'commerce'){
     });
 }
 if(imagenPerfil.value == 'default'){
-    imagenPerfil.value = '/public/img/placeholderPerfil.webp';
+    imagenPerfil.value = imagenPerfilDefault;
 }
 if(imagenBanner.value == 'default'){
-    imagenBanner.value = '/public/img/placeholderBanner.webp';
+    imagenBanner.value = imagenBannerDefault;
 }
 const isValid = ref(null);
-const tratarDatos = ()=>{
-    console.log(nombre.value);
-    console.log(imagenPerfil.value);
-    console.log(imagenBanner.value);
-    console.log(telefono.value);
-    console.log(email.value.length);
-    console.log(municipio.value);
-    console.log(fechaNac.value);
-    console.log(sexo.value);
-    console.log(horarioActual.value);
-    console.log(direccion.value);
-    console.log(categoria.value);
-    console.log(contraNueva.value);
-    console.log(repetirNueva.value);
-    console.log(tipoUsuario.value);
+const tratarDatos = async ()=>{
+    /*
+    //console.log(nombre.value);
+    //console.log(imagenPerfil.value);
+    //console.log(imagenBanner.value);
+    //console.log(telefono.value);
+    //console.log(email.value.length);
+    //console.log(municipio.value);
+    //console.log(fechaNac.value);
+    //console.log(sexo.value);
+    //console.log(horarioActual.value);
+    //console.log(direccion.value);
+    //console.log(categoria.value);
+    //console.log(contraNueva.value);
+    //console.log(repetirNueva.value);
+    //console.log(tipoUsuario.value);*/
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if(nombre.value == null || nombre.value.length == 0){
         window.scroll({top:50, right:0, behavior: 'smooth'});
@@ -139,7 +141,7 @@ const tratarDatos = ()=>{
             }
             if(municipio.value != null && municipio.value != user.value.municipality_name){
                 municipio.value = options.value[municipio.value].name;
-            }
+            } 
             let datos =  {
                 "email": email.value,
                 "password": contraNueva.value,
@@ -156,7 +158,8 @@ const tratarDatos = ()=>{
                 "birth_date": fechaNac.value,
                 "password_confirmation": repetirNueva.value,
             }
-            let respuesta = updateUserData("POST", datos, userType.value.username);
+            console.log(datos);
+            let respuesta = await updateUserData("POST", datos, userType.value.username);
             console.log(respuesta);
             if(respuesta.status){
                 email.value = null;
@@ -169,11 +172,11 @@ const tratarDatos = ()=>{
                 sexo.value = null;
                 sessionStorage.setItem(
                     "userData",
-                    JSON.stringify({ usuario: data.message })
+                    JSON.stringify({ usuario: respuesta.data })
                     );
                     router.go(-1);
             }else{
-            console.log("Error de back en el registro");
+            //console.log("Error de back en el registro");
             }
         }
     }else{
@@ -181,11 +184,11 @@ const tratarDatos = ()=>{
         let auxFechaNacBack = null;
 
         if(fechaNac.value == undefined){
-            console.log('No esta definida la fechaNac');
+            //console.log('No esta definida la fechaNac');
         }else{
-            console.log("Al fin usas la fechaNac");
-            console.log(fechaNac);
-            console.log(fechaNac.value);
+            //console.log("Al fin usas la fechaNac");
+            //console.log(fechaNac);
+            //console.log(fechaNac.value);
             auxFechaNacBack = fechaNac.value;
         }
 
@@ -211,6 +214,12 @@ const tratarDatos = ()=>{
 
         }
         if(errorCategory.value == null && errorDirec.value == null && errorPhone.value == null && errorContra.value == null && errorNombre.value == null && errorMail.value == null && errorMunic.value == null){
+            if(imagenBanner.value == imagenBannerDefault){
+                imagenBanner.value = null;
+            }
+            if(imagenPerfil.value == imagenPerfilDefault){
+                imagenPerfil.value = null;
+            }
             if(municipio.value != null && municipio.value != user.value.municipality_name){
                 municipio.value = options.value[municipio.value].name;
             }
@@ -234,8 +243,9 @@ const tratarDatos = ()=>{
                 "birth_date": auxFechaNacBack,
                 "password_confirmation": repetirNueva.value,
             }
-            console.log(datos);
-            let respuesta = updateUserData("POST", datos, userType.value.username);
+            //console.log(datos);
+            let respuesta = await updateUserData("POST", datos, userType.value.username);
+            //console.log(respuesta)
             if(respuesta.status){
                 email.value = null;
                 nombre.value = null;
@@ -248,19 +258,19 @@ const tratarDatos = ()=>{
                 categoria.value = null;
                 sessionStorage.setItem(
                     "userData",
-                    JSON.stringify({ usuario: data.message })
+                    JSON.stringify({ usuario: data.data })
                 );
                 router.go(-1);
             }else{
-                console.log("Error de back en el registro");
+                //console.log("Error de back en el registro");
             } 
         }
     }
 }
 /** Controla la apertura del modal de horarios */
 const controlarModal = () => {
-    console.log(horarioActual)
-    console.log(controlador_modal.value)
+    //console.log(horarioActual)
+    //console.log(controlador_modal.value)
     if(controlador_modal.value) {
         controlador_modal.value = false;
     } else {
@@ -274,7 +284,7 @@ const controlarModal = () => {
  * */
 const obtenerCambioHorario = (cambio) => {
     horarioActual.value = cambio;
-    console.log("obtenido cambio")
+    //console.log("obtenido cambio")
     controlador_modal.value = false;
 }
 
