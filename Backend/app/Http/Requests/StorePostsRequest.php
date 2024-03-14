@@ -22,19 +22,15 @@ class StorePostsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'nullable|file', // Imagen del post
             'title' => 'required|string|max:255', // Titulo del post
             'description' => 'string|max:300', // Descripción del post
             'post_type_id' => 'required|integer', // Id de tipo de publicación
-            'start_date' => 'nullable|date|after_or_equal:today', // Fecha en la que inicia el evento
-            'end_date' => 'nullable|date|after_or_equal:start_date', // Fecha en la que termina el evento
         ];
     }
 
     public function messages(): array
     {
         return [
-            'image' => 'El dato no es el adecuado, imagen requerida',
             'title' => [
                 'required' => 'El titulo de la publicación es obligatorio',
                 'max' => 'El titulo es demasiado largo',
@@ -47,14 +43,6 @@ class StorePostsRequest extends FormRequest
                 'required' => 'El tipo de publicación es obligatorio',
                 'integer' => 'Tipo de dato incorrecto',
             ],
-            'start_date' => [
-                'date' => 'La fecha no tiene el formato correcto',
-                'after_or_equal' => 'No puedes poner una fecha anterior a hoy',
-            ],
-            'end_date' => [
-                'date' => 'La fecha no tiene el formato correcto',
-                'after' => 'No puedes poner una fecha anterior a la fecha de inicio',
-            ]
         ];
     }
 }

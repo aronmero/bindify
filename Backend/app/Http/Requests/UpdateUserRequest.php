@@ -22,21 +22,13 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email', // Email del usuario
-            'password' => 'required', //Contraseña del usuario
             'phone' => 'required|string|max:9', // Numero de telefono del usuario
             'municipality' => 'required|string', //Nombre del municipio
-            'avatar' => 'nullable|file', // Imagen de perfil
-            'username' => 'nullable|string', // Nombre de usuario
             'name' => 'nullable|string', // Nombre real del usuario
             'address' => 'nullable|string', // Dirección del comercio
-            // 'category' => 'required|string', // Nombre de la categoría del comercio
-            // 'empresa' => 'boolean', // Booleano que comprueba si es una empresa
             'schedule' => 'nullable|string', // Horario de una empresa
             'description' => 'nullable|string|max:300', // Descripción de la empresa
             'gender' => 'nullable|string', // Género del cliente
-            // 'birth_date' => 'nullable|date|before:today', // Fecha de nacimiento del cliente
-            // 'banner' => 'nullable|file', // Imagen de banner del usuario
         ];
     }
 

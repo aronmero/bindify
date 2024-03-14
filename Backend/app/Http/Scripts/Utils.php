@@ -134,6 +134,7 @@ class Utils
     {
         $encrypted = openssl_encrypt($id, self::$method, env('SECRET_KEY'), 0, self::$iv);
         $encrypted = substr($encrypted, 0, -2);
+        $encrypted = str_replace('/', '_', $encrypted);
         return $encrypted;
     }
 
@@ -150,6 +151,7 @@ class Utils
      */
     public static function deCrypt(string $id)
     {
+        $id = str_replace('_', '/', $id);
         $decrypted = openssl_decrypt($id . "==", self::$method, env('SECRET_KEY'), 0, self::$iv);
         return $decrypted;
     }
