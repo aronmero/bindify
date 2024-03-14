@@ -678,13 +678,11 @@ class PostsController extends Controller
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $rutaFotoPost = 'posts/' . $user->username.$post->id . '/imagenPost.webp';
-                Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
-                $rutaFotoPost = asset($rutaFotoPost);
+                Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp'.$post->id);
+                $rutaFotoPost = env('APP_URL').Storage::url('posts/'.$user->username . '/imagenPost.webp'.$post->id);
+                $post->image = $rutaFotoPost;
+                $post->save();
             }
-
-            $post->image=$rutaFotoPost;
-            $post->save();
             
             try {
                 $post->users()->attach($user->id);

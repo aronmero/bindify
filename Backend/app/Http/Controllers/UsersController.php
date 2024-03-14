@@ -551,7 +551,7 @@ class UsersController extends Controller
                     'posts.image',
                     'posts.title',
                     'posts.description',
-                    'posts.description',
+                    'posts.active',
                     'post_types.name',
                     'posts.start_date',
                     'posts.end_date',
