@@ -316,8 +316,8 @@ class PostsController extends Controller
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $rutaFotoPost = 'storage/posts/' . $request->username . 'imagenPost.webp';
-                Storage::disk('posts')->putFileAs($user->username, $image, '/imagenPost.webp');
+                $rutaFotoPost = 'posts/' . $user->username . '/imagenPost.webp';
+                Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
                 $rutaFotoPost = asset($rutaFotoPost);
             }
 
@@ -558,10 +558,11 @@ class PostsController extends Controller
 
                 if ($request->hasFile('image')) {
                     $image = $request->file('image');
-                    $rutaFotoPost = 'storage/posts/' . $request->username . 'imagenPost.webp';
-                    Storage::disk('posts')->putFileAs($user->username, $image, '/imagenPost.webp');
+                    $rutaFotoPost = 'posts/' . $user->username . '/imagenPost.webp';
+                    Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
                     $rutaFotoPost = asset($rutaFotoPost);
                 }
+
 
                 if ($request->active) {
                     $post->active = $request->active;

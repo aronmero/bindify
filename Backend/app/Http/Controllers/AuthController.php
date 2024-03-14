@@ -72,7 +72,7 @@ class AuthController extends Controller
      * @param \Illuminate\Http\Request $request - El token del usuario.
      *
      * @return \Illuminate\Http\JsonResponse - Un mensaje indicando que se cerro la sesión o un mensaje de error.
-     * 
+     *
      * @response 200 {
      *   "message": "Sesión Cerrada Correctamente"
      * }
@@ -123,14 +123,14 @@ class AuthController extends Controller
 
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
-            $rutaAvatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
+            $rutaAvatar = 'avatars/' . $request->username . '/imagenPerfil.webp';
+            Storage::disk('public')->putFileAs('avatars/' . $request->username, $avatar, 'imagenPerfil.webp');
         }
-        
+
         if ($request->hasFile('banner')) {
             $banner = $request->file('banner');
-            Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
-            $rutaBanner = asset('storage/avatars/' . $request->username . '/banner.webp');
+            $rutaBanner = 'banners/' . $request->username . '/imagenBanner.webp';
+            Storage::disk('public')->putFileAs('banners/' . $request->username, $banner, 'imagenBanner.webp');
         }
 
 
