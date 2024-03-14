@@ -15,7 +15,7 @@ class MunicipalitiesController extends Controller
      *     summary="Muestra una lista de los municipios.",
      *     description="Este método devuelve una lista de todos los municipios. Si se encuentran municipios, devuelve una respuesta JSON con los datos de los municipios y un estado 200. Si no se encuentran municipios, devuelve una respuesta JSON con un mensaje de error y un estado 404. Si ocurre algún otro error durante el proceso, devuelve una respuesta JSON con un mensaje de error y un estado 500.",
      *     operationId="getMunicipalities",
-     *     tags={"Municipios"},
+     *     tags={"Municipalities"},
      *     @OA\Response(
      *         response=200,
      *         description="Lista de municipios recuperada exitosamente",
