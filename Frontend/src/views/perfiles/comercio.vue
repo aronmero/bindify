@@ -271,7 +271,7 @@ function manipulacion(evento) {
         </div>
 
         <!-- <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser> -->
-        <div class="flex justify-center">
+        <div class="flex justify-center items-center gap-4">
           <RouterLink to="/perfil/edit" v-if="!userExterno">
             <btnConText
               texto="EDIT PROFILE"
