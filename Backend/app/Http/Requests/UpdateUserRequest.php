@@ -24,13 +24,13 @@ class UpdateUserRequest extends FormRequest
         return [
             'email' => 'required|email', // Email del usuario
             'password' => 'required', //Contraseña del usuario
-            'phone' => 'required|integer|max:9', // Numero de telefono del usuario
-            'municipality_id' => 'required|integer', //Id del municipio
+            'phone' => 'required|string|max:9', // Numero de telefono del usuario
+            'municipality' => 'required|string', //Nombre del municipio
             'avatar' => 'image', // Imagen de perfil
             'username' => 'required|string', // Nombre de usuario
             'name' => 'required|string', // Nombre real del usuario
             'address' => 'string', // Dirección del comercio
-            'category_id' => 'integer', // Categoría del comercio
+            'category' => 'required|string', // Nombre de la categoría del comercio
             'empresa' => 'boolean', // Booleano que comprueba si es una empresa
             'schedule' => 'string', // Horario de una empresa
             'description' => 'string|max:300', // Descripción de la empresa
@@ -52,12 +52,12 @@ class UpdateUserRequest extends FormRequest
             ],
             'phone' => [
                 'required' => 'El teléfono es requerido',
-                'integer' => 'Formato de dato incorrecto, integer requerido',
+                'string' => 'Formato de dato incorrecto, string requerido',
                 'max' => 'El numero es demasiado largo para un número de teléfono'
             ],
-            'municipality_id' => [
-                'required' => 'El id del municipio es requerido',
-                'integer' => 'Formato de dato incorrecto, integer requerido',
+            'municipality' => [
+                'required' => 'El municipio es requerido',
+                'string' => 'Formato de dato incorrecto, string requerido',
             ],
             'avatar' => 'El archivo no es una imagen, (jpg, jpeg, png, bmp, gif, svg, or webp)',
             'username' => [
@@ -69,8 +69,9 @@ class UpdateUserRequest extends FormRequest
                 'string' => 'Formato de dato incorrecto, string requerido',
             ],
             'address' => 'Formato de dato incorrecto, string requerido',
-            'category_id' => [
-                'integer' => 'Formato de dato incorrecto, integer requerido',
+            'category' => [
+                'required' => 'La categoría es requerida',
+                'string' => 'Formato de dato incorrecto, string requerido',
             ],
             'empresa' => 'El dato no es un booleano',
             'schedule' => 'Formato de dato incorrecto, string requerido',

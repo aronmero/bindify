@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Scripts\Utils;
+use App\Models\Category;
 use App\Models\Commerce;
 use App\Models\Customer;
 use App\Models\Follower;
+use App\Models\Municipality;
 use App\Models\Post;
 use App\Models\User;
 use Exception;
@@ -238,6 +240,7 @@ class UsersController extends Controller
     public function update(UpdateUserRequest $request, string $username)
     {
         try {
+
             // Elimina campos que no queremos actualizar
             $request->request->remove("username");
             $request->request->remove("phone");
@@ -245,6 +248,8 @@ class UsersController extends Controller
 
             // Busca al usuario por su nombre de usuario
             $user = User::where("username", $username)->firstOrFail();
+            $user->municipality_id = Municipality::where('name', '=', $request->municipality)->first()->id;
+
             // Revisa si el usuario es él mismo el que se va a cambiar
             if (Auth::user()->id != $user->id) {
                 return response()->json(["status" => false, "message" => "No autorizado"], 401);
@@ -276,7 +281,7 @@ class UsersController extends Controller
                 // Si el usuario es un comercio, actualiza los detalles como comercio
                 $commerce = Commerce::where('user_id', $user->id)->first();
 
-                $commerce->fill($request->except('avatar', 'banner'));
+                $commerce->fill($request->except('avatar', 'banner', 'category', 'municipality'));
 
                 if ($request->hasFile('avatar')) {
                     $avatar = $request->file('avatar');
@@ -290,6 +295,7 @@ class UsersController extends Controller
                     $commerce->banner = asset('storage/avatars/' . $request->username . '/banner.webp');
                 }
 
+                $commerce->category_id = Category::where('name', '=', $request->category)->first()->id;
                 $commerce->save();
                 $updatedUser = $commerce->user;
             }
