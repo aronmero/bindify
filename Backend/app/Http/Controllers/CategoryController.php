@@ -5,45 +5,73 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Controllers\APIDocumentationController;
 
 class CategoryController extends Controller
 {
     /**
- * @swagger
- * /api/categorias:
- *   get:
- *     summary: Muestra una lista de todas las categorías.
- *     description: >
- *       Este método devuelve una lista de todas las categorías.
- *       Si se encuentran categorías, devuelve una respuesta JSON con los datos de las categorías y un estado 200.
- *       Si no se encuentran categorías, devuelve una respuesta JSON con un mensaje de error y un estado 404.
- *       Si ocurre algún otro error durante el proceso, devuelve una respuesta JSON con un mensaje de error y un estado 500.
- *     responses:
- *       200:
- *         description: Lista de categorías obtenida exitosamente.
- *         content:
- *           application/json:
- *             example:
- *               status: true
- *               data:
- *                 - name: NombreCategoría1
- *                 - name: NombreCategoría2
- *                 # ...
- *       404:
- *         description: No se encontraron categorías.
- *         content:
- *           application/json:
- *             example:
- *               status: false
- *               message: No se encontró ninguna categoría
- *       500:
- *         description: Error al obtener las categorías.
- *         content:
- *           application/json:
- *             example:
- *               status: false
- *               message: Hubo un problema al obtener las categorías: mensaje_de_error
- */
+     * @OA\Get(
+     *     path="/category",
+     *     summary="Muestra una lista de todas las categorías.",
+     *     description="Este método devuelve una lista de todas las categorías. Si se encuentran categorías, devuelve una respuesta JSON con los datos de las categorías y un estado 200. Si no se encuentran categorías, devuelve una respuesta JSON con un mensaje de error y un estado 404. Si ocurre algún otro error durante el proceso, devuelve una respuesta JSON con un mensaje de error y un estado 500.",
+     *     tags={"Categorias"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de categorías obtenida exitosamente.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="string"
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontraron categorías.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener las categorías.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=false
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string"
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         try {

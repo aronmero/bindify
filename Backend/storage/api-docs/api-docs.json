@@ -12,13 +12,90 @@
         }
     ],
     "paths": {
-        "/hashtags": {
+        "/category": {
+            "get": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Muestra una lista de todas las categorías.",
+                "description": "Este método devuelve una lista de todas las categorías. Si se encuentran categorías, devuelve una respuesta JSON con los datos de las categorías y un estado 200. Si no se encuentran categorías, devuelve una respuesta JSON con un mensaje de error y un estado 404. Si ocurre algún otro error durante el proceso, devuelve una respuesta JSON con un mensaje de error y un estado 500.",
+                "operationId": "062b0e17b0b265231ad33ece1785b1fe",
+                "responses": {
+                    "200": {
+                        "description": "Lista de categorías obtenida exitosamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontraron categorías.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error al obtener las categorías.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/hashtag": {
             "get": {
                 "tags": [
                     "Hashtags"
                 ],
                 "summary": "Muestra todos los hashtags disponibles",
-                "operationId": "49f1cf274ffff53e14f9459fcfc34a3a",
+                "operationId": "ce9a49e575371f17f11339ed7b35ccb4",
                 "responses": {
                     "200": {
                         "description": "Lista de hashtags obtenida exitosamente",
@@ -74,7 +151,7 @@
                     "Hashtags"
                 ],
                 "summary": "Almacena un nuevo hashtag",
-                "operationId": "f8802a9e37c71f21948dd615807964f0",
+                "operationId": "d608c07e41eea216fb763c0134f4d565",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -154,13 +231,13 @@
                 }
             }
         },
-        "/hashtags/populares": {
+        "/hashtag/populares": {
             "get": {
                 "tags": [
                     "Hashtags"
                 ],
                 "summary": "Obtiene los hashtags más populares",
-                "operationId": "4bdf68b19e59fb9cd63252b7dcc90810",
+                "operationId": "628a9a6cda03d6477a3326c5c6036063",
                 "parameters": [
                     {
                         "name": "type",

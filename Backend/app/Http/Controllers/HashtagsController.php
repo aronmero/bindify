@@ -12,7 +12,7 @@ class HashtagsController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/hashtags",
+     *     path="/hashtag",
      *     summary="Muestra todos los hashtags disponibles",
      *     tags={"Hashtags"},
      *     @OA\Response(
@@ -61,7 +61,7 @@ class HashtagsController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/hashtags",
+     *     path="/hashtag",
      *     summary="Almacena un nuevo hashtag",
      *     tags={"Hashtags"},
      *     @OA\RequestBody(
@@ -126,7 +126,7 @@ class HashtagsController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/hashtags/populares",
+     *     path="/hashtag/populares",
      *     summary="Obtiene los hashtags más populares",
      *     tags={"Hashtags"},
      *     @OA\Parameter(
