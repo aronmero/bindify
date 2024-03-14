@@ -4,6 +4,7 @@ import { inputSearch } from '@/stores/inputSearch';
 import { getCommerces } from '@/Api/busqueda/busqueda.js';
 import { actualSection } from '@/stores/actualSection';
 
+
 export default function useSearchLogic() {
     let results = ref([]);
 
@@ -118,10 +119,12 @@ export default function useSearchLogic() {
         option.setOptionSelectedHashtag('');
         option.setOptionSelectedPost('');
         const selected = document.querySelectorAll('.selected');
-        console.log(selected);
         selected.forEach(element => {
             element.classList.remove('selected');
         });
+        const searhBar = document.querySelector('.search-bar');
+        searhBar.value = '';
+        inputSearch().setInputSearch('');
     }
 
 
