@@ -144,7 +144,8 @@ class HashtagsController extends Controller
      *             @OA\Property(property="data", type="array",
      *                 @OA\Items(
      *                     type="object",
-     *                     @OA\Property(property="name", type="string", example="hashtag1")
+     *                     @OA\Property(property="name", type="string", example="hashtag1"),
+     *                     @OA\Property(property="hashtag_count", type="integer", example="4")
      *                 )
      *             )
      *         )
