@@ -318,12 +318,6 @@ class PostsController extends Controller
 
             $rutaFotoPost = 'default';
 
-            if (isset($request->start_date)) {
-                return response()->json(['status' => true, 'message' => 'isset', 'data' => $request->start_date], 200);
-            }
-
-            return response()->json(['status' => true, 'message' => 'startdate', 'data' => $request->start_date], 200);
-
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 Storage::disk('posts')->putFileAs($user->username, $image, '/imagenPost.webp');
