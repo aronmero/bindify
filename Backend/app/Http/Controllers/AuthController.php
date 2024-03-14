@@ -128,10 +128,10 @@ class AuthController extends Controller
             $rutaAvatar = env('APP_URL').Storage::url('avatars/'.$request->username . '/imagenPerfil.webp');
         }
 
-        if ($request->hasFile('banners')) {
+        if ($request->hasFile('banner')) {
             $image = $request->file('banner');
-            Storage::disk('banner')->putFileAs($request->username, $image, '/imagenBanner.webp');
-            $rutaAvatar = env('APP_URL').Storage::url('avatars/'.$request->username . '/imagenBanner.webp');
+            Storage::disk('banners')->putFileAs($request->username, $image, '/imagenBanner.webp');
+            $rutaAvatar = env('APP_URL').Storage::url('banners/'.$request->username . '/imagenBanner.webp');
         }
 
 

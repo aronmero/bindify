@@ -256,10 +256,10 @@ class UsersController extends Controller
                 Storage::disk('avatars')->putFileAs($user->username, $image, '/imagenPerfil.webp');
                 $user->avatar = env('APP_URL').Storage::url('avatars/'.$user->username. '/imagenPerfil.webp');
             }
-            if ($request->hasFile('avatar')) {
-                $image = $request->file('avatar');
-                Storage::disk('avatars')->putFileAs($user->username, $image, '/imagenPerfil.webp');
-                $user->banner = env('APP_URL').Storage::url('avatars/'.$user->username. '/imagenPerfil.webp');
+            if ($request->hasFile('banner')) {
+                $image = $request->file('banner');
+                Storage::disk('banners')->putFileAs($user->username, $image, '/imagenBanner.webp');
+                $user->banner = env('APP_URL').Storage::url('banners/'.$user->username. '/imagenBanner.webp');
             }
 
             if ($request->password) {

@@ -210,7 +210,7 @@ button {
 
       img {
         margin-right: 10px;
-        background: $destacado;
+        // background: $destacado;
         width: 35px;
         height: 35px;
         border-radius: 50px;
