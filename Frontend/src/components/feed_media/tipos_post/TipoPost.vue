@@ -23,44 +23,17 @@ const modalHandler = ref(false);
 const modal = ref(null);
 
 const esSeguido = ref(false);
-console.log(props.seguidos);
-console.log(post);
+
 props.seguidos.forEach(seguido => {
     if(seguido.username == post.value.username) esSeguido.value = true;
 });
 
 console.log(esSeguido.value);
 
-const modal_comentarios = ref(null);
-/** Genero la referencia para abrir o cerrar el modal de comentarios */
-const comentariosVisibles = ref(false);
-
-/** Genero la referencia para obtener los favoritos del usuario, hecho en frontend por no poderse poner en back */
-const favoritos = ref(obtener_favoritos());
-
-/** Abre el modal del perfil */
-const abrirModal = () => {
-    if (modalHandler.value) {
-        modal.value.style.display = "none";
-        modalHandler.value = false;
-    } else {
-        modal.value.style.display = "flex";
-        modalHandler.value = true;
-    }
-}
-
-
 
 
 /** Dependiendo del tipo de post, carga un icono  */
 const tipo = post.value.name;
-
-/**Obtenemos el tipo de usuario para decidir que tipo de post se muestra */
-let tipo_usuario = ref(post.userRol);
-
-/** referencia los comentarios */
-let comentarios = ref(null);
-
 
 
 /**
@@ -114,7 +87,7 @@ const { stop } = useIntersectionObserver(post_reference,
         >
         </PostAyuntamiento>
         <!-- El modal de comentarios -->
-        <Comentarios v-if="comentariosVisibles" :post="post" /> 
+        <!-- <Comentarios v-if="comentariosVisibles" :post="post" />  -->
     </div>
 </template>
 
