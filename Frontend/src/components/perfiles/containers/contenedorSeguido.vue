@@ -47,5 +47,5 @@ function irAPerfil(evento) {
       <img :src="imagen" :alt="imagenAltText" class="scale-90" />
     </div>
   </div>
-</template>
+</template> 
 <style scoped></style>

@@ -1,6 +1,6 @@
 <script setup>
     import UserCard from "@/components/seguidos/userCard.vue";
-    import InputSearch from "../../components/comun/inputSearch.vue";
+    import InputSearch from "./inputSearchAdaptado.vue";
     import {usersAux, loading, searchByFilter, followedListAux, fetchUsers} from "@/utils/followedSearchLogic.js";
     import { onMounted } from "vue";
 
