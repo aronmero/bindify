@@ -32,7 +32,8 @@ import { obtener_favoritos } from '../helpers/favoritos';
 
 const props = defineProps({
     post: Object,
-    tipo: String
+    tipo: String,
+    abrirComentarios: Function
 });
 
 
