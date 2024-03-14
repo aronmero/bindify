@@ -12,10 +12,348 @@
         }
     ],
     "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Iniciar sesión de usuario",
+                "description": "Verifica las credenciales del usuario y genera un token de acceso si son válidas.",
+                "operationId": "2dd578ff7aba2721293dac66833b27d1",
+                "requestBody": {
+                    "description": "Datos de inicio de sesión del usuario",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "usuario@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "contraseña_secreta"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Inicio de sesión exitoso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "nombre_de_usuario"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "access_token"
+                                                },
+                                                "tipo": {
+                                                    "type": "string",
+                                                    "example": "rol"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Usuario no encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Cierra la sesión del usuario actual",
+                "description": "Este método cierra la sesión del usuario actual y revoca todos los tokens de acceso asociados.",
+                "operationId": "logoutUser",
+                "requestBody": {
+                    "description": "El token del usuario.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": "token_de_acceso"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sesión cerrada correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sesión cerrada correctamente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Usuario no autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Usuario no autenticado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Maneja la solicitud de registro de usuarios.",
+                "description": "Este método crea un nuevo usuario con los datos proporcionados en la solicitud. Asigna un rol al usuario (comercio, cliente o ayuntamiento) según los datos proporcionados. Devuelve una respuesta JSON con un mensaje de éxito y los detalles del usuario creado.",
+                "operationId": "registerUser",
+                "requestBody": {
+                    "description": "Datos de la solicitud de registro de usuario",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password",
+                                    "phone",
+                                    "username",
+                                    "empresa",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "usuario@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "contraseña_secreta"
+                                    },
+                                    "phone": {
+                                        "type": "integer",
+                                        "example": "654781238"
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "example": "nombre_usuario"
+                                    },
+                                    "municipality_id": {
+                                        "type": "integer",
+                                        "example": "id_municipio"
+                                    },
+                                    "empresa": {
+                                        "type": "boolean",
+                                        "example": "true"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "nombre_real"
+                                    },
+                                    "verification_toke": {
+                                        "type": "integer",
+                                        "example": "token_ayuntamiento"
+                                    },
+                                    "avatar": {
+                                        "type": "file",
+                                        "example": "imagen_perfil"
+                                    },
+                                    "banner": {
+                                        "type": "file",
+                                        "example": "banner"
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "example": "genero_particular"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "direccion_empresa"
+                                    },
+                                    "schedule": {
+                                        "type": "string",
+                                        "example": "horario_empresa"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario creado correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuario creado correctamente"
+                                        },
+                                        "user": {
+                                            "type": "object",
+                                            "example": "User"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "access_token"
+                                        },
+                                        "tipo": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "rol_1"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos de creación de usuario incorrectos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Datos de creación de usuario incorrectos"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Token de verificación incorrecto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Token de verificación incorrecto"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensaje de error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/category": {
             "get": {
                 "tags": [
-                    "Categorias"
+                    "Category"
                 ],
                 "summary": "Muestra una lista de todas las categorías.",
                 "description": "Este método devuelve una lista de todas las categorías. Si se encuentran categorías, devuelve una respuesta JSON con los datos de las categorías y un estado 200. Si no se encuentran categorías, devuelve una respuesta JSON con un mensaje de error y un estado 404. Si ocurre algún otro error durante el proceso, devuelve una respuesta JSON con un mensaje de error y un estado 500.",
@@ -1188,7 +1526,7 @@
         "/municipality": {
             "get": {
                 "tags": [
-                    "Municipios"
+                    "Municipalities"
                 ],
                 "summary": "Muestra una lista de los municipios.",
                 "description": "Este método devuelve una lista de todos los municipios. Si se encuentran municipios, devuelve una respuesta JSON con los datos de los municipios y un estado 200. Si no se encuentran municipios, devuelve una respuesta JSON con un mensaje de error y un estado 404. Si ocurre algún otro error durante el proceso, devuelve una respuesta JSON con un mensaje de error y un estado 500.",
@@ -1353,7 +1691,7 @@
         "/home_calendario": {
             "get": {
                 "tags": [
-                    "Publicaciones"
+                    "Posts"
                 ],
                 "summary": "Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.",
                 "description": "Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.",
@@ -1458,7 +1796,7 @@
         "/home_todos": {
             "get": {
                 "tags": [
-                    "Publicaciones"
+                    "Posts"
                 ],
                 "summary": "Muestra una lista de publicaciones para el usuario sin ningún tipo de seguidos.",
                 "description": "Este método devuelve una lista de publicaciones para el usuario autenticado sin restricciones.",
@@ -1579,7 +1917,7 @@
         "/home": {
             "get": {
                 "tags": [
-                    "Publicaciones"
+                    "Posts"
                 ],
                 "summary": "Muestra una lista de publicaciones de los usuarios que sigue el usuario actual.",
                 "description": "Este método devuelve una lista de publicaciones de los usuarios que sigue el usuario autenticado.",
@@ -1699,7 +2037,7 @@
         "/posts": {
             "post": {
                 "tags": [
-                    "Publicaciones"
+                    "Posts"
                 ],
                 "summary": "Crea una nueva publicación en la plataforma.",
                 "description": "Este método permite al usuario autenticado crear una nueva publicación en la plataforma, con los datos proporcionados en la solicitud.",
@@ -1819,7 +2157,7 @@
         "/posts/{id}": {
             "get": {
                 "tags": [
-                    "Publicaciones"
+                    "Posts"
                 ],
                 "summary": "Muestra los detalles de una publicación específica junto con los comentarios y usuarios asociados.",
                 "description": "Este método recupera información detallada sobre una publicación específica, incluyendo su imagen, título, descripción, tipo, fechas, estado, ubicación, fecha de creación y hashtags asociados. Además, obtiene hasta 5 comentarios asociados con la publicación, junto con los nombres de usuario, avatares e IDs de los comentaristas. También recupera información sobre los usuarios que son propietarios de la publicación, incluyendo sus nombres, nombres de usuario, avatares e IDs.",
@@ -1986,7 +2324,7 @@
             },
             "put": {
                 "tags": [
-                    "Publicaciones"
+                    "Posts"
                 ],
                 "summary": "Actualiza la información de una publicación existente.",
                 "description": "Este método permite al usuario autenticado actualizar la información de una publicación existente proporcionando los datos actualizados en la solicitud.",
@@ -2086,7 +2424,7 @@
             },
             "delete": {
                 "tags": [
-                    "Publicaciones"
+                    "Posts"
                 ],
                 "summary": "Elimina una publicación existente de forma lógica.",
                 "description": "Este método permite al usuario autenticado eliminar una publicación existente de forma lógica, marcándola como inactiva en lugar de eliminarla físicamente de la base de datos.",

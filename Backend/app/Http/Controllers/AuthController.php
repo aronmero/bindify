@@ -22,27 +22,41 @@ use Illuminate\Support\Facades\Crypt;
 class AuthController extends Controller
 {
     /**
-     * Maneja la solicitud de inicio de sesión.
-     *
-     * Este método verifica las credenciales del usuario y genera un token de acceso si las credenciales son válidas.
-     * Devuelve una respuesta JSON con el token de acceso y el tipo de usuario si la autenticación es exitosa.
-     * Si las credenciales son inválidas, devuelve una respuesta JSON con un mensaje de error y un estado 404.
-     *
-     * @param \App\Http\Requests\LoginRequest $datos - Los datos de la solicitud de inicio de sesión.
-     *
-     * @return \Illuminate\Http\JsonResponse - Una respuesta JSON que contiene el token de acceso y el tipo de usuario o un mensaje de error.
-     *
-     * Ejemplo de la solicitud
-     *
-     * @response 201 {
-     *   "username": nombre_usuario,
-     *   "token": "access_token",
-     *   "tipo": ["rol_1", "rol_2", ...]
-     * }
-     *
-     * @response 404 {
-     *   "error": "Usuario no encontrado"
-     * }
+     * @OA\Post(
+     *     path="/login",
+     *     summary="Iniciar sesión de usuario",
+     *     description="Verifica las credenciales del usuario y genera un token de acceso si son válidas.",
+     *     tags={"Autenticación"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Datos de inicio de sesión del usuario",
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", example="usuario@example.com"),
+     *             @OA\Property(property="password", type="string", example="contraseña_secreta")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Inicio de sesión exitoso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="object",
+     *                 @OA\Property(property="username", type="string", example="nombre_de_usuario"),
+     *                 @OA\Property(property="token", type="string", example="access_token"),
+     *                 @OA\Property(property="tipo", type="string", example="rol")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuario no encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="error", type="string", example="Usuario no encontrado")
+     *         )
+     *     )
+     * )
      */
     public function login(LoginRequest $datos)
     {
@@ -69,17 +83,38 @@ class AuthController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request - El token del usuario.
-     *
-     * @return \Illuminate\Http\JsonResponse - Un mensaje indicando que se cerro la sesión o un mensaje de error.
-     * 
-     * @response 200 {
-     *   "message": "Sesión Cerrada Correctamente"
-     * }
-     *
-     * @response 401 {
-     *   "error": "Usuario no autenticado"
-     * }
+     * @OA\Post(
+     *     path="/logout",
+     *     summary="Cierra la sesión del usuario actual",
+     *     description="Este método cierra la sesión del usuario actual y revoca todos los tokens de acceso asociados.",
+     *     operationId="logoutUser",
+     *     tags={"Autenticación"},
+     *     security={ {"bearerAuth": {}} },
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="El token del usuario.",
+     *         @OA\JsonContent(
+     *             required={"token"},
+     *             @OA\Property(property="token", type="string", example="token_de_acceso")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Sesión cerrada correctamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Sesión cerrada correctamente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Usuario no autenticado",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="error", type="string", example="Usuario no autenticado")
+     *         )
+     *     )
+     * )
      */
     public function logout(request $request)
     {
@@ -97,22 +132,72 @@ class AuthController extends Controller
     }
 
     /**
-     * Maneja la solicitud de registro de usuarios.
-     *
-     * Este método crea un nuevo usuario con los datos proporcionados en la solicitud.
-     * Asigna un rol al usuario (comercio, cliente o ayuntamiento) según los datos proporcionados.
-     * Devuelve una respuesta JSON con un mensaje de éxito y los detalles del usuario creado.
-     *
-     * @param \App\Http\Requests\RegisterRequest $request - Los datos de la solicitud de registro de usuario.
-     *
-     * @return \Illuminate\Http\JsonResponse - Una respuesta JSON que contiene un mensaje de éxito y los detalles del usuario creado.
-     *
-     * @response 201 {
-     *   "message": "Usuario creado correctamente",
-     *   "user": {
-     *     Detalles del usuario
-     *   }
-     * }
+     * @OA\Post(
+     *     path="/register",
+     *     summary="Maneja la solicitud de registro de usuarios.",
+     *     description="Este método crea un nuevo usuario con los datos proporcionados en la solicitud. Asigna un rol al usuario (comercio, cliente o ayuntamiento) según los datos proporcionados. Devuelve una respuesta JSON con un mensaje de éxito y los detalles del usuario creado.",
+     *     operationId="registerUser",
+     *     tags={"Autenticación"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Datos de la solicitud de registro de usuario",
+     *         @OA\JsonContent(
+     *             required={"email", "password", "phone", "username", "empresa", "name"},
+     *             @OA\Property(property="email", type="string", example="usuario@example.com"),
+     *             @OA\Property(property="password", type="string", example="contraseña_secreta"),
+     *             @OA\Property(property="phone", type="integer", example="654781238"),
+     *             @OA\Property(property="username", type="string", example="nombre_usuario"),
+     *             @OA\Property(property="municipality_id", type="integer", example="id_municipio"),
+     *             @OA\Property(property="empresa", type="boolean", example="true"),
+     *             @OA\Property(property="name", type="string", example="nombre_real"),
+     *             @OA\Property(property="verification_toke", type="integer", example="token_ayuntamiento"),
+     *             @OA\Property(property="avatar", type="file", example="imagen_perfil"),
+     *             @OA\Property(property="banner", type="file", example="banner"),
+     *             @OA\Property(property="gender", type="string", example="genero_particular"),
+     *             @OA\Property(property="address", type="string", example="direccion_empresa"),
+     *             @OA\Property(property="schedule", type="string", example="horario_empresa"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Usuario creado correctamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Usuario creado correctamente"),
+     *             @OA\Property(property="user", type="object", example="User"),
+     *             @OA\Property(property="token", type="string", example="access_token"),
+     *             @OA\Property(property="tipo", type="array", @OA\Items(type="string", example="rol_1"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Datos de creación de usuario incorrectos",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Datos de creación de usuario incorrectos"),
+     *             @OA\Property(property="error", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Token de verificación incorrecto",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="error", type="string", example="Token de verificación incorrecto")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno del servidor",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="error", type="string", example="Mensaje de error")
+     *         )
+     *     )
+     * )
      */
     public function register(RegisterRequest $request)
     {
@@ -126,7 +211,7 @@ class AuthController extends Controller
             Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
             $rutaAvatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
         }
-        
+
         if ($request->hasFile('banner')) {
             $banner = $request->file('banner');
             Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
