@@ -2509,6 +2509,494 @@
                 ]
             }
         },
+        "/review": {
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Almacena una nueva review.",
+                "description": "Este método crea una nueva review utilizando los datos proporcionados en la solicitud. Si la review se crea con éxito, devuelve una respuesta JSON con un mensaje de éxito y los detalles de la review creada. Si ocurre algún error durante el proceso de creación de la review, devuelve una respuesta JSON con un mensaje de error.",
+                "operationId": "storeReview",
+                "requestBody": {
+                    "description": "La solicitud HTTP que contiene los datos de la review a crear.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "commerce_username",
+                                    "comment",
+                                    "note"
+                                ],
+                                "properties": {
+                                    "commerce_username": {
+                                        "type": "string",
+                                        "example": "nombre_usuario_comercio"
+                                    },
+                                    "comment": {
+                                        "type": "string",
+                                        "example": "Contenido_del_comentario"
+                                    },
+                                    "note": {
+                                        "type": "integer",
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Review creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Review creada"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "commerce_id": {
+                                                    "type": "string",
+                                                    "example": "ID_del_comercio"
+                                                },
+                                                "content": {
+                                                    "type": "string",
+                                                    "example": "Contenido_del_comentario"
+                                                },
+                                                "note": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Usuario inexistente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuario inexistente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "El usuario $request->commerce_username no es un comercio",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "El usuario $request->commerce_username no es un comercio"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error al crear la review: mensaje_de_error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error al crear la review: mensaje_de_error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/review/{username}": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Muestra las reviews relacionadas con un comercio.",
+                "description": "Esta función obtiene y formatea las reviews asociadas con un comercio específico. Si no se encuentran reviews para el comercio, el usuario no existe o no es un comercio devuelve un mensaje de error.",
+                "operationId": "showReviews",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "El username del comercio para el que se desean obtener las reviews.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Respuesta JSON que contiene las reviews formateadas.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "reviews": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "identificador_de_la_review"
+                                                    },
+                                                    "username": {
+                                                        "type": "string",
+                                                        "example": "nombre_de_usuario"
+                                                    },
+                                                    "avatarUsuario": {
+                                                        "type": "string",
+                                                        "example": "avatar_del_usuario"
+                                                    },
+                                                    "commerce_username": {
+                                                        "type": "string",
+                                                        "example": "nombre_de_usuario_del_comercio"
+                                                    },
+                                                    "avatarComercio": {
+                                                        "type": "string",
+                                                        "example": "avatar_del_comercio"
+                                                    },
+                                                    "comment": {
+                                                        "type": "string",
+                                                        "example": "comentario_de_la_revision"
+                                                    },
+                                                    "note": {
+                                                        "type": "integer",
+                                                        "example": 5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No se encontraron reviews para este comercio",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No se encontraron reviews para el comercio"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Usuario inexistente o no es un comercio",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuario inexistente o no es un comercio"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Reviews no encontradas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Reviews no encontradas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error al mostrar las reviews",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Error al mostrar las reviews"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reviews/{id}": {
+            "put": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Actualiza una review existente.",
+                "description": "Este método busca una review por su ID y actualiza sus datos con los proporcionados en la solicitud. Si la review se actualiza con éxito, devuelve una respuesta JSON con un mensaje de éxito. Si la review no se encuentra, devuelve una respuesta JSON con un mensaje de error. Si ocurre algún error durante el proceso de actualización de la review, devuelve una respuesta JSON con un mensaje de error.",
+                "operationId": "updateReview",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "El ID de la review a actualizar.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Datos actualizados de la review.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "comment",
+                                    "note"
+                                ],
+                                "properties": {
+                                    "comment": {
+                                        "type": "string",
+                                        "example": "Nuevo comentario"
+                                    },
+                                    "note": {
+                                        "type": "integer",
+                                        "example": 4
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Review actualizada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Review actualizada exitosamente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "La review no existe",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La review no existe"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error al actualizar la review",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error al actualizar la review: mensaje_de_error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Elimina una review.",
+                "description": "Este método busca una review por su ID y la elimina de la base de datos. Si la review se elimina con éxito, devuelve una respuesta JSON con un mensaje de éxito. Si la review no se encuentra, devuelve una respuesta JSON con un mensaje de error. Si ocurre algún error durante el proceso de eliminación de la review, devuelve una respuesta JSON con un mensaje de error.",
+                "operationId": "deleteReview",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "El ID de la review a eliminar.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Review eliminada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Review eliminada exitosamente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "La review no existe",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La review no existe"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error al eliminar la review",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error al eliminar la review: mensaje_de_error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/{username}": {
             "get": {
                 "tags": [
