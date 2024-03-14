@@ -5,7 +5,7 @@ defineProps({
 </script>
 <template>
   <button
-    class="px-10 border border-background-200 min-h-8 rounded-lg text-xs lg:text-base p-1 lg:min-h-8"
+    class="px-2 border border-background-200 h-8 rounded-lg text-xs lg:text-base p-1 lg:min-h-8 lg:px-6"
   >
     {{ texto }}
   </button>

@@ -5,17 +5,17 @@ namespace App\Http\Controllers;
 use App\Events\ModelCreated;
 use App\Http\Requests\StorePostsRequest;
 use App\Http\Requests\UpdatePostsRequest;
+use App\Http\Scripts\Utils;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\APIDocumentationController;
-
-
 class PostsController extends Controller
 {
 
@@ -156,7 +156,7 @@ class PostsController extends Controller
                 $commentsCount = Comment::where('post_id', $post->post_id)->count();
                 $post->comment_count = $commentsCount;
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                $post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Utils::Crypt($post->post_id);
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
             });
@@ -325,7 +325,7 @@ class PostsController extends Controller
                 $commentsCount = Comment::where('post_id', $post->post_id)->count();
                 $post->comment_count = $commentsCount;
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                $post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Utils::Crypt($post->post_id);
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
             });
@@ -343,6 +343,37 @@ class PostsController extends Controller
     }
 
     /**
+     * Muestra una lista de publicaciones para el usuario actual.
+     *
+     * Este método devuelve una lista de publicaciones para el usuario autenticado.
+     *
+     * @authenticated
+     *
+     * @response 200 {
+     *     "status": true,
+     *     "data": [
+     *         {
+     *             "post_id": "ID_de_la_publicación",
+     *             "image": "imagen_de_la_publicación",
+     *             "title": "título_de_la_publicación",
+     *             "description": "descripción_de_la_publicación",
+     *             "name": "nombre_del_tipo_de_publicación",
+     *             "start_date": "fecha_de_inicio_de_la_publicación",
+     *             "end_date": "fecha_de_finalización_de_la_publicación",
+     *             "created_at": "fecha_de_creación_de_la_publicación",
+     *             "username": "nombre_de_usuario",
+     *             "user_id": "ID_del_usuario",
+     *             "avatar": "avatar_del_usuario",
+     *             "avg": "media_del_reseñas_del_usuario"
+     *         },
+     *         ...
+     *     ]
+     * }
+     *
+     * @response 404 {
+     *     "status": false,
+     *     "message": "mensaje_de_error"
+     * }
      * @OA\Get(
      *     path="/home",
      *     summary="Muestra una lista de publicaciones de los usuarios que sigue el usuario actual.",
@@ -475,6 +506,7 @@ class PostsController extends Controller
             $listado = Post::join('users-posts', 'users-posts.post_id', '=', 'posts.id')
                 ->join('users', 'users.id', '=', 'users-posts.user_id')
                 ->join('post_types', 'post_types.id', '=', 'posts.post_type_id')
+                ->join('commerces', 'users.id', 'commerces.user_id')
                 ->select(
                     'posts.id AS post_id',
                     'posts.image',
@@ -486,6 +518,7 @@ class PostsController extends Controller
                     'posts.created_at',
                     'users.username',
                     'users.id AS user_id',
+                    'commerces.avg as avg',
                     'users.avatar'
                 )
                 ->whereIn('users-posts.user_id', $ids)
@@ -497,7 +530,7 @@ class PostsController extends Controller
                 $commentsCount = Comment::where('post_id', $post->post_id)->count();
                 $post->comment_count = $commentsCount;
                 $post->hashtags = Post::find($post->post_id)->hashtags->pluck('name')->toArray();
-                $post->post_id = Crypt::encryptString($post->post_id);
+                $post->post_id = Utils::Crypt($post->post_id);
                 $user = User::where('username', $post->username)->first();
                 $post->userRol = $user->getRoleNames()[0];
             });
@@ -627,10 +660,14 @@ class PostsController extends Controller
     public function store(StorePostsRequest $request)
     {
         try {
+
             $user = Auth::user();
 
+            $rutaFotoPost = 'default';
+
+
             $post = Post::create([
-                'image' => $request->image,
+                'image' => $rutaFotoPost,
                 'title' => $request->title,
                 'description' => $request->description,
                 'post_type_id' => $request->post_type_id,
@@ -639,7 +676,16 @@ class PostsController extends Controller
                 'active' => true,
             ]);
 
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $rutaFotoPost = 'posts/' . $user->username.$post->id . '/imagenPost.webp';
+                Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
+                $rutaFotoPost = asset($rutaFotoPost);
+            }
 
+            $post->image=$rutaFotoPost;
+            $post->save();
+            
             try {
                 $post->users()->attach($user->id);
             } catch (\Throwable $th) {
@@ -652,7 +698,7 @@ class PostsController extends Controller
             event(new ModelCreated($post));
 
             $postData = [
-                'post_id' => $post->id = Crypt::encryptString($post->id),
+                'post_id' => $post->id = Utils::Crypt($post->id),
                 'image' => $post->image,
                 'title' => $post->title,
                 'description' => $post->description,
@@ -841,14 +887,7 @@ class PostsController extends Controller
     {
         try {
 
-            try {
-                $id = Crypt::decryptString($id);
-            } catch (DecryptException $e) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Post inexistente',
-                ], 500);
-            }
+            $id = Utils::deCrypt($id);
 
             // Obtener el post
             $post = Post::with('users')->findOrFail($id);
@@ -884,7 +923,7 @@ class PostsController extends Controller
                 $formattedComment = [
                     'username' => $comment->user->username,
                     'content' => $comment->content,
-                    'comment_id' => Crypt::encryptString($comment->id),
+                    'comment_id' => Utils::Crypt($comment->id),
                     'avatar' => $comment->user->avatar,
                 ];
                 $formattedComments[] = $formattedComment;
@@ -1001,15 +1040,7 @@ class PostsController extends Controller
     {
         try {
 
-            try {
-                $id = Crypt::decryptString($id);
-            } catch (DecryptException $e) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Post inexistente',
-                ], 500);
-            }
-
+            $id = Utils::deCrypt($id);
             $user = Auth::user();
             $post = Post::find($id);
             $userVerificado = false;
@@ -1021,15 +1052,30 @@ class PostsController extends Controller
             }
 
             if ($userVerificado) {
+
+                $rutaFotoPost = $post->image;
+
+                if ($request->hasFile('image')) {
+                    $image = $request->file('image');
+                    $rutaFotoPost = 'posts/' . $user->username . '/imagenPost.webp';
+                    Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
+                    $rutaFotoPost = asset($rutaFotoPost);
+                }
+
+
+                if ($request->active) {
+                    $post->active = $request->active;
+                }
+
                 $post->update([
-                    'image' => $request->image,
+                    'image' => $rutaFotoPost,
                     'title' => $request->title,
                     'description' => $request->description,
                     'post_type_id' => $request->post_type_id,
                     'start_date' => $request->start_date,
                     'end_date' => $request->end_date,
                     'ubicacion' => $request->ubicacion,
-                    'active' => $request->active
+                    'active' => $post->active
                 ]);
 
                 //Obtener los datos del post
@@ -1158,15 +1204,7 @@ class PostsController extends Controller
     {
         try {
 
-            try {
-                $id = Crypt::decryptString($id);
-            } catch (DecryptException $e) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Post inexistente',
-                ], 500);
-            }
-
+            $id = Utils::deCrypt($id);
             $user = Auth::user();
             $post = Post::find($id);
             $userVerificado = false;

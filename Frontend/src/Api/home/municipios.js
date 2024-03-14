@@ -1,4 +1,4 @@
-import { urlApi as urlApi, genOptions, genOptionsWithoutBody } from "../api";
+import { urlApi } from "../api";
 
 
 /**
@@ -10,7 +10,6 @@ import { urlApi as urlApi, genOptions, genOptionsWithoutBody } from "../api";
  * @returns {unknown}
  */
 export async function obtener_posts_municipios() {
-    const options = genOptionsWithoutBody('GET');
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     const token = user.usuario.token;
 
@@ -37,7 +36,6 @@ export async function obtener_posts_municipios() {
  * @returns {unknown}
  */
 export async function obtener_municipios() {
-    const options = genOptionsWithoutBody('GET');
     const user = JSON.parse(sessionStorage.getItem("usuario"));
     const token = user.usuario.token;
 

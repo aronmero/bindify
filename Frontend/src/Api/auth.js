@@ -24,7 +24,7 @@ export async function register(datos) {
       `${urlApi}/api/register`,
       options
     );
-    const data = await response.json().then(response => console.log(response));
+    const data = await response.json();
     return data;
   } catch (error) {
     console.error(error);

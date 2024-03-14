@@ -3,6 +3,7 @@ import router from '@/router/index.js';
 import { ref } from 'vue';
 import Input from '@/components/comun/input.vue';
 import { login } from "@/Api/auth.js";
+import { google_login } from '../../Api/google';
 
 const email = ref("");
 const password = ref("");
@@ -37,31 +38,33 @@ async function tryLogin() {
 
     if (isValido) {
         const data = await login(email.value, password.value);
+
         if (data.status) {
             sessionStorage.setItem(
                 "usuario",
                 JSON.stringify({ usuario: data.message })
             );
+
             router.push("/");
             router.go();
         } else {
             errorMsg.value = "Email o contraseña incorrecta";
         }
     }
-  }
+}
 
 
 function OlvidarPassword() {
-  /* Funcion que redirecciona al modal o vista para recuperar la contraseña */
+    router.push("/reset-password");
 }
 
 function Registro() {
-  router.push("/registro");
+    router.push("/registro");
 }
 </script>
 
 <template>
-    <div class="mt-[1rem] flex flex-col lg:flex-row justify-center items-center">
+    <div class="mt-[40px] flex flex-col lg:flex-row justify-center items-center">
         <div class="w-[45vw] lg:flex justify-center items-center hidden">
             <img src="/img/fondo.png" alt="imagen">
         </div>
@@ -74,8 +77,8 @@ function Registro() {
                 <p class="text-center text-primary-700 text-xs lg:text-sm ms-3">{{ errorMsg }}</p>
                 <Input @datos="(nuevosDatos) => { email = nuevosDatos }" tipo="text" label="Email" :valor="email"
                     :error="errorEmail" />
-                <Input @datos="(nuevosDatos) => { password = nuevosDatos }" tipo="password" label="Password"
-                    class="-mt-2" :valor="password" :error="errorPass" />
+                <Input @datos="(nuevosDatos) => { password = nuevosDatos }" tipo="password" label="Password" class="-mt-2"
+                    :valor="password" :error="errorPass" />
                 <Input tipo="submit" clase="oscuro" valor="Iniciar sesión" />
                 <p @click="OlvidarPassword" class="font-semibold lg:text-base text-sm text-right cursor-pointer -mt-3">
                     ¿Olvidaste tu
@@ -84,7 +87,7 @@ function Registro() {
             <div class="flex flex-col gap-y-5">
                 <p class="text-center">O inicie sesión con:</p>
                 <div class="social-media-buttons flex w-full justify-evenly gap-x-5">
-                    <Input tipo="button" clase="social" img="/img/google-logo.png" />
+                    <Input tipo="button" @click="google_login" clase="social" img="/img/google-logo.png" />
                     <Input tipo="button" clase="social" img="/img/facebook-logo.png" />
                     <Input tipo="button" clase="social" img="/img/instagram-logo.png" />
                 </div>

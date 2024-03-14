@@ -54,6 +54,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('home', [PostsController::class , 'home']);
     Route::get('search', [SearchController::class, 'search']);
     Route::apiResource('notifications', NotificationsController::class)->only('index');
+    Route::delete('notifications/{id}', [NotificationsController::class , 'destroy']);
+    Route::post('notifications/{id}', [NotificationsController::class , 'check']);
 
     Route::post('logout', [AuthController::class, 'logout']);
 

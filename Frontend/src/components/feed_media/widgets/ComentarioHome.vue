@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 import MoreSVG from '@public/assets/icons/ellipsis.svg';
-import { encontrar_usuario_por_id } from './../mocks/users';
 import { datetranslatesql } from './../helpers/datetranslate.js'
 import StarSVG from '@public/assets/icons/star.svg';
 import StarEmptySVG from '@public/assets/icons/starEmpty.svg';
@@ -75,11 +74,12 @@ const abrirModal = () => {
         <!-- Header del comentario -->
         <div class=" header-comentario flex ">
             <!-- Avatar del usuario -->
-            <img  v-if="comentario.avatar" class=" mr-[10px] " :src="comentario.avatar" alt="">
+            <img v-if="comentario.avatar" class=" mr-[10px] " :src="comentario.avatar" alt="">
             <!-- Textos del usuario -->
             <div class="textos m-l flex flex-col">
                 <b v-if="user != null"> {{ user }}</b>
-                <small v-if="comentario.comment_creation != null">{{ datetranslatesql(comentario.comment_creation) }}</small>
+                <small v-if="comentario.comment_creation != null">{{ datetranslatesql(comentario.comment_creation)
+                }}</small>
                 <button class=" mt-[-15px] rating flex h-[fit-content] items-center justify-start "
                     v-if="comentario.avg != null">
                     <img class="  " :src="StarSVG" v-for="index in Math.floor(user.avg)" alt="star"
@@ -99,11 +99,11 @@ const abrirModal = () => {
             {{ comentario.content }}
         </span>
         <!-- Modal de Ver Más -->
-        <ModalReutilizable v-if="modalHandler" :options="opcionesModal" :status="modal_status" :info="comentario" :handler="abrirModal" />
+        <ModalReutilizable v-if="modalHandler" :options="opcionesModal" :status="modal_status" :info="comentario"
+            :handler="abrirModal" />
     </div>
 </template>
 <style scoped lang="scss">
-
 .header-comentario {
     img {
         width: 50px;
@@ -116,4 +116,5 @@ const abrirModal = () => {
             width: 20px;
         }
     }
-}</style>
+}
+</style>
