@@ -322,13 +322,7 @@ class UsersController extends Controller
             $request->request->remove("email");
             $request->request->remove("password");
 
-            // Busca al usuario por su nombre de usuario
-            $user = User::where("username", $username)->firstOrFail();
-
-            // Revisa si el usuario es él mismo el que se va a cambiar
-            if (Auth::user()->id != $user->id) {
-                return response()->json(["status" => false, "message" => "No autorizado"], 401);
-            }
+            $user = User::find(Auth::user()->id);
 
             //campos de usuario base
             $user->name = $request->name;
@@ -338,22 +332,16 @@ class UsersController extends Controller
             $user->municipality_id = Municipality::where('name', '=', $request->municipality)->first()->id;
 
             // Guarda las imágenes si están presentes en la solicitud
-            if ($request->hasFile('avatar')) {
-                $avatar = $request->file('avatar');
-                $rutaAvatar = 'avatars/' . $username . '/imagenPerfil.webp';
-                Storage::disk('public')->putFileAs('avatars/' . $username, $avatar, 'imagenPerfil.webp');
-                $user->avatar = asset($rutaAvatar);
-            } else {
-                $user->avatar = "default";
-            }
 
+            if ($request->hasFile('avatar')) {
+                $image = $request->file('avatar');
+                Storage::disk('avatars')->putFileAs($user->username, $image, '/imagenPerfil.webp');
+                $user->avatar = env('APP_URL').Storage::url('avatars/'.$user->username. '/imagenPerfil.webp');
+            }
             if ($request->hasFile('banner')) {
-                $banner = $request->file('banner');
-                $rutaBanner = 'banners/' . $username . '/imagenBanner.webp';
-                Storage::disk('public')->putFileAs('banners/' . $username, $banner, 'imagenBanner.webp');
-                $user->banner = asset($rutaBanner);
-            } else {
-                $user->banner = "default";
+                $image = $request->file('banner');
+                Storage::disk('banners')->putFileAs($user->username, $image, '/imagenBanner.webp');
+                $user->banner = env('APP_URL').Storage::url('banners/'.$user->username. '/imagenBanner.webp');
             }
 
             if ($request->password) {
@@ -391,7 +379,7 @@ class UsersController extends Controller
                 }
 
                 if ($request->address) {
-                    $commerce->schedule = $request->address;
+                    $commerce->address = $request->address;
                 }
 
                 $commerce->category_id = Category::where('name', '=', $request->category)->first()->id;

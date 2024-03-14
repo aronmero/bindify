@@ -1057,11 +1057,9 @@ class PostsController extends Controller
 
                 if ($request->hasFile('image')) {
                     $image = $request->file('image');
-                    $rutaFotoPost = 'posts/' . $user->username . '/imagenPost.webp';
-                    Storage::disk('public')->putFileAs('posts/'. $user->username, $image, '/imagenPost.webp');
-                    $rutaFotoPost = asset($rutaFotoPost);
+                    Storage::disk('posts')->putFileAs($user->username, $image, '/imagenPost.webp'. $post->id);
+                    $rutaFotoPost = env('APP_URL').Storage::url('posts/'.$user->username . '/imagenPost.webp'. $post->id);
                 }
-
 
                 if ($request->active) {
                     $post->active = $request->active;

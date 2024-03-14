@@ -35,6 +35,7 @@ const tratarDatos = async()=>{
     console.log(fechaInicio.value);
     console.log(fechaFin.value);
     if(titulo.value != null && titulo.value.length > 0){
+
         /* Revisar error en el que cuando pones una descripcion y luego la quitas te deja de aparecer el error, comprobar el length del value */
         if((descripcion.value == null || descripcion.value.length == 0) && imagen.value == null){
             errorTitle.value = null;
@@ -43,7 +44,10 @@ const tratarDatos = async()=>{
             errorTitle.value = null;
             errorDesc.value = null;
             errorType.value = "Es obligatorio seleccionar un tipo de evento para crear una publicación.";
-        }else if(publiTipo.value == "1" && (fechaInicio.value == null || fechaFin.value == null) ){ /* Cambiar el tipo cuando llegue la info del back */
+
+            //Apaño de Rengifo
+
+        }else if(publiTipo.value == "2" && (fechaInicio.value == null || fechaFin.value == null) ){ /* Cambiar el tipo cuando llegue la info del back */
             errorTitle.value = null;
             errorDesc.value = null;
             errorType.value = null;

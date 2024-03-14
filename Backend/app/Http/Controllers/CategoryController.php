@@ -76,7 +76,7 @@ class CategoryController extends Controller
     {
         try {
             // Obtener todas las categorías
-            $categorias = Category::select('name')->get();
+            $categorias = Category::select('name','id')->get();
 
             // Devolver una respuesta con los datos de las categorías
             return response()->json(['status' => true, 'data' => $categorias], 200);

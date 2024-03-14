@@ -16,10 +16,6 @@ const props = defineProps({
     seguidos: Object
 });
 
-// const post = ref(props.post);
-// const post_reference = ref(null);
-// const modalHandler = ref(false);
-// const modal = ref(null);
 
 const post = ref(props.post);
 const post_reference = ref({ dataset: { favorito: false } });

@@ -70,7 +70,7 @@ export const genOptionsWithoutAuth = (metodo) => {
   };
 };
 
-export const genOptionsUpdate = (metodo, body = null) => {
+export const genOptionsUpdate = (metodo, body) => {
   const user = JSON.parse(sessionStorage.getItem("usuario"));
   const token = user.usuario.token;
   

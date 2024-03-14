@@ -73,20 +73,16 @@ export async function updateUserData(metodo,datos,userName) {
       console.error(error);
     }
   }
-  export async function postUserReview(metodo, body = null) {
+  export async function postUserReview(metodo, body) {
     // const user = JSON.parse(sessionStorage.getItem("usuario"));
     // console.log(user)
     try {
-      let formData = new FormData();
-      for(let clave in body){
-        formData.append(clave, body[clave]);
-      }
-      console.log(formData.get("title"));
-      const options = genOptions(metodo,formData);
+      const datos = JSON.stringify(body);
+      const options = genOptions(metodo, datos);
       const response = await fetch(`${urlApi}/api/review`, options);
       const data = await response.json();
       // sessionStorage.setItem("userData",JSON.stringify({ userData: data.data }))
-      console.log(data.reviews)
+      console.log(data);
       return data.reviews;
     } catch (error) {
       console.error(error);
