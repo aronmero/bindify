@@ -237,62 +237,98 @@ class UsersController extends Controller
      */
 
 
-    public function update(UpdateUserRequest $request, string $username)
+    public function update(Request $request, string $username)
     {
         try {
-            // Elimina campos que no queremos actualizar
-            $request->request->remove("username");
-            $request->request->remove("phone");
-            $request->request->remove("email");
 
             // Busca al usuario por su nombre de usuario
             $user = User::where("username", $username)->firstOrFail();
+
             // Revisa si el usuario es él mismo el que se va a cambiar
             if (Auth::user()->id != $user->id) {
                 return response()->json(["status" => false, "message" => "No autorizado"], 401);
             }
 
-            // Determina el rol del usuario
-            if ($user->getRoleNames() == "customer") {
+            //campos de usuario base 
+            $user->name = $request->input('name');
 
+            // Guarda las imágenes si están presentes en la solicitud
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar');
+                $rutaAvatar = 'storage/avatars/' . $username . '/imagenPerfil.webp';
+                Storage::disk('public')->putFileAs('avatars/' . $username, $avatar, 'imagenPerfil.webp');
+                $user->avatar = asset($rutaAvatar);
+            } else {
+                $user->avatar = "default";
+            }
+
+            if ($request->hasFile('banner')) {
+                $banner = $request->file('banner');
+                $rutaBanner = 'storage/avatars/' . $username . '/banner.webp';
+                Storage::disk('public')->putFileAs('avatars/' . $username, $banner, 'banner.webp');
+                $user->banner = asset($rutaBanner);
+            } else {
+                $user->banner = "default";
+            }
+
+            $user->phone = $request->input('phone');
+            $user->municipality_id = $request->input('municipality_id');
+
+            if ($request->has('password')) {
+                $pass1 = $request->input('password');
+                $pass2 = $request->input('password_confirmation');
+                if ($pass1 == $pass2) {
+                    $user->password = $pass1;
+                }
+
+            }
+
+            // Determina el rol del usuario
+            if ($user->hasRole('customer')) {
                 // Si el usuario es un cliente, actualiza los detalles como cliente
                 $customer = Customer::where('user_id', $user->id)->first();
-                $customer->fill($request->except('avatar', 'banner'));
 
-                if ($request->hasFile('avatar')) {
-                    $avatar = $request->file('avatar');
-                    Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
-                    $customer->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
+                // Actualiza los campos uno por uno
+                if ($request->has('gender')) { // COMO PASA LA POSICION DEL ARRAY LO HACE ASI , SE PUEDE MODIFICAR EL FRONT PARA AHORRARNOS ESTO 
+                    $genero = $request->input('gender');
+                    if ($genero == 1) {
+                        $customer->gender = 'H';
+                    } else {
+                        $customer->gender = 'M';
+                    }
+
                 }
-                
-                if ($request->hasFile('banner')) {
-                    $banner = $request->file('banner');
-                    Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
-                    $customer->banner = asset('storage/avatars/' . $request->username . '/banner.webp');
+                if ($request->has('birth_date')) {
+                    $customer->birth_date = $request->input('birth_date');
                 }
+                // Actualiza otros campos de ser necesario
 
                 $customer->save();
+                $user->save();
                 $updatedUser = $customer->user;
 
             } else {
                 // Si el usuario es un comercio, actualiza los detalles como comercio
                 $commerce = Commerce::where('user_id', $user->id)->first();
 
-                $commerce->fill($request->except('avatar', 'banner'));
-
-                if ($request->hasFile('avatar')) {
-                    $avatar = $request->file('avatar');
-                    Storage::disk('avatars')->putFileAs($request->username, $avatar, 'imagenPerfil.webp');
-                    $commerce->avatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
+                // Actualiza los campos uno por uno
+                if ($request->has('address')) {
+                    $commerce->address = $request->input('address');
                 }
-                
-                if ($request->hasFile('banner')) {
-                    $banner = $request->file('banner');
-                    Storage::disk('avatars')->putFileAs($request->username, $banner, 'banner.webp');
-                    $commerce->banner = asset('storage/avatars/' . $request->username . '/banner.webp');
+                if ($request->has('schedule')) {
+                    $commerce->schedule = $request->input('schedule');
                 }
 
+                if ($request->has('description')) {
+                    $commerce->description = $request->input('description');
+                }
+
+                if ($request->has('category_id')) {
+                    $commerce->category_id = $request->input('category_id');
+                }
+                // Actualiza otros campos de ser necesario
                 $commerce->save();
+                $user->save();
                 $updatedUser = $commerce->user;
             }
 
