@@ -57,14 +57,26 @@ return [
         ],
         'avatars' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/avatars'), // Directorio donde se almacenarÃ¡n los avatares
+            'root' => storage_path('app/public/avatars'), // Directorio donde se almacenarán los avatares
             'url' => env('APP_URL').'/storage/avatars', // URL base para acceder a los avatares
+            'visibility' => 'public',
+        ],
+        'banners' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/banners'), // Directorio donde se almacenarán los banners
+            'url' => env('APP_URL').'/storage/banners', // URL base para acceder a los banners
             'visibility' => 'public',
         ],
         'posts' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/posts'), // Directorio donde se almacenarÃ¡n los avatares
-            'url' => env('APP_URL').'/storage/posts', // URL base para acceder a los avatares
+            'root' => storage_path('app/public/posts'), // Directorio donde se almacenarán los posts
+            'url' => env('APP_URL').'/storage/posts', // URL base para acceder a los posts
+            'visibility' => 'public',
+        ],
+        'reviews' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/reviews'), // Directorio donde se almacenarán las reviews
+            'url' => env('APP_URL').'/storage/reviews', // URL base para acceder a los reviews
             'visibility' => 'public',
         ],
     ],
