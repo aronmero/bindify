@@ -77,7 +77,7 @@ async function responseCatcher(metodo, subRuta) {
   router.go();
 }
 function clickBorrarPost(evento) {
-  if (confirm("Estas seguro de que quieres borrar el post ?")) {
+  if (confirm("Estas seguro de que quieres borrar esta publicación ?")) {
     responseCatcher("delete", `/api/post/${props.post.post_id}`);
   }
 }
@@ -164,7 +164,7 @@ function clickBorrarPost(evento) {
         @click="editarPost"
         :id="post.post_id"
         v-if="
-          userLogeado.usuario.tipo == 'commerce' &&
+          (userLogeado.usuario.tipo == 'commerce' || userLogeado.usuario.tipo == 'ayuntamiento') &&
           userLogeado.usuario.username == userData.userData[0].username
         "
       >
@@ -178,7 +178,7 @@ function clickBorrarPost(evento) {
         @click="clickBorrarPost"
         :id="post.post_id"
         v-if="
-          userLogeado.usuario.tipo == 'commerce' &&
+          (userLogeado.usuario.tipo == 'commerce' || userLogeado.usuario.tipo == 'ayuntamiento') &&
           userLogeado.usuario.username == userData.userData[0].username
         "
       >
