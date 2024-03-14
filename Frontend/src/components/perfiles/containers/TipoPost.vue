@@ -1,18 +1,22 @@
 <script setup>
 import { onMounted, ref } from "vue";
 
-import StarSVG from "@public/assets/icons/star.svg";
+import DeleteSVG from "@public/assets/icons/delete.svg";
+import EditSVG from "@public/assets/icons/edit_pen.svg";
+import DetallesSVG from "@public/assets/icons/eye.svg";
 import HeartSVG from "@public/assets/icons/like.svg";
 import ShareSVG from "@public/assets/icons/share.svg";
 import BookmarkSVG from "@public/assets/icons/bookmark.png";
 import MoreSVG from "@public/assets/icons/ellipsis.svg";
 import UserSVG from "@public/assets/icons/user.svg";
-
+import { borrarPost } from "@/Api/perfiles/perfil.js";
 import TipoOferta from "@public/assets/icons/tipo_oferta.svg";
+import { setDefaultImgs } from "@/components/perfiles/helpers/defaultImgs";
 import TipoEvento from "@public/assets/icons/tipo_evento.svg";
 const userData = JSON.parse(sessionStorage.getItem("userData"));
 console.log(userData);
 const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
+userData.userData[0] = setDefaultImgs(userData.userData[0]);
 console.log(userData.userData[0]);
 import { datetranslate } from "@/components/feed_media/helpers/datetranslate.js";
 import router from "@/router/index.js";
@@ -65,6 +69,17 @@ function editarPost(evento) {
   sessionStorage.setItem("postData", JSON.stringify({ postData: props.post }));
   console.log(JSON.parse(sessionStorage.getItem("postData")));
   router.push(`/post/${props.post.post_id}/editar`);
+}
+let response = ref(null);
+async function responseCatcher(metodo, subRuta) {
+  response.value = await borrarPost(metodo, subRuta);
+  console.log(response.value);
+  router.go();
+}
+function clickBorrarPost(evento) {
+  if (confirm("Estas seguro de que quieres borrar el post ?")) {
+    responseCatcher("delete", `/api/post/${props.post.post_id}`);
+  }
 }
 </script>
 
@@ -138,7 +153,7 @@ function editarPost(evento) {
       <!-- Botón ver post -->
       <RouterLink :to="`/post/${post.post_id}`">
         <button :class="`${estilos.modal_button} m-2 `">
-          <img class="w-[30px] h-[30px] mr-3" :src="UserSVG" />
+          <img class="w-[30px] h-[30px] mr-3" :src="DetallesSVG" />
           Detalles
         </button>
       </RouterLink>
@@ -153,8 +168,22 @@ function editarPost(evento) {
           userLogeado.usuario.username == userData.userData[0].username
         "
       >
-        <img class="w-[30px] h-[30px] mr-3" :src="StarSVG" />
+        <img class="w-[30px] h-[30px] mr-3" :src="EditSVG" />
         Editar
+      </button>
+      <!-- Botón eliminar post -->
+
+      <button
+        :class="`${estilos.modal_button} m-2 `"
+        @click="clickBorrarPost"
+        :id="post.post_id"
+        v-if="
+          userLogeado.usuario.tipo == 'commerce' &&
+          userLogeado.usuario.username == userData.userData[0].username
+        "
+      >
+        <img class="w-[30px] h-[30px] mr-3" :src="DeleteSVG" />
+        Eliminar
       </button>
     </div>
   </article>
