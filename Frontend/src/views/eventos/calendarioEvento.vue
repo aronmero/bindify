@@ -10,7 +10,7 @@
 
 <template >
     <Header />
-    <Grid style="max-height:100vh; overflow-y:scroll; background:#fff; ">
+    <Grid style="background:#fff; ">
         <template v-slot:Left  >
    
         </template>
