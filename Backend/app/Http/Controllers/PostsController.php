@@ -631,6 +631,9 @@ class PostsController extends Controller
                 $rutaFotoPost = env('APP_URL') . Storage::url('posts/' . $user->username . '/imagenPost.webp' . $post->id);
                 $post->image = $rutaFotoPost;
                 $post->save();
+            }else{
+                $post->image = "default";
+                $post->save();
             }
 
             try {
@@ -1004,8 +1007,10 @@ class PostsController extends Controller
 
                 if ($request->hasFile('image')) {
                     $image = $request->file('image');
-                    Storage::disk('posts')->putFileAs($user->username, $image, '/imagenPost.webp' . $post->id);
-                    $rutaFotoPost = env('APP_URL') . Storage::url('posts/' . $user->username . '/imagenPost.webp' . $post->id);
+                    Storage::disk('posts')->putFileAs($user->username, $image, '/imagenPost.webp'. $post->id);
+                    $rutaFotoPost = env('APP_URL').Storage::url('posts/'.$user->username . '/imagenPost.webp'. $post->id);
+                }else{
+                    $rutaFotoPost = "default";
                 }
 
                 if ($request->active) {

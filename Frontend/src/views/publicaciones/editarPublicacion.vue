@@ -6,50 +6,31 @@ import Header from "@/components/comun/header.vue";
 import Footer from "@/components/comun/footer.vue";
 
 import Input from "@/components/comun/input.vue";
-//import {posts} from '@/scripts/posts.js';
-import router from '@/router/index';
-
-import {obtener_post, actualizar_posts} from '@/Api/home/publicaciones.js';
-
-//obtener_post()
-
-let id_post = ref(null)
-
-onMounted(async () => {
-    id_post.value = router.currentRoute.value.params.id;
-
-    let query = await obtener_post(id_post.value).then((data) => {
-        console.log(data);
-        data.value = data;
-    });
-
-
-});
-
-let data = ref(null);
-//let data = posts[2];
-let options = [
-    { id: 1, name: "Publicación"},
-    { id: 2, name: "Evento"},
-]; /* Cambiar por info del back */
-let opciones_activo = [
-    { id: 1, name: "Activo"},
-    { id: 0, name: "Inactivo"},
-];
-let tipo = ref(options[(data.post_type_id)-1]);
+import {actualizar_posts} from '@/Api/home/publicaciones.js';
+const postData = ref(JSON.parse(sessionStorage.getItem("postData")));
+console.log(postData.value.postData);
+let options = [{id: 1, name: "Publicación"}, {id: 2, name: "Evento"}];
+let opciones_activo = [{id: 1, name: "Activo"}, {id: 0, name: "Inactivo"}];
+let tipo = ref(null);
+if(postData.value.postData.name == "Post"){
+    tipo.value = options[0].id;
+}else{
+    tipo.value = options[1].id;
+}
+console.log(tipo.value);
 let errorDesc = ref(null);
 let errorIMG = ref(null);
 let errorType = ref(null);
 let errorDate = ref(null);
 let errorTitle = ref(null);
-let errorActivo = ref(null);
-const titulo = ref(null);
-const descripcion = ref(null);
-const imagen = ref(null);
-const publiTipo = ref(null);
-const activo = ref(null);
-const fechaInicio = ref(null);
-const fechaFin = ref(null);
+const titulo = ref(postData.value.postData.title);
+const descripcion = ref(postData.value.postData.description);
+const imagen = ref(postData.value.postData.image);
+const publiTipo = ref(tipo.value);
+const fechaInicio = ref(postData.value.postData.fecha_inicio);
+const fechaFin = ref(postData.value.postData.fecha_fin);
+const activo = ref(postData.value.postData.active);
+console.log(activo.value);
 const colaboradores = ref(null);
 
 const mostrarInformacion = (e)=>{
@@ -59,8 +40,6 @@ const mostrarInformacion = (e)=>{
         tipo.value = opcionSeleccionada[0].textContent;
     }
 }
-
-
 const tratarDatos = async ()=>{
     console.log(titulo.value);
     console.log(descripcion.value);
@@ -75,13 +54,13 @@ const tratarDatos = async ()=>{
         if(descripcion.value == null || descripcion.value.length == 0){
             errorTitle.value = null;
             errorDesc.value = "Es necesario una descripción para la publicación.";
-        }else if(data.image != null && imagen == null){
-            /* Crear boton de eliminar imagen y comprobar si se elimina en la edición */
+        /*}else if(data.image != null && imagen == null){
+             Crear boton de eliminar imagen y comprobar si se elimina en la edición */
         }else if(publiTipo.value == null){
             errorTitle.value = null;
             errorDesc.value = null;
             errorType.value = "Es obligatorio seleccionar un tipo de evento para crear una publicación.";
-        }else if(publiTipo.value == "1" && (fechaInicio.value == null || fechaFin.value == null) ){ /* Cambiar el tipo cuando llegue la info del back */
+        }else if(publiTipo.value == "2" && (fechaInicio.value == null || fechaFin.value == null) ){ /* Cambiar el tipo cuando llegue la info del back */
             errorTitle.value = null;
             errorDesc.value = null;
             errorType.value = null;
@@ -93,20 +72,32 @@ const tratarDatos = async ()=>{
         // } 
         else{
             console.log(imagen.value);
-            const body = {
-                image: imagen.value.name,
-                title: titulo.value,
-                description: descripcion.value,
-                post_type_id: publiTipo.value,
-                start_date: fechaInicio.value, 
-                end_date: fechaFin.value,
-                active: 1
-            };
-            console.log("enviando", body)
+            const body = ref(null);
+            if(publiTipo.value == "2"){
+                body.value = {
+                    image: imagen.value,
+                    title: titulo.value,
+                    description: descripcion.value,
+                    post_type_id: publiTipo.value,
+                    start_date: fechaInicio.value, 
+                    end_date: fechaFin.value,
+                    active: activo.value
+                };
+            }else{
+                body.value = {
+                    image: imagen.value,
+                    title: titulo.value,
+                    description: descripcion.value,
+                    post_type_id: publiTipo.value,
+                    active: activo.value
+                };
+
+            }
+            console.log("enviando", body.value)
 
             console.log("actualizando")
 
-            await actualizar_posts(id_post.value, body).then((data) => {
+            await actualizar_posts(postData.value.postData.post_id, body.value).then((data) => {
                 console.log("se ha actualizado todo");
                 console.log(data);
             }).catch(err => {
@@ -130,9 +121,9 @@ const tratarDatos = async ()=>{
         <template v-slot:Left></template>
         <template class="flex flex-col items-center justify-center">
             <header class="flex items-center relative w-[90vw] justify-center mt-[1rem] mb-[0.5rem]">
-                <!-- <button @click="router.back()" class="absolute lg:-translate-x-[21rem]">
+                <button @click="$router.go(-1)" class="absolute lg:-translate-x-[21rem]">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
-                </button> -->
+                </button>
                 <h3 class="lg:text-xl">Editar publicación</h3>
             </header>
             <section class="w-full mt-5 mb-5">

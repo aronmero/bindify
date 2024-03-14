@@ -337,11 +337,15 @@ class UsersController extends Controller
                 $image = $request->file('avatar');
                 Storage::disk('avatars')->putFileAs($user->username, $image, '/imagenPerfil.webp');
                 $user->avatar = env('APP_URL').Storage::url('avatars/'.$user->username. '/imagenPerfil.webp');
+            }else{
+                $user->avatar = "dafault";
             }
             if ($request->hasFile('banner')) {
                 $image = $request->file('banner');
                 Storage::disk('banners')->putFileAs($user->username, $image, '/imagenBanner.webp');
                 $user->banner = env('APP_URL').Storage::url('banners/'.$user->username. '/imagenBanner.webp');
+            }else{
+                $user->banner = "default";
             }
 
             if ($request->password) {
@@ -669,7 +673,7 @@ class UsersController extends Controller
                     'posts.image',
                     'posts.title',
                     'posts.description',
-                    'posts.description',
+                    'posts.active',
                     'post_types.name',
                     'posts.start_date',
                     'posts.end_date',
