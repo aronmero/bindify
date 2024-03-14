@@ -1,10 +1,13 @@
 import { defineStore } from "pinia";
 
-
 export const optionSelected = defineStore({
     id : "idOptionSelected",
     state: () =>({
-        optionSelected : ("Botánica"),
+        optionSelected : (""),
+        optionSelectedLocation : (""),
+        optionSelectedHashtag : (""),
+        optionSelectedPost : (""),
+
     }),
     actions : {
         getOptionSelected(){
@@ -12,6 +15,26 @@ export const optionSelected = defineStore({
         },
         setOptionSelected(option){
             this.optionSelected = option; 
+        },
+        getOptionSelectedLocation(){
+            return this.optionSelectedLocation;
+        },
+        setOptionSelectedLocation(option){
+            this.optionSelectedLocation = option; 
+        },
+        getOptionSelectedHashtag(){
+            return this.optionSelectedHashtag;
+        },
+        setOptionSelectedHashtag(option){
+            this.optionSelectedHashtag = option; 
+        },
+        getOptionSelectedPost(){
+            return this.optionSelectedPost;
+        },
+        setOptionSelectedPost(option){
+            console.log(option);
+            this.optionSelectedPost = option; 
         }
+
     }
 })

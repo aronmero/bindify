@@ -1,28 +1,36 @@
 <script setup>
+    import useSearchLogic from '@/utils/searchLogic.js';
     defineProps({
-        icon : String,
-        name : String
-    })
-
-    import { optionSelected } from '@/stores/option.js';
-
-    let option = optionSelected();
-
-    const selectedOption = (name) =>{
-
-        option.setOptionSelected(name);
-    }
-
+      name: String,
+      type: String,
+    });
+  
+    const { selectedOption } = useSearchLogic();
     
-</script>
+    const toggleOption = (name, type, event) => {
+      event.currentTarget.classList.toggle('selected');
+      document.querySelectorAll(`.${type}`).forEach((option) => {
+        if (option !== event.currentTarget) {
+          option.classList.remove('selected');
+        }
+      });
+      selectedOption(name, type);
+    };
+   
+
+  </script>
 
 <template>
-    <div class="flex flex-col items-center cursor-pointer" @click="selectedOption(name)">
-        <img :src="icon" class="size-7 icon" />
-        <p class="text-gray-400 text-md">{{ name }}</p>
+    <div :class="[type, 'flex', 'gap-x-1', 'items-center', 'justify-center', 'p-3', 'bg-[#e5e5e5]', 'text-[#404040]','rounded-full', 'cursor-pointer' ,'transition-all', 'duration-300', 'transform', 'hover:scale-105']" @click="toggleOption(name, type, $event)">
+      <p class="font-semibold text-md capitalize">{{ name }}</p>
     </div>
-</template>
-
-<style scoped>
-    
-</style>
+  </template>
+  
+  <style scoped>
+    .selected {
+      background-color: #fe822f !important;
+      color: white !important;
+      font-weight: bold !important;
+    }
+  </style>
+  

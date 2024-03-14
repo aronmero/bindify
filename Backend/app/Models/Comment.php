@@ -15,23 +15,28 @@ class Comment extends Model
         'user_id',
         'post_id',
         'content',
-        'comment_id',
+        'father_id',
         'active'
     ];
 
     public function replies(){
 
-        return $this->hasMany(Comment::class, 'comment_id');
+        return $this->hasMany(Comment::class, 'father_id');
 
     }
 
     public function user(){
-   
+
         return $this->belongsTo(User::class, 'user_id');
     }
 
     public function post(){
-   
+
         return $this->belongsTo(Post::class, 'post_id');
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'element');
     }
 }

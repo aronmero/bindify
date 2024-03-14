@@ -22,14 +22,27 @@ class StorePostsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'nullable|string', // Imagen del post
-            'title'=> 'required|string|max:255', // Titulo del post
-            'description'=> 'nullable|string|max:300', // Descripción del post
-            'post_type_id'=> 'required|integer', // Id de tipo de publicación
-            'start_date'=> 'nullable|date|after_or_equal:today', // Fecha en la que inicia el evento
-            'end_date'=> 'nullable|date|after:start_date', // Fecha en la que termina el evento
+            'title' => 'required|string|max:255', // Titulo del post
+            'description' => 'string|max:300', // Descripción del post
+            'post_type_id' => 'required|integer', // Id de tipo de publicación
         ];
     }
 
-    
+    public function messages(): array
+    {
+        return [
+            'title' => [
+                'required' => 'El titulo de la publicación es obligatorio',
+                'max' => 'El titulo es demasiado largo',
+            ],
+            'description' => [
+                'string' => 'El dato no es el adecuado, string requerido',
+                'max' => 'La descripción es demasiada larga',
+            ],
+            'post_type_id' => [
+                'required' => 'El tipo de publicación es obligatorio',
+                'integer' => 'Tipo de dato incorrecto',
+            ],
+        ];
+    }
 }

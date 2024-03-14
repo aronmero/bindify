@@ -22,14 +22,27 @@ class StoreCommentsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'post_id' => 'required|integer', // ID de la publicación a la que pertenece el comentario
-            'user_id' => 'required|integer', // ID del usuario que realiza el comentario
+           'post_id' => 'required|string', // ID de la publicación a la que pertenece el comentario
             'content' => 'required|string', // Contenido del comentario
             'comment_id' => 'nullable|integer', // ID del comentario padre en caso de que exista
         ];
     }
 
-    
-
-
+    public function messages()
+    {
+        return [
+            'post_id' => [
+                'required' => 'El id de la publicacion es obligatorio',
+                'integer' => 'Tipo de dato incorrecto',
+            ],
+            'content' => [
+                'string' => 'El dato no es el adecuado, string requerido',
+                'required' => 'el contenido del comentario es obligatorio',
+            ],
+            'comment_id' => [
+                'nullable' => 'El id del comentario puede ser nulo',
+                'integer' => 'Tipo de dato incorrecto',
+            ]
+        ];
+    }
 }

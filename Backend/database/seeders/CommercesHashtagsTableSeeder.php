@@ -38,12 +38,14 @@ class CommercesHashtagsTableSeeder extends Seeder
             ->inRandomOrder()
             ->first();
 
-            DB::table('commerces-hashtags')->insert([
-                'commerce_id' => $commerceId->commerceId,
-                'hashtag_id' => $hashtagId->hashtag_id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            Commerce::where('user_id', '=', $commerceId->commerceId)->first()->hashtags()->attach($hashtagId->hashtag_id);
+
+            // DB::table('commerces-hashtags')->insert([
+            //     'commerce_id' => $commerceId->commerceId,
+            //     'hashtag_id' => $hashtagId->hashtag_id,
+            //     'created_at' => now(),
+            //     'updated_at' => now(),
+            // ]);
         }
     }
 }

@@ -7,6 +7,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as FakerFactory;
+use App\Events\ModelCreated;
+use App\Models\Follower;
 
 class FollowersTableSeeder extends Seeder
 {
@@ -40,11 +42,14 @@ class FollowersTableSeeder extends Seeder
             ->inRandomOrder()
             ->first();
 
-            DB::table('followers')->insert([
+            $follower = Follower::create([
                 'follows_id' => $followsId->followsId,
                 'follower_id' => $followerId->followerId,
                 'favorito' => $factory->boolean,
             ]);
+
+            event(new ModelCreated($follower));
+
         }
     }
 }

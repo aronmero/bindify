@@ -19,7 +19,7 @@ class CategoryFactory extends Factory
         return [
             'name' => $this->faker->name,
             'description' => $this->faker->sentence,
-            'active' => $this->faker->boolean,
+            'active' => true,
         ];
     }
 }

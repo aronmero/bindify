@@ -75,4 +75,10 @@ class User extends Authenticatable
 
     }
 
+    public function municipality(){
+
+        return $this->belongsTo(Municipality::class);
+
+    }
+
 }

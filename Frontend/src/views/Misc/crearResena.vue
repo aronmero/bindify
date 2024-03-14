@@ -7,7 +7,8 @@ import Footer from "@/components/comun/footer.vue";
 
 import Input from "@/components/comun/input.vue";
 import { useRouter } from "vue-router";
-let options = ["Publicación", "Evento"]; /* Cambiar por info del back */
+import { postUserReview } from "@/Api/perfiles/perfil.js";
+let options = ["Publicación", "Evento"];
 let tipo = ref(null);
 let errorTitle = ref(null);
 let errorDesc = ref(null);
@@ -24,6 +25,7 @@ const estrella2 = ref('/assets/icons/starEmpty.svg');
 const estrella3 = ref('/assets/icons/starEmpty.svg');
 const estrella4 = ref('/assets/icons/starEmpty.svg');
 const estrella5 = ref('/assets/icons/starEmpty.svg');
+const userData = JSON.parse(sessionStorage.getItem("userData"));
 const valoraciones = {
     "estrella1": "Mala",
     "estrella2": "No muy buena",
@@ -32,33 +34,43 @@ const valoraciones = {
     "estrella5": "Muy buena"
 }
 
-const tratarDatos = ()=>{ /* Revisar */
+const tratarDatos = async()=>{ 
     console.log(titulo.value);
     console.log(descripcion.value);
     console.log(imagen.value);
     console.log(fecha.value);
     console.log(puntuacion.value);
-    if(titulo.value != null){
-        /* Revisar error en el que cuando pones una descripcion y luego la quitas te deja de aparecer el error, comprobar el length del value */
-        if(descripcion.value == null){
-            errorTitle.value = null;
-            errorDesc.value = "Es necesario explicar un poco tu experiecia.";
-        }else if(fecha.value == null || puntuacion.value == null){
-            errorTitle.value = null;
-            errorDesc.value = null;
-            if(fecha.value == null){
-                errorButtons.value = "Es necesario indicar la fecha en la que visitaste el comercio.";
-            }else{
-                errorButtons.value = "Es obligatorio puntuar tu experiencia con el comercio.";
-            }
-
-        }else{
-            errorTitle.value = null;
-            errorDesc.value = null;
-            errorButtons.value = null;
-        }
-    }else{
+    console.log(titulo.value == null || titulo.value.length == 0);
+    /* if(titulo.value == null || titulo.value.length == 0){
+        window.scroll({top:50, right:0, behavior: 'smooth'});
         errorTitle.value = "Es necesario indicar un breve título para la reseña";
+    }else{
+        errorTitle.value = null;
+    } */
+    if(descripcion.value == null || descripcion.value.length == 0){
+        errorDesc.value = "Es necesario explicar un poco tu experiecia.";
+    }else{
+        errorDesc.value = null;
+    }
+   /*  if(fecha.value == null){
+        errorButtons.value = "Es necesario indicar la fecha en la que visitaste el comercio.";
+    }else  */if(puntuacion.value == null){
+        errorButtons.value = "Es obligatorio puntuar tu experiencia con el comercio.";
+    }else{
+        errorButtons.value = null;
+    }
+    if(errorButtons.value == null && errorDesc.value == null /* && errorTitle.value == null */){
+        let datos = {
+            "commerce_username": userData.userData[0].username,
+/*             "title": titulo.value, */
+            "comment": descripcion.value,
+/*             "image": imagen.value,
+            "date": fecha.value, */
+            "note": puntuacion.value
+        }
+        console.log(datos);
+        let respuesta = await postUserReview("POST", datos);
+        console.log(respuesta);
     }
 }
 /* Poner el apratado de puntuar (Modal) visible por defecto ya que es obligatorio */
@@ -134,6 +146,9 @@ const setearPuntuacion = (e)=>{
     textoResenia.value = valoraciones[estrellas[estrellas.indexOf(e.target)].id];
     puntuacion.value = estrellas.indexOf(e.target)+1;
 }
+/* <Input @datos="(nuevosDatos)=>{titulo = nuevosDatos}" tipo="text" requerido="true" label="Título" :error="errorTitle" :valor="titulo"/> */
+    /* <Input @datos="(nuevosDatos)=>{fecha = nuevosDatos}" tipo="fechaLibre" label="¿Cuándo fue?" requerido="false"/> */
+       /*  <Input @datos="(nuevosDatos)=>{imagen = nuevosDatos}" tipo="file" label="Incluye una imágen" clase="banner"/> */
 </script>
 
 <template>
@@ -141,23 +156,20 @@ const setearPuntuacion = (e)=>{
     <Grid>
         <template v-slot:Left></template>
         <tempalte class="flex flex-col items-center justify-center">
-            <header class="flex items-center relative w-[90vw] justify-center">
-                <button @click="router.go(-1)" class="lg:hidden absolute left-0">
+            <header class="flex items-center relative w-[90vw] justify-center mt-[1rem] mb-[0.5rem]">
+                <button @click="router.back()" class="absolute lg:-translate-x-[21rem]">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
                 </button>
                 <h3 class="lg:text-xl">Crear una reseña</h3>
             </header>
             <section class="w-full mt-5 mb-5">
                 <form action="javascript:void(0);" class="flex flex-col gap-y-5">
-                    <Input @datos="(nuevosDatos)=>{titulo = nuevosDatos}" tipo="text" requerido="true" label="Título" :error="errorTitle" :valor="titulo"/>
-                    <Input @datos="(nuevosDatos)=>{descripcion = nuevosDatos}" tipo="texto" requerido="true" label="Cuéntanos un poco más" :error="errorDesc" :valor="descripcion"/>
-                    <Input @datos="(nuevosDatos)=>{imagen = nuevosDatos}" tipo="file" label="Incluye una imágen" clase="banner"/>
+                    <Input @datos="(nuevosDatos)=>{descripcion = nuevosDatos}" tipo="texto" requerido="true" label="Cuéntanos tu experiencia" :error="errorDesc" :valor="descripcion"/>
                     <div class="buttons flex flex-col gap-y-5">
                         <p v-if="errorButtons != null" class="mb-1 text-primary-700 text-sm">{{ errorButtons }}</p>
-                        <div class="row flex flex-col lg:flex-row gap-y-6 gap-x-10 relative">
-                            <Input @datos="(nuevosDatos)=>{fecha = nuevosDatos}" tipo="fechaLibre" label="¿Cuándo fue?" requerido="false"/>
+                        <div class="flex flex-col lg:flex-row justify-center gap-y-6 gap-x-10 relative">
                             <div id="modalResenia"
-                            class="bg-background-50 rounded-xl font-normal flex-col gap-[5px] justify-evenly items-start lg:items-center cursor-pointer flex h-[4rem] lg:h-[5.5rem]">
+                            class="bg-background-50 rounded-xl font-normal flex-col gap-[5px] justify-evenly  items-start lg:items-center cursor-pointer flex h-[4rem] lg:h-[5.5rem]">
                                 <p>{{ textoResenia }}</p>
                                 <div class="estrellas flex">
                                     <img @mouseover="modificarPuntuacion" @mouseleave="resetPuntuacion" @click="setearPuntuacion" id="estrella1" :src="estrella1" class="w-[2rem]"> 

@@ -21,27 +21,41 @@ class CommerceFactory extends Factory
     public function definition(): array
     {
         $userId = User::leftJoin('customers', 'customers.user_id', '=', 'users.id')
-        ->leftJoin('commerces', 'commerces.user_id', '=', 'users.id')
-        ->whereNull('customers.user_id')
-        ->whereNull('commerces.user_id')
-        ->pluck('users.id')
-        ->first();
+            ->leftJoin('commerces', 'commerces.user_id', '=', 'users.id')
+            ->whereNull('customers.user_id')
+            ->whereNull('commerces.user_id')
+            ->pluck('users.id')
+            ->first();
 
         $user = User::find($userId);
-        $user->assignRole('commerce');
 
-        $aux = rand(1, 10);
+        $aux1 = rand(1, 10);
 
         $verification_token_id = null;
 
 
-        if ($aux == 1) {
+        if ($aux1 == 1) {
+
+            $user->assignRole('ayuntamiento');
 
             $verification_token_id = Verification_token::select('id')
-            ->inRandomOrder()
-            ->first();
+                ->inRandomOrder()
+                ->first();
+
+        } else {
+
+            $user->assignRole('commerce');
 
         }
+
+        $aux2 = rand(1, 12);
+
+        $active = false;
+
+        if ($aux2 > 1) {
+            $active = true;
+        }
+
 
         return [
             'user_id' => $userId,
@@ -51,7 +65,7 @@ class CommerceFactory extends Factory
             'category_id' => rand(1, Category::count()),
             'verificated' => $this->faker->boolean,
             'schedule' => null,
-            'active' => $this->faker->boolean,
+            'active' => $active,
         ];
     }
 }

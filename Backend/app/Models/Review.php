@@ -22,7 +22,7 @@ class Review extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function commerce()
@@ -30,4 +30,8 @@ class Review extends Model
         return $this->belongsTo(User::class, 'commerce_id');
     }
 
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'element');
+    }
 }

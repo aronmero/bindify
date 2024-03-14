@@ -1,7 +1,9 @@
 <script setup>
-    import {onMounted} from 'vue';
-    import { postsPerDate, postsDates, format_date } from '../mocks/filtros';
+    import {onMounted, ref} from 'vue';
     import ForwardSVG from '@public/assets/icons/forward.svg';
+    import {comparar_fechas} from '@/components/calendario/helpers/comparar_fechas.js';
+    
+    /* realizado por David */
 
     const props = defineProps({
         title: String, 
@@ -12,127 +14,137 @@
         post_per_date: Function
     });
 
-    onMounted(() => {
-        let date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        const day = document.querySelector(".calendar-dates");
+    const year = ref(new Date().getFullYear());
+    const month = ref(new Date().getMonth());
 
-        const currdate = document
-            .querySelector(".calendar-current-date");
+    const dias = [
+        'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
+    ];
 
-        const prenexIcons = document
-            .querySelectorAll(".calendar-navigation span");
+    const months = [
+      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
 
-        const months = [
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
-            "Diciembre"
-        ];
+    const currentMonth = ref('');
 
-        const manipulate = () => {
-            const daysWithEvents = postsDates();
-            let dayone = new Date(year, month, 1).getDay();
-            let lastdate = new Date(year, month + 1, 0).getDate();
-            let dayend = new Date(year, month, lastdate).getDay();
-            let monthlastdate = new Date(year, month, 0).getDate();
+    const days = ref([]);
 
-            let cell = "";
-            for (let i = dayone; i > 0; i--) {
-                if (month + 1)
-                    cell += `<a class="inactive">${monthlastdate-i+1}</a>`;
-            }
+    const manipulate = () => {
+        const lastDate = new Date(year.value, month.value + 1, 0).getDate();
+        const firstDay = new Date(year.value, month.value, 1).getDay();
+        const monthLabel = `${months[month.value]} ${year.value}`;
+        currentMonth.value = monthLabel;
 
-            for (let i = 1; i <= lastdate; i++) {
-                let isToday = (i === date.getDate() && month === new Date().getMonth() && year === new Date().getFullYear())
-                let today = "";
-                if(isToday) {
-                    today = "active";
-                }
+        const newDays = [];
+        const prevMonthLastDate = new Date(year.value, month.value, 0).getDate();
 
-                //console.log(postsDates())
-                let hasEvent = daysWithEvents.includes(`${month+1}/${i}/${year}`);
-                let event = ""
-                if(hasEvent) {
-                    event = 'with_event';
-                } 
-
-                let posts_found = ""
-                if (hasEvent) {
-                    posts_found = postsPerDate(`${month+1}/${i}/${year}`);
-                }
-
-                cell += `<a class="${event} ${today}" title="${(posts_found != "") ? posts_found[0].title : "No hay eventos en esta fecha"}" href="${(posts_found != "") ? '/post/' + posts_found[0].id : ""}" >${i}</a>`;
-            }
-
-            for (let i = dayend; i < 6; i++) {
-                cell += `<a class="inactive">${i-dayend+1}</a>`
-            }
-
-            currdate.innerText = `${months[month]} ${year}`;
-            day.innerHTML = cell;
+        // Agregar días inactivos del mes anterior
+        for (let i = firstDay - 1; i >= 0; i--) {
+            newDays.push({ day: prevMonthLastDate - i, month: month.value + 1, year: year.value, inactive: true });
         }
 
-        manipulate();
+        // Agregar días activos del mes actual
+        for (let i = 1; i <= lastDate; i++) {
+            newDays.push({ day: i,  month: month.value + 1, year: year.value, inactive: false });
+        }
 
-        prenexIcons.forEach(icon => {
-            icon.addEventListener("click", () => {
-                month = icon.id === "calendar-prev" ? month - 1 : month + 1;
+        // Agregar días inactivos del mes siguiente
+        const daysToAdd = 6 - newDays.length % 7;
+        for (let i = 1; i <= daysToAdd; i++) {
+            newDays.push({ day: i, month: month.value + 1, year: year.value,  inactive: true });
+        }
 
-                if (month < 0 || month > 11) {
-                    date = new Date(year, month, new Date().getDate());
-                    year = date.getFullYear();
-                    month = date.getMonth();
-                } else {
-                    date = new Date();
-                }
+        days.value = newDays;
+    };
 
-                manipulate();
-            });
+    /**
+     * Comprueba que la fecha elegida, se encuentre dentro del rango de ambas fechas
+     * */
+    const estaEnFecha = (date_start_sql, date_choosen, date_end_sql) => {
+        const isChosen = new Date(date_choosen).getTime(); 
+        let start_date = new Date(date_start_sql).getTime();
+        let end_date = new Date(date_end_sql).getTime();
+        return start_date <= isChosen && end_date >= isChosen || date_start_sql == "" && date_end_sql == "";
+    }
+
+    const cambiarFecha = (day) => {
+      // Formatear la fecha con el mismo de sql
+      let fechaElegida = `${day.year}-${day.month}-${day.day}`;
+      let elegidaDate = new Date(day.year, day.month - 1, day.day)
+
+      let diaString = (elegidaDate.getDay() - 1 >= 0)? dias[elegidaDate.getDay() - 1] :  dias[6] ;
+
+      // Obtiene el id del título y nos muestra la fecha actual
+      document.getElementById("fecha").innerHTML = `${diaString}, ${day.day} de ${months[day.month - 1] } de ${day.year}`
+
+      let cards = Array.from(document.getElementsByClassName('card'));
+      // Filtra las fechas comparándolas
+      cards.forEach(card => {
+            if(estaEnFecha(card.dataset.start_date, fechaElegida, card.dataset.end_date)) {
+                card.style.display = "flex";
+                card.dataset.listando = "true";
+            } else {
+                card.style.display = "none";
+                card.dataset.listando = "false";
+            }
         });
-    })
+               
+    };
+
+    const changeMonth = (diff) => {
+      month.value += diff;
+      if (month.value < 0 || month.value > 11) {
+        const currentDate = new Date(year.value, month.value, new Date().getDate());
+        year.value = currentDate.getFullYear();
+        month.value = currentDate.getMonth();
+    }
+    manipulate();
+};
+
+onMounted(() => {
+  manipulate();
+});
+
 </script>
+
 <template>
-    <div class=" flex justify-end items-center mb-3  ">
+    <div class="flex justify-end items-center mb-3">
         <div class="card-body events-calendar xl:w-[450px] sm:w-[400px] sm:p-0">
-            <h5 class="card-title">{{ title }}</h5>
-            <p class="card-text">{{ desc }}</p>
-            <div class="calendar-container">
-                <header class="calendar-header">
-                    <p class="calendar-current-date"></p>
-                    <div class="calendar-navigation">
-                        <span id="calendar-prev" class="material-symbols-rounded">
-                            <img :src="ForwardSVG" />
-                        </span>
-                        <span id="calendar-next" class="material-symbols-rounded">
-                            <img :src="ForwardSVG" />
-                        </span>
-                    </div>
-                </header>
-                <div class="calendar-body">
-                    <ul class="calendar-weekdays">
-                        <li>Dom</li>
-                        <li>Lun</li>
-                        <li>Mar</li>
-                        <li>Mie</li>
-                        <li>Jue</li>
-                        <li>Vie</li>
-                        <li>Sab</li>
-                    </ul>
-                    <ul id="calendarDates" class="calendar-dates"></ul>
-                </div>
+          <h5 class="card-title">{{ title }}</h5>
+          <p class="card-text">{{ desc }}</p>
+          <div class="calendar-container">
+            <header class="calendar-header">
+              <p class="calendar-current-date">{{ currentMonth }}</p>
+              <div class="calendar-navigation">
+                <span id="calendar-prev" @click="changeMonth(-1)" class="material-symbols-rounded">
+                  <img :src="ForwardSVG" />
+                </span>
+                <span id="calendar-next" @click="changeMonth(1)" class="material-symbols-rounded">
+                  <img :src="ForwardSVG" />
+                </span>
+              </div>
+            </header>
+            <div class="calendar-body">
+              <ul class="calendar-weekdays">
+                <li>Dom</li>
+                <li>Lun</li>
+                <li>Mar</li>
+                <li>Mie</li>
+                <li>Jue</li>
+                <li>Vie</li>
+                <li>Sab</li>
+              </ul>
+              <ul id="calendarDates" class="calendar-dates">
+                <li v-for="day in days" :key="day" :class="(day.inactive) ? 'inactive':'active'">
+                  <button v-if="!day.inactive" @click="cambiarFecha(day)">{{ day.day }}</button>
+                  <button v-else>{{ day.day }}</button>
+                </li>
+              </ul>
             </div>
+          </div>
         </div>
-    </div>
+      </div>
 </template>
 <style lang="scss">
     @import './../styles/calendario/variables', './../styles/calendario/mixins';
@@ -192,6 +204,7 @@
 
     .calendar-body ul {
         @include row_center();
+        justify-content: flex-start;
         list-style: none;
         flex-wrap: wrap;
         padding: 0;
@@ -201,7 +214,7 @@
         margin-bottom: 20px;
     }
 
-    .calendar-body a {
+    .calendar-body button {
         text-decoration: none;
         width: calc(100% / 7);
         font-size: 1.07rem;
@@ -224,21 +237,27 @@
         font-size:.9rem;
     }
 
-    .calendar-body .active {
-        color: red;
+    .calendar-body .active button {
+        //color: red !important;
     }
+
+
 
     .calendar-body .with_event {
         background: #f3f3f3;
         cursor: pointer;
     }
 
-    .calendar-body .inactive {
-        color: #BFC1C5;
+    .calendar-body .inactive button {
+        color: #BFC1C5 !important;
     }
 
     #calendar-prev {
         // transform: rotate(180deg);
+    }
+
+    .selected {
+        background:#414141;
     }
 
     #calendar-next {
@@ -272,4 +291,6 @@
         }
        
     }
+
+
 </style>

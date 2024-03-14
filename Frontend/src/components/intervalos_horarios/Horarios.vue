@@ -2,13 +2,16 @@
 
     import { ref } from 'vue';
     import BackSVG from '@public/assets/icons/forward.svg';
+    import HorarioSVG from '@public/assets/icons/time.svg';
 
-    import { comercios, obtener_rango_horarios } from '../feed_media/mocks/comercios';
+    import { comercios, filtrar_rango_horarios, pasar_a_string_horario } from '../feed_media/mocks/comercios';
     import Intervalo from './widgets/Intervalo.vue';
 
-    const props = defineProps([
-        'referencia_padre'
-    ]);
+    const props = defineProps({
+        referencia_padre: String,
+        controlar_modal: Function,
+        enviar_cambios: Function
+    });
 
     const datos_padre = ref(props.referencia_padre)
     const comercio = comercios[0];
@@ -22,14 +25,15 @@
      * Obtengo el rango de horarios de ese comercio
      * */
 
-    let horario =   ref(obtener_rango_horarios(1));; 
+    //let horario =   ref(obtener_rango_horarios(1)); 
+    let horario = ref(filtrar_rango_horarios(datos_padre.value));
 
+    console.log(horario);
     /* *
     * Borrar el intervalo
     * @param index - index del elemento a borrar
     * */
     const borrar_intervalo = (index) => {
-        let pos = "";
         console.log(`borrando ${index}`);
         horario.value.splice(index, 1);
         horario.value = horario.value;
@@ -63,7 +67,8 @@
      * Cierra el modal
      * */
     const cerrarModal = () => {
-        document.body.style.overflow= "scroll"
+        document.body.style.overflow= "scroll";
+        props.controlar_modal();
     };
 
     /**
@@ -71,9 +76,10 @@
      * Enviar cambios
      * 
      * */
-     const enviar_cambios = () => {
-        datos_padre.value = horario.value;
-     }
+     //const enviar_cambios = () => {
+     //   datos_padre.value = horario.value;
+     //   cerrarModal()
+     //}
 
 </script>
 <template>
@@ -87,20 +93,22 @@
                 <button @click="() => cerrarModal()">
                     <img class="w-[30px] ml-3 cursor-pointer" :src="BackSVG" alt="">
                 </button>
-                <!-- Mensaje central de comentarios -->
+                <!-- Mensaje central de texto -->
                 <h2 class="w-[90%] text-center">Intervalos de Horario</h2>
             </nav>
-            <!-- El listado de comentarios -->
-            <div ref="comentario_handler"
-                class="comentarios flex flex-col items-start max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
-                <h2>Actualmente:</h2>
+            <!-- El listado de intervalos -->
+            <div ref="handler"
+                class="comentarios flex flex-col items-center max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%]  overflow-y-scroll">
+                <h2 class=" flex items-center "> 
+                    Intervalos horarios actuales
+                </h2>
                 <Intervalo v-for="(intervalo, index) in horario" :intervalo="intervalo" :index="index"
                     :borrar_intervalo="borrar_intervalo" :cambiar_intervalo="cambiar_intervalo" />
-                    <div>
-                        <button @click="() => crear_intervalo()" class="bg-[#FE822F] w-[200px] h-[50px] rounded-xl">Agregar intervalo</button>
-                    </div>
-                    <div>
-                        <button @click="() => enviar_cambios()" class="mt-[10px] bg-[#404040] text-white w-[200px] h-[50px] rounded-xl">Aplicar y volver</button>
+                    <b v-if="horario.length == 0" class="p-[20px]">Aún no has añadido ningún horario.</b>
+                    <div class="w-[100%] flex flex-col items-center justify-start w-[200px] ">
+                        <button @click="() => crear_intervalo()" class=" bg-[#FE822F] w-[100%]  h-[50px] rounded-xl">Agregar intervalo</button>
+                    
+                        <button @click="() => props.enviar_cambios(pasar_a_string_horario(horario))" class="mt-[10px] bg-[#404040] text-white w-[100%] h-[50px] rounded-xl">Aplicar y volver</button>
                     </div>
                 </div>
         </div>

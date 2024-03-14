@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import MoreSVG from '@public/assets/icons/ellipsis.svg';
 import { encontrar_usuario_por_id } from './../mocks/users';
+import { datetranslatesql } from './../helpers/datetranslate.js'
 import StarSVG from '@public/assets/icons/star.svg';
 import StarEmptySVG from '@public/assets/icons/starEmpty.svg';
 
@@ -17,10 +18,14 @@ const props = defineProps({
 });
 
 const comentario = props.comentario;
+if(comentario.avatar=="default"){
+    comentario.avatar="/public/img/placeholderPerfil.webp";
+}
+const user = comentario.username;
+
 /**
  * Obtenemos el usuario para poder mostrar el avatar 
  * */
-const user = encontrar_usuario_por_id(comentario.user_id);
 
 /**
  * Creo la referencia para poder utilizar ocultar y mostrar el modal
@@ -33,17 +38,17 @@ const modalHandler = ref(false);
 const opcionesModal = [
     {
         name: "Borrar Comentario",
-        action: `comentario/${comentario._id}/delete`,
+        action: `/comentario/${comentario.comment_id}/delete`,
         icon: DeleteSVG
     },
     {
         name: "Ver perfil",
-        action: `perfil/${user._id}`,
+        action: `/perfil/${comentario.username}`,
         icon: UserSVG
     },
     {
         name: "Reseñas",
-        action: `perfil/${user._id}`,
+        action: `/perfil/${comentario.username}`,
         icon: StarSVG
     }
 ];
@@ -68,21 +73,22 @@ const abrirModal = () => {
         <!-- Header del comentario -->
         <div class=" header-comentario flex ">
             <!-- Avatar del usuario -->
-            <img v-if="user.avatar != null" class=" mr-[10px] " :src="user.avatar" alt="">
+            <img v-if="props.comentario.avatar != null" class=" mr-[10px] " :src="props.comentario.avatar" alt="">
             <!-- Textos del usuario -->
             <div class="textos m-l">
-                <b> {{ user.name }}</b>
+                <b> {{ comentario.username }}</b>
                 <button click="" class=" mt-[-15px] rating flex h-[fit-content] items-center justify-start "
-                    v-if="user.rating != null">
+                    v-if="comentario.rating != null">
                     <img class="  " :src="StarSVG" v-for="index in Math.floor(user.rating)" alt="star"
                         :title="user.rating" />
-                    <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(user.rating))" alt="star"
+                    <img class=" " :src="StarEmptySVG" v-for="index in (5 - Math.floor(user.avg))" alt="star"
                         :title="user.rating" />
-                    <small>({{ user.rating }})</small>
+                    <small>({{ user.avg }})</small>
                 </button>
             </div>
             <!-- Botón de Ver Más -->
-            <button v-if="user.name != null" @click="() => abrirModal()" class="w-[20px] h-[20px] absolute right-10">
+            <button v-if="comentario.username != null" @click="() => abrirModal()"
+                class="w-[20px] h-[20px] absolute right-10">
                 <img class="  " :src="MoreSVG" alt="">
             </button>
         </div>
@@ -91,7 +97,7 @@ const abrirModal = () => {
             {{ comentario.content }}
         </span>
         <!-- Modal de Ver Más -->
-        <ModalReutilizable v-if="modalHandler" :options="opcionesModal" :status="modal_status" :handler="abrirModal" />
+        <ModalReutilizable v-if="modalHandler" :options="opcionesModal" :status="modal_status" :info="comentario"  :handler="abrirModal" />
     </div>
 </template>
 <style scoped lang="scss">
@@ -107,4 +113,5 @@ const abrirModal = () => {
             width: 20px;
         }
     }
-}</style>
+}
+</style>

@@ -1,148 +1,136 @@
 <script setup>
-    import {onMounted} from 'vue';
+    import {onMounted, ref} from 'vue';
+    import ForwardSVG from '@public/assets/icons/forward.svg';
+    import router from '@/router/index';
+
     const props = defineProps({
-        title: String, 
-        desc: String, 
-        type: String,
-        posts: Array, 
-        dates: Array,
-        post_per_date: Function
+        post: Object, 
     });
 
-    onMounted(() => {
-        let date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        const day = document.querySelector(".calendar-dates");
+    /* Mocks de días y meses */
+    const dias = [
+        'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
+    ];
 
-        const currdate = document
-            .querySelector(".calendar-current-date");
+    const months = [
+      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
 
-        const prenexIcons = document
-            .querySelectorAll(".calendar-navigation span");
+    /** Obtiene los datos actuales */
+    const year = ref(new Date().getFullYear());
+    const month = ref(new Date().getMonth());
 
-        const months = [
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
-            "Diciembre"
-        ];
+    /* Variable de ref para dibujar el calendario*/
+    const currentMonth = ref('');
 
+    const days = ref([]);
+    
+    /* comprueba que los campos estén dentro de las fechas */
+    const estaEnFecha = (date_start_sql, date_choosen, date_end_sql) => {
+        const isChosen = new Date(date_choosen).getTime(); 
+        let start_date = new Date(date_start_sql).getTime();
+        let end_date = new Date(date_end_sql).getTime();
+        return start_date <= isChosen && end_date >= isChosen || date_start_sql == "" && date_end_sql == "";
+    }
 
+    /* Imprime los días del mes */
+    const manipulate = () => {
+        const lastDate = new Date(year.value, month.value + 1, 0).getDate();
+        const firstDay = new Date(year.value, month.value, 1).getDay();
+        const monthLabel = `${months[month.value]} ${year.value}`;
+        currentMonth.value = monthLabel;
 
+        const newDays = [];
+        const prevMonthLastDate = new Date(year.value, month.value, 0).getDate();
 
-        const manipulate = () => {
-            //const daysWithEvents = props.dates;
-            const daysWithEvents = [
-                '09/02/2024', '03/07/2024'
-            ];
-            const post_per_date = (date) => { return [{ id: 1, title: 'Test' }]} ;
-            let dayone = new Date(year, month, 1).getDay();
-            let lastdate = new Date(year, month + 1, 0).getDate();
-            let dayend = new Date(year, month, lastdate).getDay();
-            let monthlastdate = new Date(year, month, 0).getDate();
-
-            let cell = "";
-            for (let i = dayone; i > 0; i--) {
-                if (month + 1)
-                    cell += `<a class="inactive">${monthlastdate-i+1}</a>`;
-            }
-
-            for (let i = 1; i <= lastdate; i++) {
-                let isToday = (i === date.getDate() && month === new Date().getMonth() && year === new Date().getFullYear())
-                let today = "";
-                if(isToday) {
-                    today = "active";
-                }
-
-                let hasEvent = daysWithEvents.includes(`${month+1}/${i}/${year}`);
-                let event = ""
-                if(hasEvent) {
-                    event = 'with_event';
-                } 
-
-                let posts_found = ""
-                if (hasEvent) {
-                    posts_found = post_per_date(`${month+1}/${i}/${year}`);
-                }
-
-                cell += `<a class="${event} ${today}" title="${(posts_found != "") ? posts_found[0].title : "No hay eventos en esta fecha"}" href="${(posts_found != "") ? '/post/' + posts_found[0].id : ""}" >${i}</a>`;
-            }
-
-            for (let i = dayend; i < 6; i++) {
-                cell += `<a class="inactive">${i-dayend+1}</a>`
-            }
-
-            currdate.innerText = `${months[month]} ${year}`;
-            day.innerHTML = cell;
+        // Agregar días inactivos del mes anterior
+        for (let i = firstDay - 1; i >= 0; i--) {
+            newDays.push({ day: prevMonthLastDate - i, month: month.value + 1, year: year.value, inactive: true });
         }
 
-        manipulate();
+        // Agregar días activos del mes actual
+        for (let i = 1; i <= lastDate; i++) {
+            newDays.push({ day: i,  month: month.value + 1, year: year.value, inactive: false });
+        }
 
-        prenexIcons.forEach(icon => {
-            icon.addEventListener("click", () => {
-                month = icon.id === "calendar-prev" ? month - 1 : month + 1;
+        // Agregar días inactivos del mes siguiente
+        const daysToAdd = 6 - newDays.length % 7;
+        for (let i = 1; i <= daysToAdd; i++) {
+            newDays.push({ day: i, month: month.value + 1, year: year.value,  inactive: true });
+        }
 
-                if (month < 0 || month > 11) {
-                    date = new Date(year, month, new Date().getDate());
-                    year = date.getFullYear();
-                    month = date.getMonth();
-                } else {
-                    date = new Date();
-                }
+        days.value = newDays;
+    };
 
-                manipulate();
-            });
-        });
-    })
+    /** Cambia el mes seleccionado */
+    const changeMonth = (diff) => {
+      month.value += diff;
+      if (month.value < 0 || month.value > 11) {
+        const currentDate = new Date(year.value, month.value, new Date().getDate());
+        year.value = currentDate.getFullYear();
+        month.value = currentDate.getMonth();
+    }
+
+    // dibuja el calendario 
+    manipulate();
+};
+
+onMounted(() => {
+  manipulate();
+});
+
 </script>
+
 <template>
-    <div :class="props.type + ' widget card mb-3'">
-        <div class="card-body">
-            <h5 class="card-title">{{ title }}</h5>
-            <p class="card-text">{{ desc }}</p>
-            <div class="calendar-container">
-                <header class="calendar-header">
-                    <p class="calendar-current-date"></p>
-                    <div class="calendar-navigation">
-                        <span id="calendar-prev" class="material-symbols-rounded">
-                            <iconify-icon icon="material-symbols:chevron-left"></iconify-icon>
-                        </span>
-                        <span id="calendar-next" class="material-symbols-rounded">
-                            <iconify-icon icon="material-symbols:chevron-right"></iconify-icon>
-                        </span>
-                    </div>
-                </header>
-                <div class="calendar-body">
-                    <ul class="calendar-weekdays">
-                        <li>Dom</li>
-                        <li>Lun</li>
-                        <li>Mar</li>
-                        <li>Mie</li>
-                        <li>Jue</li>
-                        <li>Vie</li>
-                        <li>Sab</li>
-                    </ul>
-                    <ul id="calendarDates" class="calendar-dates"></ul>
-                </div>
+    <div class="flex justify-center items-center mb-3">
+        <div class="card-body events-calendar xl:w-[450px] sm:w-[400px] sm:p-0">
+          <div class="calendar-container">
+            <header class="calendar-header">
+              <p class="calendar-current-date">{{ currentMonth }}</p>
+              <div class="calendar-navigation">
+                <span id="calendar-prev" @click="changeMonth(-1)" class="material-symbols-rounded">
+                  <img :src="ForwardSVG" />
+                </span>
+                <span id="calendar-next" @click="changeMonth(1)" class="material-symbols-rounded">
+                  <img :src="ForwardSVG" />
+                </span>
+              </div>
+            </header>
+            <div class="calendar-body">
+              <ul class="calendar-weekdays">
+                <li>Dom</li>
+                <li>Lun</li>
+                <li>Mar</li>
+                <li>Mie</li>
+                <li>Jue</li>
+                <li>Vie</li>
+                <li>Sab</li>
+              </ul>
+              <ul id="calendarDates" class="calendar-dates">
+                <li v-for="day in days" :key="day" 
+                    :class="{'inactive': (day.inactive),  'active' : (!day.inactive), 'bg-slate-200': (!day.inactive && estaEnFecha(props.post.fechaInicio, `${day.year}-${day.month}-${day.day}`, props.post.fechaFin))}">
+                  <button 
+                        v-if="!day.inactive" 
+                        @click="router.push(`/calendario/q=${day.year}-${day.day}-${day.month}`)"
+                    >{{ day.day }}</button>
+                  <button v-else>{{ day.day }}</button>
+                </li>
+              </ul>
             </div>
+          </div>
         </div>
-    </div>
+      </div>
 </template>
 <style lang="scss">
-    @import '@/style/variables', '@/style/mixins';
+
     .calendar-container {
-        background: #fff;
-        width: 100%;
+        margin:20px 0px;
+        width:100%;
+        height:450px;
+        padding:20px;
         border-radius: 10px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     }
 
     .calendar-container header {
@@ -150,15 +138,20 @@
         align-items: center;
         padding: 25px 30px 10px;
         justify-content: space-between;
+        //background:red;
         
     }
 
     header .calendar-navigation {
-        @include row_center();
+        display:flex;
+        align-items: center;
+        justify-content: center
     }
 
     header .calendar-navigation span {
-        @include row_center();
+        display:flex;
+        align-items: center;
+        justify-content: center;
         height: 38px;
         width: 38px;
         margin: 0 1px;
@@ -189,7 +182,9 @@
     }
 
     .calendar-body ul {
-        @include row_center();
+        display:flex;
+        align-items: center;
+        justify-content: flex-start;
         list-style: none;
         flex-wrap: wrap;
         padding: 0;
@@ -199,12 +194,13 @@
         margin-bottom: 20px;
     }
 
-    .calendar-body a {
+    .calendar-body button {
         text-decoration: none;
         width: calc(100% / 7);
         font-size: 1.07rem;
         font-size:.9rem;
         color: #414141;
+        padding:10px;
     }
 
     .calendar-body li {
@@ -212,25 +208,68 @@
         font-size:.9rem;
         width: calc(100% / 7);
         font-size: .9rem;
+        
         color: #414141;
     }
 
     .calendar-body .calendar-weekdays li {
         cursor: default;
         font-weight: 500;
+
         font-size:.9rem;
     }
 
-    .calendar-body .active {
-        color: red;
-    }
 
     .calendar-body .with_event {
         background: #f3f3f3;
         cursor: pointer;
     }
 
-    .calendar-body .inactive {
-        color: #BFC1C5;
+    .calendar-body .inactive button {
+        color: #BFC1C5 !important;
     }
+
+    #calendar-prev {
+        // transform: rotate(180deg);
+    }
+
+    .selected {
+        background:#E06031;
+        border-radius:1px;
+        color:white !important;
+    }
+
+    #calendar-next {
+        transform: rotate(180deg);
+    }
+
+    @media screen and (max-width: 640px) {
+        .calendar-container {
+            padding:0px 10px;
+            height:350px;
+            margin-top:0px;
+            .calendar-body {
+                padding:10px;
+            }
+            header {
+                padding:5px 10px;
+                .calendar-current-date {
+                    font-size:.9rem;
+                }
+            }
+            .events-calendar {
+                max-width:100%;
+                a {
+                    padding:7px 0px;
+                    font-size:.7rem;
+                }
+            }   
+        }
+        .card {
+            padding:5px 10px;
+        }
+       
+    }
+
+
 </style>

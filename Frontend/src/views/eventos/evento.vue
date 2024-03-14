@@ -7,7 +7,7 @@ import Evento from "@/components/utils/evento.vue";
 import absoluteURL from "@/scripts/getFullUrl.js";
 import router from "@/router/index.js";
 import { ref, onMounted } from "vue";
-import { postId } from "@/api/publicacion/publicacion.js";
+import { postId } from "@/Api/publicacion/publicacion.js";
 
 const datos = ref([])
 
@@ -25,7 +25,8 @@ onMounted(async () => {
     <Grid><template v-slot:Left> </template>
         <section v-if="datos.data !== undefined">
             <Evento :url="absoluteURL()" :banner="datos.data.post.image" :titulo="datos.data.post.title" :ubicacion="BLANK" :fechaInicio="datos.data.post.start_date"
-                :fechaFin="datos.data.post.end_date" :dias="BLANK" :descripcion="datos.data.post.description" :tipo="datos.data.post.post_type_name" :user="datos.data.users" :fecha_publicacion="datos.data.post.fecha_creacion"/>
+                :fechaFin="datos.data.post.end_date" :dias="BLANK" :descripcion="datos.data.post.description" :tipo="datos.data.post.post_type_name" 
+                :user="datos.data.users" :fecha_publicacion="datos.data.post.fecha_creacion" :comentarios="datos.data.comments" :post_id="id"/>
         </section>
         <template v-slot:Right> </template>
 
