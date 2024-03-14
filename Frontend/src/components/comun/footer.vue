@@ -36,7 +36,7 @@ import { RouterLink } from "vue-router";
       /></RouterLink>
     </nav>
     <nav class="w-[50px] flex justify-center items-center">
-      <RouterLink to="/">
+      <RouterLink to="/perfil/">
         <img  title="Perfil" alt="Perfil"
           src="/assets/icons/user.svg"
           class="max-w-[20px] max-h-[20px] "

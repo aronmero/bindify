@@ -1,4 +1,16 @@
-import { urlApi } from "@/Api/api.js";
+import { urlApi,genOptions } from "@/Api/api.js";
+
+/**
+ * Inicia sesion en el servidor y obtiene el token
+ * @date 3/14/2024 - 6:53:20 PM
+ * @author Aaron Medina Rodriguez
+ *
+ * @export
+ * @async
+ * @param {String} email
+ * @param {String} pass
+ * @returns {Object}
+ */
 export async function login(email,pass) {
   try {
     const options = genOptionsLogin("POST");
@@ -12,6 +24,30 @@ export async function login(email,pass) {
     console.error(error);
   }
 }
+
+/**
+ * Cierra sesion en el servidor
+ * @date 3/14/2024 - 6:59:58 PM
+ * @author Aaron Medina Rodriguez
+ *
+ * @export
+ * @async
+ * @returns {Object}
+ */
+export async function closeSession() {
+  try {
+    const options = genOptions("POST");
+    const response = await fetch(
+      `${urlApi}/api/logout`,
+      options
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function register(datos) {
   try {
     let formData = new FormData();

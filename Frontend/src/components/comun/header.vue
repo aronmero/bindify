@@ -2,13 +2,17 @@
 import { RouterLink } from "vue-router";
 import router from '@/router/index.js';
 import  logo  from '@public/img/fondo.png';
+import {  closeSession} from "@/Api/auth.js";
 
 /**
  * Cierra la sesion actual y redirige al usuario
  * @date 3/10/2024 - 10:02:05 PM
  * @author Aarón Medina Rodríguez
  */
- const closeSession = () => {
+ const closeSesion = async () => {
+   
+    const data= await closeSession();
+    console.log(data)
     sessionStorage.clear();
     router.push("/");
     router.go();
@@ -55,7 +59,7 @@ import  logo  from '@public/img/fondo.png';
         </RouterLink>
       </nav>
       <nav class="w-[50px] flex justify-center items-center">
-        <button @click="closeSession">
+        <button @click="closeSesion">
           <img title="Cerrar sesion" src="/assets/icons/logout.svg" class="max-w-[30px] max-h-[30px]"
             alt="Cerrar sesion" />
         </button>
