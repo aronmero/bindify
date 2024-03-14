@@ -320,7 +320,7 @@ class PostsController extends Controller
                 $rutaFotoPost = asset('storage/usuarios/' . $request->username . '/imagenPost.webp');
             }
 
-        /* 
+        /*
            $rutaAvatar = 'default';
 
            if ($request->hasFile('avatar')) {
@@ -427,14 +427,8 @@ class PostsController extends Controller
     public function show(string $id)
     {
         try {
-            try {
-                $id = Crypt::decryptString($id);
-            } catch (DecryptException $e) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Post inexistente',
-                ], 500);
-            }
+
+            $id = Utils::deCrypt($id);
 
             // Obtener el post
             $post = Post::with('users')->findOrFail($id);
