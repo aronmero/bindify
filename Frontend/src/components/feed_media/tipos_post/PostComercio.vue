@@ -34,7 +34,6 @@ import BotonSpeaker from '../widgets/BotonSpeaker.vue';
 const props = defineProps({
     post: Object,
     tipo: String,
-    abrirComentarios: Function,
     esSeguido: Boolean
 });
 
@@ -42,10 +41,6 @@ const post = ref(props.post);
 const post_reference = ref({dataset: {favorito:false}});
 const modalHandler = ref(false);
 const modal = ref(null);
-
-const modal_comentarios = ref(null);
-/** Genero la referencia para abrir o cerrar el modal de comentarios */
-const comentariosVisibles = ref(false);
 
 /** Genero la referencia para obtener los favoritos del usuario, hecho en frontend por no poderse poner en back */
 const favoritos = ref(obtener_favoritos());
@@ -75,10 +70,8 @@ let IconoTipo = "";
 if (tipo == 'Post') IconoTipo = TipoOferta; // 1 Post
 if (tipo == 'Evento') IconoTipo = TipoEvento; // 2 Event
 
-/** referencia los comentarios */
-let comentarios = ref(null);
 
-
+/** Controla el añadir y borrar de favoritos */
 const aniadir_favorito = (item) => {
         if (favoritos.value.indexOf(item) == -1) {
             favoritos.value.push(item);
@@ -91,7 +84,7 @@ const aniadir_favorito = (item) => {
         // guardamos los cambios
         localStorage.setItem("favoritos", JSON.stringify(favoritos.value));
 }
-
+/** Controla el estado del moval  */
 const comentariosPadre = ref(false);
 /**
  * Abre los comentarios de la sección de landing 
@@ -128,6 +121,7 @@ const abrirComentariosLanding = () => {
                         :title="post.avg" loading="lazy" />
                     <small>({{ post.avg.toFixed(2) }})</small>
                 </button>
+                <!-- Muestra si está seguido -->
                 <small v-if="props.esSeguido" class="flex items-center">
                     <img title="Busqueda" src="/assets/icons/following.svg" class="max-w-[30px] max-h-[30px] hidden lg:block"
                 alt="Siguiendo" />
@@ -149,8 +143,8 @@ const abrirComentariosLanding = () => {
         <!-- Contenedor de botones del post -->
         <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
             <!-- Comentarios -->
-
-            <button @click="() => props.abrirComentarios()" class=" flex flex-row items-center mr-3 ">
+            <!-- Muestra los comentarios -->
+            <button  class=" flex flex-row items-center mr-3 ">
                 <img :src="ChatSVG" loading="lazy" />
                 {{ post.comment_count }}
             </button>
