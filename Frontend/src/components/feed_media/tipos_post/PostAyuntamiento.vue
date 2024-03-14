@@ -137,21 +137,16 @@ const abrirComentariosLanding = () => {
         <!-- post footer -->
         <div class=" post-footer w-[100%] h-[50px] flex pt-5 pb-5 ">
             <!-- Los destacados de ayuntamiento no tienen botones de feedback salvo el de guardar -->
-            <!-- Quitar y aniadir de guardados -->
-            <button @click="() => aniadir_favorito(post.title)" v-if="favoritos.indexOf(post.title) != -1"
-                class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
-                <img class="object-scale-down" :src="BookmarkSVG" loading="lazy" />
-            </button>
-            <button @click="() => aniadir_favorito(post.title)" v-else
-                class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ml-2 ">
-                <img class="object-scale-down mt-0 " :src="BookmarkEmptySVG" loading="lazy" />
-            </button>
 
-            <!-- Comentarios -->
-            <button  class=" flex flex-row items-center mr-3 ">
+              <!-- Comentarios -->
+              <button  class=" flex flex-row items-center mr-3 ">
                 <img :src="ChatSVG" loading="lazy" />
                 {{ post.comment_count }}
             </button>
+
+
+          
+          
 
             <!-- Compartir -->
             <button @click="share({
@@ -161,6 +156,17 @@ const abrirComentariosLanding = () => {
             })" class=" flex flex-row items-center mr-3 ">
                 <img :src="ShareSVG" loading="lazy" />
             </button>
+
+              <!-- Quitar y aniadir de guardados -->
+              <button @click="() => aniadir_favorito(post.title)" v-if="favoritos.indexOf(post.title) != -1"
+                class=" flex  max-w-[22px] min-h-[26px] flex-row items-center ">
+                <img class="object-scale-down" :src="BookmarkSVG" loading="lazy" />
+            </button>
+            <button @click="() => aniadir_favorito(post.title)" v-else
+                class=" flex  max-w-[22px] min-h-[26px] flex-row items-center">
+                <img class="object-scale-down mt-0 " :src="BookmarkEmptySVG" loading="lazy" />
+            </button>
+
 
         </div>
 
