@@ -1,13 +1,13 @@
 <script setup>
-    import UserCard from "@/components/seguidos/userCard.vue";
+    import UserCardFavorite from "@/components/seguidos/userCardFavorites.vue";
     import InputSearch from "./inputSearchAdaptado.vue";
     import { searchByFilter } from "./followedSearchLogicAdaptado.js";
     import {usersAux, loading, followedListAux, fetchUsers} from "@/utils/followedSearchLogic.js";
     import { onMounted } from "vue";
 
-    onMounted(async() => {
-      await fetchUsers();
-    });
+    // onMounted(async() => {
+    //   await fetchUsers();
+    // });
 
 
 
@@ -20,11 +20,17 @@ import { ref } from "vue";
 import { RouterLink } from "vue-router";
 
 let followsList = ref(null); 
-
+let filledFavoritos = ref([]);
 async function responseCatcher(metodo, subRuta) {
   followsList.value = await getUserFollows(metodo, subRuta);
   console.log(followsList.value);
   followsList.value = setDefaultImgs(followsList.value);
+  for(let i=0 ; i<followsList.value.length; i++){
+    console.log(followsList.value[i].favorito)
+    if(followsList.value[i].favorito){
+      filledFavoritos.value.push(followsList.value[i])
+    }
+  }
 }
 responseCatcher("get", "/api/follows");
   // console.log(followedListAux)
@@ -48,8 +54,8 @@ responseCatcher("get", "/api/follows");
         </div>
       </div> -->
       <div>
-        <div v-for="(user, index) in  followsList && followsList" :key="index">
-          <UserCard 
+        <div v-for="(user, index) in  filledFavoritos && filledFavoritos" :key="index">
+          <UserCardFavorite
             :user="user"
 
           />

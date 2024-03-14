@@ -29,6 +29,7 @@ import favoritos from "@/components/perfiles/containers/contenedorVistaFavoritos
 import seguidos from "@/components/perfiles/containers/contenedorVistaSeguidos.vue";
 import seguidosNew from "@/views/perfiles/seguidos.vue";
 import FollowedFeed from "@/components/seguidos/followedFeed.vue";
+import FavoriteFeed from "@/components/seguidos/FavoriteFeed.vue";
 
 let cambioAFollowed = ref(false);
 let cambioAFavorito = ref(false);
@@ -406,7 +407,7 @@ function manipulacion(evento) {
       <!-- <seguidosNew v-if="isFavoritos"></seguidosNew> -->
       <!-- <seguidosNew v-if="isSeguidos"></seguidosNew> -->
       <FollowedFeed v-if="isSeguidos"></FollowedFeed>
-      <FollowedFeed v-if="isFavoritos"></FollowedFeed>
+      <FavoriteFeed v-if="isFavoritos"></FavoriteFeed>
     </div>
 
     <template v-slot:Right></template>
