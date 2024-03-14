@@ -51,7 +51,6 @@ const imagenBanner = ref(user.value.banner);
 const telefono = ref(user.value.phone);
 const email = ref(user.value.email);
 const municipio = ref(user.value.municipality_name);
-const contraActual = ref(null);
 const contraNueva = ref(null);
 const repetirNueva = ref(null);
 const direccion = ref(user.value.address);
@@ -86,7 +85,6 @@ const tratarDatos = ()=>{
     console.log(categoria.value);
     console.log(contraNueva.value);
     console.log(repetirNueva.value);
-    console.log(contraActual.value);
     console.log(tipoUsuario.value);
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if(nombre.value == null || nombre.value.length == 0){
@@ -115,16 +113,12 @@ const tratarDatos = ()=>{
         if(repetirNueva.value == null || repetirNueva.value.length == 0){
             errorContra.value = "Debe indicar y repetir una contraseña.";
         }else{
-            if(contraActual.value == null || contraActual.value.length == 0){
-                errorContra.value = "Debes proporcionar tu contraseña actual.";
+            if(contraNueva.value != repetirNueva.value){
+                errorContra.value = "Las contraseñas no coinciden.";
+                contraNueva.value = null;
+                repetirNueva.value = null;
             }else{
-                if(contraNueva.value != repetirNueva.value){
-                    errorContra.value = "Las contraseñas no coinciden.";
-                    contraNueva.value = null;
-                    repetirNueva.value = null;
-                }else{
-                    errorContra.value = null;
-                }
+                errorContra.value = null;
             }
         }
     }else{
@@ -143,15 +137,18 @@ const tratarDatos = ()=>{
             if(imagenPerfil.value == imagenPerfilDefault){
                 imagenPerfil.value = null;
             }
+            if(municipio.value != null && municipio.value != user.value.municipality_name){
+                municipio.value = options.value[municipio.value].name;
+            }
             let datos =  {
                 "email": email.value,
                 "password": contraNueva.value,
                 "phone": telefono.value,
-                "municipality_id": municipio.value,
+                "municipality": municipio.value,
                 "avatar": imagenPerfil.value,
                 "banner": imagenBanner.value,
                 "name": nombre.value,
-                "category_id": categoria.value,
+                "category": categoria.value,
                 "empresa": false,
                 "schedule": horarioActual.value,
                 "address": direccion.value,
@@ -166,7 +163,6 @@ const tratarDatos = ()=>{
                 nombre.value = null;
                 imagenPerfil.value = null;
                 municipio.value = null;
-                contraActual.value = null;
                 contraNueva.value = null;
                 repetirNueva.value = null;
                 fechaNac.value = null;
@@ -209,15 +205,21 @@ const tratarDatos = ()=>{
             if(imagenPerfil.value == imagenPerfilDefault){
                 imagenPerfil.value = null;
             }
+            if(municipio.value != null && municipio.value != user.value.municipality_name){
+                municipio.value = options.value[municipio.value].name;
+            }
+            if(categoria.value != null && categoria.value != user.value.categories_name){
+                categoria.value = optionsCategory.value[categoria.value].name;
+            }
             let datos = {
                 "email": email.value,
                 "password": contraNueva.value,
                 "phone": telefono.value,
-                "municipality_id": municipio.value,
+                "municipality": municipio.value,
                 "avatar": imagenPerfil.value,
                 "banner": imagenBanner.value,
                 "name": nombre.value,
-                "category_id": categoria.value,
+                "category": categoria.value,
                 "description": hashtags.value,
                 "empresa": true,
                 "schedule": horarioActual.value,
@@ -233,7 +235,6 @@ const tratarDatos = ()=>{
                 nombre.value = null;
                 imagenPerfil.value = null;
                 municipio.value = null;
-                contraActual.value = null;
                 contraNueva.value = null;
                 repetirNueva.value = null;
                 direccion.value = null;
@@ -304,7 +305,6 @@ const obtenerCambioHorario = (cambio) => {
                     <Input v-if="tipoUsuario == 'commerce'" @datos="(nuevosDatos)=>{categoria = nuevosDatos}" tipo="selection" requerido="true" label="Categoría" :opciones="optionsCategory" placeholder="Selecciona una categoría" :error="errorCategory" :valor="categoria"/>
                     <div class="cambiocontra flex flex-col gap-y-5">
                         <p v-if="errorContra != null" class="text-primary-700 text-xs lg:text-sm ms-3">{{ errorContra }}</p>
-                        <Input @datos="(nuevosDatos)=>{contraActual = nuevosDatos}" tipo="password" label="Contraseña Actual" :valor="contraActual" />
                         <Input @datos="(nuevosDatos)=>{contraNueva = nuevosDatos}" tipo="password" label="Contraseña Nueva" :valor="contraNueva" />
                         <Input @datos="(nuevosDatos)=>{repetirNueva = nuevosDatos}" tipo="password" label="Repetir contraseña" :valor="repetirNueva" />
                     </div>

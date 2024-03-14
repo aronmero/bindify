@@ -12,7 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Storage;
 class PostsController extends Controller
 {
 
@@ -309,10 +309,28 @@ class PostsController extends Controller
     public function store(StorePostsRequest $request)
     {
         try {
+
             $user = Auth::user();
 
+            $rutaFotoPost = 'default';
+
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                Storage::disk('posts')->putFileAs($request->username, $image, 'imagenPost.webp');
+                $rutaFotoPost = asset('storage/usuarios/' . $request->username . '/imagenPost.webp');
+            }
+
+        /* 
+           $rutaAvatar = 'default';
+
+           if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+           $rutaAvatar = asset('storage/avatars/' . $request->username . '/imagenPerfil.webp');
+            }
+        */
+
             $post = Post::create([
-                'image' => $request->image,
+                'image' => $rutaFotoPost,
                 'title' => $request->title,
                 'description' => $request->description,
                 'post_type_id' => $request->post_type_id,
@@ -409,8 +427,14 @@ class PostsController extends Controller
     public function show(string $id)
     {
         try {
-
-            $id = Utils::deCrypt($id);
+            try {
+                $id = Crypt::decryptString($id);
+            } catch (DecryptException $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Post inexistente',
+                ], 500);
+            }
 
             // Obtener el post
             $post = Post::with('users')->findOrFail($id);
@@ -663,7 +687,7 @@ class PostsController extends Controller
                     'start_date' => $post->start_date,
                     'end_date' => $post->end_date,
                     'ubicacion' => $post->ubicacion,
-                    'hashtags' =>  "#" . implode('#', $post->hashtags->pluck('name')->toArray()),
+                    'hashtags' => "#" . implode('#', $post->hashtags->pluck('name')->toArray()),
                     'deleted_date' => $nowFormatted
                 ];
 
