@@ -89,6 +89,288 @@
                 }
             }
         },
+        "/follower": {
+            "get": {
+                "tags": [
+                    "Followers"
+                ],
+                "summary": "Muestra los seguidores del usuario autenticado.",
+                "description": "Este método devuelve una lista de los seguidores del usuario autenticado.",
+                "operationId": "2634cf8b194df9300f29742236b73861",
+                "responses": {
+                    "200": {
+                        "description": "Lista de seguidores obtenida exitosamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "follower_id": {
+                                                        "type": "string",
+                                                        "example": "ID_del_seguidor"
+                                                    },
+                                                    "avatar": {
+                                                        "type": "string",
+                                                        "example": "avatar_del_seguidor"
+                                                    },
+                                                    "username": {
+                                                        "type": "string",
+                                                        "example": "nombre_de_usuario_del_seguidor"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Error al obtener los seguidores.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "mensaje_de_error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/follow/{username}": {
+            "post": {
+                "tags": [
+                    "Followers"
+                ],
+                "summary": "Sigue o deja de seguir a un usuario.",
+                "description": "Este método permite al usuario autenticado seguir o dejar de seguir a otro usuario especificado por su username.",
+                "operationId": "7d51d59c7e7f140042302318f59de803",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "El username del usuario a seguir o dejar de seguir.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "El usuario ha sido seguido o dejado de seguir exitosamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "mensaje_de_confirmación"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Error al seguir o dejar de seguir al usuario.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "mensaje_de_error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/follows": {
+            "get": {
+                "tags": [
+                    "Followers"
+                ],
+                "summary": "Muestra a los usuarios seguidos por el usuario autenticado.",
+                "description": "Este método devuelve una lista de usuarios que son seguidos por el usuario autenticado.",
+                "operationId": "19a11fb7ecadd82bfa557daaabafd7ce",
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuarios seguidos obtenida exitosamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "follows_id": {
+                                                        "type": "string",
+                                                        "example": "ID_del_usuario_seguido"
+                                                    },
+                                                    "avatar": {
+                                                        "type": "string",
+                                                        "example": "avatar"
+                                                    },
+                                                    "username": {
+                                                        "type": "string",
+                                                        "example": "nombre_de_usuario"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Error al obtener la lista de usuarios seguidos.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "mensaje_de_error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/favorite/{username}": {
+            "post": {
+                "tags": [
+                    "Followers"
+                ],
+                "summary": "Añade como favorito a un usuario seguido.",
+                "description": "Este método permite al usuario autenticado seguir o dejar de seguir a otro usuario especificado por su username.",
+                "operationId": "73616c07f5f48b4635a80be74407a68d",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "El username del usuario a seguir o dejar de seguir.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuario añadido o eliminado de favoritos exitosamente.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "mensaje_de_confirmación"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Error al encontrar al usuario o al procesar la solicitud.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "mensaje_de_error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/hashtag": {
             "get": {
                 "tags": [
