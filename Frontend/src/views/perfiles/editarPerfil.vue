@@ -56,7 +56,7 @@ const contraNueva = ref(null);
 const repetirNueva = ref(null);
 const direccion = ref(user.value.address);
 const horarioActual = ref(null);
-if(user.value.schedule != null && user.value.schedule != "null"){
+if(user.value.schedule != null && user.value.schedule != "null" && user.value.schedule != "undefined" && user.value.schedule != undefined){
     horarioActual.value = user.value.schedule;
 }
 const categoria = ref(user.value.categories_name);
