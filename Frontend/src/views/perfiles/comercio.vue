@@ -284,7 +284,7 @@ function manipulacion(evento) {
           <btnConText
             @click="responseCatcherFollow"
             v-if="userExterno && !isCustomer && !cambioAFollowed"
-            texto="Segir"
+            texto="Seguir"
             class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48 font-semibold"
           >
           </btnConText>
