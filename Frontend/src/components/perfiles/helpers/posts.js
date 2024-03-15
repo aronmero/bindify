@@ -1,27 +1,13 @@
 import { random } from "./random";
 import { lorem } from "./lorem";
 
-/**
- * Retorna un array de prueba
- * @author 'David Martín Concepción'
- * @date 3/6/2024 - 5:46:22 PM
- * 
- * @type {{}}
- */
-
-
-/**
- * Etiqueta de tipos
- * @date 3/7/2024 - 3:36:25 PM
- * @default [{1:Oferta|2:Evento}]
- */
 
 export const posts = [
     {
         id: 1,
         title: "Titulo de #2",
         description: `${lorem}`,
-        post_type_id: 1, /* evento he puesto 2 */
+        post_type_id: 1, 
         usuario: {
             nombre: 'comercio_1',
             avatar: `https://randomuser.me/api/portraits/men/${random(91)}.jpg`,

@@ -3,7 +3,7 @@ defineProps({
   titulo: String,
 });
 </script>
-<!-- w-[90vw] -->
+
 <template>
   <header class="flex items-center relative justify-center">
     <button class="hidden absolute left-0">

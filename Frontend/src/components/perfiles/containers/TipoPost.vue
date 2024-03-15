@@ -14,10 +14,10 @@ import TipoOferta from "@public/assets/icons/tipo_oferta.svg";
 import { setDefaultImgs } from "@/components/perfiles/helpers/defaultImgs";
 import TipoEvento from "@public/assets/icons/tipo_evento.svg";
 const userData = JSON.parse(sessionStorage.getItem("userData"));
-console.log(userData);
+
 const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
 userData.userData[0] = setDefaultImgs(userData.userData[0]);
-console.log(userData.userData[0]);
+
 import { datetranslate } from "@/components/feed_media/helpers/datetranslate.js";
 import router from "@/router/index.js";
 import { RouterLink } from "vue-router";
@@ -65,15 +65,13 @@ if (tipo == "Post") IconoTipo = TipoOferta;
 if (tipo == "Evento") IconoTipo = TipoEvento;
 
 function editarPost(evento) {
-  console.log(props.post);
   sessionStorage.setItem("postData", JSON.stringify({ postData: props.post }));
-  console.log(JSON.parse(sessionStorage.getItem("postData")));
   router.push(`/post/${props.post.post_id}/editar`);
 }
 let response = ref(null);
 async function responseCatcher(metodo, subRuta) {
   response.value = await borrarPost(metodo, subRuta);
-  console.log(response.value);
+
   router.go();
 }
 function clickBorrarPost(evento) {
@@ -90,8 +88,7 @@ function clickBorrarPost(evento) {
     <div class="post-header w-[100%] h-[60px] flex items-center">
       <div class="w-[50px] h-[50px] rounded-full overflow-hidden mr-2">
         <img
-          
-          class=" w-[100%] h-[100%] object-cover"
+          class="w-[100%] h-[100%] object-cover"
           :src="userData.userData[0].avatar"
           alt="avatar_usuario"
         />

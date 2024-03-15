@@ -7,21 +7,15 @@ import { setDefaultImgs } from "@/components/perfiles/helpers/defaultImgs.js";
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
 let favoritosList = ref(null);
-let filledFavoritos = ref([])
+let filledFavoritos = ref([]);
 async function responseCatcher(metodo, subRuta) {
   favoritosList.value = await getUserFollows(metodo, subRuta);
-  console.log(favoritosList.value);
-  favoritosList.value = setDefaultImgs(favoritosList.value);
-  console.log(favoritosList.value)
-  
-  // favoritosList.value.forEach(favorito => {
-     console.log(favoritosList.value.length)
 
-  // });
-  for(let i=0 ; i<favoritosList.value.length; i++){
-    console.log(favoritosList.value[i].favorito)
-    if(favoritosList.value[i].favorito){
-      filledFavoritos.value.push(favoritosList.value[i])
+  favoritosList.value = setDefaultImgs(favoritosList.value);
+
+  for (let i = 0; i < favoritosList.value.length; i++) {
+    if (favoritosList.value[i].favorito) {
+      filledFavoritos.value.push(favoritosList.value[i]);
     }
   }
 }
@@ -30,7 +24,6 @@ responseCatcher("get", "/api/follows");
 <template>
   <contenedorSeguido
     v-for="comeFavorito in filledFavoritos"
-    
     :rutaPerfil="comeFavorito.avatar"
     :nombre="comeFavorito.username"
   ></contenedorSeguido>

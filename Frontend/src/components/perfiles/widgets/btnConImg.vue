@@ -16,8 +16,8 @@ defineProps({
       class="w-8 h-8 p-1 rounded-md filter hover:invert transition ease-linear"
     />
   </button>
-  <button v-if="!borde" class="">
-    <img :src="ruta" :alt="altText" class="min-w-8 min-h-8 p-1" />
+  <button v-if="!borde" class="w-8 h-8">
+    <img :src="ruta" :alt="altText" class="min-w-8 min-h-8 p-1 cursor-default" />
   </button>
 </template>
 <style scoped></style>

@@ -17,7 +17,11 @@ defineProps({
     />
   </button>
   <button v-if="!borde" class="">
-    <img :src="ruta" :alt="altText" class="min-w-6 min-h-6 p-1" />
+    <img
+      :src="ruta"
+      :alt="altText"
+      class="min-w-6 min-h-6 p-1 cursor-default"
+    />
   </button>
 </template>
 <style scoped></style>

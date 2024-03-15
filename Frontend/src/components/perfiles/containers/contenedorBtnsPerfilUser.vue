@@ -6,10 +6,9 @@ import { RouterLink } from "vue-router";
 <template>
   <div class="flex justify-center items-center gap-4">
     <RouterLink to="/perfil/edit">
-
       <btnConText
         texto="EDIT PROFILE"
-        class="transition hover:bg-accent-400 ease-linear hover:text-text-50 "
+        class="transition hover:bg-accent-400 ease-linear hover:text-text-50"
       ></btnConText>
     </RouterLink>
     <RouterLink to="/tarjeta-fidelidad">

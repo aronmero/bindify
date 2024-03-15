@@ -1,6 +1,5 @@
 export const  setDefaultImgs = (objeto) =>{
-    console.log(Array.isArray(objeto)) 
-    // console.log(objeto[0].avatarUsuario)
+    
     if(Array.isArray(objeto)){
         objeto.forEach(elemento => {
             if(elemento.banner!= undefined && elemento.banner=="default"){
