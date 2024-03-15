@@ -53,7 +53,7 @@ const tipo = JSON.parse(sessionStorage.getItem("usuario")).usuario.tipo;
             alt="Perfil" />
         </RouterLink>
       </nav>
-      <nav class="w-[50px]  justify-center items-center">
+      <nav class="w-[50px] flex  justify-center items-center">
         <RouterLink to="/notificaciones">
           <img src="/assets/icons/bell.svg" title="Notificaciones" class="max-w-[30px] max-h-[30px]"
             alt="Notificaciones" />
