@@ -55,7 +55,10 @@ const municipio = ref(user.value.municipality_name);
 const contraNueva = ref(null);
 const repetirNueva = ref(null);
 const direccion = ref(user.value.address);
-const horarioActual = ref(user.value.schedule);
+const horarioActual = ref(null);
+if(user.value.schedule != null && user.value.schedule != "null"){
+    horarioActual.value = user.value.schedule;
+}
 const categoria = ref(user.value.categories_name);
 const hashtags = ref("");
 const fechaNac = ref(user.value.birth_date);
@@ -276,7 +279,6 @@ const controlarModal = () => {
     } else {
         controlador_modal.value = true;
     }
-   
 }
 /**
  * Agrega el cambio de horario
@@ -301,7 +303,7 @@ const obtenerCambioHorario = (cambio) => {
         <template v-slot:Left></template>
         <template class="flex flex-col items-center justify-center">
             <header class="flex items-center relative w-[90vw] justify-center mt-[1rem] mb-[0.5rem]">
-                <button @click="router.back()" class="absolute lg:-translate-x-[21rem]">
+                <button @click="$router.back()" class="absolute lg:-translate-x-[21rem] -translate-x-[11rem]">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
                 </button>
                 <h3 class="lg:text-xl">Editar perfil</h3>

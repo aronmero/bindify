@@ -1,4 +1,5 @@
 <script setup>
+import router from "@/router/index.js";
 import { ref } from "vue";
 import Grid from "@/components/comun/layout.vue";
 
@@ -62,7 +63,10 @@ const tratarDatos = async()=>{
                     "post_type_id": publiTipo.value,
                 };
                 let respuesta = await crearPublicacion("POST", datos);
-                console.log(respuesta);
+                /* console.log(respuesta); */
+                if(respuesta.status){
+                    router.go(-1);
+                }
             }else{
                 let datos = {
                     "title": titulo.value, 
@@ -73,7 +77,10 @@ const tratarDatos = async()=>{
                     "end_date": fechaFin.value
                 };
                 let respuesta = await crearPublicacion("POST", datos);
-                console.log(respuesta);
+                /* console.log(respuesta); */
+                if(respuesta.status){
+                    router.go(-1);
+                }
             }
         }
     }else{
@@ -88,7 +95,7 @@ const tratarDatos = async()=>{
         <template v-slot:Left></template>
         <template class="flex flex-col items-center justify-center lg:mt-10">
             <header class="flex items-center relative w-[90vw] justify-center mt-[1rem] mb-[0.5rem]">
-                <button @click="router.back()" class="absolute lg:-translate-x-[21rem]">
+                <button @click="$router.back()" class="absolute lg:-translate-x-[21rem] -translate-x-[11rem]">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
                 </button>
                 <h3 class="lg:text-xl">Crear publicación</h3>

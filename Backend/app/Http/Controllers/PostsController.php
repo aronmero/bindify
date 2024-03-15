@@ -1006,11 +1006,20 @@ class PostsController extends Controller
                 $rutaFotoPost = $post->image;
 
                 if ($request->hasFile('image')) {
+                    $numeroRandom = mt_rand(100, 9999999);
                     $image = $request->file('image');
-                    Storage::disk('posts')->putFileAs($user->username, $image, '/imagenPost.webp'. $post->id);
-                    $rutaFotoPost = env('APP_URL').Storage::url('posts/'.$user->username . '/imagenPost.webp'. $post->id);
+                    $images = Storage::disk('posts')->files($user->username.'/'.$post->id);
+                    if($images != null){
+                        foreach ($images as $imagen) {
+                            Storage::disk('posts')->delete($imagen);
+                        }
+                    }
+                    Storage::disk('posts')->putFileAs($user->username.'/'.$post->id, $image, '/imagenPost.webp'. $numeroRandom);
+                    $rutaFotoPost = env('APP_URL').Storage::url('posts/'.$user->username .'/'.$post->id. '/imagenPost.webp'. $numeroRandom);
                 }else{
-                    $rutaFotoPost = "default";
+                     if($request->image == null){
+                        $rutaFotoPost = "default";
+                    }
                 }
 
                 if ($request->active) {

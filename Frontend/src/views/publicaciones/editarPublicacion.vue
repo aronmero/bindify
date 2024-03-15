@@ -1,4 +1,5 @@
 <script setup>
+import router from "@/router/index.js";
 import { onMounted, ref } from "vue";
 import Grid from "@/components/comun/layout.vue";
 
@@ -98,8 +99,9 @@ const tratarDatos = async ()=>{
             console.log("actualizando")
 
             await actualizar_posts(postData.value.postData.post_id, body.value).then((data) => {
-                console.log("se ha actualizado todo");
-                console.log(data);
+                router.go(-1)
+                /* console.log("se ha actualizado todo");
+                console.log(data); */
             }).catch(err => {
                 console.error(err);
             });
@@ -121,7 +123,7 @@ const tratarDatos = async ()=>{
         <template v-slot:Left></template>
         <template class="flex flex-col items-center justify-center">
             <header class="flex items-center relative w-[90vw] justify-center mt-[1rem] mb-[0.5rem]">
-                <button @click="$router.go(-1)" class="absolute lg:-translate-x-[21rem]">
+                <button @click="$router.back()" class="absolute lg:-translate-x-[21rem] -translate-x-[11rem]">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
                 </button>
                 <h3 class="lg:text-xl">Editar publicación</h3>
