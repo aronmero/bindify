@@ -21,39 +21,39 @@ const tipo = JSON.parse(sessionStorage.getItem("usuario")).usuario.tipo;
 </script>
 
 <template>
-  <header class="h-[80px] bg-[#f3f3f3]  flex fixed -top-[0.75rem] justify-around px-[10px] w-full z-50">
-    <nav class="w-[3.43rem] flex justify-center items-center">
+  <header class="h-[80px] bg-[#f3f3f3]  flex fixed -top-[0.75rem] justify-between sm:justify-around px-[10px] w-full z-50">
+    <nav class=" flex justify-center items-center">
       <RouterLink to="/" class=" logo flex justify-center items-center "> 
         <img :src="logo" class="max-w-[55px]  max-h-[40px]  hidden xl:flex sm:flex rounded-full " />
-        <h1 class="flex">Bindify</h1>
+        <h1 class="flex sm:ml-[20px]">Bindify</h1>
       </RouterLink>
     </nav>
     <div class="menu-right flex">
-    <nav class="w-[50px] flex justify-center items-center" v-if="tipo==`ayuntamiento` || tipo==`commerce`">
+    <nav class="lg:w-[50px] none lg:flex justify-center items-center " v-if="tipo==`ayuntamiento` || tipo==`commerce`">
       <RouterLink to="/post/nuevo">
         <img title="Nuevo Post" src="/assets/icons/add_rounded.svg" class="max-w-[50px] max-h-[50px] hidden lg:block"
           alt="Nuevo Post" />
       </RouterLink>
     </nav>
-      <nav class="w-[50px] flex justify-center items-center">
+      <nav class="lg:w-[50px] none lg:flex justify-center items-center">
         <RouterLink to="/busqueda">
           <img title="Busqueda" src="/assets/icons/search.svg" class="max-w-[30px] max-h-[30px] hidden lg:block"
             alt="Busqueda" />
         </RouterLink>
       </nav>
-      <nav class="w-[50px] xl:[20px] flex justify-center items-center">
+      <nav class="lg:w-[50px] xl:[20px] none lg:flex justify-center items-center">
         <RouterLink to="/calendario">
           <img title="Calendario" src="/assets/icons/schedule.svg" class="max-w-[30px] max-h-[30px] hidden lg:block"
             alt="Calendario" />
         </RouterLink>
       </nav>
-      <nav class="w-[50px] flex justify-center items-center">
+      <nav class="lg:w-[50px] none lg:flex justify-center items-center">
         <RouterLink to="/perfil">
           <img title="Perfil" src="/assets/icons/user.svg" class="max-w-[30px] max-h-[30px] hidden lg:block"
             alt="Perfil" />
         </RouterLink>
       </nav>
-      <nav class="w-[50px] flex justify-center items-center">
+      <nav class="w-[50px]  justify-center items-center">
         <RouterLink to="/notificaciones">
           <img src="/assets/icons/bell.svg" title="Notificaciones" class="max-w-[30px] max-h-[30px]"
             alt="Notificaciones" />
@@ -78,7 +78,6 @@ const tipo = JSON.parse(sessionStorage.getItem("usuario")).usuario.tipo;
       h1 {
         font-size:1.6rem;
         font-weight:bolder;
-        margin-left:20px;
         background: -webkit-linear-gradient(#EC4A41, #FE822F);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
