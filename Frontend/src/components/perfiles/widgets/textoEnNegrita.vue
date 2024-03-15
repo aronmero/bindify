@@ -1,15 +1,9 @@
 <script setup>
-    defineProps({
-        "texto":String,
-        
-    })
+defineProps({
+  texto: String,
+});
 </script>
 <template>
-    
-    <button class="font-bold leading-normal">{{ texto }}</button>
-    
-    
+  <button class="font-bold leading-normal cursor-pointer">{{ texto }}</button>
 </template>
-<style scoped>
-    
-</style>
+<style scoped></style>
