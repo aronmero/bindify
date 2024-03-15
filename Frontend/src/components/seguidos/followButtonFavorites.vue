@@ -14,14 +14,7 @@
     const props = defineProps({
         user: Object
     })
-//     async function responseCatcherFollow() {
-//     // console.log(userData.value.username);
-//     respuesta.value = await followUser(
-//     "post",
-//     `/api/follow/${props.user.username}`
-//   );
-//   console.log(respuesta.value);
-// }
+
 
 async function responseCatcherFavoritos() {
   
@@ -29,11 +22,11 @@ async function responseCatcherFavoritos() {
     "post",
     `/api/favorite/${props.user.username}`
   );
-  console.log(respuesta.value);
+  
 }
 
     function unfollow(){
-        console.log("unfollow " + props.user.username)
+        
         responseCatcherFavoritos("get", "/api/favorite");
     }
 

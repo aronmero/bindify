@@ -17,7 +17,7 @@ defineProps({
         ruta="/assets/icons/christmasStar.svg"
         altText="icono de estrella"
       ></btnConImg>
-      <textoEnNegrita :texto="puntuacion" class="text-lg" />
+      <textoEnNegrita :texto="puntuacion" class="text-lg cursor-default" />
     </div>
     <textoNormal :texto="cantidadResenias" class="lg:text-lg"></textoNormal>
   </div>

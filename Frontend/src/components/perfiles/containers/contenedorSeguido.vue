@@ -17,7 +17,7 @@ defineProps({
 
 function irAPerfil(evento) {
   router.push(`/perfil/${evento.target.id}/`);
-  // setTimeout(()=>{router.go()},100)
+  
 }
 </script>
 <template>

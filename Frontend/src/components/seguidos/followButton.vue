@@ -15,16 +15,16 @@
         user: Object
     })
     async function responseCatcherFollow() {
-    // console.log(userData.value.username);
+    
     respuesta.value = await followUser(
     "post",
     `/api/follow/${props.user.username}`
   );
-  console.log(respuesta.value);
+ 
 }
 
     function unfollow(){
-        console.log("unfollow " + props.user.username)
+        
         responseCatcherFollow("get", "/api/follows");
     }
 
@@ -41,9 +41,7 @@
 </script>
 
 <template>
-    <!-- <button class=" bg-[#EB5959] px-2 p-1 rounded-md font-semibold text-white text-sm rounded-md transition-transform duration-100 hover:scale-110" @click="toogleButton">
-        {{ "Unfollow" }}
-    </button> -->
+    
 
     <button :class="[seguido ? ' bg-[#828181]' : 'bg-[#EB5959]', 'px-2', 'p-1', 'rounded-md', 'font-semibold', 'text-white', 'text-sm', 'rounded-md', 'transition-transform', 'duration-100', 'hover:scale-110']" @click="toogleButton()">
         {{ seguido ? "Siguiendo" : "Seguir"}}

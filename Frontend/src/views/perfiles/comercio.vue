@@ -18,7 +18,7 @@ import {
   followUser,
   aniadirFavorito,
 } from "@/Api/perfiles/perfil.js";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import eventos from "@/components/perfiles/containers/contenedorVistaEventos.vue";
 import posts from "@/components/perfiles/containers/contenedorVistaPosts.vue";
 import resenias from "@/components/perfiles/containers/contenedorVistaResenias.vue";
@@ -43,8 +43,6 @@ const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
 
-// Al recargar la pagina se quita la marca arregla a futuro con variables de estado
-// a lo mejor
 function pintar(evento) {
   if (clickedLink == null) {
     clickedLink = document.querySelector("#linkPost");
@@ -52,7 +50,7 @@ function pintar(evento) {
   if (clickedLink != null) {
     clickedLink.classList.remove("text-accent-400");
   }
-  //console.log(evento.target.innerHTML);
+
   evento.target.classList.add("text-accent-400");
   clickedLink = evento.target;
 }
@@ -60,11 +58,7 @@ function pintar(evento) {
 async function responseCatcher(metodo, subRuta) {
   userData.value = await getUserData(metodo, subRuta);
 
-  console.log(userData.value[0]);
-
-  console.log(userLogeado.usuario.tipo);
   if (userData.value[0] == undefined) {
-    console.log("es Customer");
     isCustomer = true;
     isPosts.value = false;
   }
@@ -73,35 +67,29 @@ async function responseCatcher(metodo, subRuta) {
     cambioAFavorito.value = userData.value[0].favorite;
     userData.value = userData.value[0];
   }
-  console.log(userData.value);
+
   userData.value = setDefaultImgs(userData.value);
-  console.log(userData.value);
 }
 
 if (linkUsername.value == userLogeado.usuario.username) {
   responseCatcher("get", "/api/profile");
 } else {
-  //console.log(linkUsername.value);
   responseCatcher("get", `/api/user/${linkUsername.value}`);
   userExterno.value = true;
 }
 
 async function responseCatcherFollow() {
-  console.log(userData.value.username);
   cambioAFollowed.value = await followUser(
     "post",
     `/api/follow/${userData.value.username}`
   );
-  console.log(cambioAFollowed.value);
 }
 
 async function responseCatcherFavoritos() {
-  console.log(userData.value.username);
   cambioAFavorito.value = await aniadirFavorito(
     "post",
     `/api/favorite/${userData.value.username}`
   );
-  console.log(cambioAFavorito.value);
 }
 
 const isEventos = ref(false);
@@ -125,38 +113,27 @@ function ocultar() {
   isSeguidos.value = false;
 }
 
-/**
- * Ejecuta una serie de funciones que requieren de un evento.
- * Cambia un estilo, oculta todos los contenedores, y muestra uno en concreto
- * @param {*} evento
- */
 function manipulacion(evento) {
   pintar(evento);
 
   ocultar();
   switch (evento.target.value) {
     case "1":
-      console.log(evento.target.value);
       isPosts.value = true;
       break;
     case "2":
-      console.log(evento.target.value);
       isEventos.value = true;
       break;
     case "3":
-      console.log(evento.target.value);
       isResenias.value = true;
       break;
     case "4":
-      console.log(evento.target.value);
       isFidelidad.value = true;
       break;
     case "5":
-      console.log(evento.target.value);
       isFavoritos.value = true;
       break;
     case "6":
-      console.log(evento.target.value);
       isSeguidos.value = true;
       break;
 
@@ -171,6 +148,7 @@ function manipulacion(evento) {
   <Grid
     ><template v-slot:Left></template>
     <btnAtras titulo="Perfil"></btnAtras>
+
     <div class="flex flex-col gap-6" v-if="userData != null">
       <div>
         <imgsPerfil
@@ -185,15 +163,19 @@ function manipulacion(evento) {
         <div class="flex flex-col">
           <textoEnNegrita
             :texto="userData.username"
-            class="text-base lg:text-xl"
+            class="text-base lg:text-xl cursor-default"
           />
+          <textoNormal
+            :texto="userData.name"
+            class="text-sm lg:text-base bg-transparent"
+          ></textoNormal>
         </div>
         <div
-          class="flex flex-col justify-center lg:items-start gap-10 lg:gap-20 lg:flex-row border-b pb-5"
+          class="flex flex-col justify-center lg:items-start gap-10 lg:gap-10 lg:flex-row border-b pb-5"
           v-if="!isCustomer"
         >
-          <div class="flex justify-center lg:items-start gap-12 lg:gap-20">
-            <div class="flex flex-col items-end">
+          <div class="flex justify-center lg:items-start gap-5 lg:gap-10">
+            <div class="flex flex-col items-end w-44 lg:w-48">
               <textoNormal
                 :texto="userData.address"
                 class="text-sm lg:text-base m-1"
@@ -204,40 +186,61 @@ function manipulacion(evento) {
               />
               <textoNormal
                 :texto="userData.email"
-                class="text-sm lg:text-base m-1"
+                class="text-xs sm:text-sm lg:text-base m-1"
               />
             </div>
-            <contenedorPuntuacion
-              v-if="userData.tipo != 'ayuntamiento'"
-              :puntuacion="userData.avg"
-              :cantidadResenias="userData.review_count"
-            />
+            <div class="wid-32">
+              <contenedorPuntuacion
+                v-if="userData.tipo != 'ayuntamiento'"
+                :puntuacion="userData.avg"
+                :cantidadResenias="userData.review_count"
+              />
+            </div>
           </div>
-          <div class="flex flex-row gap-4 justify-center lg:flex-col lg:gap-0">
+          <div
+            class="flex flex-row gap-4 justify-center lg:flex-col lg:gap-0 lg:w-48"
+          >
             <textoEnNegrita texto="Horario:" class="text-sm lg:text-base" />
-            <div class="flex flex-col">
+            <div
+              class="flex flex-col"
+              v-if="
+                userData.schedule != null &&
+                userData.schedule != 'null' &&
+                userData.schedule != 'undefined' &&
+                userData.schedule != undefined
+              "
+            >
               <textoNormal
                 :texto="userData.schedule"
+                class="text-sm lg:text-base"
+              />
+            </div>
+            <div class="flex flex-col" v-else>
+              <textoNormal
+                texto="No hay horario"
                 class="text-sm lg:text-base"
               />
             </div>
           </div>
         </div>
         <div
-          class="flex justify-center items-center gap-12 lg:gap-20 border-b pb-5"
+          class="flex justify-center items-center gap-5 lg:gap-10 border-b pb-5"
           v-if="!isCustomer"
         >
-          <div class="flex flex-col">
+          <div class="flex flex-col items-end w-40 lg:w-56">
             <textoNormal
               :texto="userData.categories_name"
-              class="text-sm lg:text-base"
+              class="text-sm lg:text-base w-fit"
             />
           </div>
-          <div class="flex flex-col items-start">
+          <div
+            class="flex flex-col items-start lg:w-56"
+            v-if="userData.hashtags.length != 0"
+          >
             <textoNormal
               v-for="hashtag in userData.hashtags"
               :texto="hashtag"
-              class="text-sm lg:text-base m-1"
+              class="text-xs sm:text-sm lg:text-base m-1"
             />
           </div>
         </div>
@@ -247,11 +250,11 @@ function manipulacion(evento) {
           <contenedorFollower amount="20" tipo="Posts" />
         </div>
 
-        <div class="flex justify-center items-center gap-4">
+        <div class="flex justify-center items-center gap-2 lg:gap-3">
           <RouterLink to="/perfil/edit" v-if="!userExterno">
             <btnConText
               texto="EDIT PROFILE"
-              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48"
             >
             </btnConText>
           </RouterLink>
@@ -266,7 +269,7 @@ function manipulacion(evento) {
           >
             <btnConText
               texto="Añadir Reseña"
-              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48"
             >
             </btnConText>
           </RouterLink>
@@ -282,7 +285,7 @@ function manipulacion(evento) {
             @click="responseCatcherFollow"
             v-if="userExterno && !isCustomer && !cambioAFollowed"
             texto="Segir"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48 font-semibold"
           >
           </btnConText>
 
@@ -290,7 +293,7 @@ function manipulacion(evento) {
             @click="responseCatcherFollow"
             v-if="userExterno && !isCustomer && cambioAFollowed"
             texto="Dejar de Seguir"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48 font-semibold"
           >
           </btnConText>
           <btnConText
@@ -299,7 +302,7 @@ function manipulacion(evento) {
               userExterno && !isCustomer && !cambioAFavorito && cambioAFollowed
             "
             texto="Añadir a Favoritos"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48 font-semibold"
           >
           </btnConText>
           <btnConText
@@ -308,7 +311,7 @@ function manipulacion(evento) {
               userExterno && !isCustomer && cambioAFavorito && cambioAFollowed
             "
             texto="Quitar de Favoritos"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48 font-semibold"
           >
           </btnConText>
         </div>

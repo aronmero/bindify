@@ -8,16 +8,16 @@ import { ref } from "vue";
 let userPosts = ref(null);
 const show = ref(false);
 let linkUsername = ref(router.currentRoute.value.params.username);
-console.log(linkUsername.value);
+
 async function responseCatcher() {
   userPosts.value = await getUserPosts(
     "get",
     `/api/user/${linkUsername.value}/posts`
   );
   show.value = true;
-  console.log(userPosts.value)
+
   userPosts.value = setDefaultImgs(userPosts.value);
-  console.log(userPosts.value.length);
+
 }
 responseCatcher();
 </script>
