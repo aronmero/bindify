@@ -24,8 +24,10 @@ const back = () => {
 let data = ref({status:false});
 
 const callApi = async () => {
-     data.value = await getNotificacion();
-    console.log(data.value);
+    data.value = await getNotificacion();
+    if(data.value==undefined){
+        data.value={data:[]};
+    }
 }
 callApi();
 
@@ -50,7 +52,7 @@ callApi();
                 <!-- El listado de comentarios -->
                 <div v-if="data.status" ref="comentario_handler"
                     class="comentarios  max-h-[80%] sm:max-h-[84%] md:max-h-[84%] lg:max-h-[100%] xl:max-h-[100%] 2xl:max-h-[100%] flex gap-[25px] flex-col pr-[15px] pl-[15px]">
-                    <notificacion v-for="not in data.data" :notificacion="not"></notificacion>
+                    <notificacion v-if=" data.data !=undefined" v-for="not in data.data" :notificacion="not"></notificacion>
                     
                 </div>
                     <div v-if=" data.data !=undefined && data.data.length==0" class="flex justify-center">No hay notificaciones en este momento</div>
