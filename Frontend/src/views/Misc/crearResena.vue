@@ -71,6 +71,7 @@ const tratarDatos = async()=>{
         console.log(datos);
         let respuesta = await postUserReview("POST", datos);
         console.log(respuesta);
+        router.back();
     }
 }
 /* Poner el apratado de puntuar (Modal) visible por defecto ya que es obligatorio */
