@@ -1,8 +1,6 @@
 <script setup>
-import textoEnNegrita from "@/components/perfiles/widgets/textoEnNegrita.vue";
-import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
-import imgRedonda from "@/components/perfiles/widgets/imgRedonda.vue";
-import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPuntuacion.vue";
+
+import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPuntuacionResenia.vue";
 
 import { ref } from "vue";
 const userData = JSON.parse(sessionStorage.getItem("userData"));
