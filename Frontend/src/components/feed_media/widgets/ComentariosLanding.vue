@@ -51,7 +51,7 @@ let imagenRuta;
 if(user.avatar == 'default'){
     imagenRuta = 'public/img/placeholderPerfil.webp'
 } else {
-    imagenRuta = comentario.avatar;
+    imagenRuta = user.avatar;
 }
 
 let comentarios = ref(null);

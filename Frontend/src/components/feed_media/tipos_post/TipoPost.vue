@@ -28,7 +28,7 @@ props.seguidos.forEach(seguido => {
     if(seguido.username == post.value.username) esSeguido.value = true;
 });
 
-console.log(esSeguido.value);
+//console.log(esSeguido.value);
 
 
 
