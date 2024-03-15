@@ -313,7 +313,7 @@ class UsersController extends Controller
      *     )
      * )
      */
-    public function update(UpdateUserRequest $request, string $username)
+    public function update(UpdateUserRequest $request)
     {
         try {
            // Elimina campos que no queremos actualizar
@@ -331,7 +331,7 @@ class UsersController extends Controller
            $user->municipality_id = Municipality::where('name', '=', $request->municipality)->first()->id;
 
            // Guarda las imágenes si están presentes en la solicitud
-           
+
            $numeroRandom = mt_rand(100, 9999999);
            if ($request->hasFile('avatar')) {
                 $image = $request->file('avatar');
@@ -371,7 +371,7 @@ class UsersController extends Controller
             if ($user->hasRole('customer')) {
                 // Si el usuario es un cliente, actualiza los detalles como cliente
                 $customer = Customer::where('user_id', $user->id)->first();
-              
+
                 $customer->gender = $request->gender;
 
                 if ($request->birth_date) {
@@ -456,11 +456,11 @@ class UsersController extends Controller
      *     )
      * )
      */
-    public function destroy(string $username)
+    public function destroy()
     {
         try {
-            // Busca al usuario por su nombre de usuario
-            $user = User::where("username", $username)->firstOrFail();
+
+            $user = User::find(Auth::user()->id);
 
             // Determina el rol del usuario
             if ($user->getRoleNames() == "customer") {
