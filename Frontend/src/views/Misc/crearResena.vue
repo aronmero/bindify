@@ -157,7 +157,7 @@ const setearPuntuacion = (e)=>{
         <template v-slot:Left></template>
         <tempalte class="flex flex-col items-center justify-center">
             <header class="flex items-center relative w-[90vw] justify-center mt-[1rem] mb-[0.5rem]">
-                <button @click="router.back()" class="absolute lg:-translate-x-[21rem]">
+                <button @click="router.back()" class="absolute left-0 md:left-auto md:-translate-x-[21rem]">
                     <img src="/assets/icons/forward.svg" alt="Boton para volver atras">
                 </button>
                 <h3 class="lg:text-xl">Crear una reseña</h3>
