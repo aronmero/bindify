@@ -4,6 +4,6 @@ defineProps({
 });
 </script>
 <template>
-  <button class="font-bold leading-normal cursor-pointer">{{ texto }}</button>
+  <button class="font-bold leading-normal ">{{ texto }}</button>
 </template>
 <style scoped></style>

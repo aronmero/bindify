@@ -1,5 +1,4 @@
 <script setup>
-
 import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPuntuacionResenia.vue";
 
 import { ref } from "vue";
@@ -53,7 +52,7 @@ const abrirModal = () => {
 /* Son estilos personalizados para acortar y mejorar la visibilidad del codigo principal */
 
 const estilos = {
-  post: " w-[100%]  flex flex-col overflow-hidden ",
+  post: " w-[100%]   flex flex-col overflow-hidden ",
   post_avatar: "",
   modal:
     " absolute bg-white min-w-[200px] rounded-lg p-2 flex flex-col items-start justify-center ",
@@ -66,10 +65,10 @@ const redirect = (url) => {
 };
 </script>
 <template>
-  <article :class="` post ${estilos.post} relative border-b`">
+  <article :class="` post ${estilos.post} relative border-b pb-10`">
     <!-- Contenedor del header del post -->
-    <div class="post-header w-[100%] h-[60px] flex items-center">
-      <div class="w-[50px] h-[50px] rounded-full overflow-hidden mr-2">
+    <div class="post-header w-[100%] h-[60px] flex items-center mb-9">
+      <div class="w-[50px] h-[50px] rounded-full overflow-hidden mr-2 flex">
         <img
           class="w-[100%] h-[100%] object-cover"
           :src="rutaPerfil"

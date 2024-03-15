@@ -76,6 +76,7 @@ async function responseCatcher(metodo, subRuta) {
   console.log(userData.value);
   userData.value = setDefaultImgs(userData.value);
   console.log(userData.value);
+  
 }
 
 if (linkUsername.value == userLogeado.usuario.username) {
@@ -171,6 +172,7 @@ function manipulacion(evento) {
   <Grid
     ><template v-slot:Left></template>
     <btnAtras titulo="Perfil"></btnAtras>
+
     <div class="flex flex-col gap-6" v-if="userData != null">
       <div>
         <imgsPerfil
@@ -185,15 +187,19 @@ function manipulacion(evento) {
         <div class="flex flex-col">
           <textoEnNegrita
             :texto="userData.username"
-            class="text-base lg:text-xl"
+            class="text-base lg:text-xl cursor-default"
           />
+          <textoNormal
+            :texto="userData.name"
+            class="text-sm lg:text-base bg-transparent"
+          ></textoNormal>
         </div>
         <div
-          class="flex flex-col justify-center lg:items-start gap-10 lg:gap-20 lg:flex-row border-b pb-5"
+          class="flex flex-col justify-center lg:items-start gap-10 lg:gap-10 lg:flex-row border-b pb-5"
           v-if="!isCustomer"
         >
-          <div class="flex justify-center lg:items-start gap-12 lg:gap-20">
-            <div class="flex flex-col items-end">
+          <div class="flex justify-center lg:items-start gap-5 lg:gap-10">
+            <div class="flex flex-col items-end w-44 lg:w-48">
               <textoNormal
                 :texto="userData.address"
                 class="text-sm lg:text-base m-1"
@@ -204,18 +210,30 @@ function manipulacion(evento) {
               />
               <textoNormal
                 :texto="userData.email"
-                class="text-sm lg:text-base m-1"
+                class="text-xs sm:text-sm lg:text-base m-1"
               />
             </div>
-            <contenedorPuntuacion
-              v-if="userData.tipo != 'ayuntamiento'"
-              :puntuacion="userData.avg"
-              :cantidadResenias="userData.review_count"
-            />
+            <div class="wid-32">
+              <contenedorPuntuacion
+                v-if="userData.tipo != 'ayuntamiento'"
+                :puntuacion="userData.avg"
+                :cantidadResenias="userData.review_count"
+              />
+            </div>
           </div>
-          <div class="flex flex-row gap-4 justify-center lg:flex-col lg:gap-0">
+          <div
+            class="flex flex-row gap-4 justify-center lg:flex-col lg:gap-0 lg:w-48"
+          >
             <textoEnNegrita texto="Horario:" class="text-sm lg:text-base" />
-            <div class="flex flex-col">
+            <div
+              class="flex flex-col"
+              v-if="
+                userData.schedule != null &&
+                userData.schedule != 'null' &&
+                userData.schedule != 'undefined' &&
+                userData.schedule != undefined
+              "
+            >
               <textoNormal
                 :texto="userData.schedule"
                 class="text-sm lg:text-base"
@@ -224,20 +242,23 @@ function manipulacion(evento) {
           </div>
         </div>
         <div
-          class="flex justify-center items-center gap-12 lg:gap-20 border-b pb-5"
+          class="flex justify-center items-center gap-5 lg:gap-10 border-b pb-5"
           v-if="!isCustomer"
         >
-          <div class="flex flex-col">
+          <div class="flex flex-col items-end w-40 lg:w-56">
             <textoNormal
               :texto="userData.categories_name"
-              class="text-sm lg:text-base"
+              class="text-sm lg:text-base w-fit"
             />
           </div>
-          <div class="flex flex-col items-start">
+          <div
+            class="flex flex-col items-start lg:w-56"
+            v-if="userData.hashtags.length != 0"
+          >
             <textoNormal
               v-for="hashtag in userData.hashtags"
               :texto="hashtag"
-              class="text-sm lg:text-base m-1"
+              class="text-xs sm:text-sm lg:text-base m-1"
             />
           </div>
         </div>
@@ -247,11 +268,11 @@ function manipulacion(evento) {
           <contenedorFollower amount="20" tipo="Posts" />
         </div>
 
-        <div class="flex justify-center items-center gap-4">
+        <div class="flex justify-center items-center gap-2 lg:gap-3">
           <RouterLink to="/perfil/edit" v-if="!userExterno">
             <btnConText
               texto="EDIT PROFILE"
-              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48"
             >
             </btnConText>
           </RouterLink>
@@ -266,7 +287,7 @@ function manipulacion(evento) {
           >
             <btnConText
               texto="Añadir Reseña"
-              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48"
             >
             </btnConText>
           </RouterLink>
@@ -282,7 +303,7 @@ function manipulacion(evento) {
             @click="responseCatcherFollow"
             v-if="userExterno && !isCustomer && !cambioAFollowed"
             texto="Segir"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48 font-semibold"
           >
           </btnConText>
 
@@ -290,7 +311,7 @@ function manipulacion(evento) {
             @click="responseCatcherFollow"
             v-if="userExterno && !isCustomer && cambioAFollowed"
             texto="Dejar de Seguir"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48 font-semibold"
           >
           </btnConText>
           <btnConText
@@ -299,7 +320,7 @@ function manipulacion(evento) {
               userExterno && !isCustomer && !cambioAFavorito && cambioAFollowed
             "
             texto="Añadir a Favoritos"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48 font-semibold"
           >
           </btnConText>
           <btnConText
@@ -308,7 +329,7 @@ function manipulacion(evento) {
               userExterno && !isCustomer && cambioAFavorito && cambioAFollowed
             "
             texto="Quitar de Favoritos"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 lg:w-48 font-semibold"
           >
           </btnConText>
         </div>
