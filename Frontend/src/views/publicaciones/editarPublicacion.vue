@@ -18,7 +18,7 @@ if(postData.value.postData.name == "Post"){
 }else{
     tipo.value = options[1].id;
 }
-console.log(tipo.value);
+console.log(postData.value);
 let errorDesc = ref(null);
 let errorIMG = ref(null);
 let errorType = ref(null);
@@ -28,8 +28,8 @@ const titulo = ref(postData.value.postData.title);
 const descripcion = ref(postData.value.postData.description);
 const imagen = ref(postData.value.postData.image);
 const publiTipo = ref(tipo.value);
-const fechaInicio = ref(postData.value.postData.fecha_inicio);
-const fechaFin = ref(postData.value.postData.fecha_fin);
+const fechaInicio = ref(postData.value.postData.start_date);
+const fechaFin = ref(postData.value.postData.end_date);
 const activo = ref(postData.value.postData.active);
 console.log(activo.value);
 const colaboradores = ref(null);
@@ -138,7 +138,7 @@ const tratarDatos = async ()=>{
                     <div v-if="tipo == 'Publicación'" class="datos flex flex-col items-center">
                         <Input tipo="button" valor="Colaboradores" img="/assets/icons/addUser.svg"/>
                     </div>
-                    <div v-if="tipo == 'Evento'" class="datosEvento flex flex-col items-center">
+                    <div v-if="tipo == 'Evento' || tipo == 2" class="datosEvento flex flex-col items-center">
                         <p v-if="errorDate != null" class="mb-1 text-primary-700 text-sm">{{ errorDate }}</p>
                         <div class="flex justify-center gap-x-5 mb-5">
                             <Input @datos="(nuevosDatos)=>{fechaInicio = nuevosDatos}" tipo="fecha" requerido="true" label="Fecha de inicio" :valor="fechaInicio"/>
