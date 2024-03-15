@@ -1,16 +1,19 @@
 <script setup>
-    defineProps({
+import router from "@/router/index.js"
+import FollowButtonFavorite from './followButtonFavorites.vue';
+   const props = defineProps({
         user : Object
     })
 
-    import FollowButtonFavorite from './followButtonFavorites.vue';
-
+    function irAPerfil(){
+        router.push(`/perfil/${props.user.username}`)
+    }
 </script>
 
 
 <template>
     <div class="flex items-center justify-between p-4 cursor-pointer transition-colors duration-300 hover:bg-[#eeeeee] rounded-md">
-        <div class="flex items-center gap-x-2">
+        <div class="flex items-center gap-x-2" @click="irAPerfil">
             <img :src="user.avatar" alt="image-profile" class="size-20 rounded-full" v-if="user">
             <div class="flex flex-col items-start">
                 <h4 v-if="user" >{{ user.username }}</h4>

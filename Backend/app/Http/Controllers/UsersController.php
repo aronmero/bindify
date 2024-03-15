@@ -313,7 +313,7 @@ class UsersController extends Controller
      *     )
      * )
      */
-    public function update(UpdateUserRequest $request, string $username)
+    public function update(UpdateUserRequest $request)
     {
         try {
            // Elimina campos que no queremos actualizar
@@ -331,12 +331,16 @@ class UsersController extends Controller
            $user->municipality_id = Municipality::where('name', '=', $request->municipality)->first()->id;
 
            // Guarda las imágenes si están presentes en la solicitud
-           
+
            $numeroRandom = mt_rand(100, 9999999);
            if ($request->hasFile('avatar')) {
-               $image = $request->file('avatar');
-               Storage::disk('avatars')->putFileAs($user->username, $image, '/imagenPerfil'.$numeroRandom.'.webp');
-               $user->avatar = env('APP_URL').Storage::url('avatars/'.$user->username. '/imagenPerfil'.$numeroRandom.'.webp');
+                $image = $request->file('avatar');
+                $images = Storage::disk('avatars')->files($user->username);
+                foreach ($images as $imagen) {
+                    Storage::disk('avatars')->delete($imagen);
+                }
+                Storage::disk('avatars')->putFileAs($user->username, $image, '/imagenPerfil'.$numeroRandom.'.webp');
+                $user->avatar = env('APP_URL').Storage::url('avatars/'.$user->username. '/imagenPerfil'.$numeroRandom.'.webp');
            }else{
               if($request->avatar == null || $request->avatar == "null"){
                    $user->avatar = "default";
@@ -344,6 +348,10 @@ class UsersController extends Controller
            }
            if ($request->hasFile('banner')) {
                $image = $request->file('banner');
+               $images = Storage::disk('banners')->files($user->username);
+                foreach ($images as $imagen) {
+                    Storage::disk('banners')->delete($imagen);
+                }
                Storage::disk('banners')->putFileAs($user->username, $image, '/imagenBanner'.$numeroRandom.'.webp');
                $user->banner = env('APP_URL').Storage::url('banners/'.$user->username. '/imagenBanner'.$numeroRandom.'.webp');
            }else{
@@ -363,7 +371,7 @@ class UsersController extends Controller
             if ($user->hasRole('customer')) {
                 // Si el usuario es un cliente, actualiza los detalles como cliente
                 $customer = Customer::where('user_id', $user->id)->first();
-              
+
                 $customer->gender = $request->gender;
 
                 if ($request->birth_date) {
@@ -448,11 +456,11 @@ class UsersController extends Controller
      *     )
      * )
      */
-    public function destroy(string $username)
+    public function destroy()
     {
         try {
-            // Busca al usuario por su nombre de usuario
-            $user = User::where("username", $username)->firstOrFail();
+
+            $user = User::find(Auth::user()->id);
 
             // Determina el rol del usuario
             if ($user->getRoleNames() == "customer") {

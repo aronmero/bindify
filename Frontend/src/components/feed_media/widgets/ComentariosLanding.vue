@@ -47,6 +47,13 @@ const user_req = await obtener_datos_usuario(user_session.usuario.username);
 
 const user = (!Array.isArray(user_req.data)) ? user_req.data : user_req.data[0];
 
+let imagenRuta;
+if(user.avatar == 'default'){
+    imagenRuta = 'public/img/placeholderPerfil.webp'
+} else {
+    imagenRuta = user.avatar;
+}
+
 let comentarios = ref(null);
 
 let comentarios_req = await obtener_comentarios(post.post_id);
@@ -152,7 +159,7 @@ const refreshComentarios = async () => {
     <div style="z-index: 99 !important;  max-width: 700px;"
         class=" chat w-[100%]  h-[50px] flex items-center  md:bottom-[50px] lg:bottom-[10px] xl:bottom-[10px] 2xl:bottom-[10px] p-[20px_0px]">
         <!-- Avatar del usuario -->
-        <img class=" w-[40px] h-[40px] rounded-full " :src="user.avatar" alt="">
+        <img class=" w-[40px] h-[40px] rounded-full " :src="imagenRuta" alt="">
         <!-- Input de Enviar datos -->
         <input ref="chat_input"  @keydown="(e) => enviarComentarioPorSubmit(post.post_id, e)"
             class=" input outline-none  w-[100%] h-[100%] p-[20px_20px] bg-[transparent] " type="text" placeholder="Agregar comentario">

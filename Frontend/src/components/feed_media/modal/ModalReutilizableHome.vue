@@ -11,6 +11,7 @@ const props = defineProps({
 const user = JSON.parse(sessionStorage.getItem("usuario"));
 const username = user.usuario.username;
 
+
 /**
  * Elimina la opcion de borrar comentario si no eres el propietario
  */

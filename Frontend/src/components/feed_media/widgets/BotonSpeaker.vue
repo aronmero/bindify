@@ -18,6 +18,7 @@
         border-radius:50%;
         border:none;
         img {
+            min-width:20px;
             width:20px;
             height:20px;
         }

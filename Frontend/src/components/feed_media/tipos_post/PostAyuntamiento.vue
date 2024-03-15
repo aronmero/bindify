@@ -112,7 +112,7 @@ const abrirComentariosLanding = () => {
                 <img @click="redirect(`perfil/${post.username}`)" loading="lazy"
                     class=" cursor-pointer w-[100%] h-[100%] object-cover" :src="post.avatar" alt="avatar_usuario">
             </div>
-            <div @click="redirect(`ayuntamiento/${post.post_id}`)"
+            <div @click="redirect(`perfil/${post.username}`)"
                 class=" cursor-pointer flex flex-col items-start texts w-[100%] h-[100%] ">
                 <b>{{ post.username }}</b>
                 <small> Organización </small>
