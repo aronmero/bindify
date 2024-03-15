@@ -18,7 +18,7 @@ const props = defineProps({
 
 const comentario = props.comentario;
 if(comentario.avatar=="default"){
-    comentario.avatar="/public/img/placeholderPerfil.webp";
+    comentario.avatar="/img/placeholderPerfil.webp";
 }
 const user = comentario.username;
 

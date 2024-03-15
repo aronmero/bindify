@@ -17,7 +17,7 @@ const comentario = props.comentario;
 console.log(comentario);
 let imagenRuta;
 if(comentario.avatar == 'default'){
-    imagenRuta = 'public/img/placeholderPerfil.webp'
+    imagenRuta = '/img/placeholderPerfil.webp'
 } else {
     imagenRuta = comentario.avatar;
 }
@@ -73,7 +73,7 @@ if(comentario.avatar == 'default'){
             <small v-if="comentario.comment_creation != null">{{ datetranslatesql(comentario.comment_creation)
             }}</small>
         </div>
-        <span class="max-w-[80%]">{{ comentario.content}}</span>
+        <span class="max-w-[80%] mr-[25px]">{{ comentario.content}}</span>
         <button v-if="comentario.username" class="absolute right-0 "  @click="() => abrirModal()">
             <img :src="MoreSVG" alt="">
         </button>
