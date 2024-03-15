@@ -334,9 +334,13 @@ class UsersController extends Controller
            
            $numeroRandom = mt_rand(100, 9999999);
            if ($request->hasFile('avatar')) {
-               $image = $request->file('avatar');
-               Storage::disk('avatars')->putFileAs($user->username, $image, '/imagenPerfil'.$numeroRandom.'.webp');
-               $user->avatar = env('APP_URL').Storage::url('avatars/'.$user->username. '/imagenPerfil'.$numeroRandom.'.webp');
+                $image = $request->file('avatar');
+                $images = Storage::disk('avatars')->files($user->username);
+                foreach ($images as $imagen) {
+                    Storage::disk('avatars')->delete($imagen);
+                }
+                Storage::disk('avatars')->putFileAs($user->username, $image, '/imagenPerfil'.$numeroRandom.'.webp');
+                $user->avatar = env('APP_URL').Storage::url('avatars/'.$user->username. '/imagenPerfil'.$numeroRandom.'.webp');
            }else{
               if($request->avatar == null || $request->avatar == "null"){
                    $user->avatar = "default";
@@ -344,6 +348,10 @@ class UsersController extends Controller
            }
            if ($request->hasFile('banner')) {
                $image = $request->file('banner');
+               $images = Storage::disk('banners')->files($user->username);
+                foreach ($images as $imagen) {
+                    Storage::disk('banners')->delete($imagen);
+                }
                Storage::disk('banners')->putFileAs($user->username, $image, '/imagenBanner'.$numeroRandom.'.webp');
                $user->banner = env('APP_URL').Storage::url('banners/'.$user->username. '/imagenBanner'.$numeroRandom.'.webp');
            }else{

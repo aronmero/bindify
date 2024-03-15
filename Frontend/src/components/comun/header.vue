@@ -21,8 +21,8 @@ const tipo = JSON.parse(sessionStorage.getItem("usuario")).usuario.tipo;
 </script>
 
 <template>
-  <header class="h-[80px] bg-[#f3f3f3]  flex fixed top-0 justify-around px-[10px] w-full z-50">
-    <nav class="w-[55px] flex justify-center items-center">
+  <header class="h-[80px] bg-[#f3f3f3]  flex fixed -top-[0.75rem] justify-around px-[10px] w-full z-50">
+    <nav class="w-[3.43rem] flex justify-center items-center">
       <RouterLink to="/" class=" logo flex justify-center items-center "> 
         <img :src="logo" class="max-w-[55px]  max-h-[40px]  hidden xl:flex sm:flex rounded-full " />
         <h1 class="flex">Bindify</h1>
