@@ -112,7 +112,7 @@ const abrirComentariosLanding = () => {
                 <img @click="redirect(`perfil/${post.username}`)" loading="lazy"
                     class=" cursor-pointer w-[100%] h-[100%] object-cover " :src="post.avatar" alt="avatar_usuario">
             </div>
-            <div class=" flex flex-col items-start w-[100%] h-[100%] ">
+            <div @click="redirect(`perfil/${post.username}`)" class=" flex flex-col items-start w-[100%] h-[100%] ">
                 <b>{{ post.username }}</b>
                 <small>{{ datetranslatesql(post.start_date) }}</small>
                 <button click="" class=" rating flex h-[fit-content] items-center justify-start "

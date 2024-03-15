@@ -116,10 +116,10 @@
 
         h2 {
             font-size: 1.3rem;
-            max-width:400px;
+            max-width:300px;
+            height:50px;
             overflow:hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
             color: $primario;
             font-weight: bold;
         }
