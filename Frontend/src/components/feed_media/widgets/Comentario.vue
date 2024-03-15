@@ -69,13 +69,13 @@ const abrirModal = () => {
 </script>
 <template>
     <!-- Contenedor Comentario -->
-    <div class=" comentario flex flex-col w-[100%] p-[10px_30px] rounded-lg relative my-4   ">
+    <div class=" comentario flex flex-col w-[100%] sm:p-[10px_30px] rounded-lg relative my-4   ">
         <!-- Header del comentario -->
         <div class=" header-comentario flex ">
             <!-- Avatar del usuario -->
             <img v-if="props.comentario.avatar != null" class=" mr-[10px] " :src="props.comentario.avatar" alt="">
             <!-- Textos del usuario -->
-            <div class="textos m-l">
+            <div class="textos m-l flex wrap mr-[25px]">
                 <b> {{ comentario.username }}</b>
                 <button click="" class=" mt-[-15px] rating flex h-[fit-content] items-center justify-start "
                     v-if="comentario.rating != null">
@@ -88,7 +88,7 @@ const abrirModal = () => {
             </div>
             <!-- Botón de Ver Más -->
             <button v-if="comentario.username != null" @click="() => abrirModal()"
-                class="w-[20px] h-[20px] absolute right-10">
+                class="w-[20px] h-[20px] absolute right-0 sm:right-10">
                 <img class="  " :src="MoreSVG" alt="">
             </button>
         </div>
