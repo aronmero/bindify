@@ -198,7 +198,7 @@ const abrirComentariosLanding = () => {
             <!-- Comentarios en landing -->
             <div class=" comentarios m-[20px_0px] flex flex-col ">
                 <b class=" flex ">Comentarios 
-                    <button  class="bg-[white] overflow-hidden " @click="abrirComentariosLanding" > 
+                    <button  class="overflow-hidden " @click="abrirComentariosLanding" > 
                         <img v-if="!comentariosPadre" :src="DownSVG" alt="">
                         <img v-if="comentariosPadre" :src="UpSVG" alt="">
                     </button>
