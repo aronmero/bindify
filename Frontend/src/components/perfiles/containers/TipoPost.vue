@@ -46,7 +46,7 @@ const abrirModal = () => {
 /* Son estilos personalizados para acortar y mejorar la visibilidad del codigo principal */
 
 const estilos = {
-  post: " w-[100%] min-h-[800px] flex flex-col overflow-hidden ",
+  post: " w-[100%]  flex flex-col overflow-hidden ",
   post_avatar: "",
   modal:
     " absolute bg-white min-w-[200px] rounded-lg p-2 flex flex-col items-start justify-center ",
@@ -90,8 +90,8 @@ function clickBorrarPost(evento) {
     <div class="post-header w-[100%] h-[60px] flex items-center">
       <div class="w-[50px] h-[50px] rounded-full overflow-hidden mr-2">
         <img
-          @click="redirect(`perfil/${userData.userData[0].username}`)"
-          class="cursor-pointer w-[100%] h-[100%] object-cover"
+          
+          class=" w-[100%] h-[100%] object-cover"
           :src="userData.userData[0].avatar"
           alt="avatar_usuario"
         />
@@ -164,7 +164,8 @@ function clickBorrarPost(evento) {
         @click="editarPost"
         :id="post.post_id"
         v-if="
-          (userLogeado.usuario.tipo == 'commerce' || userLogeado.usuario.tipo == 'ayuntamiento') &&
+          (userLogeado.usuario.tipo == 'commerce' ||
+            userLogeado.usuario.tipo == 'ayuntamiento') &&
           userLogeado.usuario.username == userData.userData[0].username
         "
       >
@@ -178,7 +179,8 @@ function clickBorrarPost(evento) {
         @click="clickBorrarPost"
         :id="post.post_id"
         v-if="
-          (userLogeado.usuario.tipo == 'commerce' || userLogeado.usuario.tipo == 'ayuntamiento') &&
+          (userLogeado.usuario.tipo == 'commerce' ||
+            userLogeado.usuario.tipo == 'ayuntamiento') &&
           userLogeado.usuario.username == userData.userData[0].username
         "
       >

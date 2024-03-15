@@ -32,29 +32,15 @@ function clickBorrarResenia(evento) {
   }
 }
 
-import { onMounted } from "vue";
-
 import DeleteSVG from "@public/assets/icons/delete.svg";
-import HeartSVG from "@public/assets/icons/like.svg";
-import ShareSVG from "@public/assets/icons/share.svg";
-import BookmarkSVG from "@public/assets/icons/bookmark.png";
 import MoreSVG from "@public/assets/icons/ellipsis.svg";
-import UserSVG from "@public/assets/icons/user.svg";
 import { borrarPost } from "@/Api/perfiles/perfil.js";
-import TipoOferta from "@public/assets/icons/tipo_oferta.svg";
-import TipoEvento from "@public/assets/icons/tipo_evento.svg";
 
-import { datetranslate } from "@/components/feed_media/helpers/datetranslate.js";
 import router from "@/router/index.js";
-import { RouterLink } from "vue-router";
 
 const post = ref(props.post);
 const modalHandler = ref(false);
 const modal = ref(null);
-
-const increaseLike = () => {
-  //post.value.likes++;
-};
 
 const abrirModal = () => {
   if (modalHandler.value) {
@@ -80,35 +66,9 @@ const estilos = {
 const redirect = (url) => {
   router.push(url);
 };
-
-/** Agregué que se listaran ya los tipos */
-// const tipo = props.post.name;
-// let IconoTipo = "";
-// if (tipo == "Post") IconoTipo = TipoOferta;
-// if (tipo == "Evento") IconoTipo = TipoEvento;
-
-// function editarPost(evento) {
-//   console.log(props.post);
-//   sessionStorage.setItem("postData", JSON.stringify({ postData: props.post }));
-//   console.log(JSON.parse(sessionStorage.getItem("postData")));
-//   router.push(`/post/${props.post.post_id}/editar`);
-// }
-// let response = ref(null)
-// async function responseCatcher(metodo, subRuta) {
-//   response.value = await borrarPost(metodo, subRuta);
-//   console.log(response.value);
-//   router.go()
-// }
-// function clickBorrarPost(evento) {
-//   if(confirm("Estas seguro de que quieres borrar el post ?")){
-
-//     // responseCatcher("delete", `/api/post/${props.post.post_id}`);
-//   }
-// }
 </script>
 <template>
-  <!------------------------------------ Post NORMAL ------------------------------>
-  <article :class="` post ${estilos.post} relative `">
+  <article :class="` post ${estilos.post} relative border-b`">
     <!-- Contenedor del header del post -->
     <div class="post-header w-[100%] h-[60px] flex items-center">
       <div class="w-[50px] h-[50px] rounded-full overflow-hidden mr-2">
@@ -122,6 +82,7 @@ const redirect = (url) => {
         <b>{{ nombre }}</b>
         <small>{{ fecha }}</small>
       </div>
+
       <!-- Abrir Mas -->
       <button
         @click="() => abrirModal(id)"
@@ -148,10 +109,13 @@ const redirect = (url) => {
 
     <!-- Contenido del Post -->
     <div class="information">
-      <h1>
+      <!-- <h1>
         {{ texto }}
-      </h1>
+      </h1> -->
       <span>{{ texto }}</span>
+      <div class="flex justify-end w-100 bg-slate-200 rounded-full max-h-10">
+        <contenedorPuntuacion :puntuacion="puntuacion"></contenedorPuntuacion>
+      </div>
     </div>
 
     <!-- Modal de Ver Más -->
@@ -230,8 +194,9 @@ button {
   .information {
     /*estilos simples */
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     height: fit-content;
+    justify-content: space-between;
 
     h1 {
       font-size: 1.2rem;

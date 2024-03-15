@@ -9,15 +9,17 @@ defineProps({
 });
 </script>
 <template>
-  <div class="flex flex-col justify-center items-center">
+  <div
+    class="flex flex-col justify-center items-center bg-slate-200 rounded-md px-2 pt-1 h-fit"
+  >
     <div class="flex flex-row justify-center items-center w-14">
       <btnConImg
         ruta="/assets/icons/christmasStar.svg"
         altText="icono de estrella"
       ></btnConImg>
-      <textoEnNegrita :texto="puntuacion" class="text-lg lg:text-xl" />
+      <textoEnNegrita :texto="puntuacion" class="text-lg lg:text-2xl" />
     </div>
-    <textoNormal :texto="cantidadResenias"></textoNormal>
+    <textoNormal :texto="cantidadResenias" class="lg:text-lg"></textoNormal>
   </div>
 </template>
 <style scoped></style>

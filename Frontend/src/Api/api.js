@@ -1,5 +1,5 @@
-//export const urlApi = "http://apiproyecto.ajdevprojects.com";
-export const urlApi = 'http://127.0.0.1:8000';
+export const urlApi = "http://apiproyecto.ajdevprojects.com";
+// export const urlApi = 'http://127.0.0.1:8000';
 export const urlApiHome = urlApi;
 /**
  * Genera unas opciones para hacer una peticion a una api. Obtiene un token del SessionStorage

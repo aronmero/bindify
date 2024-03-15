@@ -5,7 +5,6 @@ import Footer from "@/components/comun/footer.vue";
 import imgsPerfil from "@/components/perfiles/containers/imgsPerfil.vue";
 import btnConImg from "@/components/perfiles/widgets/btnConImg.vue";
 import btnConText from "@/components/perfiles/widgets/btnConText.vue";
-import contenedorBtnsPerfilUser from "@/components/perfiles/containers/contenedorBtnsPerfilUser.vue";
 import textoEnNegrita from "@/components/perfiles/widgets/textoEnNegrita.vue";
 import textoNormal from "@/components/perfiles/widgets/textoNormal.vue";
 import contenedorPuntuacion from "@/components/perfiles/containers/contenedorPuntuacion.vue";
@@ -13,21 +12,17 @@ import contenedorFollower from "@/components/perfiles/containers/contenedorFollo
 import btnAtras from "@/components/perfiles/containers/btnAtras.vue";
 import { setDefaultImgs } from "@/components/perfiles/helpers/defaultImgs";
 import router from "@/router/index.js";
-import { RouterLink, RouterView } from "vue-router";
+import { RouterLink } from "vue-router";
 import {
   getUserData,
   followUser,
   aniadirFavorito,
 } from "@/Api/perfiles/perfil.js";
 import { ref, onMounted } from "vue";
-console.log("REDIRIGE");
 import eventos from "@/components/perfiles/containers/contenedorVistaEventos.vue";
 import posts from "@/components/perfiles/containers/contenedorVistaPosts.vue";
 import resenias from "@/components/perfiles/containers/contenedorVistaResenias.vue";
 import fidelidad from "@/components/perfiles/containers/contenedorVistaFidelidad.vue";
-import favoritos from "@/components/perfiles/containers/contenedorVistaFavoritos.vue";
-import seguidos from "@/components/perfiles/containers/contenedorVistaSeguidos.vue";
-import seguidosNew from "@/views/perfiles/seguidos.vue";
 import FollowedFeed from "@/components/seguidos/followedFeed.vue";
 import FavoriteFeed from "@/components/seguidos/FavoriteFeed.vue";
 
@@ -37,20 +32,13 @@ let clickedLink = null;
 let userData = ref(null);
 let userExterno = ref(false);
 let linkUsername = ref(router.currentRoute.value.params.username);
-console.log(linkUsername.value);
+
 if (linkUsername.value == undefined) {
   router.push(`/perfil`);
 }
 const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
 let isCustomer = false;
-// if(userLogeado.usuario.tipo == "customer" ){
-//   isCustomer = true
 
-// }
-
-onMounted(() => {
-  console.log("Montado");
-});
 const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
@@ -58,9 +46,8 @@ const estilos = {
 // Al recargar la pagina se quita la marca arregla a futuro con variables de estado
 // a lo mejor
 function pintar(evento) {
-  if(clickedLink == null){
-
-    clickedLink = document.querySelector("#linkPost")
+  if (clickedLink == null) {
+    clickedLink = document.querySelector("#linkPost");
   }
   if (clickedLink != null) {
     clickedLink.classList.remove("text-accent-400");
@@ -79,6 +66,7 @@ async function responseCatcher(metodo, subRuta) {
   if (userData.value[0] == undefined) {
     console.log("es Customer");
     isCustomer = true;
+    isPosts.value = false;
   }
   if (!isCustomer) {
     cambioAFollowed.value = userData.value[0].followed;
@@ -115,16 +103,6 @@ async function responseCatcherFavoritos() {
   );
   console.log(cambioAFavorito.value);
 }
-
-// function setDefaultImgs(objeto){
-//   if(objeto.banner!= undefined && objeto.banner=="default"){
-//     objeto.banner = "/img/placeholderPerfil.webp"
-//   }
-//   if(objeto.avatar!= undefined && objeto.avatar=="default"){
-//     objeto.avatar = "/img/placeholderBanner.webp"
-//   }
-//   return objeto
-// }
 
 const isEventos = ref(false);
 const isPosts = ref(true);
@@ -186,10 +164,6 @@ function manipulacion(evento) {
       break;
   }
 }
-// let bloquearVerParticular = ref(false)
-// if(!isCustomer && userExterno.value){
-//   bloquearVerParticular.value = true
-// }
 </script>
 
 <template>
@@ -197,7 +171,6 @@ function manipulacion(evento) {
   <Grid
     ><template v-slot:Left></template>
     <btnAtras titulo="Perfil"></btnAtras>
-    <!-- <h3 v-if="bloquearVerParticular">Nos puedes ver el perfil de este usuario</h3> -->
     <div class="flex flex-col gap-6" v-if="userData != null">
       <div>
         <imgsPerfil
@@ -216,22 +189,22 @@ function manipulacion(evento) {
           />
         </div>
         <div
-          class="flex flex-col justify-center lg:items-start gap-10 lg:gap-20 lg:flex-row"
+          class="flex flex-col justify-center lg:items-start gap-10 lg:gap-20 lg:flex-row border-b pb-5"
           v-if="!isCustomer"
         >
-          <div class="flex justify-center lg:items-start gap-28 lg:gap-20">
-            <div class="flex flex-col">
+          <div class="flex justify-center lg:items-start gap-12 lg:gap-20">
+            <div class="flex flex-col items-end">
               <textoNormal
                 :texto="userData.address"
-                class="text-sm lg:text-base"
+                class="text-sm lg:text-base m-1"
               />
               <textoNormal
                 :texto="userData.phone"
-                class="text-sm lg:text-base"
+                class="text-sm lg:text-base m-1"
               />
               <textoNormal
                 :texto="userData.email"
-                class="text-sm lg:text-base"
+                class="text-sm lg:text-base m-1"
               />
             </div>
             <contenedorPuntuacion
@@ -244,18 +217,14 @@ function manipulacion(evento) {
             <textoEnNegrita texto="Horario:" class="text-sm lg:text-base" />
             <div class="flex flex-col">
               <textoNormal
-                texto="Lun-Vier: 8:00-15:00"
-                class="text-sm lg:text-base"
-              />
-              <textoNormal
-                texto="Sabado: 8:00-12:00"
+                :texto="userData.schedule"
                 class="text-sm lg:text-base"
               />
             </div>
           </div>
         </div>
         <div
-          class="flex justify-center items-center gap-40 lg:gap-20"
+          class="flex justify-center items-center gap-12 lg:gap-20 border-b pb-5"
           v-if="!isCustomer"
         >
           <div class="flex flex-col">
@@ -264,11 +233,11 @@ function manipulacion(evento) {
               class="text-sm lg:text-base"
             />
           </div>
-          <div class="flex flex-col">
+          <div class="flex flex-col items-start">
             <textoNormal
               v-for="hashtag in userData.hashtags"
               :texto="hashtag"
-              class="text-sm lg:text-base"
+              class="text-sm lg:text-base m-1"
             />
           </div>
         </div>
@@ -278,7 +247,6 @@ function manipulacion(evento) {
           <contenedorFollower amount="20" tipo="Posts" />
         </div>
 
-        <!-- <contenedorBtnsPerfilUser></contenedorBtnsPerfilUser> -->
         <div class="flex justify-center items-center gap-4">
           <RouterLink to="/perfil/edit" v-if="!userExterno">
             <btnConText
@@ -296,11 +264,11 @@ function manipulacion(evento) {
               userLogeado.usuario.tipo != 'commerce'
             "
           >
-            <btnConImg
-              ruta="/assets/icons/christmasStar.svg"
-              altText="icono estrella"
-              :borde="true"
-            ></btnConImg>
+            <btnConText
+              texto="Añadir Reseña"
+              class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+            >
+            </btnConText>
           </RouterLink>
           <RouterLink to="/tarjeta-fidelidad" v-if="!userExterno && isCustomer">
             <btnConImg
@@ -314,7 +282,7 @@ function manipulacion(evento) {
             @click="responseCatcherFollow"
             v-if="userExterno && !isCustomer && !cambioAFollowed"
             texto="Segir"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
           >
           </btnConText>
 
@@ -322,7 +290,7 @@ function manipulacion(evento) {
             @click="responseCatcherFollow"
             v-if="userExterno && !isCustomer && cambioAFollowed"
             texto="Dejar de Seguir"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
           >
           </btnConText>
           <btnConText
@@ -331,7 +299,7 @@ function manipulacion(evento) {
               userExterno && !isCustomer && !cambioAFavorito && cambioAFollowed
             "
             texto="Añadir a Favoritos"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
           >
           </btnConText>
           <btnConText
@@ -340,19 +308,18 @@ function manipulacion(evento) {
               userExterno && !isCustomer && cambioAFavorito && cambioAFollowed
             "
             texto="Quitar de Favoritos"
-            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48"
+            class="transition hover:bg-accent-400 ease-linear hover:text-text-50 w-48 font-semibold"
           >
           </btnConText>
         </div>
       </div>
 
-      <div class="flex w-full justify-center gap-6">
+      <div class="flex w-full justify-evenly gap-6 flex-wrap">
         <textoEnNegrita
           v-if="!isCustomer"
           @click="manipulacion"
           texto="Posts"
-          class="text-sm lg:text-base text-accent-400"
-          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          :class="`text-sm lg:text-lg text-accent-400  ${estilos.hoverLinks}`"
           value="1"
           id="linkPost"
         />
@@ -360,52 +327,43 @@ function manipulacion(evento) {
           v-if="!isCustomer"
           @click="manipulacion"
           texto="Eventos"
-          class="text-sm lg:text-base"
-          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          :class="`text-sm lg:text-lg ${estilos.hoverLinks}`"
           value="2"
         />
         <textoEnNegrita
           v-if="userData.tipo != 'ayuntamiento' && !isCustomer"
           @click="manipulacion"
           texto="Reseñas"
-          class="text-sm lg:text-base"
-          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          :class="`text-sm lg:text-lg  ${estilos.hoverLinks}`"
           value="3"
         />
         <textoEnNegrita
           v-if="isCustomer && !userExterno"
           @click="manipulacion"
           texto="Fidelidad"
-          class="text-sm lg:text-base"
-          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          :class="`text-sm lg:text-lg  ${estilos.hoverLinks}`"
           value="4"
         />
         <textoEnNegrita
           v-if="!userExterno"
           @click="manipulacion"
           texto="Seguidos"
-          class="text-sm lg:text-base"
-          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          :class="`text-sm lg:text-lg  ${estilos.hoverLinks}`"
           value="6"
         />
         <textoEnNegrita
           v-if="!userExterno"
           @click="manipulacion"
           texto="Favoritos"
-          class="text-sm lg:text-base"
-          :class="`text-sm lg:text-base  ${estilos.hoverLinks}`"
+          :class="`text-sm lg:text-lg  ${estilos.hoverLinks}`"
           value="5"
         />
       </div>
-      <!--<RouterView></RouterView>-->
+
       <posts v-if="isPosts"></posts>
       <eventos v-if="isEventos"></eventos>
       <resenias v-if="isResenias"></resenias>
       <fidelidad v-if="isFidelidad"></fidelidad>
-      <!-- <favoritos v-if="isFavoritos"></favoritos> -->
-      <!-- <seguidos v-if="isSeguidos"></seguidos> -->
-      <!-- <seguidosNew v-if="isFavoritos"></seguidosNew> -->
-      <!-- <seguidosNew v-if="isSeguidos"></seguidosNew> -->
       <FollowedFeed v-if="isSeguidos"></FollowedFeed>
       <FavoriteFeed v-if="isFavoritos"></FavoriteFeed>
     </div>
