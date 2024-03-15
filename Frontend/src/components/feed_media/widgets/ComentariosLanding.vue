@@ -49,7 +49,7 @@ const user = (!Array.isArray(user_req.data)) ? user_req.data : user_req.data[0];
 
 let imagenRuta;
 if(user.avatar == 'default'){
-    imagenRuta = 'public/img/placeholderPerfil.webp'
+    imagenRuta = '/img/placeholderPerfil.webp'
 } else {
     imagenRuta = user.avatar;
 }
