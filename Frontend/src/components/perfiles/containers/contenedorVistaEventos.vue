@@ -7,14 +7,14 @@ import { ref } from "vue";
 let userPosts = ref(null);
 const show = ref(false);
 let linkUsername = ref(router.currentRoute.value.params.username);
-console.log(linkUsername.value);
+
 async function responseCatcher() {
   userPosts.value = await getUserPosts(
     "get",
     `/api/user/${linkUsername.value}/events`
   );
   show.value=true;
-  console.log(userPosts.value);
+  
 }
 responseCatcher();
 </script>

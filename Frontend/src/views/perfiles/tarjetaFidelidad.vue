@@ -14,8 +14,11 @@ import router from "@/router/index.js";
 let userData = JSON.parse(sessionStorage.getItem("userData"));
 const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
 userData = setDefaultImgs(userData.userData);
-console.log(userData);
-if (userData.username != userLogeado.usuario.username && userLogeado.usuario.tipo!="customer") {
+
+if (
+  userData.username != userLogeado.usuario.username &&
+  userLogeado.usuario.tipo != "customer"
+) {
   router.push("/perfil");
 }
 </script>

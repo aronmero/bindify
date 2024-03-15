@@ -20,7 +20,7 @@ const props = defineProps({
 let response = ref(null);
 async function responseCatcher(metodo, subRuta) {
   response.value = await borrarPost(metodo, subRuta);
-  console.log(response.value);
+  
   router.go();
 }
 function clickBorrarResenia(evento) {

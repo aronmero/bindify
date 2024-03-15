@@ -18,7 +18,7 @@ import {
   followUser,
   aniadirFavorito,
 } from "@/Api/perfiles/perfil.js";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import eventos from "@/components/perfiles/containers/contenedorVistaEventos.vue";
 import posts from "@/components/perfiles/containers/contenedorVistaPosts.vue";
 import resenias from "@/components/perfiles/containers/contenedorVistaResenias.vue";
@@ -43,8 +43,6 @@ const estilos = {
   hoverLinks: "transition ease-in-out hover:text-accent-400",
 };
 
-// Al recargar la pagina se quita la marca arregla a futuro con variables de estado
-// a lo mejor
 function pintar(evento) {
   if (clickedLink == null) {
     clickedLink = document.querySelector("#linkPost");
@@ -52,7 +50,7 @@ function pintar(evento) {
   if (clickedLink != null) {
     clickedLink.classList.remove("text-accent-400");
   }
-  //console.log(evento.target.innerHTML);
+
   evento.target.classList.add("text-accent-400");
   clickedLink = evento.target;
 }
@@ -60,11 +58,7 @@ function pintar(evento) {
 async function responseCatcher(metodo, subRuta) {
   userData.value = await getUserData(metodo, subRuta);
 
-  console.log(userData.value[0]);
-
-  console.log(userLogeado.usuario.tipo);
   if (userData.value[0] == undefined) {
-    console.log("es Customer");
     isCustomer = true;
     isPosts.value = false;
   }
@@ -73,36 +67,29 @@ async function responseCatcher(metodo, subRuta) {
     cambioAFavorito.value = userData.value[0].favorite;
     userData.value = userData.value[0];
   }
-  console.log(userData.value);
+
   userData.value = setDefaultImgs(userData.value);
-  console.log(userData.value);
-  
 }
 
 if (linkUsername.value == userLogeado.usuario.username) {
   responseCatcher("get", "/api/profile");
 } else {
-  //console.log(linkUsername.value);
   responseCatcher("get", `/api/user/${linkUsername.value}`);
   userExterno.value = true;
 }
 
 async function responseCatcherFollow() {
-  console.log(userData.value.username);
   cambioAFollowed.value = await followUser(
     "post",
     `/api/follow/${userData.value.username}`
   );
-  console.log(cambioAFollowed.value);
 }
 
 async function responseCatcherFavoritos() {
-  console.log(userData.value.username);
   cambioAFavorito.value = await aniadirFavorito(
     "post",
     `/api/favorite/${userData.value.username}`
   );
-  console.log(cambioAFavorito.value);
 }
 
 const isEventos = ref(false);
@@ -126,38 +113,27 @@ function ocultar() {
   isSeguidos.value = false;
 }
 
-/**
- * Ejecuta una serie de funciones que requieren de un evento.
- * Cambia un estilo, oculta todos los contenedores, y muestra uno en concreto
- * @param {*} evento
- */
 function manipulacion(evento) {
   pintar(evento);
 
   ocultar();
   switch (evento.target.value) {
     case "1":
-      console.log(evento.target.value);
       isPosts.value = true;
       break;
     case "2":
-      console.log(evento.target.value);
       isEventos.value = true;
       break;
     case "3":
-      console.log(evento.target.value);
       isResenias.value = true;
       break;
     case "4":
-      console.log(evento.target.value);
       isFidelidad.value = true;
       break;
     case "5":
-      console.log(evento.target.value);
       isFavoritos.value = true;
       break;
     case "6":
-      console.log(evento.target.value);
       isSeguidos.value = true;
       break;
 
@@ -236,6 +212,12 @@ function manipulacion(evento) {
             >
               <textoNormal
                 :texto="userData.schedule"
+                class="text-sm lg:text-base"
+              />
+            </div>
+            <div class="flex flex-col" v-else>
+              <textoNormal
+                texto="No hay horario"
                 class="text-sm lg:text-base"
               />
             </div>

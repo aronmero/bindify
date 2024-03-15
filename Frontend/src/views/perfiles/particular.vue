@@ -21,20 +21,14 @@ const userLogeado = JSON.parse(sessionStorage.getItem("usuario"));
 let userExterno = ref(false);
 let userData = ref(null);
 
-// console.log(getUserData("get"));
-
 async function responseCatcher(metodo, subRuta) {
   userData.value = await getUserData(metodo, subRuta);
-  console.log(userData.value);
-
+  
 }
-// responseCatcher("get","/api/profile");
 
 if (linkUsername.value == userLogeado.usuario.username) {
   responseCatcher("get", "/api/profile");
 } else {
-  //console.log(linkUsername.value);
-  // router.push()
   responseCatcher("get", `/api/user/${linkUsername.value}`);
   userExterno.value = true;
 }
@@ -76,15 +70,12 @@ function manipulacion(evento) {
   ocultar();
   switch (evento.target.value) {
     case "1":
-      console.log(evento.target.value);
       isFidelidad.value = true;
       break;
     case "2":
-      console.log(evento.target.value);
       isFavoritos.value = true;
       break;
     case "3":
-      console.log(evento.target.value);
       isSeguidos.value = true;
       break;
     default:

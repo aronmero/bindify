@@ -17,7 +17,7 @@ let followsList = ref(null);
 
 async function responseCatcher(metodo, subRuta) {
   followsList.value = await getUserFollows(metodo, subRuta);
-  console.log(followsList.value);
+  
   followsList.value = setDefaultImgs(followsList.value);
 }
 responseCatcher("get", "/api/follows");
