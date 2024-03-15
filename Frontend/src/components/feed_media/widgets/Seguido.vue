@@ -5,7 +5,7 @@
     });
 
     if(props.user.avatar=="default"){
-        props.user.avatar="public/img/placeholderPerfil.webp";
+        props.user.avatar="/img/placeholderPerfil.webp";
 }
 </script>
 <template>
