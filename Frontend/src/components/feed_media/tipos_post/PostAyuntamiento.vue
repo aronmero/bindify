@@ -36,7 +36,7 @@ const props = defineProps({
     abrirComentarios: Function
 });
 if(props.post.avatar=="default"){
-        props.post.avatar="public/img/placeholderPerfil.webp";
+        props.post.avatar="/img/placeholderPerfil.webp";
 }
 
 const post = ref(props.post);
