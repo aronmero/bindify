@@ -60,27 +60,26 @@
             <!-- Descripcion -->
             <p class=" description  sm:block md:block hidden xl:block" :title="post.description">{{ post.description }}</p>
             <!-- Campo Municipio -->
-            <p class=" campo mt-3 h-[20px] flex items-center  ">
+            <p class=" campo mt-3 min-h-[20px] flex items-center  ">
                 <img :src="LocationSVG" class=" w-[20px] mr-1 " alt="Ubicacion:">
                 {{ post.municipality }}
             </p>
-            <p class=" campo mt-3 h-[20px] flex items-center  " >
-                <img :src="DiaSVG" class=" w-[20px] mr-1 " alt="Fecha de inicio:"> <b>Inicio: {{ post.start_date }}  </b>
-                <img :src="DiaSVG" class=" ml-2 w-[20px] mr-1 " alt="Fecha de fin:"> <b>Fin: {{ post.end_date }}</b>
+            <p class=" fechas campo mt-3 min-h-[20px] flex items-center  " >
+                 <b class="flex items-center">Inicio: <img :src="DiaSVG" class=" w-[20px] mr-1 " alt="Fecha de inicio:"> {{ post.start_date }}  </b>
+                 <b class="flex items-center md:ml-[10px] ml-0">Fin: <img :src="DiaSVG" class=" ml-2 w-[20px] mr-1 " alt="Fecha de fin:">{{ post.end_date }}</b>
             </p>
-            <p class=" campo mt-3 h-[20px] flex items-center  " >
+            <p class=" campo mt-3 min-h-[20px] flex items-center  " >
                 <img :src="UserSVG" class=" w-[20px] mr-1 " alt="Fecha de inicio:"> <b>{{ post.username }}  </b>
-            
             </p>
         </div>
         <div class="">
-            <button class="p-2 absolute top-[0px] right-[0px] " @click="() => abrirModal(post.post_id)">
+            <button class=" modal-handler p-2 absolute top-[20px] xl:right-[0px] left-[20px] " @click="() => abrirModal(post.post_id)">
                 <img :src="MenuSVG" alt="">
             </button>
         </div>
 
           <!-- Modal de Ver Más -->
-          <div ref="modal" :id="`modal_${post.post_id}`" :class="`modal absolute  top-[50px] right-[20px]  bg-white min-w-[200px] rounded-lg p-2 flex flex-col items-start justify-center`">
+          <div ref="modal" :id="`modal_${post.post_id}`" :class="`modal absolute  top-[50px] xl:right-[20px] left-[20px]  bg-white min-w-[200px] rounded-lg p-2 flex flex-col items-start justify-center`">
             <!-- Botón ver perfil -->
             <button @click="redirect(`perfil/${post.username}`)" :class="`flex items-center font-medium w-[100%] m-2 `">
                 <img class="w-[30px] h-[30px] mr-3 " :src="UserSVG" />
@@ -102,6 +101,7 @@
         margin: 10px 0px;
         display: flex;
         width: clamp(20px, 620px, 900px);
+        height:fit-content;
 
         //background:red;
         .img-wrapper {
@@ -117,13 +117,13 @@
         h2 {
             font-size: 1.3rem;
             max-width:300px;
-            height:50px;
             overflow:hidden;
             text-overflow: ellipsis;
             color: $primario;
             font-weight: bold;
         }
 
+      
         .wrapper {
             margin-left: 10px;
 
@@ -166,7 +166,7 @@
     @media screen and (max-width: 450px) {
         .card {
             h2 {
-                font-size: 1.1rem;
+                font-size: 1rem !important;
             }
 
             width:clamp(300px, 350px, 430px);
@@ -175,10 +175,14 @@
             .img-wrapper {
                 max-width: 100px;
             }
+            .fechas {
+                flex-direction:column;
+                align-items: flex-start;
+            }
 
             .wrapper {
                 .campo {
-                    font-size: .9rem;
+                    font-size: .8rem;
 
                     img {
                         width: 18px;
@@ -193,13 +197,18 @@
             h2 {
                 font-size: 1.1rem;
             }
+            .modal-handler {
+                left:0 !important;
+                right:auto !important;
+            }
 
-            width:clamp(250px, 340px, 300px);
+            width:clamp(250px, 320px, 280px);
             margin:10px 0px;
 
+           
             .img-wrapper {
-                max-width: 100px;
-                max-height:70px;
+                //max-width: 100px;
+
                 img{
                     object-fit:cover;
                 }
@@ -221,12 +230,6 @@
     @media screen and (max-width: 320px) {
         .img-wrapper {
             max-width: 50px;
-            max-height:70px;
-            img{
-                object-fit:cover;
-            }
-            
         }
-        
     }
 </style>
