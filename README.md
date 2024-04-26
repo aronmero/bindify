@@ -10,7 +10,7 @@ Se realizo un diseño en Figma de las vistas del proyecto ademas de hacer una gu
 
 Se realizo un diseño de la BBDD previa a su programacion. Se puede ver mas en [dbdocs.io](https://dbdocs.io/aronmero/Bindify)
 
-El plazo de realizacion del proyecto incluyendo fase de diseño visual y BBDD, prorgamacion del cliente y el servidor, ademas de documentacion y presentacion con defensa del proyecto fue de **4 de Marzo de 2024 a 15 de Marzo de 2024** **(menos de 10 días programando)*
+El plazo de realizacion del proyecto incluyendo fase de diseño visual y BBDD, prorgamacion del cliente y el servidor, ademas de documentacion y presentacion con defensa del proyecto fue de **4 de Marzo de 2024 a 15 de Marzo de 2024** 
 
 # Tecnologia utilizada
 
